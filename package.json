@@ -1,0 +1,33 @@
+{
+    "name": "playwright-report-grid",
+    "version": "1.0.0",
+    "description": "playwright-report-grid",
+    "main": "lib/index.js",
+    "scripts": {
+        "build": "sf b -m"
+    },
+    "workspaces": [
+        "packages/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cenfun/playwright-report-grid.git"
+    },
+    "dependencies": {
+        "lithops-ui": "^2.0.2",
+        "lz-utils": "^1.0.4",
+        "turbogrid": "^2.0.5"
+    },
+    "devDependencies": {
+        "eslint": "^8.4.1",
+        "eslint-plugin-chain": "^2.0.0",
+        "eslint-plugin-html": "^6.2.0",
+        "eslint-plugin-vue": "^8.2.0",
+        "postcss": "^8.4.4",
+        "postcss-html": "^1.3.0",
+        "postcss-scss": "^4.0.2",
+        "stylelint": "^14.1.0",
+        "stylelint-config-recommended": "^6.0.0",
+        "stylelint-config-standard": "^24.0.0"
+    }
+}
