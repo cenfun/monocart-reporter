@@ -31,7 +31,7 @@ module.exports = {
                     });
                     
                     //generate reportData 
-                    const jsonPath = path.resolve(__dirname, '../h3yun-autotest/.temp/report/report.json');
+                    const jsonPath = path.resolve(__dirname, '../../h3yun-autotest/.temp/report/playwright-report-grid.json');
                     if (!fs.existsSync(jsonPath)) {
                         console.log(`Not found test json: ${jsonPath}`);
                         return 1;
@@ -54,6 +54,12 @@ module.exports = {
             },
 
             afterBuild: (item, Util) => {
+
+                if (item.minify) {
+                //copy dist file to lib
+                    const fromJs = path.resolve(item.outputPath, `${item.name}.js`);
+                    fs.cpSync(fromJs, path.resolve(__dirname, 'lib/'));
+                }
                 return 0;
             }
         }
