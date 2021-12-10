@@ -57,8 +57,10 @@ module.exports = {
 
                 if (item.minify) {
                 //copy dist file to lib
-                    const fromJs = path.resolve(item.outputPath, `${item.name}.js`);
-                    fs.cpSync(fromJs, path.resolve(__dirname, 'lib/'));
+                    const fromJs = path.resolve(item.outputPath, `${item.fullName}.js`);
+                    const toJs = path.resolve(__dirname, 'lib/report-grid.js');
+                    //console.log(fromJs, toJs);
+                    fs.cpSync(fromJs, toJs);
                 }
                 return 0;
             }
