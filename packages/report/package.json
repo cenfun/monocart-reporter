@@ -1,6 +1,6 @@
 {
     "name": "playwright-report-grid",
-    "version": "1.0.0",
+    "version": "",
     "description": "playwright-report-grid",
     "private": true,
     "main": "dist/playwright-report-grid.js",
@@ -8,5 +8,6 @@
         "lithops-ui": "^2.0.2",
         "lz-utils": "^1.0.4",
         "turbogrid": "^2.0.5"
-    }
+    },
+    "devDependencies": {}
 }
