@@ -11,6 +11,7 @@
       <LuiInput
         v-model="nameKeywords"
         width="120"
+        class="pat-search"
         placeholder="keywords"
       >
         Search:
@@ -211,6 +212,14 @@ body {
         line-height: 40px;
         height: 40px;
         overflow: hidden;
+
+        .pat-search input {
+            background-repeat: no-repeat;
+            background-position: 97% center;
+            background-image: url("./images/search.svg");
+            background-size: 16px;
+            padding-right: 23px;
+        }
     }
 
     .pat-body {

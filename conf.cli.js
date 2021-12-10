@@ -46,7 +46,9 @@ module.exports = {
                     const jsPath = path.resolve(item.outputPath, 'report-data.js');
                     Util.writeFileContentSync(jsPath, jsContent, true);
                     const jsFile = Util.relativePath(jsPath);
-                    item.dependencies.files.push(jsFile);
+                    if (!item.dependencies.files.includes(jsFile)) {
+                        item.dependencies.files.push(jsFile);
+                    }
                     console.log(jsFile);
                 }
 

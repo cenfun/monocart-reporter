@@ -1,15 +1,15 @@
-import OK from './ok.vue';
+import StatusIcon from './status-icon.vue';
 import Util from '../util/util.js';
 
 const formatters = {
 
-    ok: function(v) {
+    ok: function(v, rowData) {
         if (typeof v !== 'boolean') {
             return '';
         }
-        const vm = OK.create({
+        const vm = StatusIcon.create({
             props: {
-                ok: v
+                row: rowData
             }
         });
         return vm.$el;
