@@ -233,6 +233,7 @@ body {
 
     .tg-case-failed.tg-row {
         background-color: rgb(252, 220, 220);
+        border-bottom-color: rgb(255, 211, 211);;
     }
 
     .tg-case-skipped  {
