@@ -224,16 +224,21 @@ body {
 
     .pat-body {
         flex: 1;
+        overflow: hidden;
     }
 
     .pat-grid-container {
         width: 100%;
         height: 100%;
+
+        .tg-cell {
+            border-right: none;
+        }
     }
 
     .tg-case-failed.tg-row {
         background-color: rgb(252, 220, 220);
-        border-bottom-color: rgb(255, 211, 211);;
+        border-bottom: none;
     }
 
     .tg-case-skipped  {

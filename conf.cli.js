@@ -31,7 +31,7 @@ module.exports = {
                     });
                     
                     //generate reportData 
-                    const jsonPath = path.resolve(__dirname, '../../h3yun-autotest/.temp/report/playwright-report-grid.json');
+                    const jsonPath = path.resolve(__dirname, '../h3yun-autotest/.temp/report/playwright-report-grid.json');
                     if (!fs.existsSync(jsonPath)) {
                         console.log(`Not found test json: ${jsonPath}`);
                         return 1;
