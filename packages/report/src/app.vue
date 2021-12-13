@@ -132,33 +132,40 @@ const App = {
                 total: 0
             };
 
+            const caseHandler = (item) => {
+                cases.total += 1;
+                if (item.ok) {
+                    if (item.status === 'skipped') {
+                        cases.skipped += 1;
+                        item.rowClass = 'tg-case-skipped';
+                    } else if (item.outcome === 'flaky') {
+                        cases.flaky += 1;
+                        item.rowClass = 'tg-case-flaky';
+                    } else {
+                        cases.passed += 1;
+                    }
+                } else {
+                    item.rowClass = 'tg-case-failed';
+                    cases.failed += 1;
+                    if (parent.failedCases) {
+                        parent.failedCases += 1;
+                    } else {
+                        parent.failedCases = 1;
+                    }
+                }
+            };
+
             Util.forEachTree(list, function(item, i, parent) {
                 if (item.type === 'step') {
                     steps.total += 1;
+                    if (item.error) {
+                        item.rowClass = 'tg-case-failed';
+                    }
                     return;
                 }
                 
                 if (item.type === 'case') {
-                    cases.total += 1;
-                    if (item.ok) {
-                        if (item.status === 'skipped') {
-                            cases.skipped += 1;
-                            item.rowClass = 'tg-case-skipped';
-                        } else if (item.outcome === 'flaky') {
-                            cases.flaky += 1;
-                            item.rowClass = 'tg-case-flaky';
-                        } else {
-                            cases.passed += 1;
-                        }
-                    } else {
-                        item.rowClass = 'tg-case-failed';
-                        cases.failed += 1;
-                        if (parent.failedCases) {
-                            parent.failedCases += 1;
-                        } else {
-                            parent.failedCases = 1;
-                        }
-                    }
+                    caseHandler(item);
                     return;
                 }
                 if (item.type === 'suite') {
