@@ -31,13 +31,22 @@
       </LuiCheckbox>
       <div class="lui-hs-10" />
       <LuiSelect
-        v-model="status"
-        label="Status:"
+        v-model="result"
+        label="Result:"
       >
         <option />
-        <option>failed</option>
-        <option>skipped</option>
-        <option>passed</option>
+        <option v-if="summary.cases.failed > 0">
+          failed
+        </option>
+        <option v-if="summary.cases.skipped > 0">
+          skipped
+        </option>
+        <option v-if="summary.cases.flaky > 0">
+          flaky
+        </option>
+        <option v-if="summary.cases.passed > 0">
+          passed
+        </option>
       </LuiSelect>
     </div>
     <div class="pat-body">
@@ -109,8 +118,9 @@ const App = {
             const cases = {
                 total: 0,
                 failed: 0,
-                passed: 0,
-                skipped: 0
+                skipped: 0,
+                flaky: 0,
+                passed: 0
             };
             const steps = {
                 total: 0
@@ -128,6 +138,9 @@ const App = {
                         if (item.status === 'skipped') {
                             cases.skipped += 1;
                             item.rowClass = 'tg-case-skipped';
+                        } else if (item.outcome === 'flaky') {
+                            cases.flaky += 1;
+                            item.rowClass = 'tg-case-flaky';
                         } else {
                             cases.passed += 1;
                         }
@@ -238,6 +251,11 @@ body {
 
     .tg-case-failed.tg-row {
         background-color: rgb(252, 220, 220);
+        border-bottom: none;
+    }
+
+    .tg-case-flaky.tg-row {
+        background-color: rgb(252, 246, 220);
         border-bottom: none;
     }
 

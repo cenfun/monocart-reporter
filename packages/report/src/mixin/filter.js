@@ -10,7 +10,7 @@ const mixinFilter = {
             type: 'case',
             showGrouped: true,
 
-            status: ''
+            result: ''
         
         };
     },
@@ -60,8 +60,8 @@ const mixinFilter = {
             return has;
         },
 
-        statusFilter(rowData) {
-            if (!this.status) {
+        resultFilter(rowData) {
+            if (!this.result) {
                 return true;
             }
             if (rowData.type === 'case') {
@@ -81,7 +81,7 @@ const mixinFilter = {
 
         rowFilter(rowData) {
             const filters = [
-                this.statusFilter,
+                this.resultFilter,
                 this.keywordsFilter
             ];
             for (const item of filters) {
