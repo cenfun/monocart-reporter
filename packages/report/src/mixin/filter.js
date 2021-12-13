@@ -2,19 +2,6 @@ import Util from '../util/util.js';
 
 const mixinFilter = {
 
-    data() {
-        return {
-           
-            nameKeywords: '',
-
-            type: 'case',
-            showGrouped: true,
-
-            result: ''
-        
-        };
-    },
-
     methods: {
         keywordsFilter(rowData) {
             if (!this.nameKeywords) {
@@ -30,14 +17,31 @@ const mixinFilter = {
             return false;
         },
 
-        isCaseFailed(item) {
+        isCaseMatch(item, result) {
             if (!item) {
                 return false;
             }
-            if (item.status === item.expectedStatus) {
-                return false;
+            const maps = {
+                failed: 'unexpected',
+                skipped: 'skipped',
+                flaky: 'flaky',
+                passed: 'expected'
+            };
+            if (item.outcome === maps[result]) {
+                return true;
             }
-            return true;
+            return false;
+        },
+
+        hasSubCaseMatch(rowData, result) {
+            let has = false;
+            Util.forEachTree(rowData.subs, (item) => {
+                if (item.type === 'case' && this.isCaseMatch(item, result)) {
+                    has = true;
+                    return false;
+                }
+            });
+            return has;
         },
 
         getParentCase(item) {
@@ -49,34 +53,24 @@ const mixinFilter = {
             }
         },
 
-        hasSubCaseFailed(rowData) {
-            let has = false;
-            Util.forEachTree(rowData.subs, function(item) {
-                if (item.type === 'suite' && item.failedCases) {
-                    has = true;
-                    return false;
-                }
-            });
-            return has;
-        },
-
         resultFilter(rowData) {
             if (!this.result) {
                 return true;
             }
+            //failed, skipped, flaky, passed
             if (rowData.type === 'case') {
-                return this.isCaseFailed(rowData);
+                return this.isCaseMatch(rowData, this.result);
             }
             if (rowData.type === 'suite') {
                 //sub case has failed
-                return this.hasSubCaseFailed(rowData);
+                return this.hasSubCaseMatch(rowData, this.result);
             }
-            //step
+            //if step, find parent case first
             const parentCase = this.getParentCase(rowData);
             if (!parentCase) {
                 return true;
             }
-            return this.isCaseFailed(parentCase);
+            return this.isCaseMatch(parentCase, this.result);
         },
 
         rowFilter(rowData) {

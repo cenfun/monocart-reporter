@@ -12,7 +12,7 @@ const mixinGrid = {
         rowChange() {
             return [
                 this.nameKeywords,
-                this.status
+                this.result
             ];
         },
         dataChange() {

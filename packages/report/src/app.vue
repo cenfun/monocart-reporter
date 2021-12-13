@@ -84,7 +84,13 @@ const App = {
         return {
             title: '',
             generated: '',
-            summary: {}
+            summary: {},
+
+            //filter
+            nameKeywords: '',
+            type: 'case',
+            showGrouped: true,
+            result: ''
         };
     },
 
