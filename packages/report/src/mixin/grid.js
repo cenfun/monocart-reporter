@@ -82,15 +82,45 @@ const mixinGrid = {
                 const elem = d.cellNode;
                 const rowItem = this.grid.getRowItem(d.row);
                 const columnItem = this.grid.getColumnItem(d.column);
+                const value = rowItem[columnItem.id];
+                if (!value) {
+                    return;
+                }
+
+                if (columnItem.id === 'location') {
+                    this.showTooltip(elem, `${value.file}:${value.line},${value.column}`);
+                    return;
+                }
+
+                if (columnItem.id === 'error') {
+                    let errorMsg = `<b>${rowItem.title}:</b>\n${value.message}`;
+                    if (value.stack) {
+                        errorMsg += `\n${value.stack}`;
+                    }
+                    this.showTooltip(elem, errorMsg);
+                    return;
+                }
 
                 //show tooltip if cell truncated
-                const value = rowItem[columnItem.id];
-                if (value && isNodeTruncated(elem)) {
+                if (isNodeTruncated(elem)) {
                     this.showTooltip(elem, elem.innerText);
                 }
 
             }).bind('onCellMouseOut', (e, d) => {
                 this.hideTooltip();
+            });
+
+            this.grid.bind('onClick', (e, d) => {
+
+                // const elem = d.cellNode;
+                // const rowItem = this.grid.getRowItem(d.row);
+                // const columnItem = this.grid.getColumnItem(d.column);
+                // const value = rowItem[columnItem.id];
+                // if (!value) {
+                //     return;
+                // }
+                //show flyover
+
             });
         },
 
@@ -155,11 +185,32 @@ const mixinGrid = {
                 return;
             }
 
+            const arr = message.split(/\r|\n/g);
+            arr.forEach(function(str, i) {
+                //space to &nbsp;
+                str = str.replace(/ +/g, function(word) {
+                    const ls = [];
+                    ls.length = word.length + 1;
+                    return ls.join('&nbsp;');
+                });
+                arr[i] = str;
+            });
+
+            message = `<div>${arr.join('</div><div>')}</div>`;
+
             this.tooltip = LuiTooltip.create((h) => {
                 return {
                     props: {
-                        target: elem,
-                        text: message
+                        target: elem
+                    },
+                    scopedSlots: {
+                        default: (props) => {
+                            return h('div', {
+                                domProps: {
+                                    innerHTML: message
+                                }
+                            });
+                        }
                     }
                 };
             });

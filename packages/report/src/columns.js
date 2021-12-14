@@ -11,7 +11,8 @@ const columns = {
             name: 'Title'
         }, {
             id: 'type',
-            name: 'Type'
+            name: 'Type',
+            align: 'center'
         }, {
             id: 'status',
             name: 'Status'
@@ -31,6 +32,7 @@ const columns = {
         }, {
             id: 'retry',
             name: 'Retry',
+            align: 'center',
             width: 50
         }, {
             id: 'error',
