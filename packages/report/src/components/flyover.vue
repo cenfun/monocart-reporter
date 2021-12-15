@@ -3,12 +3,12 @@
     <div class="pat-flyover-header lui-flex-row">
       <div
         v-if="!visible"
-        class="pat-icon pat-icon-arrow-left"
+        class="pat-flyover-icon pat-icon-arrow-left"
         @click="show"
       />
       <div
         v-if="visible"
-        class="pat-icon pat-icon-arrow-right"
+        class="pat-flyover-icon pat-icon-arrow-right"
         @click="hide"
       />
       <div
@@ -134,7 +134,7 @@ export default {
     margin-left: 5px;
 }
 
-.pat-icon {
+.pat-flyover-icon {
     width: 25px;
     height: 25px;
     cursor: pointer;
