@@ -38,16 +38,16 @@
         label="Result:"
       >
         <option />
-        <option v-if="info.cases.failed > 0">
+        <option v-if="summary.failed > 0">
           failed
         </option>
-        <option v-if="info.cases.skipped > 0">
+        <option v-if="summary.skipped > 0">
           skipped
         </option>
-        <option v-if="info.cases.flaky > 0">
+        <option v-if="summary.flaky > 0">
           flaky
         </option>
-        <option v-if="info.cases.passed > 0">
+        <option v-if="summary.passed > 0">
           passed
         </option>
       </LuiSelect>
@@ -58,7 +58,7 @@
     </div>
     <div class="lui-flex-row pat-footer">
       <div class="lui-flex-auto">
-        <info :info="info" />
+        <info :info="summary" />
       </div>
       <div>{{ generated }}</div>
     </div>
@@ -97,7 +97,7 @@ const App = {
         return {
             title: '',
             generated: '',
-            info: {},
+            summary: {},
 
             //filter
             keywords: '',
@@ -131,35 +131,31 @@ const App = {
     methods: {
         
         initList(list) {
-            const suites = {
-                total: 0
-            };
-            const cases = {
-                total: 0,
+            const summary = {
+                cases: 0,
                 failed: 0,
                 skipped: 0,
                 flaky: 0,
-                passed: 0
-            };
-            const steps = {
-                total: 0
+                passed: 0,
+                suites: 0,
+                steps: 0
             };
 
             const caseHandler = (item) => {
-                cases.total += 1;
+                summary.cases += 1;
                 if (item.ok) {
                     if (item.status === 'skipped') {
-                        cases.skipped += 1;
+                        summary.skipped += 1;
                         item.rowClass = 'tg-case-skipped';
                     } else if (item.outcome === 'flaky') {
-                        cases.flaky += 1;
+                        summary.flaky += 1;
                         item.rowClass = 'tg-case-flaky';
                     } else {
-                        cases.passed += 1;
+                        summary.passed += 1;
                     }
                 } else {
                     item.rowClass = 'tg-case-failed';
-                    cases.failed += 1;
+                    summary.failed += 1;
                     if (parent.failedCases) {
                         parent.failedCases += 1;
                     } else {
@@ -170,7 +166,7 @@ const App = {
 
             Util.forEachTree(list, function(item, i, parent) {
                 if (item.type === 'step') {
-                    steps.total += 1;
+                    summary.steps += 1;
                     if (item.error) {
                         item.rowClass = 'tg-case-failed';
                     }
@@ -182,15 +178,16 @@ const App = {
                     return;
                 }
                 if (item.type === 'suite') {
-                    suites.total += 1;
+                    summary.suites += 1;
                 }
             });
 
-            this.info = {
-                suites,
-                cases,
-                steps
-            };
+            summary.passedPercent = Util.PF(summary.passed, summary.cases);
+            summary.failedPercent = Util.PF(summary.failed, summary.cases);
+            summary.skippedPercent = Util.PF(summary.skipped, summary.cases);
+            summary.flakyPercent = Util.PF(summary.flaky, summary.cases);
+
+            this.summary = summary;
         }
     }
 };

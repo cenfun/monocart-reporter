@@ -34,6 +34,17 @@ const Util = {
         return v.toLocaleString();
     },
 
+    //percent
+    PF: function(v, t = 1, digits = 1) {
+        v = Util.toNum(v);
+        t = Util.toNum(t);
+        let per = 0;
+        if (t) {
+            per = v / t;
+        }
+        return `${(per * 100).toFixed(digits)}%`;
+    },
+
     //time
     TF: function(v, unit, digits = 1) {
         v = Util.toNum(v, true);

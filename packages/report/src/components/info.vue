@@ -1,26 +1,33 @@
 <template>
   <div class="pat-info lui-flex-row">
-    <div><b>Cases:</b> {{ cases.total }}</div>
-    <div class="lui-hs-5" />
-    <div>(</div>
-    <div class="lui-hs-5" />
-    <div>Passed: {{ cases.passed }}</div>
-    <div class="lui-hs-5" />
-    <div :class="hasFailed">
-      Failed: {{ cases.failed }}
+    <div><b>Cases:</b> {{ summary.cases }}</div>
+    <div class="pat-info-item pat-info-passed">
+      Passed: {{ summary.passed }} ({{ summary.passedPercent }})
     </div>
-    <div class="lui-hs-5" />
-    <div :class="hasFlaky">
-      Flaky: {{ cases.flaky }}
+    <div
+      v-if="summary.failed > 0"
+      class="pat-info-item pat-info-failed"
+    >
+      Failed: {{ summary.failed }} ({{ summary.failedPercent }})
     </div>
-    <div class="lui-hs-5" />
-    <div>Skipped: {{ cases.skipped }}</div>
-    <div class="lui-hs-5" />
-    <div>)</div>
-    <div class="lui-hs-10" />
-    <div><b>Suites:</b> {{ suites.total }}</div>
-    <div class="lui-hs-10" />
-    <div><b>Steps:</b> {{ steps.total }}</div>
+    <div
+      v-if="summary.flaky > 0"
+      class="pat-info-item pat-info-flaky"
+    >
+      Flaky: {{ summary.flaky }} ({{ summary.flakyPercent }})
+    </div>
+    <div
+      v-if="summary.skipped > 0"
+      class="pat-info-item"
+    >
+      Skipped: {{ summary.skipped }} ({{ summary.skippedPercent }})
+    </div>
+    <div class="pat-info-item">
+      <b>Suites:</b> {{ summary.suites }}
+    </div>
+    <div class="pat-info-item">
+      <b>Steps:</b> {{ summary.steps }}
+    </div>
   </div>
 </template>
 <script>
@@ -35,35 +42,20 @@ export default {
     },
     data: function() {
         return {
-            cases: {},
-            suites: {},
-            steps: {}
+            summary: this.info
         };
-    },
-    computed: {
-        hasFailed: function() {
-            if (this.cases.failed > 0) {
-                return 'pat-info-failed';
-            }
-            return '';
-        },
-        hasFlaky: function() {
-            if (this.cases.flaky > 0) {
-                return 'pat-info-flaky';
-            }
-            return '';
-        }
-    },
-    created() {
-        this.cases = this.info.cases;
-        this.suites = this.info.suites;
-        this.steps = this.info.steps;
     }
 };
 </script>
 <style lang="scss">
 .pat-info {
     font-size: 12px;
+    .pat-info-item {
+        margin-left: 10px;
+    }
+    .pat-info-passed {
+        color: green;
+    }
     .pat-info-failed {
         color: #ff0000;
     }
