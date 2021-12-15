@@ -4,10 +4,10 @@ const mixinFilter = {
 
     methods: {
         keywordsFilter(rowData) {
-            if (!this.nameKeywords) {
+            if (!this.keywords) {
                 return true;
             }
-            const arr = this.nameKeywords.toLowerCase().split(' ');
+            const arr = this.keywords.toLowerCase().split(' ');
             const name = (`${rowData.title}`).toLowerCase();
             for (const item of arr) {
                 if (item && name.indexOf(item) !== -1) {

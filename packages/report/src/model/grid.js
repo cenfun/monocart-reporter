@@ -11,14 +11,14 @@ const mixinGrid = {
     computed: {
         rowChange() {
             return [
-                this.nameKeywords,
+                this.keywords,
                 this.result
             ];
         },
         dataChange() {
             return [
                 this.type,
-                this.showGrouped
+                this.grouped
             ];
         }
     },
@@ -47,6 +47,7 @@ const mixinGrid = {
                 columnDefaultFormatter: {
                     title: 'tree'
                 },
+                frozenColumn: 1,
                 rowFilter: (rowData) => {
                     return this.rowFilter(rowData);
                 }
@@ -122,12 +123,14 @@ const mixinGrid = {
                 const rowItem = this.grid.getRowItem(d.row);
                 if (rowItem.type === 'case') {
                     this.$refs.flyover.show();
+                } else {
+                    this.$refs.flyover.hide();
                 }
             });
         },
 
         getGridData() {
-            const key = [this.type, this.showGrouped].join('_');
+            const key = [this.type, this.grouped].join('_');
             if (this.gridDataMap[key]) {
                 return this.gridDataMap[key];
             }
@@ -156,7 +159,7 @@ const mixinGrid = {
             }
 
             //if group
-            if (!this.showGrouped) {
+            if (!this.grouped) {
                 const list = [];
                 Util.forEachTree(tempData.rows, function(item) {
                     if (item.subs) {

@@ -9,7 +9,7 @@
     </div>
     <div class="lui-flex-row pat-filter">
       <LuiInput
-        v-model="nameKeywords"
+        v-model="keywords"
         width="120"
         class="pat-search"
         placeholder="keywords"
@@ -26,7 +26,7 @@
         <option>step</option>
       </LuiSelect>
       <div class="lui-hs-10" />
-      <LuiCheckbox v-model="showGrouped">
+      <LuiCheckbox v-model="grouped">
         Grouped
       </LuiCheckbox>
       <div class="lui-hs-10" />
@@ -35,16 +35,16 @@
         label="Result:"
       >
         <option />
-        <option v-if="summary.cases.failed > 0">
+        <option v-if="info.cases.failed > 0">
           failed
         </option>
-        <option v-if="summary.cases.skipped > 0">
+        <option v-if="info.cases.skipped > 0">
           skipped
         </option>
-        <option v-if="summary.cases.flaky > 0">
+        <option v-if="info.cases.flaky > 0">
           flaky
         </option>
-        <option v-if="summary.cases.passed > 0">
+        <option v-if="info.cases.passed > 0">
           passed
         </option>
       </LuiSelect>
@@ -55,7 +55,7 @@
     </div>
     <div class="lui-flex-row pat-footer">
       <div class="lui-flex-auto">
-        {{ summary }}
+        <info :info="info" />
       </div>
       <div>{{ generated }}</div>
     </div>
@@ -75,6 +75,7 @@ import mixinGrid from '../model/grid.js';
 import Util from '../util/util.js';
 import Flyover from './flyover.vue';
 import Detail from './detail.vue';
+import Info from './info.vue';
 const App = {
     components: {
         LuiButton,
@@ -82,7 +83,8 @@ const App = {
         LuiCheckbox,
         LuiSelect,
         Flyover,
-        Detail
+        Detail,
+        Info
     },
     mixins: [
         mixinFilter,
@@ -92,12 +94,12 @@ const App = {
         return {
             title: '',
             generated: '',
-            summary: {},
+            info: {},
 
             //filter
-            nameKeywords: '',
+            keywords: '',
             type: 'case',
-            showGrouped: true,
+            grouped: true,
             result: ''
         };
     },
@@ -181,13 +183,12 @@ const App = {
                 }
             });
 
-            this.summary = {
+            this.info = {
                 suites,
                 cases,
                 steps
             };
         }
-        
     }
 };
 
@@ -286,6 +287,7 @@ body {
         padding: 0px 10px;
         height: 30px;
         line-height: 30px;
+        font-size: 12px;
         background: #f5f5f5;
         position: relative;
         border-top: 1px solid #eee;
