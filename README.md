@@ -13,8 +13,7 @@ const config = {
   reporter: [
     //['list'],
     ['playwright-report-grid', {  
-        outputFolder: 'playwright-report',
-        outputFilename: 'playwright-report-grid'
+        outputFile: 'playwright-report/report.html'
     }]
   ],
 };

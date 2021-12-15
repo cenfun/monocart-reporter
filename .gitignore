@@ -2,4 +2,4 @@
 /node_modules
 /packages/**/dist
 /package-lock.json
-/lib/report-grid.js
+/lib/grid.js

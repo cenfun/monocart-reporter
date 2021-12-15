@@ -58,9 +58,9 @@ module.exports = {
             afterBuild: (item, Util) => {
 
                 if (item.minify) {
-                //copy dist file to lib
+                    //copy dist file to lib
                     const fromJs = path.resolve(item.outputPath, `${item.fullName}.js`);
-                    const toJs = path.resolve(__dirname, 'lib/report-grid.js');
+                    const toJs = path.resolve(__dirname, 'lib/grid.js');
                     //console.log(fromJs, toJs);
                     fs.cpSync(fromJs, toJs);
                 }

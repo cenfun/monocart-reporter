@@ -49,7 +49,7 @@ const formatters = {
             const href = item.path;
             list.push(`<a href="${href}" target="_blank">${item.name}</a>`);
         });
-        return list.join('');
+        return list.join(' ');
     }
 
 };

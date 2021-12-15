@@ -37,7 +37,7 @@ const columns = {
         }, {
             id: 'error',
             name: 'Error',
-            width: 150,
+            width: 80,
             formatter: 'error'
         }, {
             id: 'location',
