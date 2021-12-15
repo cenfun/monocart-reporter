@@ -116,6 +116,8 @@ const mixinGrid = {
                 if (rowItem.type === 'case') {
                     this.$refs.detail.update(rowItem);
                     this.$refs.flyover.update(rowItem);
+                    this.grid.unselectAll();
+                    this.grid.setSelectedRow(rowItem);
                 }
             });
 

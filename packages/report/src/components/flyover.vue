@@ -27,7 +27,7 @@ export default {
     data: () => {
         return {
             visible: false,
-            title: ''
+            title: 'Please select a case to show detail here'
         };
     },
     methods: {

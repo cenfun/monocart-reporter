@@ -17,6 +17,7 @@ export default {
     methods: {
         update(item) {
             this.item = item;
+            console.log(item.results);
 
             const loc = item.location;
             this.location = `${loc.file}:${loc.line},${loc.column}`;
