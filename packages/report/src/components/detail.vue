@@ -1,20 +1,25 @@
 <template>
   <div class="pat-detail">
-    Detail
-    {{ item.title }}
+    <div class="pat-location">
+      {{ location }}
+    </div>
   </div>
 </template>
 <script>
 export default {
     data: function() {
         return {
-            item: {}
+            item: {},
+            location: ''
         };
     },
 
     methods: {
-        update(currentCase) {
-            this.item = currentCase;
+        update(item) {
+            this.item = item;
+
+            const loc = item.location;
+            this.location = `${loc.file}:${loc.line},${loc.column}`;
         }
     }
 };

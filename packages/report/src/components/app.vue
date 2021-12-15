@@ -1,6 +1,9 @@
 <template>
   <div class="lui-flex-column pat">
-    <div class="lui-flex-row pat-header">
+    <div
+      class="lui-flex-row pat-header"
+      @click="hideFlyover"
+    >
       <div
         class="pat-title lui-flex-auto"
         v-text="title"

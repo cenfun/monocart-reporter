@@ -84,7 +84,7 @@ export default {
     display: block;
     height: 100%;
     width: 10px;
-    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
 }
 
 .pat-show {

@@ -122,9 +122,9 @@ const mixinGrid = {
             this.grid.bind('onDblClick', (e, d) => {
                 const rowItem = this.grid.getRowItem(d.row);
                 if (rowItem.type === 'case') {
-                    this.$refs.flyover.show();
+                    this.showFlyover();
                 } else {
-                    this.$refs.flyover.hide();
+                    this.hideFlyover();
                 }
             });
         },
@@ -173,6 +173,13 @@ const mixinGrid = {
             return tempData;
         },
         
+        showFlyover() {
+            this.$refs.flyover.show();
+        },
+
+        hideFlyover() {
+            this.$refs.flyover.hide();
+        },
 
         hideTooltip: function() {
             if (this.tooltip) {
