@@ -38,6 +38,18 @@ const formatters = {
         //console.log(v);
         return v.message;
         
+    },
+
+    attachments: function(v) {
+        if (!Util.isList(v)) {
+            return '';
+        }
+        const list = [];
+        v.forEach(item => {
+            const href = item.path;
+            list.push(`<a href="${href}" target="_blank">${item.name}</a>`);
+        });
+        return list.join('');
     }
 
 };

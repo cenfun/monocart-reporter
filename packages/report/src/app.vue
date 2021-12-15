@@ -66,8 +66,8 @@ import {
     registerComponent, LuiInput, LuiCheckbox, LuiSelect
 } from 'lithops-ui';
 import columns from './columns.js';
-import mixinFilter from './mixin/filter.js';
-import mixinGrid from './mixin/grid.js';
+import mixinFilter from './model/filter.js';
+import mixinGrid from './model/grid.js';
 import Util from './util/util.js';
 
 const App = {

@@ -44,6 +44,10 @@ const columns = {
             name: 'Location',
             width: 120,
             formatter: 'location'
+        }, {
+            id: 'attachments',
+            name: 'Attachments',
+            formatter: 'attachments'
         }];
     }
 };
