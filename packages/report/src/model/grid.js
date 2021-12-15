@@ -111,17 +111,18 @@ const mixinGrid = {
             });
 
             this.grid.bind('onClick', (e, d) => {
-
-                // const elem = d.cellNode;
                 const rowItem = this.grid.getRowItem(d.row);
-                // const columnItem = this.grid.getColumnItem(d.column);
-                // const value = rowItem[columnItem.id];
-                console.log(rowItem);
-                // if (!value) {
-                //     return;
-                // }
-                //show flyover
+                if (rowItem.type === 'case') {
+                    this.$refs.detail.update(rowItem);
+                    this.$refs.flyover.update(rowItem);
+                }
+            });
 
+            this.grid.bind('onDblClick', (e, d) => {
+                const rowItem = this.grid.getRowItem(d.row);
+                if (rowItem.type === 'case') {
+                    this.$refs.flyover.show();
+                }
             });
         },
 

@@ -1,13 +1,13 @@
 <template>
-  <div class="pat">
-    <div class="pat-header">
+  <div class="lui-flex-column pat">
+    <div class="lui-flex-row pat-header">
       <div
-        class="pat-title"
+        class="pat-title lui-flex-auto"
         v-text="title"
       />
-      <div class="lui-hs-10" />
+      <div class="lui-flex-auto" />
     </div>
-    <div class="pat-filter">
+    <div class="lui-flex-row pat-filter">
       <LuiInput
         v-model="nameKeywords"
         width="120"
@@ -48,33 +48,41 @@
           passed
         </option>
       </LuiSelect>
+      <div class="lui-flex-auto" />
     </div>
     <div class="pat-body">
       <div class="pat-grid-container" />
     </div>
-    <div class="pat-footer">
+    <div class="lui-flex-row pat-footer">
       <div class="lui-flex-auto">
         {{ summary }}
       </div>
       <div>{{ generated }}</div>
     </div>
+    <flyover ref="flyover">
+      <detail ref="detail" />
+    </flyover>
   </div>
 </template>
 <script>
 import decompress from 'lz-utils/lib/decompress.js';
 import {
-    registerComponent, LuiInput, LuiCheckbox, LuiSelect
+    registerComponent, LuiButton, LuiInput, LuiCheckbox, LuiSelect
 } from 'lithops-ui';
 import columns from './columns.js';
 import mixinFilter from './model/filter.js';
 import mixinGrid from './model/grid.js';
 import Util from './util/util.js';
-
+import Flyover from './flyover.vue';
+import Detail from './detail.vue';
 const App = {
     components: {
+        LuiButton,
         LuiInput,
         LuiCheckbox,
-        LuiSelect
+        LuiSelect,
+        Flyover,
+        Detail
     },
     mixins: [
         mixinFilter,
@@ -202,8 +210,6 @@ body {
 .pat {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
 
     .pat-header {
@@ -215,7 +221,6 @@ body {
         color: #eee;
 
         .pat-title {
-            flex: 1;
             font-weight: bold;
             font-size: 18px;
             text-overflow: ellipsis;
@@ -230,8 +235,6 @@ body {
     }
 
     .pat-filter {
-        display: flex;
-        flex-direction: row;
         align-items: center;
         padding: 0 10px;
         border-bottom: 1px solid #ddd;
@@ -283,12 +286,12 @@ body {
         padding: 0px 10px;
         height: 30px;
         line-height: 30px;
-        display:flex;
-        flex-direction: row;
         background: #f5f5f5;
         position: relative;
         border-top: 1px solid #eee;
         color: #888;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 </style>

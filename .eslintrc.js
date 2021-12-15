@@ -241,6 +241,10 @@ const fixableRules = {
     'wrap-regex': 'error'
 };
 
+const vueRules = {
+    'vue/multi-word-component-names': 'off'
+};
+
 
 module.exports = {
     'root': true,
@@ -280,6 +284,7 @@ module.exports = {
     'rules': {
         ... recommendedRules,
         ... normalRules,
-        ... fixableRules
+        ... fixableRules,
+        ... vueRules
     }
 };
