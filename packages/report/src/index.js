@@ -1,2 +1,2 @@
-import App from './app.vue';
+import App from './components/app.vue';
 App.create({}, '.app');

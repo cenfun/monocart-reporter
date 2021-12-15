@@ -69,10 +69,10 @@ import decompress from 'lz-utils/lib/decompress.js';
 import {
     registerComponent, LuiButton, LuiInput, LuiCheckbox, LuiSelect
 } from 'lithops-ui';
-import columns from './columns.js';
-import mixinFilter from './model/filter.js';
-import mixinGrid from './model/grid.js';
-import Util from './util/util.js';
+import columns from '../model/columns.js';
+import mixinFilter from '../model/filter.js';
+import mixinGrid from '../model/grid.js';
+import Util from '../util/util.js';
 import Flyover from './flyover.vue';
 import Detail from './detail.vue';
 const App = {
@@ -245,7 +245,7 @@ body {
         .pat-search input {
             background-repeat: no-repeat;
             background-position: 97% center;
-            background-image: url("./images/search.svg");
+            background-image: url("../images/search.svg");
             background-size: 16px;
             padding-right: 23px;
         }

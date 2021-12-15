@@ -145,12 +145,12 @@ export default {
 }
 
 .pat-icon-arrow-left {
-    background-image: url("./images/arrow-left.svg");
+    background-image: url("../images/arrow-left.svg");
     margin-left: -35px;
 }
 
 .pat-icon-arrow-right {
-    background-image: url("./images/arrow-right.svg");
+    background-image: url("../images/arrow-right.svg");
 }
 
 .pat-flyover-body {
