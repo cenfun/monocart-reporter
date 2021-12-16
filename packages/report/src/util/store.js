@@ -1,18 +1,22 @@
+const namespace = 'prg';
+
+const key = (k) => {
+    return `${namespace}_${k}`;
+};
+
 const store = {
-    key(k) {
-        return `prg_${k}`;
-    },
     get(k, dv = '') {
-        k = store.key(k);
-        const v = window.localStorage.getItem(k);
+        const v = window.localStorage.getItem(key(k));
         if (v === null) {
             return dv;
         }
         return v;
     },
     set(k, v) {
-        k = store.key(k);
-        window.localStorage.setItem(k, v);
+        window.localStorage.setItem(key(k), v);
+    },
+    remove(k) {
+        window.localStorage.removeItem(key(k));
     }
 };
 
