@@ -5,6 +5,7 @@ import {
 } from 'turbogrid';
 import Util from '../util/util.js';
 import formatters from '../formatters/formatters.js';
+import store from '../util/store.js';
 
 const mixinGrid = {
     
@@ -25,6 +26,7 @@ const mixinGrid = {
 
     watch: {
         rowChange: function() {
+            store.set('result', this.result);
             this.grid.update();
         },
         dataChange: function() {

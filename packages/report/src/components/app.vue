@@ -37,7 +37,9 @@
         v-model="result"
         label="Result:"
       >
-        <option />
+        <option value="">
+          all
+        </option>
         <option v-if="summary.failed > 0">
           failed
         </option>
@@ -72,6 +74,7 @@ import decompress from 'lz-utils/lib/decompress.js';
 import {
     registerComponent, LuiButton, LuiInput, LuiCheckbox, LuiSelect
 } from 'lithops-ui';
+import store from '../util/store.js';
 import columns from '../model/columns.js';
 import mixinFilter from '../model/filter.js';
 import mixinGrid from '../model/grid.js';
@@ -103,7 +106,7 @@ const App = {
             keywords: '',
             type: 'case',
             grouped: true,
-            result: ''
+            result: store.get('result')
         };
     },
 
