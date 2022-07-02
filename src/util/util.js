@@ -2,7 +2,7 @@ import { Util as util } from 'turbogrid';
 
 const Util = {
     ... util,
-    
+
     formatPath: function(str) {
         if (str) {
             str = str.replace(/\\/g, '/');

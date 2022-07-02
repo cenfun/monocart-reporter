@@ -1,6 +1,6 @@
 <template>
-  <div class="pat-detail">
-    <div class="pat-location">
+  <div class="prg-detail">
+    <div class="prg-location">
       {{ location }}
     </div>
   </div>

@@ -3,12 +3,13 @@ const columns = {
         return [{
             id: 'ok',
             name: '',
-            width: 30,
+            width: 35,
             align: 'center',
             formatter: 'ok'
         }, {
             id: 'title',
-            name: 'Title'
+            name: 'Title',
+            maxWidth: 1230
         }, {
             id: 'type',
             name: 'Type',
@@ -24,30 +25,31 @@ const columns = {
             name: 'Outcome',
             width: 85
         }, {
-            id: 'duration',
-            name: 'Duration',
-            align: 'right',
-            sortAsc: false,
-            formatter: 'duration'
+            id: 'error',
+            name: 'Error',
+            width: 100,
+            formatter: 'error'
+        }, {
+            id: 'attachments',
+            name: 'Attachments',
+            width: 100,
+            formatter: 'attachments'
         }, {
             id: 'retry',
             name: 'Retry',
             align: 'center',
             width: 50
         }, {
-            id: 'error',
-            name: 'Error',
-            width: 80,
-            formatter: 'error'
+            id: 'duration',
+            name: 'Duration',
+            align: 'right',
+            sortAsc: false,
+            formatter: 'duration'
         }, {
             id: 'location',
             name: 'Location',
             width: 120,
             formatter: 'location'
-        }, {
-            id: 'attachments',
-            name: 'Attachments',
-            formatter: 'attachments'
         }];
     }
 };

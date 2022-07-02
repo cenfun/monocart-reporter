@@ -1,5 +1,5 @@
 
-import { LuiTooltip } from 'lithops-ui';
+import { components } from 'vine-ui';
 import {
     Grid, VERSION, TIMESTAMP
 } from 'turbogrid';
@@ -7,8 +7,10 @@ import Util from '../util/util.js';
 import formatters from '../formatters/formatters.js';
 import store from '../util/store.js';
 
+const { VuiTooltip } = components;
+
 const mixinGrid = {
-    
+
     computed: {
         rowChange() {
             return [
@@ -40,27 +42,25 @@ const mixinGrid = {
 
         createGrid() {
             console.log(`grid version: ${VERSION} (${new Date(TIMESTAMP).toLocaleString()})`);
-            const grid = new Grid('.pat-grid-container');
+            const grid = new Grid('.prg-grid-container');
             this.grid = grid;
             this.bindGridEvents();
             grid.setOption({
+                selectMultiple: false,
                 bindWindowResize: true,
                 rowNotFound: '<div>No Results</div>',
-                columnDefaultFormatter: {
+                frozenColumn: 1,
+                columnTypes: {
                     title: 'tree'
                 },
-                frozenColumn: 1,
                 rowFilter: (rowData) => {
                     return this.rowFilter(rowData);
                 }
             });
-            grid.setFilter({
-                null: function() {
-                    return '';
-                }
-            });
             grid.setFormatter(formatters);
-            grid.setData(this.getGridData());
+            const data = this.getGridData();
+            console.log(data);
+            grid.setData(data);
             grid.render();
         },
 
@@ -114,17 +114,27 @@ const mixinGrid = {
             });
 
             this.grid.bind('onClick', (e, d) => {
-                const rowItem = this.grid.getRowItem(d.row);
+                if (!d.rowNode) {
+                    return;
+                }
+                const rowItem = d.rowItem;
+                this.grid.setRowSelected(rowItem);
+
                 if (rowItem.type === 'case') {
-                    this.$refs.detail.update(rowItem);
-                    this.$refs.flyover.update(rowItem);
-                    this.grid.unselectAll();
-                    this.grid.setSelectedRow(rowItem);
+                    if (d.columnItem.id === 'title') {
+                        this.$refs.detail.update(rowItem);
+                        this.showFlyover();
+                    } else {
+                        this.hideFlyover();
+                    }
                 }
             });
 
             this.grid.bind('onDblClick', (e, d) => {
-                const rowItem = this.grid.getRowItem(d.row);
+                if (!d.rowNode) {
+                    return;
+                }
+                const rowItem = d.rowItem;
                 if (rowItem.type === 'case') {
                     this.showFlyover();
                 } else {
@@ -176,18 +186,18 @@ const mixinGrid = {
             this.gridDataMap[key] = tempData;
             return tempData;
         },
-        
+
         showFlyover() {
-            this.$refs.flyover.show();
+            this.flyoverVisible = true;
         },
 
         hideFlyover() {
-            this.$refs.flyover.hide();
+            this.flyoverVisible = false;
         },
 
         hideTooltip: function() {
             if (this.tooltip) {
-                this.tooltip.$destroy();
+                this.tooltip.unmount();
                 this.tooltip = null;
             }
         },
@@ -214,21 +224,12 @@ const mixinGrid = {
 
             message = `<div>${arr.join('</div><div>')}</div>`;
 
-            this.tooltip = LuiTooltip.create((h) => {
-                return {
-                    props: {
-                        target: elem
-                    },
-                    scopedSlots: {
-                        default: (props) => {
-                            return h('div', {
-                                domProps: {
-                                    innerHTML: message
-                                }
-                            });
-                        }
-                    }
-                };
+            this.tooltip = VuiTooltip.createComponent({
+                target: elem
+            }, {
+                default: () => {
+                    return message;
+                }
             });
 
         }

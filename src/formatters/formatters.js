@@ -1,18 +1,18 @@
 import StatusIcon from './status-icon.vue';
 import Util from '../util/util.js';
 
-const formatters = {
+export default {
 
-    ok: function(v, rowData) {
+    ok: function(v, rowItem, columnItem, cellNode) {
         if (typeof v !== 'boolean') {
             return '';
         }
-        const vm = StatusIcon.create({
-            props: {
-                row: rowData
-            }
-        });
-        return vm.$el;
+        const div = document.createElement('div');
+        div.className = 'prg-status-icon';
+        StatusIcon.createComponent({
+            row: rowItem
+        }, null, div);
+        return div;
     },
 
     duration: function(v) {
@@ -37,7 +37,7 @@ const formatters = {
         }
         //console.log(v);
         return v.message;
-        
+
     },
 
     attachments: function(v) {
@@ -45,14 +45,11 @@ const formatters = {
             return '';
         }
         const list = [];
-        v.forEach(item => {
+        v.forEach((item) => {
             const href = item.path;
-            list.push(`<a href="${href}" target="_blank">${item.name}</a>`);
+            list.push(`<a href="${href}" class="tg-attachment-${item.name}" target="_blank">${item.name}</a>`);
         });
         return list.join(' ');
     }
 
 };
-
-
-export default formatters;

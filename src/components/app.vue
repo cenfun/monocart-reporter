@@ -1,94 +1,110 @@
 <template>
-  <div class="lui-flex-column pat">
+  <div class="vui-flex-column prg">
     <div
-      class="lui-flex-row pat-header"
+      class="vui-flex-row prg-header"
       @click="hideFlyover"
     >
       <div
-        class="pat-title lui-flex-auto"
+        class="prg-title vui-flex-auto"
         v-text="title"
       />
-      <div class="lui-flex-auto" />
+      <div class="vui-flex-auto" />
     </div>
-    <div class="lui-flex-row pat-filter">
-      <LuiInput
-        v-model="keywords"
-        width="120"
-        class="pat-search"
-        placeholder="keywords"
-      >
-        Search:
-      </LuiInput>
-      <div class="lui-hs-10" />
-      <LuiSelect
-        v-model="type"
-        label="Type:"
-      >
-        <option>suite</option>
-        <option>case</option>
-        <option>step</option>
-      </LuiSelect>
-      <div class="lui-hs-10" />
-      <LuiCheckbox v-model="grouped">
-        Grouped
-      </LuiCheckbox>
-      <div class="lui-hs-10" />
-      <LuiSelect
-        v-model="result"
-        label="Result:"
-      >
-        <option value="">
-          all
-        </option>
-        <option v-if="summary.failed > 0">
-          failed
-        </option>
-        <option v-if="summary.skipped > 0">
-          skipped
-        </option>
-        <option v-if="summary.flaky > 0">
-          flaky
-        </option>
-        <option v-if="summary.passed > 0">
-          passed
-        </option>
-      </LuiSelect>
-      <div class="lui-flex-auto" />
+    <div class="vui-flex-row prg-filter">
+      <VuiFlex spacing="10">
+        <VuiInput
+          v-model="keywords"
+          width="120"
+          class="prg-search"
+          placeholder="keywords"
+        >
+          Filter:
+        </VuiInput>
+
+        <VuiSelect
+          v-model="type"
+          label="Type:"
+        >
+          <option>suite</option>
+          <option>case</option>
+          <option>step</option>
+        </VuiSelect>
+
+        <VuiSelect
+          v-model="result"
+          label="Result:"
+        >
+          <option value="">
+            all
+          </option>
+          <option v-if="summary.failed > 0">
+            failed
+          </option>
+          <option v-if="summary.skipped > 0">
+            skipped
+          </option>
+          <option v-if="summary.flaky > 0">
+            flaky
+          </option>
+          <option v-if="summary.passed > 0">
+            passed
+          </option>
+        </VuiSelect>
+
+        <VuiCheckbox v-model="grouped">
+          Grouped
+        </VuiCheckbox>
+      </VuiFlex>
     </div>
-    <div class="pat-body">
-      <div class="pat-grid-container" />
+    <div class="prg-body">
+      <div class="prg-grid-container" />
     </div>
-    <div class="lui-flex-row pat-footer">
-      <div class="lui-flex-auto">
+    <div class="vui-flex-row prg-footer">
+      <div class="vui-flex-auto">
         <info :info="summary" />
       </div>
       <div>{{ generated }}</div>
     </div>
-    <flyover ref="flyover">
+    <VuiFlyover
+      ref="flyover"
+      :visible="flyoverVisible"
+      position="right"
+      width="50%"
+    >
       <detail ref="detail" />
-    </flyover>
+    </VuiFlyover>
   </div>
 </template>
 <script>
 import decompress from 'lz-utils/lib/decompress.js';
-import {
-    registerComponent, LuiButton, LuiInput, LuiCheckbox, LuiSelect
-} from 'lithops-ui';
+import { components, createComponent } from 'vine-ui';
 import store from '../util/store.js';
 import columns from '../model/columns.js';
 import mixinFilter from '../model/filter.js';
 import mixinGrid from '../model/grid.js';
 import Util from '../util/util.js';
-import Flyover from './flyover.vue';
 import Detail from './detail.vue';
 import Info from './info.vue';
-const App = {
+
+const {
+    VuiInput,
+    VuiCheckbox,
+    VuiSelect,
+    VuiFlex,
+    VuiFlyover
+} = components;
+
+
+export default {
+
+    createComponent,
+
     components: {
-        LuiButton,
-        LuiInput,
-        LuiCheckbox,
-        LuiSelect,
-        Flyover,
+        VuiInput,
+        VuiCheckbox,
+        VuiSelect,
+        VuiFlex,
+        VuiFlyover,
         Detail,
         Info
     },
@@ -106,7 +122,9 @@ const App = {
             keywords: '',
             type: 'case',
             grouped: true,
-            result: store.get('result')
+            result: store.get('result'),
+
+            flyoverVisible: false
         };
     },
 
@@ -132,7 +150,7 @@ const App = {
     },
 
     methods: {
-        
+
         initList(list) {
             const summary = {
                 cases: 0,
@@ -149,15 +167,15 @@ const App = {
                 if (item.ok) {
                     if (item.status === 'skipped') {
                         summary.skipped += 1;
-                        item.rowClass = 'tg-case-skipped';
+                        item.classMap = 'tg-case-skipped';
                     } else if (item.outcome === 'flaky') {
                         summary.flaky += 1;
-                        item.rowClass = 'tg-case-flaky';
+                        item.classMap = 'tg-case-flaky';
                     } else {
                         summary.passed += 1;
                     }
                 } else {
-                    item.rowClass = 'tg-case-failed';
+                    item.classMap = 'tg-case-failed';
                     summary.failed += 1;
                     if (parent.failedCases) {
                         parent.failedCases += 1;
@@ -171,11 +189,11 @@ const App = {
                 if (item.type === 'step') {
                     summary.steps += 1;
                     if (item.error) {
-                        item.rowClass = 'tg-case-failed';
+                        item.classMap = 'tg-case-failed';
                     }
                     return;
                 }
-                
+
                 if (item.type === 'case') {
                     caseHandler(item);
                     return;
@@ -195,9 +213,6 @@ const App = {
     }
 };
 
-registerComponent(App);
-
-export default App;
 </script>
 <style lang="scss">
 html,
@@ -211,12 +226,12 @@ body {
     overflow: hidden;
 }
 
-.pat {
+.prg {
     width: 100%;
     height: 100%;
     overflow: hidden;
 
-    .pat-header {
+    .prg-header {
         height: 35px;
         line-height: 35px;
         border-bottom: 1px solid #ccc;
@@ -224,21 +239,21 @@ body {
         background-color: #000;
         color: #eee;
 
-        .pat-title {
+        .prg-title {
             font-weight: bold;
             font-size: 18px;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        .pat-label {
+        .prg-label {
             text-overflow: ellipsis;
             white-space: nowrap;
             font-size: 14px;
         }
     }
 
-    .pat-filter {
+    .prg-filter {
         align-items: center;
         padding: 0 10px;
         border-bottom: 1px solid #ddd;
@@ -246,7 +261,7 @@ body {
         height: 40px;
         overflow: hidden;
 
-        .pat-search input {
+        .prg-search input {
             background-repeat: no-repeat;
             background-position: 97% center;
             background-image: url("../images/search.svg");
@@ -255,12 +270,12 @@ body {
         }
     }
 
-    .pat-body {
+    .prg-body {
         flex: 1;
         overflow: hidden;
     }
 
-    .pat-grid-container {
+    .prg-grid-container {
         width: 100%;
         height: 100%;
 
@@ -271,12 +286,12 @@ body {
 
     .tg-case-failed.tg-row {
         background-color: rgb(252, 220, 220);
-        border-bottom: none;
+        border: none;
     }
 
     .tg-case-flaky.tg-row {
         background-color: rgb(252, 246, 220);
-        border-bottom: none;
+        border: none;
     }
 
     .tg-case-skipped  {
@@ -286,7 +301,11 @@ body {
         }
     }
 
-    .pat-footer {
+    .tg-attachment-screenshot {
+      position: relative;
+    }
+
+    .prg-footer {
         padding: 0px 10px;
         height: 30px;
         line-height: 30px;

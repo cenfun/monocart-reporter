@@ -1,22 +1,22 @@
 <template>
-  <div class="pat-flyover lui-flex-column">
-    <div class="pat-flyover-header lui-flex-row">
+  <div class="prg-flyover vui-flex-column">
+    <div class="prg-flyover-header vui-flex-row">
       <div
         v-if="!visible"
-        class="pat-flyover-icon pat-icon-arrow-left"
+        class="prg-flyover-icon prg-icon-arrow-left"
         @click="show"
       />
       <div
         v-if="visible"
-        class="pat-flyover-icon pat-icon-arrow-right"
+        class="prg-flyover-icon prg-icon-arrow-right"
         @click="hide"
       />
       <div
-        class="pat-flyover-title lui-flex-auto"
+        class="prg-flyover-title vui-flex-auto"
         v-text="title"
       />
     </div>
-    <div class="pat-flyover-body lui-flex-auto">
+    <div class="prg-flyover-body vui-flex-auto">
       <slot />
     </div>
   </div>
@@ -40,29 +40,29 @@ export default {
             if (!this.visible) {
                 return;
             }
-            const $flyover = $('.pat-flyover');
-            $flyover.addClass('pat-slide-out-right').one('animationend', () => {
-                $flyover.removeClass('pat-slide-out-right pat-show');
+            const $flyover = $('.prg-flyover');
+            $flyover.addClass('prg-slide-out-right').one('animationend', () => {
+                $flyover.removeClass('prg-slide-out-right prg-show');
                 this.visible = false;
             });
         },
-        
+
         show: function() {
             if (this.visible) {
                 return;
             }
-            const $flyover = $('.pat-flyover');
-            $flyover.addClass('pat-slide-in-right pat-show').one('animationend', () => {
-                $flyover.removeClass('pat-slide-in-right');
+            const $flyover = $('.prg-flyover');
+            $flyover.addClass('prg-slide-in-right prg-show').one('animationend', () => {
+                $flyover.removeClass('prg-slide-in-right');
                 this.visible = true;
             });
-           
+
         }
     }
 };
 </script>
 <style lang="scss">
-.pat-flyover {
+.prg-flyover {
     position: absolute;
     top: 0;
     right: 0;
@@ -74,7 +74,7 @@ export default {
     animation-fill-mode: both;
 }
 
-.pat-show::before {
+.prg-show::before {
     pointer-events: none;
     content: '';
     position: absolute;
@@ -87,11 +87,11 @@ export default {
     background-image: linear-gradient(to left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
 }
 
-.pat-show {
+.prg-show {
     width: 50%;
 }
 
-@keyframes pat-slide-in-right {
+@keyframes prg-slide-in-right {
     from {
         transform: translate3d(100%, 0, 0);
         visibility: visible;
@@ -100,11 +100,11 @@ export default {
         transform: translate3d(0, 0, 0);
     }
 }
-.pat-slide-in-right {
-    animation-name: pat-slide-in-right;
+.prg-slide-in-right {
+    animation-name: prg-slide-in-right;
 }
 
-@keyframes pat-slide-out-right {
+@keyframes prg-slide-out-right {
     from {
         transform: translate3d(0, 0, 0);
     }
@@ -113,11 +113,11 @@ export default {
         transform: translate3d(100%, 0, 0);
     }
 }
-.pat-slide-out-right {
-    animation-name: pat-slide-out-right;
+.prg-slide-out-right {
+    animation-name: prg-slide-out-right;
 }
 
-.pat-flyover-header {
+.prg-flyover-header {
     height: 35px;
     line-height: 35px;
     border-bottom: 1px solid #ccc;
@@ -126,7 +126,7 @@ export default {
     color: #eee;
 }
 
-.pat-flyover-title {
+.prg-flyover-title {
     font-weight: bold;
     font-size: 14px;
     text-overflow: ellipsis;
@@ -134,7 +134,7 @@ export default {
     margin-left: 5px;
 }
 
-.pat-flyover-icon {
+.prg-flyover-icon {
     width: 25px;
     height: 25px;
     cursor: pointer;
@@ -144,16 +144,16 @@ export default {
     }
 }
 
-.pat-icon-arrow-left {
+.prg-icon-arrow-left {
     background-image: url("../images/arrow-left.svg");
     margin-left: -35px;
 }
 
-.pat-icon-arrow-right {
+.prg-icon-arrow-right {
     background-image: url("../images/arrow-right.svg");
 }
 
-.pat-flyover-body {
+.prg-flyover-body {
     padding: 5px 5px;
 }
 </style>

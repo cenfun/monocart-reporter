@@ -1,31 +1,31 @@
 <template>
-  <div class="pat-info lui-flex-row">
+  <div class="prg-info vui-flex-row">
     <div><b>Cases:</b> {{ summary.cases }}</div>
-    <div class="pat-info-item pat-info-passed">
+    <div class="prg-info-item prg-info-passed">
       Passed: {{ summary.passed }} ({{ summary.passedPercent }})
     </div>
     <div
       v-if="summary.failed > 0"
-      class="pat-info-item pat-info-failed"
+      class="prg-info-item prg-info-failed"
     >
       Failed: {{ summary.failed }} ({{ summary.failedPercent }})
     </div>
     <div
       v-if="summary.flaky > 0"
-      class="pat-info-item pat-info-flaky"
+      class="prg-info-item prg-info-flaky"
     >
       Flaky: {{ summary.flaky }} ({{ summary.flakyPercent }})
     </div>
     <div
       v-if="summary.skipped > 0"
-      class="pat-info-item"
+      class="prg-info-item prg-info-skipped"
     >
       Skipped: {{ summary.skipped }} ({{ summary.skippedPercent }})
     </div>
-    <div class="pat-info-item">
+    <div class="prg-info-item">
       <b>Suites:</b> {{ summary.suites }}
     </div>
-    <div class="pat-info-item">
+    <div class="prg-info-item">
       <b>Steps:</b> {{ summary.steps }}
     </div>
   </div>
@@ -48,19 +48,23 @@ export default {
 };
 </script>
 <style lang="scss">
-.pat-info {
+.prg-info {
     font-size: 12px;
-    .pat-info-item {
+    color: #666;
+    .prg-info-item {
         margin-left: 10px;
     }
-    .pat-info-passed {
-        color: green;
+    .prg-info-passed {
+        color: #333;
     }
-    .pat-info-failed {
-        color: #ff0000;
+    .prg-info-failed {
+        color: red;
     }
-    .pat-info-flaky {
+    .prg-info-flaky {
         color: orange;
+    }
+    .prg-info-skipped {
+      color: gray;
     }
 }
 </style>
