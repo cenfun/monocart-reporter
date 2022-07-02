@@ -3,7 +3,7 @@ const columns = {
         return [{
             id: 'ok',
             name: '',
-            width: 35,
+            width: 50,
             align: 'center',
             formatter: 'ok'
         }, {

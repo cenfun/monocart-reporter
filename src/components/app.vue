@@ -9,9 +9,110 @@
         v-text="title"
       />
       <div class="vui-flex-auto" />
+      <div>{{ generated }}</div>
     </div>
-    <div class="vui-flex-row prg-filter">
-      <VuiFlex spacing="10">
+    <div class="prg-summary">
+      <VuiFlex
+        spacing="10px"
+        center
+      >
+        <div class="prg-summary-item prg-summary-top">
+          <VuiRadio
+            v-model="type"
+            name="type"
+            value="suite"
+          >
+            Suites
+          </VuiRadio>
+          <div class="prg-summary-value">
+            {{ summary.suites }}
+          </div>
+        </div>
+
+        <div class="prg-summary-item prg-summary-top">
+          <VuiRadio
+            v-model="type"
+            name="type"
+            value="case"
+          >
+            Cases
+          </VuiRadio>
+          <div class="prg-summary-value">
+            {{ summary.cases }}
+          </div>
+        </div>
+        <div class="prg-summary-item prg-summary-passed">
+          <VuiRadio
+            v-model="type"
+            name="type"
+            value="case-passed"
+          >
+            Passed
+          </VuiRadio>
+          <div class="prg-summary-value">
+            {{ summary.passed }} ({{ summary.passedPercent }})
+          </div>
+        </div>
+        <div class="prg-summary-item prg-summary-failed">
+          <VuiRadio
+            v-model="type"
+            name="type"
+            value="case-failed"
+          >
+            Failed
+          </VuiRadio>
+          <div class="prg-summary-value">
+            {{ summary.failed }} ({{ summary.failedPercent }})
+          </div>
+        </div>
+        <div class="prg-summary-item prg-summary-flaky">
+          <VuiRadio
+            v-model="type"
+            name="type"
+            value="case-flaky"
+          >
+            Flaky
+          </VuiRadio>
+          <div class="prg-summary-value">
+            {{ summary.flaky }} ({{ summary.flakyPercent }})
+          </div>
+        </div>
+        <div class="prg-summary-item prg-summary-skipped">
+          <VuiRadio
+            v-model="type"
+            name="type"
+            value="case-skipped"
+          >
+            Skipped
+          </VuiRadio>
+          <div class="prg-summary-value">
+            {{ summary.skipped }} ({{ summary.skippedPercent }})
+          </div>
+        </div>
+
+        <div class="prg-summary-item prg-summary-top">
+          <VuiRadio
+            v-model="type"
+            name="type"
+            value="step"
+          >
+            Steps
+          </VuiRadio>
+          <div class="prg-summary-value">
+            {{ summary.steps }}
+          </div>
+        </div>
+      </VuiFlex>
+    </div>
+    <div class="prg-filter">
+      <VuiFlex
+        spacing="10px"
+        center
+      >
+        <VuiSwitch v-model="grouped">
+          Grouped
+        </VuiSwitch>
+
         <VuiInput
           v-model="keywords"
           width="120"
@@ -20,50 +121,10 @@
         >
           Filter:
         </VuiInput>
-
-        <VuiSelect
-          v-model="type"
-          label="Type:"
-        >
-          <option>suite</option>
-          <option>case</option>
-          <option>step</option>
-        </VuiSelect>
-
-        <VuiSelect
-          v-model="result"
-          label="Result:"
-        >
-          <option value="">
-            all
-          </option>
-          <option v-if="summary.failed > 0">
-            failed
-          </option>
-          <option v-if="summary.skipped > 0">
-            skipped
-          </option>
-          <option v-if="summary.flaky > 0">
-            flaky
-          </option>
-          <option v-if="summary.passed > 0">
-            passed
-          </option>
-        </VuiSelect>
-
-        <VuiCheckbox v-model="grouped">
-          Grouped
-        </VuiCheckbox>
       </VuiFlex>
     </div>
     <div class="prg-body">
       <div class="prg-grid-container" />
-    </div>
-    <div class="vui-flex-row prg-footer">
-      <div class="vui-flex-auto">
-        <info :info="summary" />
-      </div>
-      <div>{{ generated }}</div>
     </div>
     <VuiFlyover
       ref="flyover"
@@ -78,20 +139,19 @@
 <script>
 import decompress from 'lz-utils/lib/decompress.js';
 import { components, createComponent } from 'vine-ui';
-import store from '../util/store.js';
+//import store from '../util/store.js';
 import columns from '../model/columns.js';
 import mixinFilter from '../model/filter.js';
 import mixinGrid from '../model/grid.js';
 import Util from '../util/util.js';
 import Detail from './detail.vue';
-import Info from './info.vue';
 
 const {
     VuiInput,
-    VuiCheckbox,
-    VuiSelect,
     VuiFlex,
-    VuiFlyover
+    VuiFlyover,
+    VuiRadio,
+    VuiSwitch
 } = components;
 
 
@@ -101,12 +161,11 @@ export default {
 
     components: {
         VuiInput,
-        VuiCheckbox,
-        VuiSelect,
         VuiFlex,
         VuiFlyover,
-        Detail,
-        Info
+        VuiRadio,
+        VuiSwitch,
+        Detail
     },
     mixins: [
         mixinFilter,
@@ -122,7 +181,6 @@ export default {
             keywords: '',
             type: 'case',
             grouped: true,
-            result: store.get('result'),
 
             flyoverVisible: false
         };
@@ -253,6 +311,62 @@ body {
         }
     }
 
+    .prg-summary {
+        font-size: 12px;
+        color: #333;
+        border-bottom: thin solid #ddd;
+        padding: 5px 0 10px;
+    }
+
+    .prg-summary-item {
+        position: relative;
+    }
+
+    .prg-summary-top {
+        font-weight: bold;
+        padding-left: 15px;
+        margin-left: 15px;
+    }
+
+    .prg-summary-top::after {
+        content: "";
+        position: absolute;
+        height: calc(100% - 5px);
+        top: 5px;
+        left: 0;
+        border-right: 1px dashed #666;
+    }
+
+    .prg-summary-top:first-child {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .prg-summary-top:first-child::after {
+        display: none;
+    }
+
+    .prg-summary-passed {
+        color: #333;
+    }
+
+    .prg-summary-failed {
+        color: red;
+    }
+
+    .prg-summary-flaky {
+        color: orange;
+    }
+
+    .prg-summary-skipped {
+        color: gray;
+    }
+
+    .prg-summary-value {
+        padding-left: 25px;
+        text-align: center;
+    }
+
     .prg-filter {
         align-items: center;
         padding: 0 10px;
@@ -285,16 +399,16 @@ body {
     }
 
     .tg-case-failed.tg-row {
-        background-color: rgb(252, 220, 220);
+        background-color: rgb(252 220 220);
         border: none;
     }
 
     .tg-case-flaky.tg-row {
-        background-color: rgb(252, 246, 220);
+        background-color: rgb(252 246 220);
         border: none;
     }
 
-    .tg-case-skipped  {
+    .tg-case-skipped {
         .tg-cell,
         .tg-tree-row-number {
             color: #999;
@@ -302,20 +416,7 @@ body {
     }
 
     .tg-attachment-screenshot {
-      position: relative;
-    }
-
-    .prg-footer {
-        padding: 0px 10px;
-        height: 30px;
-        line-height: 30px;
-        font-size: 12px;
-        background: #f5f5f5;
         position: relative;
-        border-top: 1px solid #eee;
-        color: #888;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 }
 </style>

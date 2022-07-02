@@ -21,7 +21,7 @@
         "lz-utils": "^1.0.5"
     },
     "devDependencies": {
-        "eslint": "^8.18.0",
+        "eslint": "^8.19.0",
         "eslint-config-plus": "^1.0.3",
         "eslint-plugin-chain": "^2.0.0",
         "eslint-plugin-html": "^6.2.0",
@@ -34,6 +34,6 @@
         "stylelint-config-recommended": "^8.0.0",
         "stylelint-config-standard": "^26.0.0",
         "turbogrid": "^3.0.0",
-        "vine-ui": "^3.0.1"
+        "vine-ui": "^3.0.2"
     }
 }
