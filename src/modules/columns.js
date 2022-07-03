@@ -1,9 +1,9 @@
-const columns = {
+export default {
     create: function() {
         return [{
             id: 'ok',
             name: '',
-            width: 50,
+            width: 36,
             align: 'center',
             formatter: 'ok'
         }, {
@@ -53,5 +53,3 @@ const columns = {
         }];
     }
 };
-
-export default columns;

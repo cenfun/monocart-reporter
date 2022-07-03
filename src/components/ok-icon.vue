@@ -4,7 +4,7 @@
 <script>
 import { createComponent } from 'vine-ui';
 
-const StatusIcon = {
+export default {
     createComponent,
     props: {
         row: {
@@ -37,10 +37,9 @@ const StatusIcon = {
     }
 };
 
-export default StatusIcon;
 </script>
 <style lang="scss">
-.prg-status-icon {
+.prg-ok-icon {
     width: 100%;
     height: 100%;
     display: flex;
@@ -52,12 +51,15 @@ export default StatusIcon;
     width: 16px;
     height: 16px;
 }
+
 .prg-icon-passed {
     background-image: url("../images/passed.svg");
 }
+
 .prg-icon-skipped {
     background-image: url("../images/skipped.svg");
 }
+
 .prg-icon-failed {
     background-image: url("../images/failed.svg");
 }

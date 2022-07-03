@@ -1,4 +1,4 @@
-import StatusIcon from './status-icon.vue';
+import OkIcon from '../components/ok-icon.vue';
 import Util from '../util/util.js';
 
 export default {
@@ -8,8 +8,8 @@ export default {
             return '';
         }
         const div = document.createElement('div');
-        div.className = 'prg-status-icon';
-        StatusIcon.createComponent({
+        div.className = 'prg-ok-icon';
+        OkIcon.createComponent({
             row: rowItem
         }, null, div);
         return div;
