@@ -15,31 +15,32 @@
       <VuiFlex
         spacing="10px"
       >
-        <div
-          v-for="(item, i) in summary"
-          :key="i"
-          :class="item.classMap"
-        >
-          <VuiRadio
-            v-model="caseType"
-            name="caseType"
-            :value="item.caseType"
+        <div class="prg-summary vui-flex-row">
+          <div
+            v-for="(item, i) in summary"
+            :key="i"
+            :class="summaryItemClass(item)"
+            @click="summaryItemClick(item)"
           >
-            {{ item.name }}
-          </VuiRadio>
-          <div class="prg-summary-value">
-            {{ item.value }} <span>{{ item.percent }}</span>
+            {{ item.name }} <b>{{ item.value }}</b> <i>{{ item.percent }}</i>
           </div>
         </div>
 
+
+        <div class="vui-flex-auto" />
+
         <VuiInput
           v-model="keywords"
-          width="200px"
+          width="150px"
           class="prg-search"
           placeholder="keywords"
         />
-        <VuiSwitch v-model="grouped">
-          Grouped
+
+        <VuiSwitch v-model="suiteVisible">
+          Suite
+        </VuiSwitch>
+        <VuiSwitch v-model="stepVisible">
+          Step
         </VuiSwitch>
       </VuiFlex>
     </div>
@@ -70,7 +71,6 @@ const {
     VuiInput,
     VuiFlex,
     VuiFlyover,
-    VuiRadio,
     VuiSwitch
 } = components;
 
@@ -83,7 +83,6 @@ export default {
         VuiInput,
         VuiFlex,
         VuiFlyover,
-        VuiRadio,
         VuiSwitch,
         CaseDetail
     },
@@ -100,7 +99,8 @@ export default {
             //filter
             keywords: '',
             caseType: 'all',
-            grouped: true,
+            suiteVisible: true,
+            stepVisible: false,
 
             flyoverVisible: false
         };
@@ -127,7 +127,14 @@ export default {
     },
 
     methods: {
-
+        summaryItemClass(item) {
+            return ['prg-summary-item', item.classMap, item.caseType === this.caseType ? 'prg-summary-selected' : ''];
+        },
+        summaryItemClick(item) {
+            if (item.caseType !== this.caseType) {
+                this.caseType = item.caseType;
+            }
+        }
     }
 };
 
@@ -151,29 +158,74 @@ body {
 }
 
 .prg-header {
-    height: 40px;
-    line-height: 40px;
-    padding: 0 10px;
-    background-color: #f5f5f5;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 15px;
+    background-color: #333;
+    color: #fff;
     border-bottom: 1px solid #ddd;
 }
 
 .prg-title {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .prg-info {
-    color: #666;
+    color: #ccc;
 }
 
 .prg-filter {
     align-items: center;
-    padding: 0 10px;
+    padding: 10px;
     overflow: hidden;
     border-bottom: 1px solid #ddd;
+}
+
+.prg-summary {
+    position: relative;
+    border: thin solid #aaa;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.prg-summary-item {
+    user-select: none;
+    padding: 8px 10px;
+    border-left: thin solid #aaa;
+    cursor: pointer;
+    overflow: hidden;
+
+    &:first-child {
+        border-left: none;
+    }
+
+    b {
+        font-weight: normal;
+        margin-left: 3px;
+        background-color: #eee;
+        padding: 3px 5px;
+        border-radius: 10px;
+    }
+
+    i {
+        font-size: 12px;
+        font-style: normal;
+    }
+}
+
+.prg-summary-item:hover {
+    background-color: #f5f5f5;
+}
+
+.prg-summary-selected {
+    background-color: #ddd;
+}
+
+.prg-summary-selected:hover {
+    background-color: #ddd;
 }
 
 .prg-summary-passed {
@@ -211,8 +263,6 @@ body {
 }
 
 .prg-search {
-    padding-left: 20px;
-
     input {
         background-repeat: no-repeat;
         background-position: 97% center;

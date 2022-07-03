@@ -8,8 +8,8 @@ export default {
         initSummaryData() {
 
             const summary = {
-                cases: {
-                    name: 'All Cases',
+                all: {
+                    name: 'All',
                     value: 0,
                     percent: '',
                     caseType: 'all'
@@ -40,7 +40,7 @@ export default {
                 if (item.subs) {
                     item.collapsed = true;
                 }
-                summary.cases.value += 1;
+                summary.all.value += 1;
                 if (item.ok) {
                     if (item.status === 'skipped') {
                         summary.skipped.value += 1;
@@ -84,16 +84,16 @@ export default {
                 }
             });
 
-            summary.passed.percent = Util.PF(summary.passed.value, summary.cases.value);
-            summary.passed.classMap = summary.passed.value === summary.cases.value ? 'prg-summary-passed' : '';
+            summary.passed.percent = Util.PF(summary.passed.value, summary.all.value);
+            summary.passed.classMap = summary.passed.value === summary.all.value ? 'prg-summary-passed' : '';
 
-            summary.failed.percent = Util.PF(summary.failed.value, summary.cases.value);
+            summary.failed.percent = Util.PF(summary.failed.value, summary.all.value);
             summary.failed.classMap = summary.failed.value > 0 ? 'prg-summary-failed' : 'prg-summary-skipped';
 
-            summary.flaky.percent = Util.PF(summary.flaky.value, summary.cases.value);
+            summary.flaky.percent = Util.PF(summary.flaky.value, summary.all.value);
             summary.flaky.classMap = summary.flaky.value > 0 ? 'prg-summary-flaky' : 'prg-summary-skipped';
 
-            summary.skipped.percent = Util.PF(summary.skipped.value, summary.cases.value);
+            summary.skipped.percent = Util.PF(summary.skipped.value, summary.all.value);
             summary.skipped.classMap = summary.skipped.value > 0 ? '' : 'prg-summary-skipped';
 
             this.summary = summary;

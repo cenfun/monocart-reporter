@@ -12,7 +12,8 @@ export default {
         dataChange() {
             return [
                 this.caseType,
-                this.grouped
+                this.suiteVisible,
+                this.stepVisible
             ];
         }
     },
@@ -158,30 +159,37 @@ export default {
         },
 
         getGridData() {
-            const key = [this.caseType, this.grouped].join('_');
+            const key = [this.caseType, this.suiteVisible, this.stepVisible].join('_');
             if (this.gridDataMap[key]) {
                 return this.gridDataMap[key];
             }
             //console.log(key);
             const allData = JSON.parse(JSON.stringify(this.gridDataAll));
-            const data = this.getGridDataByType(allData, this.caseType, this.grouped);
+            const data = this.getGridDataByType(allData, this.caseType, this.suiteVisible, this.stepVisible);
             this.gridDataMap[key] = data;
             return data;
         },
 
-        getGridDataByType(allData, caseType, grouped) {
+        getGridDataByType(allData, caseType, suiteVisible, stepVisible) {
 
             allData.rows = this.getFilteredRows(allData.rows, caseType);
 
-            if (!grouped) {
+            if (!suiteVisible) {
                 const list = [];
                 Util.forEachTree(allData.rows, function(item) {
                     if (item.type === 'case') {
-                        delete item.subs;
                         list.push(item);
                     }
                 });
                 allData.rows = list;
+            }
+
+            if (!stepVisible) {
+                Util.forEachTree(allData.rows, function(item) {
+                    if (item.type === 'case') {
+                        delete item.subs;
+                    }
+                });
             }
 
             return allData;
