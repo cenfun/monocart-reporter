@@ -1,7 +1,7 @@
 const namespace = 'prg';
 
 const key = (k) => {
-    return `${namespace}_${k}`;
+    return `${namespace}-${k}`;
 };
 
 const store = {

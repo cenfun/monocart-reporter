@@ -7,7 +7,10 @@
       />
       <div class="vui-flex-auto" />
       <div class="prg-info">
-        {{ generated }}
+        {{ generated }} by <a
+          href="https://github.com/cenfun/playwright-report-grid"
+          target="_blank"
+        >PRG</a>
       </div>
     </div>
 
@@ -67,6 +70,8 @@ import mixinGrid from '../modules/grid.js';
 import columns from '../modules/columns.js';
 import CaseDetail from './case-detail.vue';
 
+import store from '../util/store.js';
+
 const {
     VuiInput,
     VuiFlex,
@@ -99,8 +104,8 @@ export default {
             //filter
             keywords: '',
             caseType: 'all',
-            suiteVisible: true,
-            stepVisible: false,
+            suiteVisible: store.get('suiteVisible', true),
+            stepVisible: store.get('stepVisible', false),
 
             flyoverVisible: false
         };
@@ -175,6 +180,11 @@ body {
 
 .prg-info {
     color: #ccc;
+
+    a:link,
+    a:visited {
+        color: #ccc;
+    }
 }
 
 .prg-filter {

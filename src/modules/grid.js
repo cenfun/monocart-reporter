@@ -3,7 +3,7 @@ import { components } from 'vine-ui';
 import { Grid } from 'turbogrid';
 import Util from '../util/util.js';
 import formatters from './formatters.js';
-
+import store from '../util/store.js';
 const { VuiTooltip } = components;
 
 export default {
@@ -25,6 +25,8 @@ export default {
         },
         dataChange: function() {
             this.hideFlyover();
+            store.set('suiteVisible', this.suiteVisible ? '1' : '');
+            store.set('stepVisible', this.stepVisible ? '1' : '');
             const gridData = this.getGridData();
             this.grid.setData(gridData);
             this.grid.render();
