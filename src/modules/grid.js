@@ -2,7 +2,7 @@
 import { components } from 'vine-ui';
 import { Grid } from 'turbogrid';
 import Util from '../util/util.js';
-import formatters from './body-formatters.js';
+import formatters from './formatters.js';
 
 const { VuiTooltip } = components;
 
@@ -11,7 +11,7 @@ export default {
     computed: {
         dataChange() {
             return [
-                this.dataType,
+                this.caseType,
                 this.grouped
             ];
         }
@@ -19,21 +19,23 @@ export default {
 
     watch: {
         keywords: function() {
-            this.bodyGrid.update();
+            this.hideFlyover();
+            this.grid.update();
         },
         dataChange: function() {
-            const gridData = this.getBodyGridData();
-            this.bodyGrid.setData(gridData);
-            this.bodyGrid.render();
+            this.hideFlyover();
+            const gridData = this.getGridData();
+            this.grid.setData(gridData);
+            this.grid.render();
         }
     },
 
     methods: {
 
-        createBodyGrid() {
-            const grid = new Grid('.prg-body-grid');
-            this.bodyGrid = grid;
-            this.bindBodyGridEvents();
+        createGrid() {
+            const grid = new Grid('.prg-grid');
+            this.grid = grid;
+            this.bindGridEvents();
 
             let rowNumber = 1;
 
@@ -42,9 +44,10 @@ export default {
                 bindWindowResize: true,
                 scrollbarFade: true,
                 scrollbarRound: true,
+                collapseAllVisible: false,
                 rowNumberVisible: true,
                 rowNumberFilter: (rowItem) => {
-                    if (rowItem.type === this.type) {
+                    if (rowItem.type === 'case') {
                         return rowNumber++;
                     }
                 },
@@ -68,14 +71,14 @@ export default {
                 }
             });
             grid.setFormatter(formatters);
-            const data = this.getBodyGridData();
+            const data = this.getGridData();
             grid.setData(data);
             grid.render();
         },
 
-        bindBodyGridEvents() {
+        bindGridEvents() {
 
-            const grid = this.bodyGrid;
+            const grid = this.grid;
 
             const isNodeTruncated = function(node) {
                 if (!node) {
@@ -154,113 +157,71 @@ export default {
             });
         },
 
-        getDataKey() {
-            if (this.dataType === 'suite') {
-                return this.dataType;
-            }
-            return [this.dataType, this.grouped].join('_');
-        },
-
-        getBodyGridData() {
-            const key = this.getDataKey();
+        getGridData() {
+            const key = [this.caseType, this.grouped].join('_');
             if (this.gridDataMap[key]) {
                 return this.gridDataMap[key];
             }
             //console.log(key);
-            const allData = JSON.parse(JSON.stringify(this.gridDataMap.all));
-            const data = this.getGridDataByType(allData, this.dataType, this.grouped);
+            const allData = JSON.parse(JSON.stringify(this.gridDataAll));
+            const data = this.getGridDataByType(allData, this.caseType, this.grouped);
             this.gridDataMap[key] = data;
             return data;
         },
 
-        getGridDataByType(allData, dataType, grouped) {
-            if (dataType === 'suite') {
-                return this.getGridDataBySuite(allData);
-            }
-            if (dataType === 'step') {
-                return this.getGridDataByStep(allData, grouped);
-            }
-            return this.getGridDataByCase(allData, dataType, grouped);
-        },
+        getGridDataByType(allData, caseType, grouped) {
 
-        getGridDataBySuite(allData) {
-            const filter = function(list) {
-                list = list.filter((it) => it.type === 'suite');
-                list.forEach((item) => {
-                    if (item.subs) {
-                        const subs = filter(item.subs);
-                        if (subs.length) {
-                            item.subs = subs;
-                            return;
-                        }
-                        delete item.subs;
-                    }
-                });
-                return list;
-            };
-            allData.rows = filter(allData.rows);
-            return allData;
-        },
+            allData.rows = this.getFilteredRows(allData.rows, caseType);
 
-        getGridDataByStep(allData, grouped) {
-            return this.getGridDataGrouped(allData, grouped);
-        },
-
-        getGridDataByCase(allData, dataType, grouped) {
-            const filter = function(list) {
-                list = list.filter((it) => {
-                    if (it.type === 'suite') {
-                        return true;
-                    }
-                    if (it.type === 'case') {
-                        if (dataType === 'case') {
-                            return true;
-                        }
-                        if (it.dataType === dataType) {
-                            return true;
-                        }
-                    }
-
-                });
-                list.forEach((item) => {
-                    if (item.subs) {
-                        const subs = filter(item.subs);
-                        if (subs.length) {
-                            item.subs = subs;
-                            return;
-                        }
-                        delete item.subs;
-                    }
-                });
-
-                list = list.filter((it) => {
-                    if (it.type === 'suite' && !it.subs) {
-                        return false;
-                    }
-                    return true;
-                });
-
-                return list;
-            };
-
-            allData.rows = filter(allData.rows);
-
-            return this.getGridDataGrouped(allData, grouped);
-        },
-
-        getGridDataGrouped(allData, grouped) {
             if (!grouped) {
                 const list = [];
                 Util.forEachTree(allData.rows, function(item) {
-                    if (item.subs) {
-                        return;
+                    if (item.type === 'case') {
+                        delete item.subs;
+                        list.push(item);
                     }
-                    list.push(item);
                 });
                 allData.rows = list;
             }
+
             return allData;
+
         },
+
+        getFilteredRows(rows, caseType) {
+
+            if (caseType === 'all') {
+                return rows;
+            }
+
+            rows = rows.filter((it) => {
+                if (it.type === 'case' && it.caseType !== caseType) {
+                    return false;
+                }
+                return true;
+            });
+            rows.forEach((item) => {
+                if (item.subs) {
+                    const subs = this.getFilteredRows(item.subs, caseType);
+                    if (subs.length) {
+                        item.subs = subs;
+                        return;
+                    }
+                    delete item.subs;
+                }
+            });
+
+            rows = rows.filter((it) => {
+                if (it.type === 'suite' && !it.subs) {
+                    return false;
+                }
+                return true;
+            });
+
+            return rows;
+
+        },
+
 
         showFlyover() {
             this.flyoverVisible = true;

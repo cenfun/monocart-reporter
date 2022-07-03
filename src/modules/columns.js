@@ -15,6 +15,12 @@ export default {
             name: 'Type',
             align: 'center'
         }, {
+            id: 'duration',
+            name: 'Duration',
+            align: 'right',
+            sortAsc: false,
+            formatter: 'duration'
+        }, {
             id: 'status',
             name: 'Status'
         }, {
@@ -39,12 +45,6 @@ export default {
             name: 'Retry',
             align: 'center',
             width: 50
-        }, {
-            id: 'duration',
-            name: 'Duration',
-            align: 'right',
-            sortAsc: false,
-            formatter: 'duration'
         }, {
             id: 'location',
             name: 'Location',
