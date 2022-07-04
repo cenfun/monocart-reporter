@@ -25,7 +25,7 @@
             :class="summaryItemClass(item)"
             @click="summaryItemClick(item)"
           >
-            {{ item.name }} <b>{{ item.value }}</b> <i>{{ item.percent }}</i>
+            {{ item.name }} <span>{{ item.value }}</span> <span>{{ item.percent }}</span>
           </div>
         </div>
 
@@ -212,15 +212,8 @@ body {
         border-left: none;
     }
 
-    b {
-        font-weight: normal;
-        margin-left: 3px;
-        padding: 3px 5px;
-        border-radius: 10px;
-    }
-
-    i {
-        font-style: normal;
+    span {
+        margin-left: 5px;
     }
 }
 
