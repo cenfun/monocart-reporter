@@ -196,7 +196,7 @@ body {
 
 .prg-summary {
     position: relative;
-    border: thin solid #aaa;
+    border: thin solid #6c757d;
     border-radius: 5px;
     overflow: hidden;
 }
@@ -204,7 +204,7 @@ body {
 .prg-summary-item {
     user-select: none;
     padding: 8px 10px;
-    border-left: thin solid #aaa;
+    border-left: thin solid #6c757d;
     cursor: pointer;
     overflow: hidden;
 
@@ -215,43 +215,59 @@ body {
     b {
         font-weight: normal;
         margin-left: 3px;
-        background-color: #eee;
         padding: 3px 5px;
         border-radius: 10px;
     }
 
     i {
-        font-size: 12px;
         font-style: normal;
     }
 }
 
-.prg-summary-item:hover {
-    background-color: #f5f5f5;
-}
-
+.prg-summary-item:hover,
 .prg-summary-selected {
-    background-color: #ddd;
-}
-
-.prg-summary-selected:hover {
-    background-color: #ddd;
+    color: #fff;
+    background-color: #6c757d;
 }
 
 .prg-summary-passed {
     color: green;
 }
 
+.prg-summary-passed:hover,
+.prg-summary-passed.prg-summary-selected {
+    color: #fff;
+    background-color: green;
+}
+
 .prg-summary-failed {
-    color: red;
+    color: orangered;
+}
+
+.prg-summary-failed:hover,
+.prg-summary-failed.prg-summary-selected {
+    color: #fff;
+    background-color: orangered;
 }
 
 .prg-summary-flaky {
     color: orange;
 }
 
+.prg-summary-flaky:hover,
+.prg-summary-flaky.prg-summary-selected {
+    color: #fff;
+    background-color: orange;
+}
+
 .prg-summary-skipped {
     color: gray;
+}
+
+.prg-summary-skipped:hover,
+.prg-summary-skipped.prg-summary-selected {
+    color: #fff;
+    background-color: gray;
 }
 
 .prg-summary-value {
