@@ -36,6 +36,12 @@ export default {
             align: 'center',
             formatter: 'errors'
         }, {
+            id: 'logs',
+            name: 'Logs',
+            width: 60,
+            align: 'center',
+            formatter: 'logs'
+        }, {
             id: 'attachments',
             name: 'Attachments',
             width: 100,

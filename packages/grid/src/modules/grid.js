@@ -111,6 +111,14 @@ export default {
                     }
                 }
 
+                if (columnItem.id === 'logs') {
+                    const logMsg = this.getCaseLogMessage(rowItem);
+                    if (logMsg) {
+                        this.showTooltip(cellNode, logMsg);
+                        return;
+                    }
+                }
+
                 if (this.isNodeTruncated(cellNode)) {
                     this.showTooltip(cellNode, cellNode.innerText);
                 }
@@ -243,6 +251,23 @@ export default {
             const errorMsg = errList.join('</div><div>');
 
             return `<div>${errorMsg}</div>`;
+        },
+
+        getCaseLogMessage(rowItem) {
+            const logs = rowItem.logs;
+            if (!logs) {
+                return;
+            }
+            const logList = [`<b>${rowItem.title}</b>`];
+
+            logs.forEach((item) => {
+                logList.push(Util.CH(item));
+            });
+
+            const logMsg = logList.join('</div><div>');
+
+            return `<div>${logMsg}</div>`;
+
         },
 
         showFlyover() {

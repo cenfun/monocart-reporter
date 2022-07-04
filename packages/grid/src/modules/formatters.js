@@ -15,6 +15,14 @@ export default {
         return div;
     },
 
+    tree: function(v, rowItem, columnItem, cellNode) {
+        const defaultFormatter = this.getDefaultFormatter('tree');
+        if (rowItem.type === 'suite') {
+            v = `${v} (${rowItem.tests})`;
+        }
+        return defaultFormatter(v, rowItem, columnItem, cellNode);
+    },
+
     duration: function(v) {
         if (typeof v !== 'number') {
             return '';
@@ -28,6 +36,14 @@ export default {
             return '';
         }
         return '<div class="tg-case-error"></div>';
+    },
+
+    logs: function(v, rowItem) {
+        const logs = rowItem.logs;
+        if (!logs) {
+            return '';
+        }
+        return '<div class="tg-case-info"></div>';
     },
 
     attachments: function(v) {
