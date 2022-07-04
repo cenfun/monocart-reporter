@@ -56,10 +56,7 @@
       position="right"
       width="50%"
     >
-      <CaseDetail
-        ref="detail"
-        :item="caseItem"
-      />
+      <CaseDetail ref="detail" />
     </VuiFlyover>
   </div>
 </template>
@@ -110,7 +107,6 @@ export default {
             suiteVisible: true,
             stepVisible: false,
 
-            caseItem: null,
             flyoverVisible: false
         };
     },
@@ -332,30 +328,9 @@ body {
         }
     }
 
-    .tg-case-error {
+    .tg-case-num {
+        text-decoration: underline;
         cursor: pointer;
-        width: 20px;
-        height: 20px;
-        background-image: url("../images/error.svg");
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .tg-case-info {
-        cursor: pointer;
-        width: 20px;
-        height: 20px;
-        background-image: url("../images/info.svg");
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .tg-attachment-screenshot {
-        position: relative;
     }
 }
 

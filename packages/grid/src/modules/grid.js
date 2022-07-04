@@ -99,30 +99,10 @@ export default {
             const grid = this.grid;
 
             grid.bind('onCellMouseOver', (e, d) => {
-
                 const cellNode = d.cellNode;
-                const rowItem = d.rowItem;
-                const columnItem = d.columnItem;
-                if (columnItem.id === 'errors') {
-                    const errorMsg = this.getCaseErrorMessage(rowItem);
-                    if (errorMsg) {
-                        this.showTooltip(cellNode, errorMsg);
-                        return;
-                    }
-                }
-
-                if (columnItem.id === 'logs') {
-                    const logMsg = this.getCaseLogMessage(rowItem);
-                    if (logMsg) {
-                        this.showTooltip(cellNode, logMsg);
-                        return;
-                    }
-                }
-
                 if (this.isNodeTruncated(cellNode)) {
                     this.showTooltip(cellNode, cellNode.innerText);
                 }
-
             }).bind('onCellMouseOut', (e, d) => {
                 this.hideTooltip();
             });
@@ -134,14 +114,21 @@ export default {
                 const rowItem = d.rowItem;
                 grid.setRowSelected(rowItem);
 
-                if (rowItem.type === 'case') {
-                    if (d.columnItem.id === 'title') {
-                        this.caseItem = rowItem;
-                        this.showFlyover();
-                    }
-                } else {
-                    this.hideFlyover();
+                const columnItem = d.columnItem;
+
+                const target = d.e.target;
+                if (target.classList.contains('tg-case-num')) {
+                    this.showFlyover(rowItem, columnItem.id);
+                    return;
                 }
+
+                if (rowItem.type === 'case' && columnItem.id === 'title') {
+                    this.showFlyover(rowItem);
+                    return;
+                }
+
+                this.hideFlyover();
+
             });
 
             grid.bind('onDblClick', (e, d) => {
@@ -150,7 +137,7 @@ export default {
                 }
                 const rowItem = d.rowItem;
                 if (rowItem.type === 'case') {
-                    this.showFlyover();
+                    this.showFlyover(rowItem);
                 } else {
                     this.hideFlyover();
                 }
@@ -270,7 +257,8 @@ export default {
 
         },
 
-        showFlyover() {
+        showFlyover(rowItem, position) {
+            this.$refs.detail.update(rowItem, position);
             this.flyoverVisible = true;
         },
 

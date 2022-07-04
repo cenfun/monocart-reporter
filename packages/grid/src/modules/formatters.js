@@ -35,7 +35,7 @@ export default {
         if (!errors) {
             return '';
         }
-        return '<div class="tg-case-error"></div>';
+        return `<div class="tg-case-num">${errors.length}</div>`;
     },
 
     logs: function(v, rowItem) {
@@ -43,19 +43,15 @@ export default {
         if (!logs) {
             return '';
         }
-        return '<div class="tg-case-info"></div>';
+        return `<div class="tg-case-num">${logs.length}</div>`;
     },
 
-    attachments: function(v) {
-        if (!Util.isList(v)) {
+    attachments: function(v, rowItem) {
+        const attachments = rowItem.attachments;
+        if (!attachments) {
             return '';
         }
-        const list = [];
-        v.forEach((item) => {
-            const href = item.path;
-            list.push(`<a href="${href}" class="tg-attachment-${item.name}" target="_blank">${item.name}</a>`);
-        });
-        return list.join(' ');
+        return `<div class="tg-case-num">${attachments.length}</div>`;
     }
 
 };

@@ -30,6 +30,11 @@ export default {
             name: 'Expected',
             align: 'center'
         }, {
+            id: 'retry',
+            name: 'Retry',
+            align: 'center',
+            width: 50
+        }, {
             id: 'errors',
             name: 'Errors',
             width: 60,
@@ -47,11 +52,6 @@ export default {
             width: 100,
             align: 'center',
             formatter: 'attachments'
-        }, {
-            id: 'retry',
-            name: 'Retry',
-            align: 'center',
-            width: 50
         }, {
             id: 'location',
             name: 'Location',
