@@ -9,10 +9,7 @@ module.exports = {
 
     build: {
 
-        vendors: ['playwright-report-grid'],
-
-        exclude: ['lz-utils', 'eight-colors'],
-        include: ['turbogrid', 'vine-ui'],
+        vendors: ['grid'],
 
         before: (item, Util) => {
 
@@ -22,12 +19,6 @@ module.exports = {
                 //console.log(item.dependencies.files);
                 item.dependencies.files = [];
             } else {
-
-                item.dependencies.files = item.dependencies.files.filter((it) => {
-                    if (it.indexOf('lz-utils') === -1) {
-                        return true;
-                    }
-                });
 
                 //generate reportData
                 const jsonPath = path.resolve(__dirname, '../monocart-test/.temp/report/report.json');
@@ -60,7 +51,7 @@ module.exports = {
             if (item.minify) {
                 //copy dist file to lib
                 const fromJs = path.resolve(item.buildPath, `${item.fullName}.js`);
-                const toJs = path.resolve(__dirname, 'lib/grid.js');
+                const toJs = path.resolve(__dirname, 'lib/runtime/grid.js');
                 //console.log(fromJs, toJs);
                 fs.cpSync(fromJs, toJs);
             }

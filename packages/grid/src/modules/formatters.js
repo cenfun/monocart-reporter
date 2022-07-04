@@ -1,16 +1,16 @@
-import OkIcon from '../components/ok-icon.vue';
+import CaseIcon from '../components/case-icon.vue';
 import Util from '../util/util.js';
 
 export default {
 
-    ok: function(v, rowItem, columnItem, cellNode) {
+    caseIcon: function(v, rowItem, columnItem, cellNode) {
         if (typeof v !== 'boolean') {
             return '';
         }
         const div = document.createElement('div');
-        div.className = 'prg-ok-icon';
-        OkIcon.createComponent({
-            row: rowItem
+        div.className = 'prg-case-icon';
+        CaseIcon.createComponent({
+            caseItem: rowItem
         }, null, div);
         return div;
     },
@@ -22,22 +22,12 @@ export default {
         return Util.DTF(v);
     },
 
-    location: function(v) {
-        if (typeof v !== 'object') {
+    errors: function(v, rowItem) {
+        const errors = rowItem.errors;
+        if (!errors) {
             return '';
         }
-        //console.log(v);
-        const file = Util.formatPath(`${v.file}`).split('/').pop();
-        return `${file}:${v.line},${v.column}`;
-    },
-
-    error: function(v) {
-        if (typeof v !== 'object') {
-            return '';
-        }
-        //console.log(v);
-        return v.message;
-
+        return '<div class="tg-case-error"></div>';
     },
 
     attachments: function(v) {

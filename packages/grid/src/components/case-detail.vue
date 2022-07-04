@@ -7,21 +7,30 @@
 </template>
 <script>
 export default {
+    props: {
+        item: {
+            type: Object,
+            default: null
+        }
+    },
+
     data: function() {
         return {
-            item: {},
             location: ''
         };
     },
 
-    methods: {
-        update(item) {
-            this.item = item;
-            console.log(item.results);
-
-            const loc = item.location;
+    watch: {
+        item() {
+            console.log(this.item);
+            const loc = this.item.location;
             this.location = `${loc.file}:${loc.line},${loc.column}`;
+
         }
+    },
+
+    methods: {
+
     }
 };
 </script>

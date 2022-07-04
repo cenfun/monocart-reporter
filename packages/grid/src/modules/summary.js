@@ -93,7 +93,9 @@ export default {
                 item.percent = `(${p})`;
             });
 
-            summary.passed.classMap = summary.passed.value === summary.all.value ? 'prg-summary-passed' : '';
+            //summary.failed.value = 0;
+
+            summary.passed.classMap = summary.failed.value === 0 ? 'prg-summary-passed' : '';
             summary.failed.classMap = summary.failed.value > 0 ? 'prg-summary-failed' : 'prg-summary-skipped';
             summary.flaky.classMap = summary.flaky.value > 0 ? 'prg-summary-flaky' : 'prg-summary-skipped';
             summary.skipped.classMap = 'prg-summary-skipped';

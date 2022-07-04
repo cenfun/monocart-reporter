@@ -5,7 +5,7 @@ export default {
             name: '',
             width: 36,
             align: 'center',
-            formatter: 'ok'
+            formatter: 'caseIcon'
         }, {
             id: 'title',
             name: 'Title',
@@ -13,6 +13,7 @@ export default {
         }, {
             id: 'type',
             name: 'Type',
+            width: 60,
             align: 'center'
         }, {
             id: 'duration',
@@ -22,23 +23,23 @@ export default {
             formatter: 'duration'
         }, {
             id: 'status',
-            name: 'Status'
+            name: 'Status',
+            align: 'center'
         }, {
             id: 'expectedStatus',
-            name: 'Expected'
+            name: 'Expected',
+            align: 'center'
         }, {
-            id: 'outcome',
-            name: 'Outcome',
-            width: 85
-        }, {
-            id: 'error',
-            name: 'Error',
-            width: 100,
-            formatter: 'error'
+            id: 'errors',
+            name: 'Errors',
+            width: 60,
+            align: 'center',
+            formatter: 'errors'
         }, {
             id: 'attachments',
             name: 'Attachments',
             width: 100,
+            align: 'center',
             formatter: 'attachments'
         }, {
             id: 'retry',
@@ -48,8 +49,7 @@ export default {
         }, {
             id: 'location',
             name: 'Location',
-            width: 120,
-            formatter: 'location'
+            width: 200
         }];
     }
 };

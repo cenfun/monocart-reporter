@@ -21,15 +21,19 @@ export default {
     watch: {
         keywords: function() {
             this.hideFlyover();
-            this.grid.update();
+            if (this.grid) {
+                this.grid.update();
+            }
         },
         dataChange: function() {
             this.hideFlyover();
-            store.set('suiteVisible', this.suiteVisible ? '1' : '');
-            store.set('stepVisible', this.stepVisible ? '1' : '');
-            const gridData = this.getGridData();
-            this.grid.setData(gridData);
-            this.grid.render();
+            store.set('suiteVisible', this.suiteVisible);
+            store.set('stepVisible', this.stepVisible);
+            if (this.grid) {
+                const gridData = this.getGridData();
+                this.grid.setData(gridData);
+                this.grid.render();
+            }
         }
     },
 
@@ -79,51 +83,36 @@ export default {
             grid.render();
         },
 
+        isNodeTruncated(node) {
+            if (!node) {
+                return false;
+            }
+            node = node.querySelector('.tg-tree-name') || node;
+            if (node.clientWidth < node.scrollWidth) {
+                return true;
+            }
+            return false;
+        },
+
         bindGridEvents() {
 
             const grid = this.grid;
 
-            const isNodeTruncated = function(node) {
-                if (!node) {
-                    return false;
-                }
-                const itemNode = node.querySelector('.tg-tree-item');
-                if (itemNode) {
-                    node = itemNode;
-                }
-                if (node.clientWidth < node.scrollWidth) {
-                    return true;
-                }
-                return false;
-            };
-
             grid.bind('onCellMouseOver', (e, d) => {
 
-                const elem = d.cellNode;
-                const rowItem = grid.getRowItem(d.row);
-                const columnItem = grid.getColumnItem(d.column);
-                const value = rowItem[columnItem.id];
-                if (!value) {
-                    return;
-                }
-
-                if (columnItem.id === 'location') {
-                    this.showTooltip(elem, `${value.file}:${value.line},${value.column}`);
-                    return;
-                }
-
-                if (columnItem.id === 'error') {
-                    let errorMsg = `<b>${rowItem.title}:</b>\n${value.message}`;
-                    if (value.stack) {
-                        errorMsg += `\n${value.stack}`;
+                const cellNode = d.cellNode;
+                const rowItem = d.rowItem;
+                const columnItem = d.columnItem;
+                if (columnItem.id === 'errors') {
+                    const errorMsg = this.getCaseErrorMessage(rowItem);
+                    if (errorMsg) {
+                        this.showTooltip(cellNode, errorMsg);
+                        return;
                     }
-                    this.showTooltip(elem, errorMsg);
-                    return;
                 }
 
-                //show tooltip if cell truncated
-                if (isNodeTruncated(elem)) {
-                    this.showTooltip(elem, elem.innerText);
+                if (this.isNodeTruncated(cellNode)) {
+                    this.showTooltip(cellNode, cellNode.innerText);
                 }
 
             }).bind('onCellMouseOut', (e, d) => {
@@ -139,7 +128,7 @@ export default {
 
                 if (rowItem.type === 'case') {
                     if (d.columnItem.id === 'title') {
-                        this.$refs.detail.update(rowItem);
+                        this.caseItem = rowItem;
                         this.showFlyover();
                     }
                 } else {
@@ -168,6 +157,7 @@ export default {
             //console.log(key);
             const allData = JSON.parse(JSON.stringify(this.gridDataAll));
             const data = this.getGridDataByType(allData, this.caseType, this.suiteVisible, this.stepVisible);
+            console.log(key, data);
             this.gridDataMap[key] = data;
             return data;
         },
@@ -232,6 +222,28 @@ export default {
 
         },
 
+        getCaseErrorMessage(rowItem) {
+
+            const errors = rowItem.errors;
+            if (!errors) {
+                return;
+            }
+
+            const errList = [`<b>${rowItem.title}</b>`];
+
+            errors.forEach((item) => {
+                if (item.message) {
+                    errList.push(item.message);
+                }
+                if (item.stack) {
+                    errList.push(Util.CH(item.stack));
+                }
+            });
+
+            const errorMsg = errList.join('</div><div>');
+
+            return `<div>${errorMsg}</div>`;
+        },
 
         showFlyover() {
             this.flyoverVisible = true;
@@ -250,32 +262,16 @@ export default {
 
         showTooltip: function(elem, message) {
 
-            //remove previous
             this.hideTooltip();
 
             if (!message) {
                 return;
             }
 
-            const arr = message.split(/\r|\n/g);
-            arr.forEach(function(str, i) {
-                //space to &nbsp;
-                str = str.replace(/ +/g, function(word) {
-                    const ls = [];
-                    ls.length = word.length + 1;
-                    return ls.join('&nbsp;');
-                });
-                arr[i] = str;
-            });
-
-            message = `<div>${arr.join('</div><div>')}</div>`;
-
             this.tooltip = VuiTooltip.createComponent({
-                target: elem
-            }, {
-                default: () => {
-                    return message;
-                }
+                target: elem,
+                maxWidth: 500,
+                html: message
             });
 
         }

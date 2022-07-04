@@ -56,7 +56,10 @@
       position="right"
       width="50%"
     >
-      <CaseDetail ref="detail" />
+      <CaseDetail
+        ref="detail"
+        :item="caseItem"
+      />
     </VuiFlyover>
   </div>
 </template>
@@ -104,9 +107,10 @@ export default {
             //filter
             keywords: '',
             caseType: 'all',
-            suiteVisible: store.get('suiteVisible', true),
-            stepVisible: store.get('stepVisible', false),
+            suiteVisible: true,
+            stepVisible: false,
 
+            caseItem: null,
             flyoverVisible: false
         };
     },
@@ -124,6 +128,20 @@ export default {
 
         this.title = reportData.name;
         this.generated = `Generated ${new Date(reportData.date).toLocaleString()}`;
+
+        //store
+        const booleans = {
+            'true': true,
+            'false': false
+        };
+        const suiteVisible = booleans[store.get('suiteVisible')];
+        if (typeof suiteVisible === 'boolean') {
+            this.suiteVisible = suiteVisible;
+        }
+        const stepVisible = booleans[store.get('stepVisible')];
+        if (typeof stepVisible === 'boolean') {
+            this.stepVisible = stepVisible;
+        }
     },
 
     mounted() {
@@ -314,9 +332,134 @@ body {
         }
     }
 
+    .tg-case-error {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        background-image: url("../images/error.svg");
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
     .tg-attachment-screenshot {
         position: relative;
     }
+}
+
+/*
+colors
+*/
+
+.inline {
+    width: 20px;
+    height: 1em;
+    display: inline-block;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.blink {
+    text-decoration: blink;
+}
+
+.inverse {
+    background: #333;
+}
+
+.strike {
+    text-decoration: line-through;
+}
+
+.c30,
+.c90 {
+    color: black;
+}
+
+.c31,
+.c91 {
+    color: red;
+}
+
+.c32,
+.c92 {
+    color: green;
+}
+
+.c33,
+.c93 {
+    color: yellow;
+}
+
+.c34,
+.c94 {
+    color: blue;
+}
+
+.c35,
+.c95 {
+    color: magenta;
+}
+
+.c36,
+.c96 {
+    color: cyan;
+}
+
+.c37,
+.c97 {
+    color: white;
+}
+
+.bg40,
+.bg100 {
+    background: black;
+}
+
+.bg41,
+.bg101 {
+    background: red;
+}
+
+.bg42,
+.bg102 {
+    background: green;
+}
+
+.bg43,
+.bg103 {
+    background: yellow;
+}
+
+.bg44,
+.bg104 {
+    background: blue;
+}
+
+.bg45,
+.bg105 {
+    background: magenta;
+}
+
+.bg46,
+.bg106 {
+    background: cyan;
+}
+
+.bg47,
+.bg107 {
+    background: white;
 }
 
 </style>

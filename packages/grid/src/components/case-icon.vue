@@ -7,7 +7,7 @@ import { createComponent } from 'vine-ui';
 export default {
     createComponent,
     props: {
-        row: {
+        caseItem: {
             type: Object,
             default: () => {
                 return {};
@@ -23,8 +23,8 @@ export default {
 
     created() {
         const list = ['prg-icon'];
-        if (this.row.ok) {
-            if (this.row.status === 'skipped') {
+        if (this.caseItem.ok) {
+            if (this.caseItem.status === 'skipped') {
                 list.push('prg-icon-skipped');
             } else {
                 list.push('prg-icon-passed');
@@ -39,7 +39,7 @@ export default {
 
 </script>
 <style lang="scss">
-.prg-ok-icon {
+.prg-case-icon {
     width: 100%;
     height: 100%;
     display: flex;
