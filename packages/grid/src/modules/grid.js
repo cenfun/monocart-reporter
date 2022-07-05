@@ -113,21 +113,22 @@ export default {
                 const rowItem = d.rowItem;
                 grid.setRowSelected(rowItem);
 
+                const caseItem = this.getClickCaseItem(rowItem);
+                if (!caseItem) {
+                    return;
+                }
+
+                if (this.flyoverVisible) {
+                    this.showFlyover(caseItem);
+                    return;
+                }
+
                 const columnItem = d.columnItem;
                 const target = d.e.target;
-
-                if (rowItem.type === 'case') {
-
-                    if (this.flyoverVisible) {
-                        this.showFlyover(rowItem);
-                        return;
-                    }
-
-                    if (target.classList.contains('vui-icon')) {
-                        this.showFlyover(rowItem, columnItem.id);
-                    }
-
+                if (target.classList.contains('vui-icon')) {
+                    this.showFlyover(caseItem, columnItem.id);
                 }
+
 
             });
 
@@ -144,6 +145,21 @@ export default {
             });
         },
 
+        getClickCaseItem(rowItem) {
+            if (rowItem.type === 'case') {
+                return rowItem;
+            }
+            if (rowItem.type === 'step') {
+                let parent = rowItem.parent;
+                while (parent) {
+                    if (parent.type === 'case') {
+                        return parent;
+                    }
+                    parent = parent.parent;
+                }
+            }
+        },
+
         getGridData() {
             const key = [this.caseType, this.suiteVisible, this.stepVisible].join('_');
             if (this.gridDataMap[key]) {
@@ -151,10 +167,26 @@ export default {
             }
             //console.log(key);
             const allData = JSON.parse(JSON.stringify(this.gridDataAll));
+            this.initCaseTreeList(allData.rows, null, -1);
             const data = this.getGridDataByType(allData, this.caseType, this.suiteVisible, this.stepVisible);
             console.log(key, data);
             this.gridDataMap[key] = data;
             return data;
+        },
+
+        initCaseTreeList(list, parent, level) {
+            if (!Util.isList(list)) {
+                return;
+            }
+            level += 1;
+            list.forEach((item) => {
+                item.parent = parent;
+                item.level = level;
+                if (item.type === 'case') {
+                    item.steps = item.subs;
+                }
+                this.initCaseTreeList(item.subs, item, level);
+            });
         },
 
         getGridDataByType(allData, caseType, suiteVisible, stepVisible) {

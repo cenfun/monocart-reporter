@@ -54,7 +54,7 @@
       ref="flyover"
       :visible="flyoverVisible"
       position="right"
-      width="50%"
+      width="60%"
     >
       <div class="vui-flyover-main vui-flex-column">
         <div class="vui-flyover-header">
@@ -94,6 +94,7 @@ import columns from '../modules/columns.js';
 import CaseDetail from './case-detail.vue';
 
 import store from '../util/store.js';
+import Util from '../util/util.js';
 
 const {
     VuiInput,
@@ -128,7 +129,7 @@ export default {
             keywords: '',
             caseType: 'all',
             suiteVisible: true,
-            stepVisible: false,
+            stepVisible: true,
 
             detailTitle: '',
 
@@ -149,20 +150,7 @@ export default {
 
         this.title = reportData.name;
         this.generated = `Generated ${new Date(reportData.date).toLocaleString()}`;
-
-        //store
-        const booleans = {
-            'true': true,
-            'false': false
-        };
-        const suiteVisible = booleans[store.get('suiteVisible')];
-        if (typeof suiteVisible === 'boolean') {
-            this.suiteVisible = suiteVisible;
-        }
-        const stepVisible = booleans[store.get('stepVisible')];
-        if (typeof stepVisible === 'boolean') {
-            this.stepVisible = stepVisible;
-        }
+        this.initStore();
     },
 
     mounted() {
@@ -171,9 +159,24 @@ export default {
     },
 
     methods: {
+
+        initStore() {
+            const booleans = {
+                'true': true,
+                'false': false
+            };
+            ['suiteVisible', 'stepVisible'].forEach((item) => {
+                const visible = booleans[store.get(item)];
+                if (typeof visible === 'boolean') {
+                    this[item] = visible;
+                }
+            });
+        },
+
         summaryItemClass(item) {
             return ['prg-summary-item', item.classMap, item.caseType === this.caseType ? 'prg-summary-selected' : ''];
         },
+
         summaryItemClick(item) {
             if (item.caseType !== this.caseType) {
                 this.caseType = item.caseType;
@@ -336,20 +339,31 @@ body {
         font-weight: normal;
     }
 
-    .tg-failed.tg-row {
+    .tg-case-failed.tg-row {
         background-color: rgb(252 220 220);
         border: none;
     }
 
-    .tg-flaky.tg-row {
+    .tg-case-flaky.tg-row {
         background-color: rgb(252 246 220);
         border: none;
     }
 
-    .tg-skipped.tg-row {
-        .tg-cell,
-        .tg-tree-row-number {
+    .tg-case-skipped.tg-row {
+        .tg-cell {
             color: #999;
+        }
+    }
+
+    .tg-step-retry.tg-row {
+        .tg-cell {
+            color: orange;
+        }
+    }
+
+    .tg-step-error.tg-row {
+        .tg-cell {
+            color: red;
         }
     }
 }
@@ -372,7 +386,7 @@ flyover
 }
 
 .vui-flyover-header {
-    background-color: #666;
+    background-color: #555;
     padding: 0 10px;
 }
 
@@ -390,7 +404,6 @@ flyover
 }
 
 .vui-flyover-content {
-    padding: 10px;
     overflow: auto;
 }
 

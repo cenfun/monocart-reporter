@@ -43,19 +43,19 @@ export default {
                 if (item.ok) {
                     if (item.status === 'skipped') {
                         summary.skipped.value += 1;
-                        item.classMap = 'tg-skipped';
+                        item.classMap = 'tg-case-skipped';
                         item.caseType = 'skipped';
                     } else if (item.outcome === 'flaky') {
                         summary.flaky.value += 1;
-                        item.classMap = 'tg-flaky';
+                        item.classMap = 'tg-case-flaky';
                         item.caseType = 'flaky';
                     } else {
                         summary.passed.value += 1;
-                        item.classMap = 'tg-passed';
+                        item.classMap = 'tg-case-passed';
                         item.caseType = 'passed';
                     }
                 } else {
-                    item.classMap = 'tg-failed';
+                    item.classMap = 'tg-case-failed';
                     item.caseType = 'failed';
                     summary.failed.value += 1;
                     if (parent.failedCases) {
@@ -72,8 +72,10 @@ export default {
                     if (item.subs) {
                         item.collapsed = true;
                     }
-                    if (item.error) {
-                        item.classMap = 'tg-failed';
+                    if (item.errors) {
+                        item.classMap = 'tg-step-error';
+                    } else if (item.status === 'retry') {
+                        item.classMap = 'tg-step-retry';
                     }
                     return;
                 }
@@ -85,7 +87,7 @@ export default {
 
             //percent handler
             Object.values(summary).forEach((item) => {
-                if (item.value === 0 || item.value === summary.all.value) {
+                if (item.value === 0 || item.caseType === 'all') {
                     item.percent = '';
                     return;
                 }
