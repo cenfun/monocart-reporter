@@ -259,46 +259,6 @@ export default {
 
         },
 
-        getCaseErrorMessage(rowItem) {
-
-            const errors = rowItem.errors;
-            if (!errors) {
-                return;
-            }
-
-            const errList = [`<b>${rowItem.title}</b>`];
-
-            errors.forEach((item) => {
-                if (item.message) {
-                    errList.push(item.message);
-                }
-                if (item.stack) {
-                    errList.push(Util.CH(item.stack));
-                }
-            });
-
-            const errorMsg = errList.join('</div><div>');
-
-            return `<div>${errorMsg}</div>`;
-        },
-
-        getCaseLogMessage(rowItem) {
-            const logs = rowItem.logs;
-            if (!logs) {
-                return;
-            }
-            const logList = [`<b>${rowItem.title}</b>`];
-
-            logs.forEach((item) => {
-                logList.push(Util.CH(item));
-            });
-
-            const logMsg = logList.join('</div><div>');
-
-            return `<div>${logMsg}</div>`;
-
-        },
-
         showFlyover(rowItem, position) {
             this.detailTitle = rowItem.title;
             this.$refs.detail.update(rowItem, position);

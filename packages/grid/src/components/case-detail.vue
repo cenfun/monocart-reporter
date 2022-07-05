@@ -7,15 +7,15 @@
   </div>
 </template>
 <script>
+import Convert from 'ansi-to-html';
 import Util from '../util/util.js';
 
+const convert = new Convert({
+    newline: true
+});
+
+
 export default {
-
-    data: function() {
-        return {
-
-        };
-    },
 
     methods: {
         update(caseItem, position) {
@@ -104,7 +104,7 @@ export default {
             }
 
             const list = errors.map((err) => {
-                return `<div class="prg-item-error">${Util.CH(err)}</div>`;
+                return `<div class="prg-item-error">${this.convertHtml(err)}</div>`;
             });
 
             return list.join('');
@@ -117,7 +117,7 @@ export default {
             }
 
             const list = logs.map((log) => {
-                return `<div class="prg-item-log">${Util.CH(log)}</div>`;
+                return `<div class="prg-item-log">${this.convertHtml(log)}</div>`;
             });
 
             return list.join('');
@@ -156,6 +156,19 @@ export default {
                 list.push(item);
                 this.generateSteps(list, item.subs);
             });
+        },
+
+        convertHtml(str) {
+
+            // link
+            // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
+            // str = str.replace(re, function(a) {
+            //     return `<a href="${a}" target="_blank">${a}</a>`;
+            // });
+
+            str = convert.toHtml(str);
+
+            return str;
         }
 
     }
@@ -195,11 +208,15 @@ export default {
 
 .prg-item-error,
 .prg-item-log {
+    white-space: pre;
+    font-family: Menlo, Consolas, monospace;
+    line-height: initial;
     background-color: #000;
     color: #fff;
-    padding: 5px;
+    padding: 10px;
     border-radius: 5px;
     margin: 0 5px 5px 0;
+    overflow-x: auto;
 }
 
 .prg-detail-head {
