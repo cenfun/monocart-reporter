@@ -104,15 +104,7 @@ export default {
             }
 
             const list = errors.map((err) => {
-                const ls = [];
-
-                if (err.stack) {
-                    ls.push(`<div class="prg-error">${Util.CH(err.stack)}</div>`);
-                } else if (err.message) {
-                    ls.push(`<div class="prg-error">${Util.CH(err.message)}</div>`);
-                }
-
-                return ls.join('');
+                return `<div class="prg-item-error">${Util.CH(err)}</div>`;
             });
 
             return list.join('');
@@ -125,7 +117,7 @@ export default {
             }
 
             const list = logs.map((log) => {
-                return Util.CH(log);
+                return `<div class="prg-item-log">${Util.CH(log)}</div>`;
             });
 
             return list.join('');
@@ -199,6 +191,15 @@ export default {
 
 .prg-item-body {
     margin-left: 15px;
+}
+
+.prg-item-error,
+.prg-item-log {
+    background-color: #000;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 0 5px 5px 0;
 }
 
 .prg-detail-head {

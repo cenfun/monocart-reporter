@@ -94,7 +94,7 @@ import columns from '../modules/columns.js';
 import CaseDetail from './case-detail.vue';
 
 import store from '../util/store.js';
-import Util from '../util/util.js';
+//import Util from '../util/util.js';
 
 const {
     VuiInput,

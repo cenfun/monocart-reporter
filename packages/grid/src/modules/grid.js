@@ -167,14 +167,14 @@ export default {
             }
             //console.log(key);
             const allData = JSON.parse(JSON.stringify(this.gridDataAll));
-            this.initCaseTreeList(allData.rows, null, -1);
+            this.initTreeList(allData.rows, null, -1);
             const data = this.getGridDataByType(allData, this.caseType, this.suiteVisible, this.stepVisible);
             console.log(key, data);
             this.gridDataMap[key] = data;
             return data;
         },
 
-        initCaseTreeList(list, parent, level) {
+        initTreeList(list, parent, level) {
             if (!Util.isList(list)) {
                 return;
             }
@@ -185,7 +185,17 @@ export default {
                 if (item.type === 'case') {
                     item.steps = item.subs;
                 }
-                this.initCaseTreeList(item.subs, item, level);
+                this.initItemErrors(item);
+                this.initTreeList(item.subs, item, level);
+            });
+        },
+
+        initItemErrors(item) {
+            if (!item.errors) {
+                return;
+            }
+            item.errors = item.errors.map((index) => {
+                return this.reportData.errors[index];
             });
         },
 
