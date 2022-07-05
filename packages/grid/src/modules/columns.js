@@ -2,7 +2,7 @@ export default {
     create: function() {
         return [{
             id: 'ok',
-            name: '',
+            name: 'OK',
             width: 36,
             align: 'center',
             formatter: 'caseIcon'
@@ -14,6 +14,7 @@ export default {
             id: 'type',
             name: 'Type',
             width: 60,
+            sortable: false,
             align: 'center'
         }, {
             id: 'duration',

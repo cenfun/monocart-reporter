@@ -15,7 +15,7 @@ export default {
     },
 
     methods: {
-        update(caseItem) {
+        update(caseItem, position) {
             this.location = caseItem.location;
         }
     }

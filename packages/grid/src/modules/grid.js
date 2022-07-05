@@ -20,7 +20,6 @@ export default {
 
     watch: {
         keywords: function() {
-            this.hideFlyover();
             if (this.grid) {
                 this.grid.update();
             }
@@ -108,26 +107,27 @@ export default {
             });
 
             grid.bind('onClick', (e, d) => {
-                if (!d.rowNode) {
+                if (!d.cellNode) {
                     return;
                 }
                 const rowItem = d.rowItem;
                 grid.setRowSelected(rowItem);
 
                 const columnItem = d.columnItem;
-
                 const target = d.e.target;
-                if (target.classList.contains('tg-case-num')) {
-                    this.showFlyover(rowItem, columnItem.id);
-                    return;
-                }
 
-                if (rowItem.type === 'case' && columnItem.id === 'title') {
-                    this.showFlyover(rowItem);
-                    return;
-                }
+                if (rowItem.type === 'case') {
 
-                this.hideFlyover();
+                    if (this.flyoverVisible) {
+                        this.showFlyover(rowItem);
+                        return;
+                    }
+
+                    if (target.classList.contains('vui-icon')) {
+                        this.showFlyover(rowItem, columnItem.id);
+                    }
+
+                }
 
             });
 
@@ -136,7 +136,7 @@ export default {
                     return;
                 }
                 const rowItem = d.rowItem;
-                if (rowItem.type === 'case') {
+                if (rowItem.type === 'case' && !this.flyoverVisible) {
                     this.showFlyover(rowItem);
                 } else {
                     this.hideFlyover();
@@ -258,6 +258,7 @@ export default {
         },
 
         showFlyover(rowItem, position) {
+            this.detailTitle = rowItem.title;
             this.$refs.detail.update(rowItem, position);
             this.flyoverVisible = true;
         },

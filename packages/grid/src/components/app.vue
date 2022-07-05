@@ -56,7 +56,30 @@
       position="right"
       width="50%"
     >
-      <CaseDetail ref="detail" />
+      <div class="vui-flyover-main vui-flex-column">
+        <div class="vui-flyover-header">
+          <VuiFlex spacing="10px">
+            <div
+              class="vui-flyover-icon"
+              @click="flyoverVisible=false"
+            >
+              <div class="vui-icon vui-icon-arrow-right" />
+            </div>
+            <div class="vui-flyover-title vui-flex-auto">
+              {{ detailTitle }}
+            </div>
+            <div
+              class="vui-flyover-icon"
+              @click="flyoverVisible=false"
+            >
+              <div class="vui-icon vui-icon-close" />
+            </div>
+          </VuiFlex>
+        </div>
+        <div class="vui-flyover-content vui-flex-auto">
+          <CaseDetail ref="detail" />
+        </div>
+      </div>
     </VuiFlyover>
   </div>
 </template>
@@ -106,6 +129,8 @@ export default {
             caseType: 'all',
             suiteVisible: true,
             stepVisible: false,
+
+            detailTitle: '',
 
             flyoverVisible: false
         };
@@ -248,13 +273,13 @@ body {
 }
 
 .prg-summary-failed {
-    color: orangered;
+    color: #d00;
 }
 
 .prg-summary-failed:hover,
 .prg-summary-failed.prg-summary-selected {
     color: #fff;
-    background-color: orangered;
+    background-color: #d00;
 }
 
 .prg-summary-flaky {
@@ -327,11 +352,97 @@ body {
             color: #999;
         }
     }
+}
 
-    .tg-case-num {
-        text-decoration: underline;
-        cursor: pointer;
-    }
+/*
+flyover
+*/
+
+.tg-flyover-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100%;
+}
+
+.vui-flyover-main {
+    height: 100%;
+    overflow: hidden;
+}
+
+.vui-flyover-header {
+    background-color: #666;
+    padding: 0 10px;
+}
+
+.vui-flyover-icon {
+    cursor: pointer;
+    padding: 9px 0;
+}
+
+.vui-flyover-title {
+    height: 45px;
+    line-height: 45px;
+    color: #eee;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.vui-flyover-content {
+    padding: 10px;
+    overflow: auto;
+}
+
+/*
+icon
+*/
+
+.vui-icon {
+    display: block;
+    overflow: hidden;
+    width: 20px;
+    height: 20px;
+    background-size: 20px 20px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.vui-icon:hover {
+    opacity: 1;
+}
+
+.tg-cell .vui-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.vui-icon-close {
+    background-image: url("../images/close.svg");
+}
+
+.vui-icon-arrow-right {
+    background-image: url("../images/arrow-right.svg");
+}
+
+.vui-icon-info {
+    background-image: url("../images/info.svg");
+}
+
+.vui-icon-error {
+    background-image: url("../images/error.svg");
+}
+
+.vui-icon-log {
+    background-image: url("../images/log.svg");
+}
+
+.vui-icon-attachment {
+    background-image: url("../images/attachment.svg");
 }
 
 /*

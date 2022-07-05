@@ -19,6 +19,10 @@ export default {
         const defaultFormatter = this.getDefaultFormatter('tree');
         if (rowItem.type === 'suite') {
             v = `${v} (${rowItem.tests})`;
+        } else if (rowItem.type === 'case') {
+            v = `${v} <div class="tg-cell-hover-icon tg-flyover-icon" title="Show case detail">
+                <div class="vui-icon vui-icon-info" />
+            </div>`;
         }
         return defaultFormatter(v, rowItem, columnItem, cellNode);
     },
@@ -35,7 +39,7 @@ export default {
         if (!errors) {
             return '';
         }
-        return `<div class="tg-case-num">${errors.length}</div>`;
+        return '<div class="vui-icon vui-icon-error" />';
     },
 
     logs: function(v, rowItem) {
@@ -43,7 +47,7 @@ export default {
         if (!logs) {
             return '';
         }
-        return `<div class="tg-case-num">${logs.length}</div>`;
+        return '<div class="vui-icon vui-icon-log" />';
     },
 
     attachments: function(v, rowItem) {
@@ -51,7 +55,7 @@ export default {
         if (!attachments) {
             return '';
         }
-        return `<div class="tg-case-num">${attachments.length}</div>`;
+        return '<div class="vui-icon vui-icon-attachment" />';
     }
 
 };
