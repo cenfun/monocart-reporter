@@ -36,6 +36,6 @@
         "stylelint-config-recommended": "^8.0.0",
         "stylelint-config-standard": "^26.0.0",
         "turbogrid": "^3.0.0",
-        "vine-ui": "^3.0.2"
+        "vine-ui": "^3.0.3"
     }
 }

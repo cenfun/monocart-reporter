@@ -130,8 +130,7 @@ export default {
             });
 
             grid.bind('onDblClick', (e, d) => {
-                console.log(d);
-                if (!d.rowNode) {
+                if (!d || !d.rowNode) {
                     return;
                 }
                 const rowItem = d.rowItem;
@@ -285,7 +284,7 @@ export default {
             this.tooltip = VuiTooltip.createComponent({
                 target: elem,
                 maxWidth: 500,
-                html: message
+                text: message
             });
 
         }

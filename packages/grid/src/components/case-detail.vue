@@ -181,12 +181,23 @@ export default {
             }
 
             const list = attachments.map((attachment) => {
+                console.log(attachment);
+
+                //contentType 'application/json' 'image/png' 'video/webm'
                 const contentType = attachment.contentType;
-                //contentType 'application/json' or 'image/png'.
-                if (contentType && contentType.startsWith('image')) {
-                    return `<p class="prg-item-image">
-                      <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
-                    </p>`;
+                if (contentType) {
+                    if (contentType.startsWith('image')) {
+                        return `<p class="prg-item-image">
+                            <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
+                        </p>`;
+                    } else if (contentType.startsWith('video')) {
+                        return `<p class="prg-item-video">
+                            <video controls height="350">
+                                <source src="${attachment.path}" type="${contentType}">
+                                <p>Your browser doesn't support HTML5 video. Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead.</p>
+                            </video>
+                        </p>`;
+                    }
                 }
 
                 return `<p class="prg-item-link">
@@ -319,6 +330,10 @@ export default {
 
 .prg-item-suite .prg-item-title {
     font-weight: bold;
+}
+
+.prg-item-location {
+    font-size: 13px;
 }
 
 .prg-item-body {
