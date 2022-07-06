@@ -102,8 +102,12 @@ export default {
 
             list.push(`<div class="prg-item-title vui-flex-auto">${item.title}</div>`);
 
-            list.push(`<div class="prg-item-location">${item.location || ''}</div>`);
-
+            if (item.duration) {
+                list.push(`<div class="prg-item-duration">${item.duration}ms</div>`);
+            }
+            if (item.location) {
+                list.push(`<div class="prg-item-location">${item.location}</div>`);
+            }
             const head = list.join('');
 
             return `<div class="${cls.join(' ')}">
@@ -334,6 +338,7 @@ export default {
 
 .prg-item-location {
     font-size: 13px;
+    padding-left: 10px;
 }
 
 .prg-item-body {
