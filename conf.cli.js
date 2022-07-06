@@ -13,35 +13,22 @@ module.exports = {
 
         before: (item, Util) => {
 
-            if (item.minify) {
-                //bundle all
-                item.dependencies.modules = [];
-                //console.log(item.dependencies.files);
-                item.dependencies.files = [];
-            } else {
-
-                //generate reportData
-                const jsonPath = path.resolve(__dirname, '../monocart-test/.temp/report/report.json');
-                if (!fs.existsSync(jsonPath)) {
-                    console.log(`Not found test json: ${jsonPath}`);
-                    return 1;
-                }
-                const reportData = Util.readJSONSync(jsonPath);
-                if (!reportData) {
-                    console.log(`Invalid json: ${jsonPath}`);
-                    return 1;
-                }
-                const compress = require('lz-utils/lib/compress.js');
-                const reportDataStr = compress(JSON.stringify(reportData));
-                const jsContent = `window.reportData = '${reportDataStr}';`;
-                const jsPath = path.resolve(item.buildPath, 'report-data.js');
-                Util.writeFileContentSync(jsPath, jsContent, true);
-                const jsFile = Util.relativePath(jsPath);
-                if (!item.dependencies.files.includes(jsFile)) {
-                    item.dependencies.files.push(jsFile);
-                }
-                console.log(jsFile);
+            //generate reportData for demo
+            const jsonPath = path.resolve(__dirname, '../monocart-test/.temp/report/report.json');
+            if (!fs.existsSync(jsonPath)) {
+                console.log(`Not found test json: ${jsonPath}`);
+                return 1;
             }
+            const reportData = Util.readJSONSync(jsonPath);
+            if (!reportData) {
+                console.log(`Invalid json: ${jsonPath}`);
+                return 1;
+            }
+            const compress = require('lz-utils/lib/compress.js');
+            const reportDataStr = compress(JSON.stringify(reportData));
+            const jsContent = `window.reportData = '${reportDataStr}';`;
+            const jsPath = path.resolve(item.buildPath, 'report-data.js');
+            Util.writeFileContentSync(jsPath, jsContent, true);
 
             return 0;
         },

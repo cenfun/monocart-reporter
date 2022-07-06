@@ -3,8 +3,6 @@
     "version": "1.0.2",
     "description": "playwright-report-grid",
     "main": "dist/playwright-report-grid.js",
-    "dependencies": {
-        "turbogrid": "^3.0.0",
-        "vine-ui": "^3.0.2"
-    }
+    "dependencies": {},
+    "devDependencies": {}
 }

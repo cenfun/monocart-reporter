@@ -22,6 +22,9 @@ export default {
 
     methods: {
         update(caseItem, position) {
+
+            //console.log('update', caseItem, position);
+
             if (!caseItem) {
                 return;
             }
@@ -140,7 +143,7 @@ export default {
 
             let title = '';
             if (item.type === 'case') {
-                title = '<h3><a name="errors">#</a> Errors</h3>';
+                title = '<a name="errors"></a><h3># Errors</h3>';
             }
 
             return `<div class="prg-item-errors">
@@ -161,7 +164,7 @@ export default {
 
             let title = '';
             if (item.type === 'case') {
-                title = '<h3><a name="logs">#</a> Logs</h3>';
+                title = '<a name="logs"></a><h3># Logs</h3>';
             }
 
             return `<div class="prg-item-logs">
@@ -182,7 +185,9 @@ export default {
                 //contentType 'application/json' or 'image/png'.
                 if (contentType && contentType.startsWith('image')) {
                     return `<div class="prg-item-image">
-                      <img src="${attachment.path}" alt="${attachment.name}" />
+                      <a href="${attachment.path}" target="_blank">
+                        <img src="${attachment.path}" alt="${attachment.name}" />
+                      </a>
                     </div>`;
                 }
 
@@ -193,7 +198,7 @@ export default {
 
             let title = '';
             if (item.type === 'case') {
-                title = '<h3><a name="attachments">#</a> Attachments</h3>';
+                title = '<a name="attachments"></a><h3># Attachments</h3>';
             }
 
             return `<div class="prg-item-attachments">
@@ -228,12 +233,20 @@ export default {
 
 
         positionHandler(position) {
+
+            //console.log('position', position);
+
             clearTimeout(this.timeout_position);
 
             if (!position) {
+                this.$el.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
                 return;
             }
 
+            //wait for rendered like image
             this.timeout_position = setTimeout(() => {
                 this.renderPosition(position);
             }, 100);
@@ -335,6 +348,12 @@ export default {
     border-radius: 5px;
     margin-bottom: 5px;
     overflow-x: auto;
+}
+
+.prg-item-image {
+    img {
+        max-height: 350px;
+    }
 }
 
 .prg-detail-head {

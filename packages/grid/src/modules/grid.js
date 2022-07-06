@@ -118,21 +118,19 @@ export default {
                     return;
                 }
 
-                if (this.flyoverVisible) {
-                    this.showFlyover(caseItem);
+                if (d.e.target.classList.contains('vui-icon')) {
+                    const position = d.columnItem.id;
+                    this.showFlyover(caseItem, position);
                     return;
                 }
 
-                const columnItem = d.columnItem;
-                const target = d.e.target;
-                if (target.classList.contains('vui-icon')) {
-                    this.showFlyover(caseItem, columnItem.id);
+                if (this.flyoverVisible) {
+                    this.showFlyover(caseItem);
                 }
-
-
             });
 
             grid.bind('onDblClick', (e, d) => {
+                console.log(d);
                 if (!d.rowNode) {
                     return;
                 }
