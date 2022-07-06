@@ -1,6 +1,6 @@
 {
     "name": "playwright-report-grid",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "playwright-report-grid",
     "main": "lib/index.js",
     "scripts": {

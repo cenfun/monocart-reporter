@@ -1,4 +1,5 @@
-# A grid style report for playwright
+# playwright-report-grid
+> A grid style report for playwright
 
 ## Install
 ```sh
@@ -8,16 +9,17 @@ npm i playwright-report-grid
 ## Playwright Multiple Reporters
 ```js
 // playwright.config.js
-/** @type {import('@playwright/test').PlaywrightTestConfig} */
-const config = {
-  reporter: [
-    //['list'],
-    ['playwright-report-grid', {  
-        outputFile: 'playwright-report/report.html'
-    }]
-  ],
+module.exports = {
+reporter: [
+  //['list'],
+  ['playwright-report-grid', {  
+    outputFile: 'playwright-report/report.html'
+  }]
+]
 };
-module.exports = config;
 ```
+more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
 
 ## CHANGELOG
+
+* v1.0.3 new UI
