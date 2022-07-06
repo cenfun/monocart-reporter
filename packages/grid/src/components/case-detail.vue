@@ -62,7 +62,13 @@ export default {
                 left = item.level * 10;
                 const head = this.renderItemHead(item);
                 const body = this.renderItemBody(item);
-                return `<div class="prg-item" style="margin-left:${left}px;">
+
+                const cls = ['prg-item'];
+                if (item.classMap) {
+                    cls.push(item.classMap);
+                }
+
+                return `<div class="${cls.join(' ')}" style="margin-left:${left}px;">
                   ${head}
                   ${body}
                 </div>`;
@@ -75,10 +81,6 @@ export default {
         renderItemHead(item) {
 
             const cls = ['prg-item-head', `prg-item-${item.type}`, 'vui-flex-row'];
-
-            if (item.classMap) {
-                cls.push(item.classMap);
-            }
 
             const list = [];
             if (item.level) {
@@ -309,7 +311,7 @@ export default {
 }
 
 .prg-item-body {
-    margin: 5px 5px 0;
+    padding: 0 5px;
 }
 
 .prg-item-errors,
