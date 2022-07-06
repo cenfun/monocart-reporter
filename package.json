@@ -4,7 +4,8 @@
     "description": "playwright-report-grid",
     "main": "lib/index.js",
     "scripts": {
-        "build": "sf b -m"
+        "build": "sf b -m",
+        "pack": "sf lint && sf pack -m -p docs -q v={version}"
     },
     "workspaces": [
         "packages/*"

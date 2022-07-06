@@ -1,6 +1,9 @@
 # playwright-report-grid
 > A grid style report for playwright
 
+## Preview
+[https://cenfun.github.io/playwright-report-grid](https://cenfun.github.io/playwright-report-grid)
+
 ## Install
 ```sh
 npm i playwright-report-grid

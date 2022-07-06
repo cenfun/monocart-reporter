@@ -30,6 +30,8 @@ module.exports = {
             const jsPath = path.resolve(item.buildPath, 'report-data.js');
             Util.writeFileContentSync(jsPath, jsContent, true);
 
+            item.dependencies.files.unshift(jsPath);
+
             return 0;
         },
 
