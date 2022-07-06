@@ -8,9 +8,12 @@
 </template>
 <script>
 import Convert from 'ansi-to-html';
+import CaseIcon from './case-icon.vue';
 import Util from '../util/util.js';
 
 const convert = new Convert({
+    fg: '#eee8d5',
+    bg: '#073642',
     newline: true
 });
 
@@ -24,13 +27,16 @@ export default {
             }
 
             if (caseItem === this.caseItem) {
+                this.positionHandler(position);
                 return;
             }
 
             this.caseItem = caseItem;
-            this.position = position;
 
             this.renderTree();
+
+            this.positionHandler(position);
+
         },
 
         renderTree() {
@@ -68,15 +74,35 @@ export default {
 
         renderItemHead(item) {
 
-            const loc = item.location || '';
-            let title = item.title;
-            if (item.level) {
-                title = `└ ${title}`;
+            const cls = ['prg-item-head', `prg-item-${item.type}`, 'vui-flex-row'];
+
+            if (item.classMap) {
+                cls.push(item.classMap);
             }
 
-            return `<div class="prg-item-head prg-item-${item.type} vui-flex-row">
-              <div class="prg-item-title vui-flex-auto">${title}</div>
-              <div>${loc}</div>
+            const list = [];
+            if (item.level) {
+                list.push('<div class="prg-item-next">└</div>');
+            }
+
+            if (item.type === 'case') {
+
+                const div = document.createElement('div');
+                CaseIcon.createComponent({
+                    caseItem: item
+                }, null, div);
+
+                list.push(div.innerHTML);
+            }
+
+            list.push(`<div class="prg-item-title vui-flex-auto">${item.title}</div>`);
+
+            list.push(`<div class="prg-item-location">${item.location || ''}</div>`);
+
+            const head = list.join('');
+
+            return `<div class="${cls.join(' ')}">
+              ${head}
             </div>`;
         },
 
@@ -89,10 +115,13 @@ export default {
             const logs = this.renderItemLogs(item);
             const attachments = this.renderItemAttachments(item);
 
+            const list = [errors, logs, attachments].filter((it) => it);
+            if (!list.length) {
+                return '';
+            }
+
             return `<div class="prg-item-body">
-                ${errors}
-                ${logs}
-                ${attachments}
+                ${list.join('')}
             </div>`;
         },
 
@@ -104,10 +133,18 @@ export default {
             }
 
             const list = errors.map((err) => {
-                return `<div class="prg-item-error">${this.convertHtml(err)}</div>`;
+                return this.convertHtml(err);
             });
 
-            return list.join('');
+            let title = '';
+            if (item.type === 'case') {
+                title = '<h3><a name="errors">#</a> Errors</h3>';
+            }
+
+            return `<div class="prg-item-errors">
+                ${title}
+                <p>${list.join('</p><p>')}</p>
+            </div>`;
         },
 
         renderItemLogs(item) {
@@ -117,10 +154,18 @@ export default {
             }
 
             const list = logs.map((log) => {
-                return `<div class="prg-item-log">${this.convertHtml(log)}</div>`;
+                return this.convertHtml(log);
             });
 
-            return list.join('');
+            let title = '';
+            if (item.type === 'case') {
+                title = '<h3><a name="logs">#</a> Logs</h3>';
+            }
+
+            return `<div class="prg-item-logs">
+                ${title}
+                <p>${list.join('</p><p>')}</p>
+            </div>`;
 
         },
 
@@ -144,7 +189,15 @@ export default {
                 </div>`;
             });
 
-            return list.join('');
+            let title = '';
+            if (item.type === 'case') {
+                title = '<h3><a name="attachments">#</a> Attachments</h3>';
+            }
+
+            return `<div class="prg-item-attachments">
+                ${title}
+                <p>${list.join('</p><p>')}</p>
+            </div>`;
 
         },
 
@@ -169,6 +222,32 @@ export default {
             str = convert.toHtml(str);
 
             return str;
+        },
+
+
+        positionHandler(position) {
+            clearTimeout(this.timeout_position);
+
+            if (!position) {
+                return;
+            }
+
+            this.timeout_position = setTimeout(() => {
+                this.renderPosition(position);
+            }, 100);
+
+        },
+
+        renderPosition(position) {
+            const elem = this.$el.querySelector(`[name="${position}"]`);
+            if (!elem) {
+                return;
+            }
+
+            elem.scrollIntoView({
+                behavior: 'smooth'
+            });
+
         }
 
     }
@@ -190,12 +269,39 @@ export default {
     border-bottom: thin solid #ccc;
 }
 
-.prg-item:hover {
-    background-color: #f5f5f5;
+.prg-item-head {
+    padding: 8px 10px 8px 0;
+    cursor: default;
+
+    .prg-icon {
+        margin-right: 5px;
+    }
 }
 
-.prg-item-head {
-    padding: 5px 10px 5px 0;
+.prg-item-next {
+    padding-right: 5px;
+}
+
+.tg-case-failed {
+    background-color: rgb(252 220 220);
+    border: none;
+}
+
+.tg-case-flaky {
+    background-color: rgb(252 246 220);
+    border: none;
+}
+
+.tg-case-skipped {
+    color: #999;
+}
+
+.tg-step-retry {
+    color: orange;
+}
+
+.tg-step-error {
+    color: red;
 }
 
 .prg-item-suite .prg-item-title {
@@ -203,19 +309,29 @@ export default {
 }
 
 .prg-item-body {
-    margin-left: 15px;
+    margin: 5px 5px 0;
 }
 
-.prg-item-error,
-.prg-item-log {
-    white-space: pre;
-    font-family: Menlo, Consolas, monospace;
-    line-height: initial;
-    background-color: #000;
-    color: #fff;
+.prg-item-errors,
+.prg-item-logs {
+    background-color: #073642;
+    color: #eee8d5;
     padding: 10px;
     border-radius: 5px;
-    margin: 0 5px 5px 0;
+    margin-bottom: 5px;
+    overflow-x: auto;
+
+    p {
+        white-space: pre;
+        font-family: Menlo, Consolas, monospace;
+        line-height: initial;
+    }
+}
+
+.prg-item-attachments {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
     overflow-x: auto;
 }
 
