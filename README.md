@@ -16,7 +16,8 @@ module.exports = {
 reporter: [
   //['list'],
   ['playwright-report-grid', {  
-    outputFile: 'playwright-report/report.html'
+    outputFolder: 'playwright-report/grid',
+    outputFile: 'index.html'
   }]
 ]
 };
