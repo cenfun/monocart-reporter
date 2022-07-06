@@ -184,16 +184,14 @@ export default {
                 const contentType = attachment.contentType;
                 //contentType 'application/json' or 'image/png'.
                 if (contentType && contentType.startsWith('image')) {
-                    return `<div class="prg-item-image">
-                      <a href="${attachment.path}" target="_blank">
-                        <img src="${attachment.path}" alt="${attachment.name}" />
-                      </a>
-                    </div>`;
+                    return `<p class="prg-item-image">
+                      <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
+                    </p>`;
                 }
 
-                return `<div class="prg-item-link">
+                return `<p class="prg-item-link">
                   <a href="${attachment.path}" target="_blank">${attachment.name}</a>
-                </div>`;
+                </p>`;
             });
 
             let title = '';
@@ -203,7 +201,7 @@ export default {
 
             return `<div class="prg-item-attachments">
                 ${title}
-                <p>${list.join('</p><p>')}</p>
+                ${list.join('')}
             </div>`;
 
         },
@@ -351,8 +349,13 @@ export default {
 }
 
 .prg-item-image {
+    a {
+        display: block;
+    }
+
     img {
         max-height: 350px;
+        display: block;
     }
 }
 
