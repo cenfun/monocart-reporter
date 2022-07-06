@@ -103,7 +103,7 @@ export default {
             list.push(`<div class="prg-item-title vui-flex-auto">${item.title}</div>`);
 
             if (item.duration) {
-                list.push(`<div class="prg-item-duration">${item.duration}ms</div>`);
+                list.push(`<div class="prg-item-duration">${Util.DTF(item.duration)}</div>`);
             }
             if (item.location) {
                 list.push(`<div class="prg-item-location">${item.location}</div>`);
@@ -299,11 +299,16 @@ export default {
 
 .prg-item-head {
     padding: 8px 10px 8px 0;
+    opacity: 0.8;
     cursor: default;
 
     .prg-icon {
         margin-right: 5px;
     }
+}
+
+.prg-item-head:hover {
+    opacity: 1;
 }
 
 .prg-item-next {
