@@ -1,8 +1,8 @@
 {
-    "name": "playwright-report-grid",
-    "version": "1.0.2",
-    "description": "playwright-report-grid",
-    "main": "dist/playwright-report-grid.js",
+    "name": "monocart-reporter",
+    "version": "1.0.0",
+    "description": "monocart-reporter",
+    "main": "dist/monocart-reporter.js",
     "dependencies": {},
     "devDependencies": {}
 }

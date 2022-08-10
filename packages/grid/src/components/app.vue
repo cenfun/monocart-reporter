@@ -8,9 +8,9 @@
       <div class="vui-flex-auto" />
       <div class="prg-info">
         {{ generated }} by <a
-          href="https://github.com/cenfun/playwright-report-grid"
+          href="https://github.com/cenfun/monocart-reporter"
           target="_blank"
-        >PRG</a>
+        >MCR</a>
       </div>
     </div>
 

@@ -16,12 +16,12 @@ module.exports = {
             //generate reportData for demo
             const jsonPath = path.resolve(__dirname, '../monocart-test/.temp/report/report.json');
             if (!fs.existsSync(jsonPath)) {
-                console.log(`Not found test json: ${jsonPath}`);
+                Util.logRed(`ERROR: Not found test json: ${jsonPath}`);
                 return 1;
             }
             const reportData = Util.readJSONSync(jsonPath);
             if (!reportData) {
-                console.log(`Invalid json: ${jsonPath}`);
+                Util.logRed(`ERROR: Invalid json: ${jsonPath}`);
                 return 1;
             }
             const compress = require('lz-utils/lib/compress.js');
@@ -39,13 +39,23 @@ module.exports = {
 
         after: (item, Util) => {
 
-            if (item.minify) {
+            if (item.production) {
+                const filename = `${item.fullName}.js`;
                 //copy dist file to lib
-                const fromJs = path.resolve(item.buildPath, `${item.fullName}.js`);
-                const toJs = path.resolve(__dirname, 'lib/runtime/grid.js');
+                const fromJs = path.resolve(item.buildPath, filename);
+                if (!fs.existsSync(fromJs)) {
+                    Util.logRed(`ERROR: Not found dist: ${fromJs}`);
+                    return 1;
+                }
+                const toPath = path.resolve(__dirname, 'lib/runtime');
+                if (!fs.existsSync(toPath)) {
+                    fs.mkdirSync(toPath);
+                }
+                const toJs = path.resolve(toPath, filename);
                 //console.log(fromJs, toJs);
                 fs.cpSync(fromJs, toJs);
             }
+
             return 0;
         }
 

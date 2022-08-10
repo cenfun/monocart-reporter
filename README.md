@@ -1,12 +1,12 @@
-# playwright-report-grid
-> A grid style report for playwright
+# monocart-reporter
+> A playwright test reporter
 
 ## Preview
-[https://cenfun.github.io/playwright-report-grid](https://cenfun.github.io/playwright-report-grid)
+[https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
 ## Install
 ```sh
-npm i playwright-report-grid
+npm i monocart-reporter
 ```
 
 ## Playwright Multiple Reporters
@@ -15,7 +15,7 @@ npm i playwright-report-grid
 module.exports = {
 reporter: [
   //['list'],
-  ['playwright-report-grid', {  
+  ['monocart-reporter', {  
     outputFile: 'playwright-report/grid/index.html'
   }]
 ]
@@ -25,4 +25,4 @@ more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/te
 
 ## CHANGELOG
 
-* v1.0.3 new UI
+* v1.0.0
