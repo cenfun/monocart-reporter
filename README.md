@@ -25,4 +25,5 @@ more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/te
 
 ## CHANGELOG
 
-* v1.0.0
+* 1.0.0
+  - rename from playwright-report-grid
