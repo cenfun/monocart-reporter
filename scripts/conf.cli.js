@@ -9,12 +9,12 @@ module.exports = {
 
     build: {
 
-        vendors: ['grid'],
+        vendors: ['runtime'],
 
         before: (item, Util) => {
 
             //generate reportData for demo
-            const jsonPath = path.resolve(__dirname, '../monocart-test/.temp/report/report.json');
+            const jsonPath = path.resolve(__dirname, '../../monocart-test/.temp/report/report.json');
             if (!fs.existsSync(jsonPath)) {
                 Util.logRed(`ERROR: Not found test json: ${jsonPath}`);
                 return 1;
@@ -47,13 +47,15 @@ module.exports = {
                     Util.logRed(`ERROR: Not found dist: ${fromJs}`);
                     return 1;
                 }
-                const toPath = path.resolve(__dirname, 'lib/runtime');
+                const toPath = path.resolve(__dirname, '../lib/runtime');
                 if (!fs.existsSync(toPath)) {
                     fs.mkdirSync(toPath);
                 }
                 const toJs = path.resolve(toPath, filename);
                 //console.log(fromJs, toJs);
                 fs.cpSync(fromJs, toJs);
+
+                Util.logGreen(`Copied: ${toJs}`);
             }
 
             return 0;
