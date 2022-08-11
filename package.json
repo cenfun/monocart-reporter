@@ -1,11 +1,10 @@
 {
     "name": "monocart-reporter",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A playwright test reporter",
     "main": "lib/index.js",
     "scripts": {
         "build": "sf lint && sf b -p",
-        "patch": "npm run build && sf publish patch",
         "pack": "sf lint && sf pack -o docs -q v={version}"
     },
     "workspaces": [
