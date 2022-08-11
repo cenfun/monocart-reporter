@@ -39,7 +39,7 @@ export default {
     methods: {
 
         createGrid() {
-            const grid = new Grid('.prg-grid');
+            const grid = new Grid('.mcr-grid');
             this.grid = grid;
             this.bindGridEvents();
 

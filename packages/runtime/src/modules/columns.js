@@ -4,6 +4,7 @@ export default {
             id: 'ok',
             name: 'OK',
             width: 36,
+            sortable: false,
             align: 'center',
             formatter: 'caseIcon'
         }, {

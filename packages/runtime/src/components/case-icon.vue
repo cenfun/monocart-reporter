@@ -22,15 +22,15 @@ export default {
     },
 
     created() {
-        const list = ['prg-icon'];
+        const list = ['mcr-icon'];
         if (this.caseItem.ok) {
             if (this.caseItem.status === 'skipped') {
-                list.push('prg-icon-skipped');
+                list.push('mcr-icon-skipped');
             } else {
-                list.push('prg-icon-passed');
+                list.push('mcr-icon-passed');
             }
         } else {
-            list.push('prg-icon-failed');
+            list.push('mcr-icon-failed');
         }
 
         this.icon = list.join(' ');
@@ -39,7 +39,7 @@ export default {
 
 </script>
 <style lang="scss">
-.prg-case-icon {
+.mcr-case-icon {
     width: 100%;
     height: 100%;
     display: flex;
@@ -47,20 +47,20 @@ export default {
     justify-content: center;
 }
 
-.prg-icon {
+.mcr-icon {
     width: 16px;
     height: 16px;
 }
 
-.prg-icon-passed {
+.mcr-icon-passed {
     background-image: url("../images/passed.svg");
 }
 
-.prg-icon-skipped {
+.mcr-icon-skipped {
     background-image: url("../images/skipped.svg");
 }
 
-.prg-icon-failed {
+.mcr-icon-failed {
     background-image: url("../images/failed.svg");
 }
 

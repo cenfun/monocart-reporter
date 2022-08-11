@@ -1,12 +1,12 @@
 <template>
-  <div class="prg vui-flex-column">
-    <div class="prg-header vui-flex-row">
+  <div class="mcr vui-flex-column">
+    <div class="mcr-header vui-flex-row">
       <div
-        class="prg-title"
+        class="mcr-title"
         v-text="title"
       />
       <div class="vui-flex-auto" />
-      <div class="prg-info">
+      <div class="mcr-info">
         {{ generated }} by <a
           href="https://github.com/cenfun/monocart-reporter"
           target="_blank"
@@ -14,11 +14,11 @@
       </div>
     </div>
 
-    <div class="prg-filter">
+    <div class="mcr-filter">
       <VuiFlex
         spacing="10px"
       >
-        <div class="prg-summary vui-flex-row">
+        <div class="mcr-summary vui-flex-row">
           <div
             v-for="(item, i) in summary"
             :key="i"
@@ -35,7 +35,7 @@
         <VuiInput
           v-model="keywords"
           width="150px"
-          class="prg-search"
+          class="mcr-search"
           placeholder="keywords"
         />
 
@@ -48,7 +48,7 @@
       </VuiFlex>
     </div>
 
-    <div class="prg-grid vui-flex-auto" />
+    <div class="mcr-grid vui-flex-auto" />
 
     <VuiFlyover
       ref="flyover"
@@ -174,7 +174,7 @@ export default {
         },
 
         summaryItemClass(item) {
-            return ['prg-summary-item', item.classMap, item.caseType === this.caseType ? 'prg-summary-selected' : ''];
+            return ['mcr-summary-item', item.classMap, item.caseType === this.caseType ? 'mcr-summary-selected' : ''];
         },
 
         summaryItemClick(item) {
@@ -198,13 +198,13 @@ body {
     overflow: hidden;
 }
 
-.prg {
+.mcr {
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
-.prg-header {
+.mcr-header {
     height: 45px;
     line-height: 45px;
     padding: 0 15px;
@@ -213,14 +213,14 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
-.prg-title {
+.mcr-title {
     font-weight: bold;
     font-size: 20px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.prg-info {
+.mcr-info {
     color: #ccc;
 
     a:link,
@@ -229,21 +229,21 @@ body {
     }
 }
 
-.prg-filter {
+.mcr-filter {
     align-items: center;
     padding: 10px;
     overflow: hidden;
     border-bottom: 1px solid #ddd;
 }
 
-.prg-summary {
+.mcr-summary {
     position: relative;
     border: thin solid #6c757d;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.prg-summary-item {
+.mcr-summary-item {
     user-select: none;
     padding: 8px 10px;
     border-left: thin solid #6c757d;
@@ -259,53 +259,53 @@ body {
     }
 }
 
-.prg-summary-item:hover,
-.prg-summary-selected {
+.mcr-summary-item:hover,
+.mcr-summary-selected {
     color: #fff;
     background-color: #6c757d;
 }
 
-.prg-summary-passed {
+.mcr-summary-passed {
     color: green;
 }
 
-.prg-summary-passed:hover,
-.prg-summary-passed.prg-summary-selected {
+.mcr-summary-passed:hover,
+.mcr-summary-passed.mcr-summary-selected {
     color: #fff;
     background-color: green;
 }
 
-.prg-summary-failed {
+.mcr-summary-failed {
     color: #d00;
 }
 
-.prg-summary-failed:hover,
-.prg-summary-failed.prg-summary-selected {
+.mcr-summary-failed:hover,
+.mcr-summary-failed.mcr-summary-selected {
     color: #fff;
     background-color: #d00;
 }
 
-.prg-summary-flaky {
+.mcr-summary-flaky {
     color: orange;
 }
 
-.prg-summary-flaky:hover,
-.prg-summary-flaky.prg-summary-selected {
+.mcr-summary-flaky:hover,
+.mcr-summary-flaky.mcr-summary-selected {
     color: #fff;
     background-color: orange;
 }
 
-.prg-summary-skipped {
+.mcr-summary-skipped {
     color: gray;
 }
 
-.prg-summary-skipped:hover,
-.prg-summary-skipped.prg-summary-selected {
+.mcr-summary-skipped:hover,
+.mcr-summary-skipped.mcr-summary-selected {
     color: #fff;
     background-color: gray;
 }
 
-.prg-summary-value {
+.mcr-summary-value {
     margin: 0 auto 5px;
     padding: 5px;
     width: 81px;
@@ -323,7 +323,7 @@ body {
     }
 }
 
-.prg-search {
+.mcr-search {
     input {
         background-repeat: no-repeat;
         background-position: 97% center;
@@ -333,7 +333,7 @@ body {
     }
 }
 
-.prg-grid {
+.mcr-grid {
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {
         font-weight: normal;

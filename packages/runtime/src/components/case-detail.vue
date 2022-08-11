@@ -1,8 +1,8 @@
 <template>
-  <div class="prg-detail">
+  <div class="mcr-detail">
     <div
       ref="tree"
-      class="prg-tree"
+      class="mcr-tree"
     />
   </div>
 </template>
@@ -66,7 +66,7 @@ export default {
                 const head = this.renderItemHead(item);
                 const body = this.renderItemBody(item);
 
-                const cls = ['prg-item'];
+                const cls = ['mcr-item'];
                 if (item.classMap) {
                     cls.push(item.classMap);
                 }
@@ -83,11 +83,11 @@ export default {
 
         renderItemHead(item) {
 
-            const cls = ['prg-item-head', `prg-item-${item.type}`, 'vui-flex-row'];
+            const cls = ['mcr-item-head', `mcr-item-${item.type}`, 'vui-flex-row'];
 
             const list = [];
             if (item.level) {
-                list.push('<div class="prg-item-next">└</div>');
+                list.push('<div class="mcr-item-next">└</div>');
             }
 
             if (item.type === 'case') {
@@ -100,13 +100,13 @@ export default {
                 list.push(div.innerHTML);
             }
 
-            list.push(`<div class="prg-item-title vui-flex-auto">${item.title}</div>`);
+            list.push(`<div class="mcr-item-title vui-flex-auto">${item.title}</div>`);
 
             if (item.duration) {
-                list.push(`<div class="prg-item-duration">${Util.DTF(item.duration)}</div>`);
+                list.push(`<div class="mcr-item-duration">${Util.DTF(item.duration)}</div>`);
             }
             if (item.location) {
-                list.push(`<div class="prg-item-location">${item.location}</div>`);
+                list.push(`<div class="mcr-item-location">${item.location}</div>`);
             }
             const head = list.join('');
 
@@ -129,7 +129,7 @@ export default {
                 return '';
             }
 
-            return `<div class="prg-item-body">
+            return `<div class="mcr-item-body">
                 ${list.join('')}
             </div>`;
         },
@@ -150,7 +150,7 @@ export default {
                 title = '<a name="errors"></a><h3># Errors</h3>';
             }
 
-            return `<div class="prg-item-errors">
+            return `<div class="mcr-item-errors">
                 ${title}
                 <p>${list.join('</p><p>')}</p>
             </div>`;
@@ -171,7 +171,7 @@ export default {
                 title = '<a name="logs"></a><h3># Logs</h3>';
             }
 
-            return `<div class="prg-item-logs">
+            return `<div class="mcr-item-logs">
                 ${title}
                 <p>${list.join('</p><p>')}</p>
             </div>`;
@@ -191,11 +191,11 @@ export default {
                 const contentType = attachment.contentType;
                 if (contentType) {
                     if (contentType.startsWith('image')) {
-                        return `<p class="prg-item-image">
+                        return `<p class="mcr-item-image">
                             <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
                         </p>`;
                     } else if (contentType.startsWith('video')) {
-                        return `<p class="prg-item-video">
+                        return `<p class="mcr-item-video">
                             <video controls height="350">
                                 <source src="${attachment.path}" type="${contentType}">
                                 <p>Your browser doesn't support HTML5 video. Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead.</p>
@@ -204,7 +204,7 @@ export default {
                     }
                 }
 
-                return `<p class="prg-item-link">
+                return `<p class="mcr-item-link">
                   <a href="${attachment.path}" target="_blank">${attachment.name}</a>
                 </p>`;
             });
@@ -214,7 +214,7 @@ export default {
                 title = '<a name="attachments"></a><h3># Attachments</h3>';
             }
 
-            return `<div class="prg-item-attachments">
+            return `<div class="mcr-item-attachments">
                 ${title}
                 ${list.join('')}
             </div>`;
@@ -282,36 +282,36 @@ export default {
 };
 </script>
 <style lang="scss">
-.prg-detail {
+.mcr-detail {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-.prg-tree {
+.mcr-tree {
     padding: 0 0 10px 10px;
 }
 
-.prg-item {
+.mcr-item {
     border-bottom: thin solid #ccc;
 }
 
-.prg-item-head {
+.mcr-item-head {
     padding: 8px 10px 8px 0;
     opacity: 0.8;
     cursor: default;
 
-    .prg-icon {
+    .mcr-icon {
         margin-right: 5px;
     }
 }
 
-.prg-item-head:hover {
+.mcr-item-head:hover {
     opacity: 1;
 }
 
-.prg-item-next {
+.mcr-item-next {
     padding-right: 5px;
 }
 
@@ -337,21 +337,21 @@ export default {
     color: red;
 }
 
-.prg-item-suite .prg-item-title {
+.mcr-item-suite .mcr-item-title {
     font-weight: bold;
 }
 
-.prg-item-location {
+.mcr-item-location {
     font-size: 13px;
     padding-left: 10px;
 }
 
-.prg-item-body {
+.mcr-item-body {
     padding: 0 5px;
 }
 
-.prg-item-errors,
-.prg-item-logs {
+.mcr-item-errors,
+.mcr-item-logs {
     background-color: #073642;
     color: #eee8d5;
     padding: 10px;
@@ -366,14 +366,14 @@ export default {
     }
 }
 
-.prg-item-attachments {
+.mcr-item-attachments {
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 5px;
     overflow-x: auto;
 }
 
-.prg-item-image {
+.mcr-item-image {
     a {
         display: block;
     }
@@ -384,18 +384,18 @@ export default {
     }
 }
 
-.prg-detail-head {
+.mcr-detail-head {
     font-size: 16px;
     font-weight: bold;
     border-bottom: thin solid #ccc;
     padding: 10px;
 }
 
-.prg-detail-body {
+.mcr-detail-body {
     padding: 10px;
 }
 
-.prg-error {
+.mcr-error {
     overflow: auto;
 }
 

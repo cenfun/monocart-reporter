@@ -8,7 +8,7 @@ export default {
             return '';
         }
         const div = document.createElement('div');
-        div.className = 'prg-case-icon';
+        div.className = 'mcr-case-icon';
         CaseIcon.createComponent({
             caseItem: rowItem
         }, null, div);

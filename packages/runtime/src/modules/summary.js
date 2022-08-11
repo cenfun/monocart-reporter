@@ -97,10 +97,10 @@ export default {
 
             //summary.failed.value = 0;
 
-            summary.passed.classMap = summary.failed.value === 0 ? 'prg-summary-passed' : '';
-            summary.failed.classMap = summary.failed.value > 0 ? 'prg-summary-failed' : 'prg-summary-skipped';
-            summary.flaky.classMap = summary.flaky.value > 0 ? 'prg-summary-flaky' : 'prg-summary-skipped';
-            summary.skipped.classMap = 'prg-summary-skipped';
+            summary.passed.classMap = summary.failed.value === 0 ? 'mcr-summary-passed' : '';
+            summary.failed.classMap = summary.failed.value > 0 ? 'mcr-summary-failed' : 'mcr-summary-skipped';
+            summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-summary-flaky' : 'mcr-summary-skipped';
+            summary.skipped.classMap = 'mcr-summary-skipped';
 
             this.summary = summary;
 

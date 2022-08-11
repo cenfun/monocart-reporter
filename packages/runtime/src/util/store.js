@@ -1,4 +1,4 @@
-const namespace = 'prg';
+const namespace = 'mcr';
 
 const key = (k) => {
     return `${namespace}-${k}`;
