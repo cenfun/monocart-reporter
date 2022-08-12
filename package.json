@@ -5,6 +5,7 @@
     "main": "lib/index.js",
     "scripts": {
         "build": "sf lint && sf b -p",
+        "patch": "npm run build && sf publish patch -r",
         "pack": "sf lint && sf pack -o docs -q v={version}"
     },
     "workspaces": [
