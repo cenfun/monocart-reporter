@@ -25,5 +25,8 @@ more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/te
 
 ## CHANGELOG
 
+* 1.0.3
+  - updated customize options logic
+
 * 1.0.0
   - rename from playwright-report-grid
