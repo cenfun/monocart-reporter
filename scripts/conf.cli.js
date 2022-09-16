@@ -17,6 +17,17 @@ module.exports = {
 
         before: (item, Util) => {
 
+
+            //create link for test
+            const existingPath = path.resolve(__dirname, '../');
+            const newPath = path.resolve(__dirname, '../node_modules/monocart-reporter');
+            //will be created by sf install link (runtime component)
+            if (fs.existsSync(newPath)) {
+                fs.unlinkSync(newPath);
+            }
+            fs.symlinkSync(existingPath, newPath);
+
+
             //generate reportData for demo
             const jsonPath = path.resolve(__dirname, '../../monocart-test/.temp/report/report.json');
             if (!fs.existsSync(jsonPath)) {
