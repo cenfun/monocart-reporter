@@ -13,14 +13,15 @@ npm i monocart-reporter
 ```js
 // playwright.config.js
 module.exports = {
-reporter: [
-  //['list'],
-  ['monocart-reporter', {  
-    outputFile: 'playwright-report/grid/index.html'
-  }]
-]
+  reporter: [
+    //['list'],
+    ['monocart-reporter', {  
+      outputFile: 'playwright-report/grid/index.html'
+    }]
+  ]
 };
 ```
+see example [tests/playwright.config.js](tests/playwright.config.js)  
 more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
 
 ## CHANGELOG
