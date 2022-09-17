@@ -1,4 +1,5 @@
 const config = {
+    name: 'my test',
     reporter: [
         ['list'],
         ['json', {
