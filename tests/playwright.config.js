@@ -14,6 +14,7 @@ const config = {
         ['junit', {
             outputFile: path.resolve(__dirname, '../.temp/junit/results.xml')
         }],
+        //['monocart-reporter']
         ['monocart-reporter', {
             outputFile: path.resolve(__dirname, '../.temp/monocart/index.html')
         }]
