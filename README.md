@@ -14,9 +14,9 @@ npm i monocart-reporter
 // playwright.config.js
 module.exports = {
   reporter: [
-    //['list'],
+    ['list'],
     ['monocart-reporter', {  
-      outputFile: 'playwright-report/grid/index.html'
+      outputFile: 'playwright-report/monocart/index.html'
     }]
   ]
 };
@@ -28,6 +28,3 @@ more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/te
 
 * 1.0.3
   - updated customize options logic
-
-* 1.0.0
-  - rename from playwright-report-grid

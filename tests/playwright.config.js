@@ -1,22 +1,21 @@
-const path = require('path');
-
 const config = {
     reporter: [
         ['list'],
         ['json', {
-            outputFile: path.resolve(__dirname, '../.temp/json/results.json')
+            outputFile: '.temp/json/results.json'
         }],
         ['html', {
-            outputFolder: path.resolve(__dirname, '../.temp/html'),
+            //relative config path not process.cwd ?
+            outputFolder: '../.temp/html',
             outputFile: 'results.html',
             open: 'never'
         }],
         ['junit', {
-            outputFile: path.resolve(__dirname, '../.temp/junit/results.xml')
+            outputFile: '.temp/junit/results.xml'
         }],
         //['monocart-reporter']
         ['monocart-reporter', {
-            outputFile: path.resolve(__dirname, '../.temp/monocart/index.html')
+            outputFile: '.temp/monocart/index.html'
         }]
     ]
 };
