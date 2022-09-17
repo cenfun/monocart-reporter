@@ -12,8 +12,8 @@ import CaseIcon from './case-icon.vue';
 import Util from '../util/util.js';
 
 const convert = new Convert({
-    fg: '#eee8d5',
-    bg: '#073642',
+    fg: '#333',
+    bg: '#F6F8FA',
     newline: true
 });
 
@@ -316,12 +316,12 @@ export default {
 }
 
 .tg-case-failed {
-    background-color: rgb(252 220 220);
+    background-color: var(--bg-failed);
     border: none;
 }
 
 .tg-case-flaky {
-    background-color: rgb(252 246 220);
+    background-color: var(--bg-flaky);
     border: none;
 }
 
@@ -347,16 +347,21 @@ export default {
 }
 
 .mcr-item-body {
-    padding: 0 5px;
+    padding: 0 10px;
+
+    h3 {
+        padding: 5px 0;
+        margin: 0;
+    }
 }
 
 .mcr-item-errors,
 .mcr-item-logs {
-    background-color: #073642;
-    color: #eee8d5;
+    background-color: #f6f8fa;
+    color: #333;
     padding: 10px;
     border-radius: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     overflow-x: auto;
 
     p {

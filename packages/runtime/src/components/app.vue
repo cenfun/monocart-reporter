@@ -202,13 +202,16 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+
+    --bg-failed: #ffebe9;
+    --bg-flaky: #fcf7de;
 }
 
 .mcr-header {
     height: 45px;
     line-height: 45px;
     padding: 0 15px;
-    background-color: #333;
+    background-color: #24292f;
     color: #fff;
     border-bottom: 1px solid #ddd;
 }
@@ -221,11 +224,11 @@ body {
 }
 
 .mcr-info {
-    color: #ccc;
+    color: #999;
 
     a:link,
     a:visited {
-        color: #ccc;
+        color: #999;
     }
 }
 
@@ -340,12 +343,12 @@ body {
     }
 
     .tg-case-failed.tg-row {
-        background-color: rgb(252 220 220);
+        background-color: var(--bg-failed);
         border: none;
     }
 
     .tg-case-flaky.tg-row {
-        background-color: rgb(252 246 220);
+        background-color: var(--bg-flaky);
         border: none;
     }
 
@@ -386,7 +389,7 @@ flyover
 }
 
 .vui-flyover-header {
-    background-color: #555;
+    background-color: #005ba4;
     padding: 0 10px;
 }
 
@@ -398,7 +401,7 @@ flyover
 .vui-flyover-title {
     height: 45px;
     line-height: 45px;
-    color: #eee;
+    color: #fff;
     font-size: 16px;
     font-weight: bold;
 }
