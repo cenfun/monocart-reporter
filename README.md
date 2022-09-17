@@ -25,6 +25,4 @@ see example [tests/playwright.config.js](tests/playwright.config.js)
 more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
 
 ## CHANGELOG
-
-* 1.0.3
-  - updated customize options logic
+- [CHANGELOG.md](CHANGELOG.md)

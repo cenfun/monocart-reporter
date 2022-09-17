@@ -32,7 +32,7 @@
         "eslint-config-plus": "^1.0.3",
         "eslint-plugin-chain": "^2.0.0",
         "eslint-plugin-html": "^7.1.0",
-        "eslint-plugin-vue": "^9.5.0",
+        "eslint-plugin-vue": "^9.5.1",
         "playwright": "^1.25.2",
         "postcss": "^8.4.16",
         "postcss-html": "^1.5.0",
