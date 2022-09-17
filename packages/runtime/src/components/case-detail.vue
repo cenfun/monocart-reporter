@@ -347,7 +347,11 @@ export default {
 }
 
 .mcr-item-body {
-    padding: 0 10px;
+    padding: 0 10px 10px;
+
+    > *:last-child {
+        margin-bottom: 0;
+    }
 
     h3 {
         padding: 5px 0;
@@ -374,8 +378,8 @@ export default {
 .mcr-item-attachments {
     padding: 10px;
     border-radius: 5px;
-    margin-bottom: 5px;
     overflow-x: auto;
+    background-color: #f6f8fa;
 }
 
 .mcr-item-image {
