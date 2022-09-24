@@ -1,3 +1,6 @@
+* 1.0.6
+  - fixed UI
+
 * 1.0.5
   - fixed report title and date
 

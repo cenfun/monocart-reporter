@@ -16,6 +16,7 @@ module.exports = {
   reporter: [
     ['list'],
     ['monocart-reporter', {  
+      name: "My Test Report",
       outputFile: 'playwright-report/monocart/index.html'
     }]
   ]

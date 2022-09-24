@@ -1,17 +1,25 @@
 <template>
   <div class="mcr vui-flex-column">
     <div class="mcr-header vui-flex-row">
-      <div
-        class="mcr-title"
-        v-text="title"
-      />
+      <div class="mcr-title">
+        {{ title }}
+        <span>{{ date }}</span>
+      </div>
       <div class="vui-flex-auto" />
-      <div class="mcr-info">
-        {{ generated }} by <a
+      <VuiFlex spacing="10px">
+        <a
+          class="mcr-icon mcr-icon-playwright"
+          :title="titlePlaywright"
+          href="https://github.com/microsoft/playwright"
+          target="_blank"
+        />
+        <a
+          class="mcr-icon mcr-icon-github"
+          title="Monocart Reporter"
           href="https://github.com/cenfun/monocart-reporter"
           target="_blank"
-        >MCR</a>
-      </div>
+        />
+      </VuiFlex>
     </div>
 
     <div class="mcr-filter">
@@ -122,7 +130,8 @@ export default {
     data() {
         return {
             title: '',
-            generated: '',
+            date: '',
+            titlePlaywright: '',
             summary: {},
 
             //filter
@@ -149,7 +158,8 @@ export default {
         this.gridDataMap = {};
 
         this.title = reportData.name;
-        this.generated = `Generated ${new Date(reportData.date).toLocaleString()}`;
+        this.date = new Date(reportData.date).toLocaleString();
+        this.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
         this.initStore();
     },
 
@@ -207,9 +217,32 @@ body {
     --bg-flaky: #fcf7de;
 }
 
+.mcr-icon {
+    display: block;
+    overflow: hidden;
+    width: 20px;
+    height: 20px;
+    background-size: 20px 20px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.8;
+}
+
+.mcr-icon:hover {
+    opacity: 1;
+}
+
+.mcr-icon-playwright {
+    background-image: url("../images/playwright.svg");
+}
+
+.mcr-icon-github {
+    background-image: url("../images/github.svg");
+}
+
 .mcr-header {
     height: 45px;
-    line-height: 45px;
+    line-height: 44px;
     padding: 0 15px;
     background-color: #24292f;
     color: #fff;
@@ -217,18 +250,14 @@ body {
 }
 
 .mcr-title {
-    font-weight: bold;
-    font-size: 20px;
+    font-size: 24px;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
 
-.mcr-info {
-    color: #999;
-
-    a:link,
-    a:visited {
-        color: #999;
+    span {
+        font-size: 16px;
+        margin-left: 5px;
+        color: #ccc;
     }
 }
 
