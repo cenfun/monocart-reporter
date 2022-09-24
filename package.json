@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "A playwright test reporter",
     "main": "lib/index.js",
     "scripts": {
