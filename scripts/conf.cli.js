@@ -13,8 +13,6 @@ module.exports = {
 
     build: {
 
-        vendors: ['runtime'],
-
         before: (item, Util) => {
 
             //generate reportData for demo
