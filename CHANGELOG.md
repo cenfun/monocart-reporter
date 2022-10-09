@@ -1,3 +1,6 @@
+* 1.0.7
+  - fixed skipped issue (thanks @i-novo)
+
 * 1.0.6
   - fixed UI
 
