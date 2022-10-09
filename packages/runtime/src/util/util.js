@@ -28,6 +28,11 @@ const Util = {
         return s.padStart(l, '0');
     },
 
+    //ok is outcome === 'expected' || 'flaky' || 'skipped'
+    isSkipped: function(item) {
+        return item.status === 'skipped' || item.outcome === 'skipped';
+    },
+
     //number
     NF: function(v) {
         v = Util.toNum(v);

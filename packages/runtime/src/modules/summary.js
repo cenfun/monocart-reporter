@@ -41,7 +41,7 @@ export default {
                 }
                 summary.all.value += 1;
                 if (item.ok) {
-                    if ([item.status, item.outcome].includes('skipped')) {
+                    if (Util.isSkipped(item)) {
                         summary.skipped.value += 1;
                         item.classMap = 'tg-case-skipped';
                         item.caseType = 'skipped';

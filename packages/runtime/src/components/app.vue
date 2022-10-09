@@ -255,18 +255,27 @@ icon
 
 .mcr-icon-passed {
     opacity: 1;
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;
     cursor: default;
     background-image: url("../images/passed.svg");
 }
 
 .mcr-icon-skipped {
     opacity: 1;
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;
     cursor: default;
     background-image: url("../images/skipped.svg");
 }
 
 .mcr-icon-failed {
     opacity: 1;
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;
     cursor: default;
     background-image: url("../images/failed.svg");
 }
@@ -451,6 +460,10 @@ icon
         .tg-cell {
             color: red;
         }
+    }
+
+    .mcr-location {
+        font-weight: normal;
     }
 }
 

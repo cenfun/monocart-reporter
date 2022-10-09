@@ -62,6 +62,7 @@ export default {
         }, {
             id: 'location',
             name: 'Location',
+            classMap: 'mcr-location',
             width: 200
         }];
     }

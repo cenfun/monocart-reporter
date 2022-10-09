@@ -3,6 +3,7 @@
 </template>
 <script>
 import { createComponent } from 'vine-ui';
+import Util from '../util/util.js';
 
 export default {
     createComponent,
@@ -24,7 +25,7 @@ export default {
     created() {
         const list = ['mcr-icon'];
         if (this.caseItem.ok) {
-            if ([this.caseItem.status, this.caseItem.outcome].includes('skipped')) {
+            if (Util.isSkipped(this.caseItem)) {
                 list.push('mcr-icon-skipped');
             } else {
                 list.push('mcr-icon-passed');
