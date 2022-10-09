@@ -26,21 +26,21 @@
         "stack-utils": "^2.0.5"
     },
     "devDependencies": {
-        "@playwright/test": "^1.25.2",
+        "@playwright/test": "^1.27.0",
         "ansi-to-html": "^0.7.2",
-        "eslint": "^8.23.1",
+        "eslint": "^8.25.0",
         "eslint-config-plus": "^1.0.3",
         "eslint-plugin-chain": "^2.0.0",
         "eslint-plugin-html": "^7.1.0",
-        "eslint-plugin-vue": "^9.5.1",
-        "playwright": "^1.25.2",
-        "postcss": "^8.4.16",
+        "eslint-plugin-vue": "^9.6.0",
+        "playwright": "^1.27.0",
+        "postcss": "^8.4.17",
         "postcss-html": "^1.5.0",
         "postcss-scss": "^4.0.5",
-        "stylelint": "^14.11.0",
+        "stylelint": "^14.13.0",
         "stylelint-config-recommended": "^9.0.0",
         "stylelint-config-standard": "^28.0.0",
         "turbogrid": "^3.0.1",
-        "vine-ui": "^3.0.12"
+        "vine-ui": "^3.0.14"
     }
 }
