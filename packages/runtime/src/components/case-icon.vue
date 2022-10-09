@@ -24,7 +24,7 @@ export default {
     created() {
         const list = ['mcr-icon'];
         if (this.caseItem.ok) {
-            if (this.caseItem.status === 'skipped') {
+            if ([this.caseItem.status, this.caseItem.outcome].includes('skipped')) {
                 list.push('mcr-icon-skipped');
             } else {
                 list.push('mcr-icon-passed');
@@ -45,23 +45,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.mcr-icon {
-    width: 16px;
-    height: 16px;
-}
-
-.mcr-icon-passed {
-    background-image: url("../images/passed.svg");
-}
-
-.mcr-icon-skipped {
-    background-image: url("../images/skipped.svg");
-}
-
-.mcr-icon-failed {
-    background-image: url("../images/failed.svg");
 }
 
 </style>

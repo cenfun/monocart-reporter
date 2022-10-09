@@ -1,5 +1,9 @@
 const config = {
     name: 'my test',
+    globalSetup: require.resolve('./global-setup.js'),
+    use: {
+        baseURL: 'https://example.com/'
+    },
     reporter: [
         ['list'],
         ['json', {

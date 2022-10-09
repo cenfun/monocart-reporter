@@ -1,5 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24">
-    <g fill="#333">
-        <path d="M10 20C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0-10a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm0-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+<svg viewBox="0 0 48 48" width="100%" height="100%" pointer-events="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <g fill="none">
+        <path d="M24 44a19.937 19.937 0 0 0 14.142-5.858A19.937 19.937 0 0 0 44 24a19.938 19.938 0 0 0-5.858-14.142A19.937 19.937 0 0 0 24 4 19.938 19.938 0 0 0 9.858 9.858 19.938 19.938 0 0 0 4 24a19.937 19.937 0 0 0 5.858 14.142A19.938 19.938 0 0 0 24 44Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M24 11a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z" fill="currentColor"/>
+        <path d="M24.5 34V20h-2M21 34h7" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
 </svg>

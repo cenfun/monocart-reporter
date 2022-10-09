@@ -299,16 +299,10 @@ export default {
 
 .mcr-item-head {
     padding: 8px 10px 8px 0;
-    opacity: 0.8;
-    cursor: default;
 
     .mcr-icon {
         margin-right: 5px;
     }
-}
-
-.mcr-item-head:hover {
-    opacity: 1;
 }
 
 .mcr-item-next {

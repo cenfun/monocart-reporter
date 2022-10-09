@@ -71,7 +71,7 @@
               class="vui-flyover-icon"
               @click="flyoverVisible=false"
             >
-              <div class="vui-icon vui-icon-arrow-right" />
+              <div class="mcr-icon mcr-icon-arrow-right" />
             </div>
             <div class="vui-flyover-title vui-flex-auto">
               {{ detailTitle }}
@@ -80,7 +80,7 @@
               class="vui-flyover-icon"
               @click="flyoverVisible=false"
             >
-              <div class="vui-icon vui-icon-close" />
+              <div class="mcr-icon mcr-icon-close" />
             </div>
           </VuiFlex>
         </div>
@@ -217,6 +217,10 @@ body {
     --bg-flaky: #fcf7de;
 }
 
+/*
+icon
+*/
+
 .mcr-icon {
     display: block;
     overflow: hidden;
@@ -226,6 +230,7 @@ body {
     background-position: center center;
     background-repeat: no-repeat;
     opacity: 0.8;
+    cursor: pointer;
 }
 
 .mcr-icon:hover {
@@ -238,6 +243,55 @@ body {
 
 .mcr-icon-github {
     background-image: url("../images/github.svg");
+}
+
+.mcr-icon-close {
+    background-image: url("../images/close.svg");
+}
+
+.mcr-icon-arrow-right {
+    background-image: url("../images/arrow-right.svg");
+}
+
+.mcr-icon-passed {
+    opacity: 1;
+    cursor: default;
+    background-image: url("../images/passed.svg");
+}
+
+.mcr-icon-skipped {
+    opacity: 1;
+    cursor: default;
+    background-image: url("../images/skipped.svg");
+}
+
+.mcr-icon-failed {
+    opacity: 1;
+    cursor: default;
+    background-image: url("../images/failed.svg");
+}
+
+.mcr-icon-info {
+    background-image: url("../images/info.svg");
+}
+
+.mcr-icon-error {
+    background-image: url("../images/error.svg");
+}
+
+.mcr-icon-log {
+    background-image: url("../images/log.svg");
+}
+
+.mcr-icon-attachment {
+    background-image: url("../images/attachment.svg");
+}
+
+.tg-cell .mcr-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .mcr-header {
@@ -437,57 +491,6 @@ flyover
 
 .vui-flyover-content {
     overflow: auto;
-}
-
-/*
-icon
-*/
-
-.vui-icon {
-    display: block;
-    overflow: hidden;
-    width: 20px;
-    height: 20px;
-    background-size: 20px 20px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    opacity: 0.6;
-    cursor: pointer;
-}
-
-.vui-icon:hover {
-    opacity: 1;
-}
-
-.tg-cell .vui-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.vui-icon-close {
-    background-image: url("../images/close.svg");
-}
-
-.vui-icon-arrow-right {
-    background-image: url("../images/arrow-right.svg");
-}
-
-.vui-icon-info {
-    background-image: url("../images/info.svg");
-}
-
-.vui-icon-error {
-    background-image: url("../images/error.svg");
-}
-
-.vui-icon-log {
-    background-image: url("../images/log.svg");
-}
-
-.vui-icon-attachment {
-    background-image: url("../images/attachment.svg");
 }
 
 /*

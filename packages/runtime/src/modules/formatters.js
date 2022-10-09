@@ -21,7 +21,7 @@ export default {
             v = `${v} (${rowItem.tests})`;
         } else if (rowItem.type === 'case') {
             v = `${v} <div class="tg-cell-hover-icon tg-flyover-icon" title="Show case detail">
-                <div class="vui-icon vui-icon-info" />
+                <div class="mcr-icon mcr-icon-info" />
             </div>`;
         }
         return defaultFormatter(v, rowItem, columnItem, cellNode);
@@ -39,7 +39,7 @@ export default {
         if (!errors) {
             return '';
         }
-        return '<div class="vui-icon vui-icon-error" />';
+        return '<div class="mcr-icon mcr-icon-error" />';
     },
 
     logs: function(v, rowItem) {
@@ -47,7 +47,7 @@ export default {
         if (!logs) {
             return '';
         }
-        return '<div class="vui-icon vui-icon-log" />';
+        return '<div class="mcr-icon mcr-icon-log" />';
     },
 
     attachments: function(v, rowItem) {
@@ -55,7 +55,7 @@ export default {
         if (!attachments) {
             return '';
         }
-        return '<div class="vui-icon vui-icon-attachment" />';
+        return '<div class="mcr-icon mcr-icon-attachment" />';
     }
 
 };

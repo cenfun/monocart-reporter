@@ -2,7 +2,7 @@ export default {
     create: function() {
         return [{
             id: 'ok',
-            name: 'OK',
+            name: '',
             width: 36,
             sortable: false,
             align: 'center',
@@ -31,6 +31,11 @@ export default {
             id: 'expectedStatus',
             name: 'Expected',
             align: 'center'
+        }, {
+            id: 'outcome',
+            name: 'Outcome',
+            align: 'center',
+            width: 85
         }, {
             id: 'retry',
             name: 'Retry',

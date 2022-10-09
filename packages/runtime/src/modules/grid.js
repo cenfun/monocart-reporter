@@ -118,7 +118,7 @@ export default {
                     return;
                 }
 
-                if (d.e.target.classList.contains('vui-icon')) {
+                if (d.e.target.classList.contains('mcr-icon')) {
                     const position = d.columnItem.id;
                     this.showFlyover(caseItem, position);
                     return;
