@@ -28,7 +28,8 @@ more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/te
 
 ## Output Assets
 - path-to/your-filename.html  
-Single HTML file, easy to transfer directly open, or deploy anywhere (without test attachments (screenshots/video), will link with relative path in report. All attachments need to be copied to the relative path when deploying the report)
+Single HTML file, easy to transfer/deploy or open directly anywhere   
+Note that test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
 - path-to/your-filename.json  
 Separated metadata file (Already included in the above HTML and compressed, it can be deleted)
 
