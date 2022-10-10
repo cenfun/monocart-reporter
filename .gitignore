@@ -3,3 +3,4 @@
 /packages/**/dist
 /package-lock.json
 /lib/runtime
+/test-results

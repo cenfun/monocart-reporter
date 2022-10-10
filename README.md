@@ -18,7 +18,7 @@ module.exports = {
     ['monocart-reporter', {  
       name: "My Test Report",
       //the dir relative process.cwd
-      outputFile: 'playwright-report/monocart/index.html'
+      outputFile: './test-results/index.html'
     }]
   ]
 };

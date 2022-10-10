@@ -20,7 +20,7 @@ const config = {
         }],
         //['monocart-reporter']
         ['monocart-reporter', {
-            //the dir relative process.cwd not
+            //the dir relative process.cwd
             outputFile: '.temp/monocart/index.html'
         }]
     ]
