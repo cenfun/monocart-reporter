@@ -26,5 +26,19 @@ module.exports = {
 see example [tests/playwright.config.js](tests/playwright.config.js)  
 more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
 
+## Output Assets
+- path-to/your-filename.html  
+Single HTML file, easy to transfer directly open, or deploy anywhere (without test attachments (screenshots/video), will link with relative path in report. All attachments need to be copied to the relative path when deploying the report)
+- path-to/your-filename.json  
+Separated metadata file (Already included in the above HTML and compressed, it can be deleted)
+
+## Report UI [packages/app](packages/app)
+ - Base on [Vue 3](https://github.com/vuejs/core)
+ - Lightweight UI components [vine-ui](https://github.com/cenfun/vine-ui)
+ - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
+
+## Example Test
+- [monocart-reporter-test](https://github.com/cenfun/monocart-reporter-test)
+- [monocart-test](https://github.com/cenfun/monocart-test)
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)
