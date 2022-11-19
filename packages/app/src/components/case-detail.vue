@@ -400,6 +400,10 @@ export default {
     }
 }
 
+.mcr-item-errors > h3 {
+    color: red;
+}
+
 .mcr-item-annotation {
     .markdown-body {
         padding: 5px;

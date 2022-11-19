@@ -15,7 +15,7 @@
         />
         <a
           class="mcr-icon mcr-icon-github"
-          title="Monocart Reporter"
+          :title="titleReporter"
           href="https://github.com/cenfun/monocart-reporter"
           target="_blank"
         />
@@ -132,6 +132,7 @@ export default {
             title: '',
             date: '',
             titlePlaywright: '',
+            titleReporter: `Monocart Reporter v${window.VERSION}`,
             summary: {},
 
             // filter
