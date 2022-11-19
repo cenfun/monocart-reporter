@@ -23,7 +23,7 @@ export default {
     methods: {
         update(caseItem, position) {
 
-            //console.log('update', caseItem, position);
+            // console.log('update', caseItem, position);
 
             if (!caseItem) {
                 return;
@@ -46,7 +46,7 @@ export default {
 
             const list = [];
 
-            //suites
+            // suites
             let suite = this.caseItem.parent;
             while (suite) {
                 list.push(suite);
@@ -54,10 +54,10 @@ export default {
             }
             list.reverse();
 
-            //case
+            // case
             list.push(this.caseItem);
 
-            //steps
+            // steps
             this.generateSteps(list, this.caseItem.steps);
 
             let left = 0;
@@ -187,7 +187,7 @@ export default {
             const list = attachments.map((attachment) => {
                 console.log(attachment);
 
-                //contentType 'application/json' 'image/png' 'video/webm'
+                // contentType 'application/json' 'image/png' 'video/webm'
                 const contentType = attachment.contentType;
                 if (contentType) {
                     if (contentType.startsWith('image')) {
@@ -247,7 +247,7 @@ export default {
 
         positionHandler(position) {
 
-            //console.log('position', position);
+            // console.log('position', position);
 
             clearTimeout(this.timeout_position);
 
@@ -259,7 +259,7 @@ export default {
                 return;
             }
 
-            //wait for rendered like image
+            // wait for rendered like image
             this.timeout_position = setTimeout(() => {
                 this.renderPosition(position);
             }, 100);

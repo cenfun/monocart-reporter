@@ -162,7 +162,7 @@ export default {
             if (this.gridDataMap[key]) {
                 return this.gridDataMap[key];
             }
-            //console.log(key);
+            // console.log(key);
             const allData = JSON.parse(JSON.stringify(this.gridDataAll));
             this.initTreeList(allData.rows, null, -1);
             const data = this.getGridDataByType(allData, this.caseType, this.suiteVisible, this.stepVisible);

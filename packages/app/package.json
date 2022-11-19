@@ -1,10 +1,10 @@
 {
     "name": "monocart-reporter",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "monocart-reporter",
     "main": "dist/monocart-reporter.js",
-    "private": true,
-    "link": false,
     "dependencies": {},
-    "devDependencies": {}
+    "devDependencies": {},
+    "private": true,
+    "link": false
 }

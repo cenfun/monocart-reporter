@@ -1,4 +1,22 @@
 const { test, expect } = require('@playwright/test');
+const Util = require('../common/util.js');
+
+test('before describe', () => {
+
+    // test() can only be called in a test file
+    // no test in test
+    // test('inside', () => {
+    // });
+
+});
+
+
+test('flaky case', ({ browserName }, testInfo) => {
+
+    console.log(`retry: ${testInfo.retry}`);
+    expect(testInfo.retry).toBe(1);
+
+});
 
 test.describe('two tests', () => {
     test('one', async () => {
@@ -12,6 +30,7 @@ test.describe('two tests', () => {
 
         test('failed case', () => {
 
+            console.log('stdout: failed case log');
 
             console.error('stderr: failed case error');
 
@@ -52,8 +71,9 @@ test.describe('two tests1', () => {
         // ...
     });
 
-    test('timeout case', () => {
+    test('timeout case', async () => {
         test.setTimeout(3000);
+        await Util.delay(10 * 1000);
     });
 
     test('two', async () => {
@@ -64,4 +84,11 @@ test.describe('two tests1', () => {
 
 test('after describe', () => {
 
+});
+
+test('test annotations', () => {
+    test.info().annotations.push({
+        type: 'issue',
+        description: 'https://github.com/cenfun/monocart-reporter/issues'
+    });
 });

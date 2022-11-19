@@ -28,18 +28,18 @@ const Util = {
         return s.padStart(l, '0');
     },
 
-    //ok is outcome === 'expected' || 'flaky' || 'skipped'
+    // ok is outcome === 'expected' || 'flaky' || 'skipped'
     isSkipped: function(item) {
         return item.status === 'skipped' || item.outcome === 'skipped';
     },
 
-    //number
+    // number
     NF: function(v) {
         v = Util.toNum(v);
         return v.toLocaleString();
     },
 
-    //percent
+    // percent
     PF: function(v, t = 1, digits = 1) {
         v = Util.toNum(v);
         t = Util.toNum(t);
@@ -50,7 +50,7 @@ const Util = {
         return `${(per * 100).toFixed(digits)}%`;
     },
 
-    //time
+    // time
     TF: function(v, unit, digits = 1) {
         v = Util.toNum(v, true);
         if (unit) {
@@ -70,7 +70,7 @@ const Util = {
         return `${hours}:${Util.zero(minutes)}:${Util.zero(seconds)}`;
     },
 
-    //duration time
+    // duration time
     DTF: function(v, maxV) {
         maxV = maxV || v;
         if (maxV > 60 * 1000) {

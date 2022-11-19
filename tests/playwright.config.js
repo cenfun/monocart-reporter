@@ -1,10 +1,44 @@
 const config = {
-    name: 'my test',
-    globalSetup: require.resolve('./global-setup.js'),
+
+    globalSetup: require.resolve('./common/global-setup.js'),
+
     use: {
-        //baseURL: 'https://example.coma/'
-        baseURL: 'https://example.com/'
+        // test global-setup error
+        // baseURL: 'https://example.coma/'
+        baseURL: 'https://example.com/',
+
+        // test home page object model
+        url: 'https://www.npmjs.com/package/monocart-reporter',
+        // test addInitScript
+        clientPath: 'tests/common/client.js'
     },
+
+    // test flaky case
+    retries: 1,
+
+    projects: [
+        {
+            name: 'Desktop Firefox',
+            use: {
+                browserName: 'firefox',
+                viewport: {
+                    width: 1280,
+                    height: 720
+                }
+            }
+        },
+        {
+            name: 'Desktop Chromium',
+            use: {
+                browserName: 'chromium',
+                viewport: {
+                    width: 1280,
+                    height: 720
+                }
+            }
+        }
+    ],
+
     reporter: [
         ['list'],
         ['json', {
@@ -18,9 +52,10 @@ const config = {
         ['junit', {
             outputFile: '../.temp/junit/results.xml'
         }],
-        //['monocart-reporter']
+        // ['monocart-reporter']
         ['monocart-reporter', {
-            //the dir relative process.cwd
+            name: 'My Test Report',
+            // the dir relative process.cwd
             outputFile: '.temp/monocart/index.html'
         }]
     ]

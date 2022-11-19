@@ -1,5 +1,5 @@
-//starfall-cli config
-//https://github.com/cenfun/starfall-cli
+// starfall-cli config
+// https://github.com/cenfun/starfall-cli
 
 const fs = require('fs');
 const path = require('path');
@@ -15,8 +15,8 @@ module.exports = {
 
         before: (item, Util) => {
 
-            //generate reportData for demo
-            const jsonPath = path.resolve(__dirname, '../../monocart-test/.temp/report/report.json');
+            // generate reportData for demo
+            const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
             if (!fs.existsSync(jsonPath)) {
                 Util.logRed(`ERROR: Not found test json: ${jsonPath}`);
                 return 1;
@@ -43,7 +43,7 @@ module.exports = {
 
             if (item.production) {
                 const filename = `${item.fullName}.js`;
-                //copy dist file to lib
+                // copy dist file to lib
                 const fromJs = path.resolve(item.buildPath, filename);
                 if (!fs.existsSync(fromJs)) {
                     Util.logRed(`ERROR: Not found dist: ${fromJs}`);
@@ -54,7 +54,7 @@ module.exports = {
                     fs.mkdirSync(toPath);
                 }
                 const toJs = path.resolve(toPath, filename);
-                //console.log(fromJs, toJs);
+                // console.log(fromJs, toJs);
                 fs.cpSync(fromJs, toJs);
 
                 Util.logGreen(`Copied: ${toJs}`);

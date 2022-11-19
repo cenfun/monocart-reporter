@@ -85,7 +85,7 @@ export default {
                 }
             });
 
-            //percent handler
+            // percent handler
             Object.values(summary).forEach((item) => {
                 if (item.value === 0 || item.caseType === 'all') {
                     item.percent = '';
@@ -95,7 +95,7 @@ export default {
                 item.percent = `(${p})`;
             });
 
-            //summary.failed.value = 0;
+            // summary.failed.value = 0;
 
             summary.passed.classMap = summary.failed.value === 0 ? 'mcr-summary-passed' : '';
             summary.failed.classMap = summary.failed.value > 0 ? 'mcr-summary-failed' : 'mcr-summary-skipped';
