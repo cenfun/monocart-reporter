@@ -3,6 +3,12 @@ const config = {
     globalSetup: require.resolve('./common/global-setup.js'),
 
     use: {
+
+        // test attachments
+        screenshot: 'only-on-failure',
+        video: 'on-first-retry',
+        // trace: 'retain-on-failure'
+
         // test global-setup error
         // baseURL: 'https://example.coma/'
         baseURL: 'https://example.com/',
@@ -17,16 +23,16 @@ const config = {
     retries: 1,
 
     projects: [
-        {
-            name: 'Desktop Firefox',
-            use: {
-                browserName: 'firefox',
-                viewport: {
-                    width: 1280,
-                    height: 720
-                }
-            }
-        },
+        // {
+        //     name: 'Desktop Firefox',
+        //     use: {
+        //         browserName: 'firefox',
+        //         viewport: {
+        //             width: 1280,
+        //             height: 720
+        //         }
+        //     }
+        // },
         {
             name: 'Desktop Chromium',
             use: {
@@ -39,6 +45,7 @@ const config = {
         }
     ],
 
+    outputDir: '../.temp/monocart/',
     reporter: [
         ['list'],
         ['json', {

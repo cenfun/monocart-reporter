@@ -228,7 +228,7 @@ export default {
                         return `<p class="mcr-item-video">
                             <video controls height="350">
                                 <source src="${attachment.path}" type="${contentType}">
-                                <p>Your browser doesn't support HTML5 video. Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead.</p>
+                                <p>Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead if your browser doesn't support HTML5 video.</p>
                             </video>
                         </p>`;
                     }

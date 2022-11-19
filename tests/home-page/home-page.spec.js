@@ -23,3 +23,10 @@ test('test home page', async ({ page, context }) => {
     await homePage.checkClientScript();
     await homePage.checkName();
 });
+
+test('test screenshot and video', async ({ page, context }) => {
+    const homePage = new HomePage(page, context, config);
+    await homePage.init();
+    await homePage.goto();
+    await homePage.checkWithError();
+});

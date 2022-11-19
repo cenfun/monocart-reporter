@@ -50,6 +50,20 @@ module.exports = {
 - path-to/your-filename.json  
 Separated metadata file (Already included in the above HTML and compressed, it can be deleted)
 
+## Custom Annotations with markdown description
+```js
+// https://playwright.dev/docs/test-annotations#custom-annotations
+test('test custom annotations', () => {
+    test.info().annotations.push({
+        type: 'issue',
+        description: `## see github issues
+- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
+- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
+`
+    });
+});
+```
+
 ## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
  - Lightweight UI components [vine-ui](https://github.com/cenfun/vine-ui)

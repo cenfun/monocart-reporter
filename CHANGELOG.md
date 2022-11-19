@@ -1,3 +1,6 @@
+* 1.0.8
+  - supported custom annotations with markdown description
+
 * 1.0.7
   - fixed skipped issue (thanks @i-novo)
 

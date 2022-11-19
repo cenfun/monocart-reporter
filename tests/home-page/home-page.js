@@ -45,6 +45,12 @@ class HomePage {
         expect(text.trim()).toBe('monocart-reporter - npm');
     }
 
+    async checkWithError() {
+        const $dom = await this.page.$('title');
+        const text = await $dom.textContent();
+        expect(text.trim()).toBe('');
+    }
+
 }
 
 

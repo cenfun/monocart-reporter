@@ -482,6 +482,10 @@ flyover
     right: 0;
     width: 20px;
     height: 100%;
+
+    .mcr-icon {
+        opacity: 1;
+    }
 }
 
 .vui-flyover-main {

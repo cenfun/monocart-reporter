@@ -18,6 +18,25 @@ test('flaky case', ({ browserName }, testInfo) => {
 
 });
 
+// https://playwright.dev/docs/test-annotations#custom-annotations
+test('test custom annotations', () => {
+    test.info().annotations.push({
+        type: 'issue',
+        description: `## see github issues
+- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
+- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
+`
+    });
+
+    test.info().annotations.push({
+        type: 'other',
+        description: `## stats
+- ![npm](https://img.shields.io/npm/v/monocart-reporter)
+- ![npm](https://img.shields.io/npm/dt/monocart-reporter)
+`
+    });
+});
+
 test.describe('two tests', () => {
     test('one', async () => {
         // ...
@@ -84,24 +103,4 @@ test.describe('two tests1', () => {
 
 test('after describe', () => {
 
-});
-
-test('test annotations', () => {
-    test.info().annotations.push({
-        type: 'issue',
-        description: `## see github issues
-- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-- [other link](https://github.com/cenfun/monocart-reporter)
-`
-
-    });
-
-    test.info().annotations.push({
-        type: 'other',
-        description: `## stats
-- ![npm](https://img.shields.io/npm/v/monocart-reporter)
-- ![npm](https://img.shields.io/npm/dt/monocart-reporter)
-`
-
-    });
 });
