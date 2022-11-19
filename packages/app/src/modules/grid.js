@@ -118,7 +118,8 @@ export default {
                     return;
                 }
 
-                if (d.e.target.classList.contains('mcr-icon')) {
+                const cl = d.e.target.classList;
+                if (cl.contains('mcr-icon') || cl.contains('mcr-annotation')) {
                     const position = d.columnItem.id;
                     this.showFlyover(caseItem, position);
                     return;

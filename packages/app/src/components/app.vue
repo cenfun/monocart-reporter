@@ -462,6 +462,11 @@ icon
         }
     }
 
+    .mcr-annotation {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
     .mcr-location {
         font-weight: normal;
     }

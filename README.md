@@ -28,7 +28,7 @@ more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/te
 
 ## Output Assets
 - path-to/your-filename.html  
-Single HTML file, easy to transfer/deploy or open directly anywhere   
+Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
 Note that test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
 ```js
 // playwright.config.js
@@ -56,7 +56,6 @@ Separated metadata file (Already included in the above HTML and compressed, it c
  - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
 
 ## Example Test
-- [monocart-reporter-test](https://github.com/cenfun/monocart-reporter-test)
-- [monocart-test](https://github.com/cenfun/monocart-test)
+- [tests](/tests)
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)

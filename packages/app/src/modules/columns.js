@@ -42,6 +42,12 @@ export default {
             align: 'center',
             width: 50
         }, {
+            id: 'annotations',
+            name: 'Annotations',
+            width: 100,
+            align: 'center',
+            formatter: 'annotations'
+        }, {
             id: 'errors',
             name: 'Errors',
             width: 60,

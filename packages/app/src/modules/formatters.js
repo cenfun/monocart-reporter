@@ -34,6 +34,14 @@ export default {
         return Util.DTF(v);
     },
 
+    annotations: function(v, rowItem) {
+        const annotations = rowItem.annotations;
+        if (!Util.isList(annotations)) {
+            return '';
+        }
+        return annotations.map((item) => item.type).filter((item) => item).map((item) => `<span class="mcr-annotation">${item}</span>`).join(' ');
+    },
+
     errors: function(v, rowItem) {
         const errors = rowItem.errors;
         if (!errors) {

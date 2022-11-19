@@ -7,6 +7,7 @@
   </div>
 </template>
 <script>
+import 'github-markdown-css/github-markdown-light.css';
 import Convert from 'ansi-to-html';
 import CaseIcon from './case-icon.vue';
 import Util from '../util/util.js';
@@ -120,11 +121,12 @@ export default {
                 return '';
             }
 
+            const annotations = this.renderItemAnnotations(item);
             const errors = this.renderItemErrors(item);
             const logs = this.renderItemLogs(item);
             const attachments = this.renderItemAttachments(item);
 
-            const list = [errors, logs, attachments].filter((it) => it);
+            const list = [annotations, errors, logs, attachments].filter((it) => it);
             if (!list.length) {
                 return '';
             }
@@ -134,6 +136,34 @@ export default {
             </div>`;
         },
 
+        renderItemAnnotations(item) {
+            const annotations = item.annotations;
+            if (!Util.isList(annotations)) {
+                return '';
+            }
+
+            const list = annotations.map((annotation) => {
+                // console.log(annotation);
+                const ls = ['<div class="mcr-item-annotation">'];
+                ls.push(`<h3>${annotation.type}</h3>`);
+                if (annotation.description) {
+                    ls.push(`<div class="markdown-body">${annotation.description}</div>`);
+                }
+                ls.push('</div>');
+                return ls.join('');
+            });
+
+            let title = '';
+            if (item.type === 'case') {
+                title = '<a name="annotations"></a><h3># Annotations</h3>';
+            }
+
+            return `<div class="mcr-item-annotations">
+                ${title}
+                ${list.join('')}
+            </div>`;
+
+        },
 
         renderItemErrors(item) {
             const errors = item.errors;
@@ -353,6 +383,7 @@ export default {
     }
 }
 
+.mcr-item-annotations,
 .mcr-item-errors,
 .mcr-item-logs {
     background-color: #f6f8fa;
@@ -366,6 +397,13 @@ export default {
         white-space: pre;
         font-family: Menlo, Consolas, monospace;
         line-height: initial;
+    }
+}
+
+.mcr-item-annotation {
+    .markdown-body {
+        padding: 5px;
+        border-radius: 5px;
     }
 }
 

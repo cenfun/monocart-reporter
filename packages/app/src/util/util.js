@@ -23,6 +23,13 @@ const Util = {
         return num;
     },
 
+    isList: function(data) {
+        if (data && data instanceof Array && data.length > 0) {
+            return true;
+        }
+        return false;
+    },
+
     zero: function(s, l = 2) {
         s = `${s}`;
         return s.padStart(l, '0');
