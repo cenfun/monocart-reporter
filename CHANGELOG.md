@@ -1,3 +1,6 @@
+* 1.0.9
+ - fixed dependencies not found
+
 * 1.0.8
   - supported custom annotations with markdown description
 
