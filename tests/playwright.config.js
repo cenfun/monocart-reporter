@@ -11,7 +11,7 @@ const config = {
 
         // test global-setup error
         // baseURL: 'https://example.coma/'
-        baseURL: 'https://example.com/',
+        baseURL: 'https://www.imdb.com/',
 
         // test home page object model
         url: 'https://www.npmjs.com/package/monocart-reporter',

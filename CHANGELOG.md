@@ -1,3 +1,6 @@
+* 1.0.10
+ - fixed "id" argument must be of type string
+
 * 1.0.9
  - fixed dependencies not found
 
