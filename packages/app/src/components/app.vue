@@ -2,20 +2,20 @@
   <div class="mcr vui-flex-column">
     <div class="mcr-header vui-flex-row">
       <div class="mcr-title">
-        {{ title }}
-        <span>{{ date }}</span>
+        {{ state.title }}
+        <span>{{ state.date }}</span>
       </div>
       <div class="vui-flex-auto" />
       <VuiFlex spacing="10px">
         <a
           class="mcr-icon mcr-icon-playwright"
-          :title="titlePlaywright"
+          :title="state.titlePlaywright"
           href="https://github.com/microsoft/playwright"
           target="_blank"
         />
         <a
           class="mcr-icon mcr-icon-github"
-          :title="titleReporter"
+          :title="state.titleReporter"
           href="https://github.com/cenfun/monocart-reporter"
           target="_blank"
         />
@@ -28,7 +28,7 @@
       >
         <div class="mcr-summary vui-flex-row">
           <div
-            v-for="(item, i) in summary"
+            v-for="(item, i) in state.summary"
             :key="i"
             :class="summaryItemClass(item)"
             @click="summaryItemClick(item)"
@@ -41,16 +41,16 @@
         <div class="vui-flex-auto" />
 
         <VuiInput
-          v-model="keywords"
+          v-model="state.keywords"
           width="150px"
           class="mcr-search"
           placeholder="keywords"
         />
 
-        <VuiSwitch v-model="suiteVisible">
+        <VuiSwitch v-model="state.suiteVisible">
           Suite
         </VuiSwitch>
-        <VuiSwitch v-model="stepVisible">
+        <VuiSwitch v-model="state.stepVisible">
           Step
         </VuiSwitch>
       </VuiFlex>
@@ -60,7 +60,7 @@
 
     <VuiFlyover
       ref="flyover"
-      :visible="flyoverVisible"
+      :visible="state.flyoverVisible"
       position="right"
       width="60%"
     >
@@ -69,16 +69,16 @@
           <VuiFlex spacing="10px">
             <div
               class="vui-flyover-icon"
-              @click="flyoverVisible=false"
+              @click="state.flyoverVisible=false"
             >
               <div class="mcr-icon mcr-icon-arrow-right" />
             </div>
             <div class="vui-flyover-title vui-flex-auto">
-              {{ detailTitle }}
+              {{ state.detailTitle }}
             </div>
             <div
               class="vui-flyover-icon"
-              @click="flyoverVisible=false"
+              @click="state.flyoverVisible=false"
             >
               <div class="mcr-icon mcr-icon-close" />
             </div>
@@ -91,18 +91,24 @@
     </VuiFlyover>
   </div>
 </template>
-<script>
+<script setup>
 import decompress from 'lz-utils/lib/decompress.js';
-import { components, createComponent } from 'vine-ui';
+import {
+    ref, watch, onMounted
+} from 'vue';
 
-import mixinSummary from '../modules/summary.js';
-import mixinGrid from '../modules/grid.js';
+import { components } from 'vine-ui';
+
+import Util from '../util/util.js';
+import {
+    createGrid, renderGrid, updateGrid
+} from '../modules/grid.js';
 
 import columns from '../modules/columns.js';
 import CaseDetail from './case-detail.vue';
 
 import store from '../util/store.js';
-// import Util from '../util/util.js';
+import state from '../modules/state.js';
 
 const {
     VuiInput,
@@ -111,90 +117,167 @@ const {
     VuiSwitch
 } = components;
 
-
-export default {
-
-    createComponent,
-
-    components: {
-        VuiInput,
-        VuiFlex,
-        VuiFlyover,
-        VuiSwitch,
-        CaseDetail
-    },
-    mixins: [
-        mixinSummary,
-        mixinGrid
-    ],
-    data() {
-        return {
-            title: '',
-            date: '',
-            titlePlaywright: '',
-            titleReporter: `Monocart Reporter v${window.VERSION}`,
-            summary: {},
-
-            // filter
-            keywords: '',
-            caseType: 'all',
-            suiteVisible: true,
-            stepVisible: true,
-
-            detailTitle: '',
-
-            flyoverVisible: false
-        };
-    },
-
-    created() {
-        const reportData = JSON.parse(decompress(window.reportData));
-        console.log(reportData);
-
-        this.reportData = reportData;
-        this.gridDataAll = {
-            columns: columns.create(),
-            rows: reportData.list
-        };
-        this.gridDataMap = {};
-
-        this.title = reportData.name;
-        this.date = new Date(reportData.date).toLocaleString();
-        this.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
-        this.initStore();
-    },
-
-    mounted() {
-        this.initSummaryData();
-        this.createGrid();
-    },
-
-    methods: {
-
-        initStore() {
-            const booleans = {
-                'true': true,
-                'false': false
-            };
-            ['suiteVisible', 'stepVisible'].forEach((item) => {
-                const visible = booleans[store.get(item)];
-                if (typeof visible === 'boolean') {
-                    this[item] = visible;
-                }
-            });
-        },
-
-        summaryItemClass(item) {
-            return ['mcr-summary-item', item.classMap, item.caseType === this.caseType ? 'mcr-summary-selected' : ''];
-        },
-
-        summaryItemClick(item) {
-            if (item.caseType !== this.caseType) {
-                this.caseType = item.caseType;
-            }
+const initStore = () => {
+    const booleans = {
+        'true': true,
+        'false': false
+    };
+    ['suiteVisible', 'stepVisible'].forEach((item) => {
+        const visible = booleans[store.get(item)];
+        if (typeof visible === 'boolean') {
+            state[item] = visible;
         }
+    });
+};
+
+const summaryItemClass = (item) => {
+    return ['mcr-summary-item', item.classMap, item.caseType === state.caseType ? 'mcr-summary-selected' : ''];
+};
+
+const summaryItemClick = (item) => {
+    if (item.caseType !== state.caseType) {
+        state.caseType = item.caseType;
     }
 };
+
+const initSummaryData = () => {
+
+    const summary = {
+        all: {
+            name: 'All',
+            value: 0,
+            caseType: 'all'
+        },
+        passed: {
+            name: 'Passed',
+            value: 0,
+            caseType: 'passed'
+        },
+        failed: {
+            name: 'Failed',
+            value: 0,
+            caseType: 'failed'
+        },
+        flaky: {
+            name: 'Flaky',
+            value: 0,
+            caseType: 'flaky'
+        },
+        skipped: {
+            name: 'Skipped',
+            value: 0,
+            caseType: 'skipped'
+        }
+    };
+
+    const caseHandler = (item) => {
+        if (item.subs) {
+            item.collapsed = true;
+        }
+        summary.all.value += 1;
+        if (item.ok) {
+            if (Util.isSkipped(item)) {
+                summary.skipped.value += 1;
+                item.classMap = 'tg-case-skipped';
+                item.caseType = 'skipped';
+            } else if (item.outcome === 'flaky') {
+                summary.flaky.value += 1;
+                item.classMap = 'tg-case-flaky';
+                item.caseType = 'flaky';
+            } else {
+                summary.passed.value += 1;
+                item.classMap = 'tg-case-passed';
+                item.caseType = 'passed';
+            }
+        } else {
+            item.classMap = 'tg-case-failed';
+            item.caseType = 'failed';
+            summary.failed.value += 1;
+            if (parent.failedCases) {
+                parent.failedCases += 1;
+            } else {
+                parent.failedCases = 1;
+            }
+        }
+    };
+
+    Util.forEachTree(state.gridDataAll.rows, function(item, i, parent) {
+        item.selectable = true;
+        if (item.type === 'step') {
+            if (item.subs) {
+                item.collapsed = true;
+            }
+            if (item.errors) {
+                item.classMap = 'tg-step-error';
+            } else if (item.status === 'retry') {
+                item.classMap = 'tg-step-retry';
+            }
+            return;
+        }
+
+        if (item.type === 'case') {
+            caseHandler(item);
+        }
+    });
+
+    // percent handler
+    Object.values(summary).forEach((item) => {
+        if (item.value === 0 || item.caseType === 'all') {
+            item.percent = '';
+            return;
+        }
+        const p = Util.PF(item.value, summary.all.value);
+        item.percent = `(${p})`;
+    });
+
+    // summary.failed.value = 0;
+
+    summary.passed.classMap = summary.failed.value === 0 ? 'mcr-summary-passed' : '';
+    summary.failed.classMap = summary.failed.value > 0 ? 'mcr-summary-failed' : 'mcr-summary-skipped';
+    summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-summary-flaky' : 'mcr-summary-skipped';
+    summary.skipped.classMap = 'mcr-summary-skipped';
+
+    state.summary = summary;
+
+};
+
+const detail = ref(null);
+onMounted(() => {
+
+    state.$detail = detail.value;
+
+    const reportData = JSON.parse(decompress(window.reportData));
+    console.log(reportData);
+
+    // for get errors by index
+    state.reportData = reportData;
+
+    state.gridDataAll = {
+        columns: columns.create(),
+        rows: reportData.list
+    };
+
+    state.title = reportData.name;
+    state.date = new Date(reportData.date).toLocaleString();
+    state.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
+    initStore();
+
+    initSummaryData();
+
+    createGrid();
+});
+
+watch(() => state.keywords, () => {
+    updateGrid();
+});
+
+watch([
+    () => state.caseType,
+    () => state.suiteVisible,
+    () => state.stepVisible
+], () => {
+    renderGrid();
+});
 
 </script>
 <style lang="scss">

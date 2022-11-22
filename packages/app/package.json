@@ -3,7 +3,9 @@
     "version": "1.0.9",
     "description": "monocart-reporter",
     "main": "dist/monocart-reporter.js",
-    "dependencies": {},
+    "dependencies": {
+        "vue": "^3.2.39"
+    },
     "devDependencies": {},
     "private": true,
     "link": false

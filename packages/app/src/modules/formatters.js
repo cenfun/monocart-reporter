@@ -1,5 +1,7 @@
-import CaseIcon from '../components/case-icon.vue';
+import { createComponent } from 'vine-ui';
 import Util from '../util/util.js';
+import CaseIcon from '../components/case-icon.vue';
+CaseIcon.createComponent = createComponent;
 
 export default {
 

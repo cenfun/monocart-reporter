@@ -1,42 +1,37 @@
 <template>
-  <div :class="icon" />
+  <div :class="state.icon" />
 </template>
-<script>
-import { createComponent } from 'vine-ui';
+<script setup>
+import { reactive, onMounted } from 'vue';
 import Util from '../util/util.js';
 
-export default {
-    createComponent,
-    props: {
-        caseItem: {
-            type: Object,
-            default: () => {
-                return {};
-            }
+const props = defineProps({
+    caseItem: {
+        type: Object,
+        default: () => {
+            return {};
         }
-    },
-
-    data() {
-        return {
-            icon: ''
-        };
-    },
-
-    created() {
-        const list = ['mcr-icon'];
-        if (this.caseItem.ok) {
-            if (Util.isSkipped(this.caseItem)) {
-                list.push('mcr-icon-skipped');
-            } else {
-                list.push('mcr-icon-passed');
-            }
-        } else {
-            list.push('mcr-icon-failed');
-        }
-
-        this.icon = list.join(' ');
     }
-};
+});
+
+const state = reactive({
+    icon: ''
+});
+
+onMounted(() => {
+    const list = ['mcr-icon'];
+    if (props.caseItem.ok) {
+        if (Util.isSkipped(props.caseItem)) {
+            list.push('mcr-icon-skipped');
+        } else {
+            list.push('mcr-icon-passed');
+        }
+    } else {
+        list.push('mcr-icon-failed');
+    }
+
+    state.icon = list.join(' ');
+});
 
 </script>
 <style lang="scss">

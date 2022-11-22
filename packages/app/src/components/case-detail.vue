@@ -1,16 +1,17 @@
 <template>
-  <div class="mcr-detail">
-    <div
-      ref="tree"
-      class="mcr-tree"
-    />
+  <div
+    ref="el"
+    class="mcr-detail"
+  >
+    <div class="mcr-tree" />
   </div>
 </template>
-<script>
+<script setup>
 import 'github-markdown-css/github-markdown-light.css';
 import Convert from 'ansi-to-html';
 import CaseIcon from './case-icon.vue';
 import Util from '../util/util.js';
+import { ref, shallowReactive } from 'vue';
 
 const convert = new Convert({
     fg: '#333',
@@ -18,298 +19,309 @@ const convert = new Convert({
     newline: true
 });
 
+const state = shallowReactive({
+    caseItem: null,
+    $el: null,
+    timeout_position: null
+});
 
-export default {
+const renderTree = () => {
 
-    methods: {
-        update(caseItem, position) {
+    const list = [];
 
-            // console.log('update', caseItem, position);
+    // suites
+    let suite = state.caseItem.parent;
+    while (suite) {
+        list.push(suite);
+        suite = suite.parent;
+    }
+    list.reverse();
 
-            if (!caseItem) {
-                return;
-            }
+    // case
+    list.push(state.caseItem);
 
-            if (caseItem === this.caseItem) {
-                this.positionHandler(position);
-                return;
-            }
+    // steps
+    generateSteps(list, state.caseItem.steps);
 
-            this.caseItem = caseItem;
+    let left = 0;
+    const ls = list.map((item) => {
+        left = item.level * 10;
+        const head = renderItemHead(item);
+        const body = renderItemBody(item);
 
-            this.renderTree();
+        const cls = ['mcr-item'];
+        if (item.classMap) {
+            cls.push(item.classMap);
+        }
 
-            this.positionHandler(position);
-
-        },
-
-        renderTree() {
-
-            const list = [];
-
-            // suites
-            let suite = this.caseItem.parent;
-            while (suite) {
-                list.push(suite);
-                suite = suite.parent;
-            }
-            list.reverse();
-
-            // case
-            list.push(this.caseItem);
-
-            // steps
-            this.generateSteps(list, this.caseItem.steps);
-
-            let left = 0;
-            const ls = list.map((item) => {
-                left = item.level * 10;
-                const head = this.renderItemHead(item);
-                const body = this.renderItemBody(item);
-
-                const cls = ['mcr-item'];
-                if (item.classMap) {
-                    cls.push(item.classMap);
-                }
-
-                return `<div class="${cls.join(' ')}" style="margin-left:${left}px;">
+        return `<div class="${cls.join(' ')}" style="margin-left:${left}px;">
                   ${head}
                   ${body}
                 </div>`;
-            });
+    });
 
-            this.$refs.tree.innerHTML = ls.join('');
+    const $tree = state.$el.querySelector('.mcr-tree');
+    if ($tree) {
+        $tree.innerHTML = ls.join('');
+    }
+};
 
-        },
+const renderItemHead = (item) => {
 
-        renderItemHead(item) {
+    const cls = ['mcr-item-head', `mcr-item-${item.type}`, 'vui-flex-row'];
 
-            const cls = ['mcr-item-head', `mcr-item-${item.type}`, 'vui-flex-row'];
+    const list = [];
+    if (item.level) {
+        list.push('<div class="mcr-item-next">└</div>');
+    }
 
-            const list = [];
-            if (item.level) {
-                list.push('<div class="mcr-item-next">└</div>');
-            }
+    if (item.type === 'case') {
 
-            if (item.type === 'case') {
+        const div = document.createElement('div');
+        CaseIcon.createComponent({
+            caseItem: item
+        }, null, div);
 
-                const div = document.createElement('div');
-                CaseIcon.createComponent({
-                    caseItem: item
-                }, null, div);
+        list.push(div.innerHTML);
+    }
 
-                list.push(div.innerHTML);
-            }
+    list.push(`<div class="mcr-item-title vui-flex-auto">${item.title}</div>`);
 
-            list.push(`<div class="mcr-item-title vui-flex-auto">${item.title}</div>`);
+    if (item.duration) {
+        list.push(`<div class="mcr-item-duration">${Util.DTF(item.duration)}</div>`);
+    }
+    if (item.location) {
+        list.push(`<div class="mcr-item-location">${item.location}</div>`);
+    }
+    const head = list.join('');
 
-            if (item.duration) {
-                list.push(`<div class="mcr-item-duration">${Util.DTF(item.duration)}</div>`);
-            }
-            if (item.location) {
-                list.push(`<div class="mcr-item-location">${item.location}</div>`);
-            }
-            const head = list.join('');
-
-            return `<div class="${cls.join(' ')}">
+    return `<div class="${cls.join(' ')}">
               ${head}
             </div>`;
-        },
+};
 
-        renderItemBody(item) {
-            if (item.type === 'suite') {
-                return '';
-            }
+const renderItemBody = (item) => {
+    if (item.type === 'suite') {
+        return '';
+    }
 
-            const annotations = this.renderItemAnnotations(item);
-            const errors = this.renderItemErrors(item);
-            const logs = this.renderItemLogs(item);
-            const attachments = this.renderItemAttachments(item);
+    const annotations = renderItemAnnotations(item);
+    const errors = renderItemErrors(item);
+    const logs = renderItemLogs(item);
+    const attachments = renderItemAttachments(item);
 
-            const list = [annotations, errors, logs, attachments].filter((it) => it);
-            if (!list.length) {
-                return '';
-            }
+    const list = [annotations, errors, logs, attachments].filter((it) => it);
+    if (!list.length) {
+        return '';
+    }
 
-            return `<div class="mcr-item-body">
+    return `<div class="mcr-item-body">
                 ${list.join('')}
             </div>`;
-        },
+};
 
-        renderItemAnnotations(item) {
-            const annotations = item.annotations;
-            if (!Util.isList(annotations)) {
-                return '';
-            }
+const renderItemAnnotations = (item) => {
+    const annotations = item.annotations;
+    if (!Util.isList(annotations)) {
+        return '';
+    }
 
-            const list = annotations.map((annotation) => {
-                // console.log(annotation);
-                const ls = ['<div class="mcr-item-annotation">'];
-                ls.push(`<h3>${annotation.type}</h3>`);
-                if (annotation.description) {
-                    ls.push(`<div class="markdown-body">${annotation.description}</div>`);
-                }
-                ls.push('</div>');
-                return ls.join('');
-            });
+    const list = annotations.map((annotation) => {
+        // console.log(annotation);
+        const ls = ['<div class="mcr-item-annotation">'];
+        ls.push(`<h3>${annotation.type}</h3>`);
+        if (annotation.description) {
+            ls.push(`<div class="markdown-body">${annotation.description}</div>`);
+        }
+        ls.push('</div>');
+        return ls.join('');
+    });
 
-            let title = '';
-            if (item.type === 'case') {
-                title = '<a name="annotations"></a><h3># Annotations</h3>';
-            }
+    let title = '';
+    if (item.type === 'case') {
+        title = '<a name="annotations"></a><h3># Annotations</h3>';
+    }
 
-            return `<div class="mcr-item-annotations">
+    return `<div class="mcr-item-annotations">
                 ${title}
                 ${list.join('')}
             </div>`;
 
-        },
+};
 
-        renderItemErrors(item) {
-            const errors = item.errors;
-            if (!Util.isList(errors)) {
-                return '';
-            }
+const renderItemErrors = (item) => {
+    const errors = item.errors;
+    if (!Util.isList(errors)) {
+        return '';
+    }
 
-            const list = errors.map((err) => {
-                return this.convertHtml(err);
-            });
+    const list = errors.map((err) => {
+        return convertHtml(err);
+    });
 
-            let title = '';
-            if (item.type === 'case') {
-                title = '<a name="errors"></a><h3># Errors</h3>';
-            }
+    let title = '';
+    if (item.type === 'case') {
+        title = '<a name="errors"></a><h3># Errors</h3>';
+    }
 
-            return `<div class="mcr-item-errors">
+    return `<div class="mcr-item-errors">
                 ${title}
                 <p>${list.join('</p><p>')}</p>
             </div>`;
-        },
+};
 
-        renderItemLogs(item) {
-            const logs = item.logs;
-            if (!Util.isList(logs)) {
-                return '';
-            }
+const renderItemLogs = (item) => {
+    const logs = item.logs;
+    if (!Util.isList(logs)) {
+        return '';
+    }
 
-            const list = logs.map((log) => {
-                return this.convertHtml(log);
-            });
+    const list = logs.map((log) => {
+        return convertHtml(log);
+    });
 
-            let title = '';
-            if (item.type === 'case') {
-                title = '<a name="logs"></a><h3># Logs</h3>';
-            }
+    let title = '';
+    if (item.type === 'case') {
+        title = '<a name="logs"></a><h3># Logs</h3>';
+    }
 
-            return `<div class="mcr-item-logs">
+    return `<div class="mcr-item-logs">
                 ${title}
                 <p>${list.join('</p><p>')}</p>
             </div>`;
 
-        },
+};
 
-        renderItemAttachments(item) {
-            const attachments = item.attachments;
-            if (!Util.isList(attachments)) {
-                return '';
-            }
+const renderItemAttachments = (item) => {
+    const attachments = item.attachments;
+    if (!Util.isList(attachments)) {
+        return '';
+    }
 
-            const list = attachments.map((attachment) => {
-                console.log(attachment);
+    const list = attachments.map((attachment) => {
+        console.log(attachment);
 
-                // contentType 'application/json' 'image/png' 'video/webm'
-                const contentType = attachment.contentType;
-                if (contentType) {
-                    if (contentType.startsWith('image')) {
-                        return `<p class="mcr-item-image">
+        // contentType 'application/json' 'image/png' 'video/webm'
+        const contentType = attachment.contentType;
+        if (contentType) {
+            if (contentType.startsWith('image')) {
+                return `<p class="mcr-item-image">
                             <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
                         </p>`;
-                    } else if (contentType.startsWith('video')) {
-                        return `<p class="mcr-item-video">
+            } else if (contentType.startsWith('video')) {
+                return `<p class="mcr-item-video">
                             <video controls height="350">
                                 <source src="${attachment.path}" type="${contentType}">
                                 <p>Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead if your browser doesn't support HTML5 video.</p>
                             </video>
                         </p>`;
-                    }
-                }
+            }
+        }
 
-                return `<p class="mcr-item-link">
+        return `<p class="mcr-item-link">
                   <a href="${attachment.path}" target="_blank">${attachment.name}</a>
                 </p>`;
-            });
+    });
 
-            let title = '';
-            if (item.type === 'case') {
-                title = '<a name="attachments"></a><h3># Attachments</h3>';
-            }
+    let title = '';
+    if (item.type === 'case') {
+        title = '<a name="attachments"></a><h3># Attachments</h3>';
+    }
 
-            return `<div class="mcr-item-attachments">
+    return `<div class="mcr-item-attachments">
                 ${title}
                 ${list.join('')}
             </div>`;
 
-        },
-
-        generateSteps(list, steps) {
-            if (!Util.isList(steps)) {
-                return;
-            }
-            steps.forEach((item) => {
-                list.push(item);
-                this.generateSteps(list, item.subs);
-            });
-        },
-
-        convertHtml(str) {
-
-            // link
-            // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
-            // str = str.replace(re, function(a) {
-            //     return `<a href="${a}" target="_blank">${a}</a>`;
-            // });
-
-            str = convert.toHtml(str);
-
-            return str;
-        },
-
-
-        positionHandler(position) {
-
-            // console.log('position', position);
-
-            clearTimeout(this.timeout_position);
-
-            if (!position) {
-                this.$el.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-                return;
-            }
-
-            // wait for rendered like image
-            this.timeout_position = setTimeout(() => {
-                this.renderPosition(position);
-            }, 100);
-
-        },
-
-        renderPosition(position) {
-            const elem = this.$el.querySelector(`[name="${position}"]`);
-            if (!elem) {
-                return;
-            }
-
-            elem.scrollIntoView({
-                behavior: 'smooth'
-            });
-
-        }
-
-    }
 };
+
+const generateSteps = (list, steps) => {
+    if (!Util.isList(steps)) {
+        return;
+    }
+    steps.forEach((item) => {
+        list.push(item);
+        generateSteps(list, item.subs);
+    });
+};
+
+const convertHtml = (str) => {
+
+    // link
+    // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
+    // str = str.replace(re, function(a) {
+    //     return `<a href="${a}" target="_blank">${a}</a>`;
+    // });
+
+    str = convert.toHtml(str);
+
+    return str;
+};
+
+const positionHandler = (position) => {
+
+    // console.log('position', position);
+
+    clearTimeout(state.timeout_position);
+
+    if (!position) {
+        state.$el.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        return;
+    }
+
+    // wait for rendered like image
+    state.timeout_position = setTimeout(() => {
+        renderPosition(position);
+    }, 100);
+
+};
+
+const renderPosition = (position) => {
+    const elem = state.$el.querySelector(`[name="${position}"]`);
+    if (!elem) {
+        return;
+    }
+
+    elem.scrollIntoView({
+        behavior: 'smooth'
+    });
+
+};
+
+const el = ref(null);
+const update = (caseItem, position) => {
+
+    // console.log('update', caseItem, position);
+    if (!caseItem) {
+        return;
+    }
+
+    if (!el.value) {
+        return;
+    }
+
+    state.$el = el.value;
+
+    if (caseItem === state.caseItem) {
+        positionHandler(position);
+        return;
+    }
+
+    state.caseItem = caseItem;
+
+    renderTree();
+
+    positionHandler(position);
+
+};
+
+defineExpose({
+    update
+});
+
 </script>
 <style lang="scss">
 .mcr-detail {
