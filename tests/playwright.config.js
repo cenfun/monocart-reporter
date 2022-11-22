@@ -11,7 +11,6 @@ const config = {
 
         // test global-setup error
         // baseURL: 'https://example.coma/'
-        baseURL: 'https://www.imdb.com/',
 
         // test home page object model
         url: 'https://www.npmjs.com/package/monocart-reporter',
@@ -79,37 +78,52 @@ const config = {
                     align: 'center',
 
                     // generate the column data from playwright metadata
-                    // type is suite, metadata is Suite, https://playwright.dev/docs/api/class-suite
-                    // type is case, metadata is TestCase, https://playwright.dev/docs/api/class-testcase
-                    // type is step, metadata is TestStep, https://playwright.dev/docs/api/class-teststep
-                    visitor: (type, metadata) => {
+                    // data.type is suite, metadata is Suite, https://playwright.dev/docs/api/class-suite
+                    // data.type is case, metadata is TestCase, https://playwright.dev/docs/api/class-testcase
+                    // (seems useless for now) data.type is step, metadata is TestStep, https://playwright.dev/docs/api/class-teststep
+                    visitor: (data, metadata) => {
 
-                        if (type === 'suite') {
-                            // generate the owner for the suite
-                            return 'Elon Musk';
+                        // generate the owner for the suite
+                        if (data.type === 'suite') {
+                            // currently we can only obtain suite custom data via title
+                            const matched = `${metadata.title}`.match(/@\w+/g);
+                            if (matched) {
+                                return matched[0];
+                            }
                         }
 
-                        if (type === 'case') {
-                            // generate the owner for the case
-                            return 'Kevin';
+                        // generate the owner for the case
+                        if (data.type === 'case') {
+                            // obtain case custom data via title like suite
+                            // or from custom annotations
+                            const annotation = metadata.annotations.find((item) => item.owner);
+                            if (annotation) {
+                                return annotation.owner;
+                            }
+
                         }
 
                     }
                 }, {
                     // another column for JIRA story link
                     id: 'story',
-                    name: 'Story',
+                    name: 'JIRA Story',
                     align: 'right',
 
-                    visitor: (type, metadata) => {
+                    visitor: (data, metadata) => {
 
-                        // story id for JIRA
-                        if (type === 'suite') {
-                            return '';
+                        if (data.type === 'suite') {
+                            const matched = `${metadata.title}`.match(/#\d+/g);
+                            if (matched) {
+                                return `<a href="#" target="_blank">${matched[0]}</a>`;
+                            }
                         }
 
-                        if (type === 'case') {
-                            return '<a href="#" target="_blank">#16888</a>';
+                        if (data.type === 'case') {
+                            const annotation = metadata.annotations.find((item) => item.story);
+                            if (annotation) {
+                                return `<a href="#" target="_blank">${annotation.story}</a>`;
+                            }
                         }
 
                     }
@@ -121,18 +135,19 @@ const config = {
                     name: 'Group',
                     subs: [{
                         id: 'item1',
-                        name: 'Test Item 1',
-                        width: 120,
+                        name: 'Test replace',
+                        width: 150,
+                        // using replace formatter
                         formatter: 'replace',
 
-                        visitor: (type, metadata) => {
-                            if (type === 'case') {
-                                return 'Test replace {type}';
+                        visitor: (data, metadata) => {
+                            if (data.type === 'case' && data.owner && data.story) {
+                                return '{owner} {story}';
                             }
                         }
                     }, {
                         id: 'item2',
-                        name: 'Test Item 2'
+                        name: 'Test Item'
                     }]
                 });
 
@@ -143,13 +158,15 @@ const config = {
                     invisible: true,
 
                     // support async way
-                    visitor: async () => {
+                    visitor: async (data, metadata) => {
                         // do something like call some API when case failed
 
-                        // if (type === 'case') {
                         // request something when case failed
-                        // const res = await fetch(`https://your-domain/api?id=${metadata.id}`);
-                        // return res.data;
+                        // if (data.type === 'case' && !data.ok) {
+                        //     const url = `/?id=${metadata.id}`;
+                        //     console.log(url);
+                        //     const res = await fetch(url);
+                        //     console.log(res);
                         // }
 
                     }

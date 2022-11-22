@@ -193,6 +193,9 @@ const renderItemAnnotations = (item) => {
     }
 
     const list = annotations.map((annotation) => {
+        if (!annotation.type) {
+            return '';
+        }
         // console.log(annotation);
         const ls = ['<div class="mcr-item-annotation">'];
         ls.push(`<h3>${annotation.type}</h3>`);

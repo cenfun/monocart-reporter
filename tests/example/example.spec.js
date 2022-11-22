@@ -37,12 +37,20 @@ test('test custom annotations', () => {
     });
 });
 
-test.describe('two tests', () => {
-    test('one', async () => {
+test.describe('two tests @Elon_Musk', () => {
+
+
+    test('one', () => {
         // ...
+
+        test.info().annotations.push({
+            owner: 'Elon Musk',
+            story: '#16888'
+        });
+
     });
 
-    test.describe('two tests', () => {
+    test.describe('two tests #16889', () => {
         test('one', async () => {
             // ...
         });
@@ -57,6 +65,11 @@ test.describe('two tests', () => {
         });
 
         test('fail - not yet ready', () => {
+            test.info().annotations.push({
+                owner: 'Elon Musk',
+                story: '#16900'
+            });
+
             test.fail();
             console.log('failed');
         });
