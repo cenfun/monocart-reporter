@@ -11,7 +11,11 @@ import 'github-markdown-css/github-markdown-light.css';
 import Convert from 'ansi-to-html';
 import CaseIcon from './case-icon.vue';
 import Util from '../util/util.js';
-import { ref, shallowReactive } from 'vue';
+import formatters from '../modules/formatters.js';
+import state from '../modules/state.js';
+import {
+    onMounted, ref, watch
+} from 'vue';
 
 const convert = new Convert({
     fg: '#333',
@@ -19,13 +23,11 @@ const convert = new Convert({
     newline: true
 });
 
-const state = shallowReactive({
-    caseItem: null,
-    $el: null,
-    timeout_position: null
-});
-
 const renderTree = () => {
+
+    if (!state.$detail) {
+        return;
+    }
 
     const list = [];
 
@@ -60,7 +62,7 @@ const renderTree = () => {
                 </div>`;
     });
 
-    const $tree = state.$el.querySelector('.mcr-tree');
+    const $tree = state.$detail.querySelector('.mcr-tree');
     if ($tree) {
         $tree.innerHTML = ls.join('');
     }
@@ -101,16 +103,11 @@ const renderItemHead = (item) => {
 };
 
 const renderItemBody = (item) => {
-    if (item.type === 'suite') {
-        return '';
-    }
 
-    const annotations = renderItemAnnotations(item);
-    const errors = renderItemErrors(item);
-    const logs = renderItemLogs(item);
-    const attachments = renderItemAttachments(item);
+    const list = [];
+    // columns maybe a tree
+    generateItemColumns(list, item, state.columns);
 
-    const list = [annotations, errors, logs, attachments].filter((it) => it);
     if (!list.length) {
         return '';
     }
@@ -120,10 +117,79 @@ const renderItemBody = (item) => {
             </div>`;
 };
 
+const generateItemColumns = (list, item, columns) => {
+
+    columns.forEach((column) => {
+
+        const result = renderItemColumn(item, column);
+        if (result) {
+            list.push(result);
+        }
+
+        if (Util.isList(column.subs)) {
+            generateItemColumns(list, item, column.subs);
+        }
+
+    });
+
+};
+
+const renderItemColumn = (item, column) => {
+
+    if (!column.name) {
+        return;
+    }
+
+    const defaultHandler = {
+        annotations: renderItemAnnotations,
+        errors: renderItemErrors,
+        logs: renderItemLogs,
+        attachments: renderItemAttachments
+    };
+
+    let handler = defaultHandler[column.id];
+    if (!handler && column.visitor) {
+        // custom visitor column
+        handler = renderItemCustom;
+    }
+
+    if (!handler) {
+        return;
+    }
+
+    const content = handler(item, column);
+    if (!content) {
+        return;
+    }
+
+    return `<div class="mcr-item-column mcr-item-${column.id}">
+                <a name="${column.id}"></a>
+                <h3># ${column.name}</h3> 
+                ${content}
+            </div>`;
+};
+
+const renderItemCustom = (item, column) => {
+    let value = item[column.id];
+
+    // do not show null value
+    if (value === null || typeof value === 'undefined') {
+        return;
+    }
+
+    // using grid formatter
+    const formatter = formatters[column.formatter];
+    if (formatter) {
+        value = formatter(value, item, column);
+    }
+
+    return value;
+};
+
 const renderItemAnnotations = (item) => {
     const annotations = item.annotations;
     if (!Util.isList(annotations)) {
-        return '';
+        return;
     }
 
     const list = annotations.map((annotation) => {
@@ -137,65 +203,39 @@ const renderItemAnnotations = (item) => {
         return ls.join('');
     });
 
-    let title = '';
-    if (item.type === 'case') {
-        title = '<a name="annotations"></a><h3># Annotations</h3>';
-    }
-
-    return `<div class="mcr-item-annotations">
-                ${title}
-                ${list.join('')}
-            </div>`;
-
+    return list.join('');
 };
 
 const renderItemErrors = (item) => {
     const errors = item.errors;
     if (!Util.isList(errors)) {
-        return '';
+        return;
     }
 
     const list = errors.map((err) => {
         return convertHtml(err);
     });
 
-    let title = '';
-    if (item.type === 'case') {
-        title = '<a name="errors"></a><h3># Errors</h3>';
-    }
-
-    return `<div class="mcr-item-errors">
-                ${title}
-                <p>${list.join('</p><p>')}</p>
-            </div>`;
+    return `<p>${list.join('')}</p>`;
 };
 
 const renderItemLogs = (item) => {
     const logs = item.logs;
     if (!Util.isList(logs)) {
-        return '';
+        return;
     }
 
     const list = logs.map((log) => {
         return convertHtml(log);
     });
 
-    let title = '';
-    if (item.type === 'case') {
-        title = '<a name="logs"></a><h3># Logs</h3>';
-    }
-
-    return `<div class="mcr-item-logs">
-                ${title}
-                <p>${list.join('</p><p>')}</p>
-            </div>`;
-
+    return `<p>${list.join('')}</p>`;
 };
 
 const renderItemAttachments = (item) => {
     const attachments = item.attachments;
     if (!Util.isList(attachments)) {
-        return '';
+        return;
     }
 
     const list = attachments.map((attachment) => {
@@ -223,16 +263,7 @@ const renderItemAttachments = (item) => {
                 </p>`;
     });
 
-    let title = '';
-    if (item.type === 'case') {
-        title = '<a name="attachments"></a><h3># Attachments</h3>';
-    }
-
-    return `<div class="mcr-item-attachments">
-                ${title}
-                ${list.join('')}
-            </div>`;
-
+    return list.join('');
 };
 
 const generateSteps = (list, steps) => {
@@ -259,13 +290,15 @@ const convertHtml = (str) => {
 };
 
 const positionHandler = (position) => {
-
     // console.log('position', position);
 
     clearTimeout(state.timeout_position);
+    if (!state.$detail) {
+        return;
+    }
 
     if (!position) {
-        state.$el.scrollTo({
+        state.$detail.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
@@ -280,7 +313,7 @@ const positionHandler = (position) => {
 };
 
 const renderPosition = (position) => {
-    const elem = state.$el.querySelector(`[name="${position}"]`);
+    const elem = state.$detail.querySelector(`[name="${position}"]`);
     if (!elem) {
         return;
     }
@@ -291,22 +324,10 @@ const renderPosition = (position) => {
 
 };
 
-const el = ref(null);
 const update = (caseItem, position) => {
 
     // console.log('update', caseItem, position);
     if (!caseItem) {
-        return;
-    }
-
-    if (!el.value) {
-        return;
-    }
-
-    state.$el = el.value;
-
-    if (caseItem === state.caseItem) {
-        positionHandler(position);
         return;
     }
 
@@ -318,8 +339,17 @@ const update = (caseItem, position) => {
 
 };
 
-defineExpose({
-    update
+const el = ref(null);
+onMounted(() => {
+    state.$detail = el.value;
+});
+
+watch(() => state.caseItem, () => {
+    update(state.caseItem, state.position);
+});
+
+watch(() => state.position, () => {
+    positionHandler(state.position);
 });
 
 </script>
@@ -395,9 +425,7 @@ defineExpose({
     }
 }
 
-.mcr-item-annotations,
-.mcr-item-errors,
-.mcr-item-logs {
+.mcr-item-column {
     background-color: #f6f8fa;
     color: #333;
     padding: 10px;
@@ -405,7 +433,7 @@ defineExpose({
     margin-bottom: 10px;
     overflow-x: auto;
 
-    p {
+    > p {
         white-space: pre;
         font-family: Menlo, Consolas, monospace;
         line-height: initial;
@@ -421,13 +449,6 @@ defineExpose({
         padding: 5px;
         border-radius: 5px;
     }
-}
-
-.mcr-item-attachments {
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto;
-    background-color: #f6f8fa;
 }
 
 .mcr-item-image {

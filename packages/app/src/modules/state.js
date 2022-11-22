@@ -13,11 +13,14 @@ const state = shallowReactive({
     suiteVisible: true,
     stepVisible: true,
 
+    // flyover detail
+    flyoverVisible: false,
     detailTitle: '',
     $detail: null,
+    caseItem: null,
+    position: 0,
 
-    flyoverVisible: false,
-
+    // grid data
     reportData: null,
     gridDataAll: null,
     gridDataMap: {},

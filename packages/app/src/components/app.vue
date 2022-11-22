@@ -85,7 +85,7 @@
           </VuiFlex>
         </div>
         <div class="vui-flyover-content vui-flex-auto">
-          <CaseDetail ref="detail" />
+          <CaseDetail />
         </div>
       </div>
     </VuiFlyover>
@@ -104,7 +104,6 @@ import {
     createGrid, renderGrid, updateGrid
 } from '../modules/grid.js';
 
-import columns from '../modules/columns.js';
 import CaseDetail from './case-detail.vue';
 
 import store from '../util/store.js';
@@ -241,10 +240,7 @@ const initSummaryData = () => {
 
 };
 
-const detail = ref(null);
 onMounted(() => {
-
-    state.$detail = detail.value;
 
     const reportData = JSON.parse(decompress(window.reportData));
     console.log(reportData);
@@ -253,9 +249,11 @@ onMounted(() => {
     state.reportData = reportData;
 
     state.gridDataAll = {
-        columns: columns.create(),
-        rows: reportData.list
+        columns: reportData.columns,
+        rows: reportData.rows
     };
+
+    state.columns = reportData.columns;
 
     state.title = reportData.name;
     state.date = new Date(reportData.date).toLocaleString();

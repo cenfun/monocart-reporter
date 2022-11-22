@@ -47,7 +47,8 @@ const showTooltip = (elem, message) => {
 
 const showFlyover = (rowItem, position) => {
     state.detailTitle = rowItem.title;
-    state.$detail.update(rowItem, position);
+    state.caseItem = rowItem;
+    state.position = position;
     state.flyoverVisible = true;
 };
 
@@ -227,7 +228,6 @@ export const createGrid = () => {
     grid.setOption({
         selectMultiple: false,
         bindWindowResize: true,
-        scrollbarFade: true,
         scrollbarRound: true,
         collapseAllVisible: false,
         rowNumberVisible: true,
