@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter",
-    "version": "1.0.10",
+    "version": "1.1.0",
     "description": "A playwright test reporter",
     "main": "lib/index.js",
     "scripts": {
@@ -31,7 +31,6 @@
         "ansi-to-html": "^0.7.2",
         "eslint": "^8.28.0",
         "eslint-config-plus": "^1.0.5",
-        "eslint-plugin-chain": "^2.0.0",
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-vue": "^9.7.0",
         "github-markdown-css": "^5.1.0",

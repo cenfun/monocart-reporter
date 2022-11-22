@@ -1,5 +1,5 @@
 # monocart-reporter
-> A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style.
+> A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style, markdown annotations, custom columns.
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -23,8 +23,8 @@ module.exports = {
   ]
 };
 ```
-see example [tests/playwright.config.js](tests/playwright.config.js)  
-more [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
+Example [tests/playwright.config.js](tests/playwright.config.js)  
+Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
 
 ## Output Assets
 - path-to/your-filename.html  
@@ -63,13 +63,156 @@ test('test custom annotations', () => {
     });
 });
 ```
+## Advanced Custom Reporter Columns
+```js
+// playwright.config.js
+module.exports = {
+  reporter: [
+    ['monocart-reporter', {  
+      name: "My Test Report",
+      outputFile: './test-results/report.html',
 
-## Report UI [packages/app](packages/app)
+      // Advanced reporter columns
+      columns: (defaultColumns) => {
+          // console.log(defaultColumns);
+
+          // insert custom column(s) before a default column
+          const durationColumnIndex = defaultColumns.findIndex((column) => column.id === 'duration');
+          defaultColumns.splice(durationColumnIndex, 0, {
+              // define the column in reporter
+              id: 'owner',
+              name: 'Owner',
+              width: 100,
+              align: 'center',
+
+              // generate the column data from playwright metadata
+              // data.type is suite, metadata is Suite, https://playwright.dev/docs/api/class-suite
+              // data.type is case, metadata is TestCase, https://playwright.dev/docs/api/class-testcase
+              // (seems useless for now) data.type is step, metadata is TestStep, https://playwright.dev/docs/api/class-teststep
+              visitor: (data, metadata) => {
+
+                  // generate the owner for the suite
+                  if (data.type === 'suite') {
+                      // currently we can only obtain suite custom data via title, for example:
+                      // test.describe('suite title @Elon_Musk', () => {});
+                      const matched = `${metadata.title}`.match(/@\w+/g);
+                      if (matched) {
+                          return matched[0];
+                      }
+
+                      // you can try to get custom data from first child test annotations
+                      // metadata.tests[0].annotations
+                  }
+
+                  // generate the owner for the case
+                  if (data.type === 'case') {
+                      // obtain case custom data via title like suite, for example:
+                      // test('case title @Elon_Musk', () => {});
+
+                      // or from custom annotations, for example:
+                      // test.info().annotations.push({
+                      //     owner: 'Elon Musk',
+                      //     story: '#16888'
+                      // });
+                      const annotation = metadata.annotations.find((item) => item.owner);
+                      if (annotation) {
+                          return annotation.owner;
+                      }
+
+                  }
+
+              }
+          }, {
+              // another column for JIRA story link
+              id: 'story',
+              name: 'JIRA Story',
+              align: 'right',
+
+              visitor: (data, metadata) => {
+
+                  if (data.type === 'suite') {
+                      const matched = `${metadata.title}`.match(/#\d+/g);
+                      if (matched) {
+                          return `<a href="#" target="_blank">${matched[0]}</a>`;
+                      }
+                  }
+
+                  if (data.type === 'case') {
+                      const annotation = metadata.annotations.find((item) => item.story);
+                      if (annotation) {
+                          return `<a href="#" target="_blank">${annotation.story}</a>`;
+                      }
+                  }
+
+              }
+          });
+
+          // support grouped columns
+          defaultColumns.push({
+              id: 'group',
+              name: 'Group',
+              subs: [{
+                  id: 'item1',
+                  name: 'Test replace',
+                  width: 150,
+                  // using replace formatter
+                  formatter: 'replace',
+
+                  visitor: (data, metadata) => {
+                      if (data.type === 'case' && data.owner && data.story) {
+                          return '{owner} {story}';
+                      }
+                  }
+              }, {
+                  id: 'item2',
+                  name: 'Test Item'
+              }]
+          });
+
+          // just do something in visitor
+          defaultColumns.push({
+              id: 'whatever-your-id',
+              // invisible column
+              invisible: true,
+
+              // support async way
+              visitor: async (data, metadata) => {
+                  // do something like call some API when case failed
+
+                  // request something when case failed
+                  // if (data.type === 'case' && !data.ok) {
+                  //     const url = `/?id=${metadata.id}`;
+                  //     console.log(url);
+                  //     const res = await fetch(url);
+                  //     console.log(res);
+                  // }
+
+              }
+          });
+
+          // hide a default column
+          // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
+          // retryColumn.invisible = true;
+
+          // update a default column width
+          const locationColumn = defaultColumns.find((column) => column.id === 'location');
+          locationColumn.width = 100;
+
+      }
+    }]
+  ]
+};
+```
+## Example Test
+- [tests/playwright.config.js](tests/playwright.config.js)
+- [tests/example/example.spec.js](tests/example/example.spec.js)
+
+## Reporter UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
  - Lightweight UI components [vine-ui](https://github.com/cenfun/vine-ui)
+ - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
  - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
 
-## Example Test
-- [tests](/tests)
+
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)

@@ -248,22 +248,22 @@ const renderItemAttachments = (item) => {
         const contentType = attachment.contentType;
         if (contentType) {
             if (contentType.startsWith('image')) {
-                return `<p class="mcr-item-image">
+                return `<div class="mcr-item-attachment mcr-item-image">
                             <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
-                        </p>`;
+                        </div>`;
             } else if (contentType.startsWith('video')) {
-                return `<p class="mcr-item-video">
+                return `<div class="mcr-item-attachment mcr-item-video">
                             <video controls height="350">
                                 <source src="${attachment.path}" type="${contentType}">
                                 <p>Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead if your browser doesn't support HTML5 video.</p>
                             </video>
-                        </p>`;
+                        </div>`;
             }
         }
 
-        return `<p class="mcr-item-link">
+        return `<div class="mcr-item-attachment mcr-item-link">
                   <a href="${attachment.path}" target="_blank">${attachment.name}</a>
-                </p>`;
+                </div>`;
     });
 
     return list.join('');
@@ -452,6 +452,10 @@ watch(() => state.position, () => {
         padding: 5px;
         border-radius: 5px;
     }
+}
+
+.mcr-item-attachment {
+    margin-bottom: 5px;
 }
 
 .mcr-item-image {

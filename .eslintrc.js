@@ -16,14 +16,12 @@ module.exports = {
     },
 
     'plugins': [
-        'chain',
         'vue',
         'html'
     ],
 
     'extends': [
         'plus',
-        'plugin:chain/recommended',
         'plugin:vue/recommended'
     ],
 

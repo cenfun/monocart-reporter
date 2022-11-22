@@ -85,17 +85,27 @@ const config = {
 
                         // generate the owner for the suite
                         if (data.type === 'suite') {
-                            // currently we can only obtain suite custom data via title
+                            // currently we can only obtain suite custom data via title, for example:
+                            // test.describe('suite title @Elon_Musk', () => {});
                             const matched = `${metadata.title}`.match(/@\w+/g);
                             if (matched) {
                                 return matched[0];
                             }
+
+                            // you can try to get custom data from first child test annotations
+                            // metadata.tests[0].annotations
                         }
 
                         // generate the owner for the case
                         if (data.type === 'case') {
-                            // obtain case custom data via title like suite
-                            // or from custom annotations
+                            // obtain case custom data via title like suite, for example:
+                            // test('case title @Elon_Musk', () => {});
+
+                            // or from custom annotations, for example:
+                            // test.info().annotations.push({
+                            //     owner: 'Elon Musk',
+                            //     story: '#16888'
+                            // });
                             const annotation = metadata.annotations.find((item) => item.owner);
                             if (annotation) {
                                 return annotation.owner;
@@ -179,7 +189,6 @@ const config = {
                 // update a default column width
                 const locationColumn = defaultColumns.find((column) => column.id === 'location');
                 locationColumn.width = 100;
-
 
             }
         }]
