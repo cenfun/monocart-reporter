@@ -49,6 +49,15 @@ const showFlyover = (rowItem, position) => {
     state.detailTitle = rowItem.title;
     state.caseItem = rowItem;
     state.position = position;
+
+    let flyoverWidth = '60%';
+    if (state.windowWidth < 768) {
+        flyoverWidth = '100%';
+    } else if (state.windowWidth < 1024) {
+        flyoverWidth = '80%';
+    }
+    state.flyoverWidth = flyoverWidth;
+
     state.flyoverVisible = true;
 };
 
@@ -237,7 +246,7 @@ export const createGrid = () => {
             }
         },
         rowNotFound: 'No Results',
-        frozenColumn: 1,
+        frozenColumn: state.windowWidth < 768 ? -1 : 1,
         columnTypes: {
             title: 'tree'
         },

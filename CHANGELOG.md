@@ -1,3 +1,9 @@
+
+* 1.1.0
+ - new feature: custom columns
+ - fixed UI layout for mobile
+ - fixed tooltips
+
 * 1.0.10
  - fixed "id" argument must be of type string
 

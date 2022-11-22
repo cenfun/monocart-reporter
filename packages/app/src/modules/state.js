@@ -13,8 +13,11 @@ const state = shallowReactive({
     suiteVisible: true,
     stepVisible: true,
 
+    windowWidth: window.innerWidth,
+
     // flyover detail
     flyoverVisible: false,
+    flyoverWidth: '60%',
     detailTitle: '',
     $detail: null,
     caseItem: null,

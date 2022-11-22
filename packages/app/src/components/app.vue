@@ -23,23 +23,22 @@
     </div>
 
     <div class="mcr-filter">
+      <div class="mcr-summary">
+        <div
+          v-for="(item, i) in state.summary"
+          :key="i"
+          :class="summaryItemClass(item)"
+          @click="summaryItemClick(item)"
+        >
+          {{ item.name }} <span>{{ item.value }}</span> <span>{{ item.percent }}</span>
+        </div>
+      </div>
+
+      <div class="mcr-filter-auto" />
+
       <VuiFlex
         spacing="10px"
       >
-        <div class="mcr-summary vui-flex-row">
-          <div
-            v-for="(item, i) in state.summary"
-            :key="i"
-            :class="summaryItemClass(item)"
-            @click="summaryItemClick(item)"
-          >
-            {{ item.name }} <span>{{ item.value }}</span> <span>{{ item.percent }}</span>
-          </div>
-        </div>
-
-
-        <div class="vui-flex-auto" />
-
         <VuiInput
           v-model="state.keywords"
           width="150px"
@@ -60,9 +59,9 @@
 
     <VuiFlyover
       ref="flyover"
-      :visible="state.flyoverVisible"
       position="right"
-      width="60%"
+      :visible="state.flyoverVisible"
+      :width="state.flyoverWidth"
     >
       <div class="vui-flyover-main vui-flex-column">
         <div class="vui-flyover-header">
@@ -93,9 +92,7 @@
 </template>
 <script setup>
 import decompress from 'lz-utils/lib/decompress.js';
-import {
-    ref, watch, onMounted
-} from 'vue';
+import { watch, onMounted } from 'vue';
 
 import { components } from 'vine-ui';
 
@@ -277,6 +274,10 @@ watch([
     renderGrid();
 });
 
+window.addEventListener('resize', () => {
+    state.windowWidth = window.innerWidth;
+});
+
 </script>
 <style lang="scss">
 html,
@@ -411,6 +412,8 @@ icon
     padding: 10px;
     overflow: hidden;
     border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: row;
 }
 
 .mcr-summary {
@@ -418,6 +421,27 @@ icon
     border: thin solid #6c757d;
     border-radius: 5px;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+
+.mcr-filter-auto {
+    min-width: 10px;
+    flex: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .mcr-filter {
+        display: block;
+
+        .mcr-summary {
+            margin-bottom: 5px;
+        }
+
+        .mcr-filter-auto {
+            display: none;
+        }
+    }
 }
 
 .mcr-summary-item {
@@ -425,6 +449,8 @@ icon
     padding: 8px 10px;
     border-left: thin solid #6c757d;
     cursor: pointer;
+    text-align: center;
+    text-overflow: ellipsis;
     overflow: hidden;
 
     &:first-child {
