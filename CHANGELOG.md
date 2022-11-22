@@ -1,14 +1,14 @@
-
 * 1.1.0
- - new feature: custom columns
- - fixed UI layout for mobile
- - fixed tooltips
+  - new feature: custom columns
+  - fixed UI layout for mobile
+  - fixed tooltips
 
+---
 * 1.0.10
- - fixed "id" argument must be of type string
+  - fixed "id" argument must be of type string
 
 * 1.0.9
- - fixed dependencies not found
+  - fixed dependencies not found
 
 * 1.0.8
   - supported custom annotations with markdown description
