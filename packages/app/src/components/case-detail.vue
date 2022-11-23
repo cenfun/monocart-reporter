@@ -9,7 +9,6 @@
 <script setup>
 import 'github-markdown-css/github-markdown-light.css';
 import Convert from 'ansi-to-html';
-import CaseIcon from './case-icon.vue';
 import Util from '../util/util.js';
 import formatters from '../modules/formatters.js';
 import state from '../modules/state.js';
@@ -78,16 +77,11 @@ const renderItemHead = (item) => {
     }
 
     if (item.type === 'case') {
-
-        const div = document.createElement('div');
-        CaseIcon.createComponent({
-            caseItem: item
-        }, null, div);
-
-        list.push(div.innerHTML);
+        list.push(Util.getCaseIcon(item));
     }
 
-    list.push(`<div class="mcr-item-title vui-flex-auto">${item.title}</div>`);
+    list.push(`<div class="mcr-item-title">${item.title}</div>`);
+    list.push('<div class="vui-flex-auto"></div>');
 
     if (item.duration) {
         list.push(`<div class="mcr-item-duration">${Util.DTF(item.duration)}</div>`);
@@ -374,14 +368,16 @@ watch(() => state.position, () => {
 
 .mcr-item-head {
     padding: 8px 10px 8px 0;
+    overflow-x: auto;
+    white-space: nowrap;
 
-    .mcr-icon {
-        margin-right: 5px;
+    > * {
+        margin-left: 5px;
     }
-}
 
-.mcr-item-next {
-    padding-right: 5px;
+    > *:first-child {
+        margin-left: 0;
+    }
 }
 
 .tg-case-failed {
@@ -411,8 +407,7 @@ watch(() => state.position, () => {
 }
 
 .mcr-item-location {
-    font-size: 13px;
-    padding-left: 10px;
+    font-size: 12px;
 }
 
 .mcr-item-body {

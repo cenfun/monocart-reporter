@@ -1,7 +1,4 @@
-import { createComponent } from 'vine-ui';
 import Util from '../util/util.js';
-import CaseIcon from '../components/case-icon.vue';
-CaseIcon.createComponent = createComponent;
 
 export default {
 
@@ -21,12 +18,7 @@ export default {
         if (typeof value !== 'boolean') {
             return '';
         }
-        const div = document.createElement('div');
-        div.className = 'mcr-case-icon';
-        CaseIcon.createComponent({
-            caseItem: rowItem
-        }, null, div);
-        return div;
+        return Util.getCaseIcon(rowItem);
     },
 
     tree: function(value, rowItem, columnItem, cellNode) {

@@ -48,7 +48,7 @@ module.exports = {
 // http://your.report.site/test-results/2022-10-10
 ```
 - path-to/your-filename.json  
-Separated metadata file (Already included in the above HTML and compressed, it can be deleted)
+Separated metadata file (Already included in the above HTML and compressed, it can be deleted). Can be used for debugging or custom data collection.
 
 ## Custom Annotations with markdown description
 ```js
@@ -147,7 +147,7 @@ module.exports = {
               }
           });
 
-          // support grouped columns
+          // grouped columns
           defaultColumns.push({
               id: 'group',
               name: 'Group',
@@ -175,7 +175,7 @@ module.exports = {
               // invisible column
               invisible: true,
 
-              // support async way
+              // async way
               visitor: async (data, metadata) => {
                   // do something like call some API when case failed
 

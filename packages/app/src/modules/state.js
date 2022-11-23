@@ -1,4 +1,5 @@
 import { shallowReactive } from 'vue';
+import Util from '../util/util.js';
 
 const state = shallowReactive({
     title: '',
@@ -9,7 +10,7 @@ const state = shallowReactive({
 
     // filter
     keywords: '',
-    caseType: 'all',
+    caseType: Util.getHash('caseType') || 'all',
     suiteVisible: true,
     stepVisible: true,
 

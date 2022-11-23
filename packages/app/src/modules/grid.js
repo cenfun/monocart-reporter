@@ -18,9 +18,6 @@ const isNodeTruncated = (node) => {
     return false;
 };
 
-const hideFlyover = () => {
-    state.flyoverVisible = false;
-};
 
 const hideTooltip = () => {
     if (state.tooltip) {
@@ -43,6 +40,10 @@ const showTooltip = (elem, message) => {
         text: message
     });
 
+};
+
+const hideFlyover = () => {
+    state.flyoverVisible = false;
 };
 
 const showFlyover = (rowItem, position) => {
@@ -108,6 +109,28 @@ const bindGridEvents = () => {
         } else {
             hideFlyover();
         }
+    });
+
+    grid.bind('onFirstUpdated', (e) => {
+        const hash = Util.getHash();
+
+        // match index and title
+        if (hash.index) {
+            const rowItem = grid.getRowItem(parseInt(hash.index));
+            if (rowItem && rowItem.title === hash.title) {
+                showFlyover(rowItem);
+                return;
+            }
+        }
+
+        // only match title
+        if (hash.title) {
+            const rowItem = grid.getRowItemBy('title', hash.title);
+            if (rowItem) {
+                showFlyover(rowItem);
+            }
+        }
+
     });
 };
 

@@ -30,7 +30,7 @@
           :class="summaryItemClass(item)"
           @click="summaryItemClick(item)"
         >
-          {{ item.name }} <span>{{ item.value }}</span> <span>{{ item.percent }}</span>
+          {{ item.name }} <b>{{ item.value }}</b> <i>{{ item.percent }}</i>
         </div>
       </div>
 
@@ -133,6 +133,12 @@ const summaryItemClass = (item) => {
 const summaryItemClick = (item) => {
     if (item.caseType !== state.caseType) {
         state.caseType = item.caseType;
+        if (item.caseType === 'all') {
+            Util.delHash('caseType');
+        } else {
+            Util.setHash('caseType', item.caseType);
+        }
+
     }
 };
 
@@ -274,6 +280,19 @@ watch([
     renderGrid();
 });
 
+watch(() => state.flyoverVisible, () => {
+    if (state.flyoverVisible) {
+        if (state.caseItem) {
+            Util.setHash({
+                index: state.caseItem.tg_index,
+                title: state.caseItem.title
+            });
+        }
+    } else {
+        Util.delHash(['index', 'title']);
+    }
+});
+
 window.addEventListener('resize', () => {
     state.windowWidth = window.innerWidth;
 });
@@ -389,7 +408,7 @@ icon
 .mcr-header {
     height: 45px;
     line-height: 44px;
-    padding: 0 15px;
+    padding: 0 10px;
     background-color: #24292f;
     color: #fff;
     border-bottom: 1px solid #ddd;
@@ -445,20 +464,24 @@ icon
 }
 
 .mcr-summary-item {
-    user-select: none;
     padding: 8px 10px;
     border-left: thin solid #6c757d;
     cursor: pointer;
     text-align: center;
     text-overflow: ellipsis;
+    word-wrap: break-word;
     overflow: hidden;
 
     &:first-child {
         border-left: none;
     }
 
-    span {
-        margin-left: 5px;
+    b {
+        font-weight: normal;
+    }
+
+    i {
+        font-style: normal;
     }
 }
 
