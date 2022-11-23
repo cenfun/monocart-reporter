@@ -1,3 +1,6 @@
+* 1.1.1
+  - fixed some UI issues
+
 * 1.1.0
   - new feature: custom columns
   - fixed UI layout for mobile
