@@ -63,7 +63,8 @@ test('test custom annotations', () => {
     });
 });
 ```
-## Advanced Custom Reporter Columns
+See playwright [test annotations](https://playwright.dev/docs/test-annotations)
+## Advanced: Custom Columns
 ```js
 // playwright.config.js
 module.exports = {
@@ -182,7 +183,7 @@ module.exports = {
   ]
 };
 ```
-## Example Test
+## Example Tests
 - [tests/playwright.config.js](tests/playwright.config.js)
 - [tests/example/example.spec.js](tests/example/example.spec.js)
 
