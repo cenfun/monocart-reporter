@@ -98,7 +98,7 @@ import { components } from 'vine-ui';
 
 import Util from '../util/util.js';
 import {
-    createGrid, renderGrid, updateGrid
+    createGrid, renderGrid, updateGrid, displayFlyover
 } from '../modules/grid.js';
 
 import CaseDetail from './case-detail.vue';
@@ -291,6 +291,12 @@ watch(() => state.flyoverVisible, () => {
     } else {
         Util.delHash(['index', 'title']);
     }
+});
+
+window.addEventListener('popstate', (e) => {
+    const caseType = Util.getHash('caseType');
+    state.caseType = caseType || 'all';
+    displayFlyover();
 });
 
 window.addEventListener('resize', () => {

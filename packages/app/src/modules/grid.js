@@ -62,6 +62,37 @@ const showFlyover = (rowItem, position) => {
     state.flyoverVisible = true;
 };
 
+export const displayFlyover = () => {
+
+    const grid = state.grid;
+    if (!grid) {
+        return;
+    }
+
+    const hash = Util.getHash();
+
+    // match index and title
+    if (hash.index) {
+        const rowItem = grid.getRowItem(parseInt(hash.index));
+        if (rowItem && rowItem.title === hash.title) {
+            showFlyover(rowItem);
+            return;
+        }
+    }
+
+    // only match title
+    if (hash.title) {
+        const rowItem = grid.getRowItemBy('title', hash.title);
+        if (rowItem) {
+            showFlyover(rowItem);
+            return;
+        }
+    }
+
+    hideFlyover();
+
+};
+
 const bindGridEvents = () => {
 
     const grid = state.grid;
@@ -112,25 +143,7 @@ const bindGridEvents = () => {
     });
 
     grid.bind('onFirstUpdated', (e) => {
-        const hash = Util.getHash();
-
-        // match index and title
-        if (hash.index) {
-            const rowItem = grid.getRowItem(parseInt(hash.index));
-            if (rowItem && rowItem.title === hash.title) {
-                showFlyover(rowItem);
-                return;
-            }
-        }
-
-        // only match title
-        if (hash.title) {
-            const rowItem = grid.getRowItemBy('title', hash.title);
-            if (rowItem) {
-                showFlyover(rowItem);
-            }
-        }
-
+        displayFlyover();
     });
 };
 
