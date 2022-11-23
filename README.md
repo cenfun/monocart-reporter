@@ -169,27 +169,6 @@ module.exports = {
               }]
           });
 
-          // just do something in visitor
-          defaultColumns.push({
-              id: 'whatever-your-id',
-              // invisible column
-              invisible: true,
-
-              // async way
-              visitor: async (data, metadata) => {
-                  // do something like call some API when case failed
-
-                  // request something when case failed
-                  // if (data.type === 'case' && !data.ok) {
-                  //     const url = `/?id=${metadata.id}`;
-                  //     console.log(url);
-                  //     const res = await fetch(url);
-                  //     console.log(res);
-                  // }
-
-              }
-          });
-
           // hide a default column
           // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
           // retryColumn.invisible = true;
