@@ -61,10 +61,9 @@ module.exports = {
         // ['monocart-reporter']
         ['monocart-reporter', {
             name: 'My Test Report',
-            // the dir relative process.cwd
             outputFile: '.temp/monocart/index.html',
 
-            // Advanced reporter columns
+            // custom columns
             columns: (defaultColumns) => {
                 // console.log(defaultColumns);
 
@@ -80,7 +79,7 @@ module.exports = {
                     // generate the column data from playwright metadata
                     // data.type is suite, metadata is Suite, https://playwright.dev/docs/api/class-suite
                     // data.type is case, metadata is TestCase, https://playwright.dev/docs/api/class-testcase
-                    // (seems useless for now) data.type is step, metadata is TestStep, https://playwright.dev/docs/api/class-teststep
+                    // data.type is step, metadata is TestStep, https://playwright.dev/docs/api/class-teststep (seems useless for now)
                     visitor: (data, metadata) => {
 
                         // generate the owner for the suite
