@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
 
     globalSetup: require.resolve('./common/global-setup.js'),
 
@@ -169,9 +169,20 @@ const config = {
                 const locationColumn = defaultColumns.find((column) => column.id === 'location');
                 locationColumn.width = 100;
 
+            },
+
+            // async hook after report data generated
+            onEnd: (reportData, config, root) => {
+                console.log('onEnd hook start');
+                return new Promise((resolve) => {
+                    // send email or call some API
+                    console.log('onEnd hook do something slow (async) ...');
+                    setTimeout(() => {
+                        console.log(`onEnd hook end: ${reportData.name}`);
+                        resolve();
+                    }, 2000);
+                });
             }
         }]
     ]
 };
-
-module.exports = config;
