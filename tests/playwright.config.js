@@ -174,7 +174,7 @@ module.exports = {
             onEnd: (reportData, config, root) => {
                 console.log('onEnd hook start');
                 return new Promise((resolve) => {
-                    // send email or call some API
+                    // you can send email or call some API here
                     console.log('onEnd hook do something slow (async) ...');
                     setTimeout(() => {
                         console.log(`onEnd hook end: ${reportData.name}`);

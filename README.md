@@ -212,6 +212,7 @@ module.exports = {
 
             // async hook after report data generated
             onEnd: async (reportData, config, root) => {
+                // you can send email or call some API here
                 //await myAsyncFunction();
             }
         }]

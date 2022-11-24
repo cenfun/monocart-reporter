@@ -1,3 +1,7 @@
+* 1.1.2
+  - added onEnd hook option
+  - fixed some UI issues
+
 * 1.1.1
   - fixed some UI issues
 
