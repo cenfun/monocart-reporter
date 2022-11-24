@@ -390,10 +390,6 @@ watch(() => state.position, () => {
     border: none;
 }
 
-.tg-case-skipped {
-    color: #999;
-}
-
 .tg-step-retry {
     color: orange;
 }

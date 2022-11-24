@@ -257,6 +257,15 @@ const getFilteredRows = (rows, caseType) => {
         return true;
     });
 
+    // remove row classMap when caseType is skipped
+    if (caseType === 'skipped') {
+        rows.forEach((it) => {
+            if (it.caseType === 'skipped') {
+                it.classMap = '';
+            }
+        });
+    }
+
     return rows;
 
 };

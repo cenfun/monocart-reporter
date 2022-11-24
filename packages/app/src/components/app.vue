@@ -583,7 +583,7 @@ icon
 
     .tg-case-skipped.tg-row {
         .tg-cell {
-            color: #999;
+            color: gray;
         }
     }
 
