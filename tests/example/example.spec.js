@@ -1,61 +1,60 @@
 const { test, expect } = require('@playwright/test');
 const Util = require('../common/util.js');
 
-test('before describe', () => {
+test.use({
+    owner: 'Kevin',
+    jira: 'Epic #16888'
+});
 
-    // test() can only be called in a test file
-    // no test in test
-    // test('inside', () => {
-    // });
+test('case before suite', () => {
 
 });
 
+test.describe('suite group 1', () => {
 
-test('flaky case', ({ browserName }, testInfo) => {
-
-    console.log(`retry: ${testInfo.retry}`);
-    expect(testInfo.retry).toBe(1);
-
-});
-
-// https://playwright.dev/docs/test-annotations#custom-annotations
-test('test custom annotations', () => {
-    test.info().annotations.push({
-        type: 'issue',
-        description: `## see github issues
-- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
-`
+    test.use({
+        owner: 'Mark',
+        jira: 'Story #16900'
     });
 
-    test.info().annotations.push({
-        type: 'other',
-        description: `## stats
-- ![npm](https://img.shields.io/npm/v/monocart-reporter)
-- ![npm](https://img.shields.io/npm/dt/monocart-reporter)
-`
-    });
-});
+    // https://playwright.dev/docs/test-fixtures
+    // First argument must use the object destructuring pattern: fixtures
+    test('case info', ({ browserName }, testInfo) => {
 
-test.describe('two tests @Elon_Musk', () => {
-
-
-    test('one', () => {
-        // ...
+        expect(testInfo).toBe(test.info());
 
         test.info().annotations.push({
-            owner: 'Elon Musk',
-            story: '#16888'
+            owner: 'Musk',
+            jira: 'Task #16933'
         });
 
     });
 
-    test.describe('two tests #16889', () => {
-        test('one', async () => {
+    test('case steps', async () => {
+
+        const result1 = await test.step('step 1', () => {
+            return 'result';
+        });
+
+        const result2 = await test.step('step 2', () => {
+            return 'result';
+        });
+
+        expect(result1).toBe(result2);
+
+    });
+
+    test.describe('suite sub group', () => {
+        test('case first', async () => {
             // ...
         });
 
-        test('failed case', () => {
+        test('case failed', () => {
+
+            test.info().annotations.push({
+                owner: 'Musk',
+                jira: 'Task #16936'
+            });
 
             console.log('stdout: failed case log');
 
@@ -64,56 +63,79 @@ test.describe('two tests @Elon_Musk', () => {
             expect('passed').toBe('failed');
         });
 
-        test('fail - not yet ready', () => {
-            test.info().annotations.push({
-                owner: 'Elon Musk',
-                story: '#16900'
-            });
+        test('case fail - not yet ready', () => {
 
             test.fail();
             console.log('failed');
         });
 
-        test('fixme - not yet ready', () => {
+        test('case fixme - not yet ready', () => {
             test.fixme();
             console.log('fixme');
         });
 
-        test('two', async () => {
+        test('case last', async () => {
             // ...
         });
     });
 
-    test('skipped test', () => {
+    test('case skipped by test.skip()', () => {
         test.skip();
         console.log('skipped');
     });
 
-    test.skip('skipped case', () => {
+    test.skip('case skipped case', () => {
         expect('skipped').toBe('skipped');
     });
 
-    test('two', async () => {
+    test('case two', async () => {
         // ...
     });
 });
 
-test.describe('two tests1', () => {
-    test('one', async () => {
-        // ...
+test.describe('suite group 2', () => {
+
+    test('case flaky', ({ browserName }, testInfo) => {
+
+        console.log(`retry: ${testInfo.retry}`);
+        expect(testInfo.retry).toBe(1);
+
     });
 
-    test('timeout case', async () => {
+    // https://playwright.dev/docs/test-annotations#custom-annotations
+    test('case custom annotations', () => {
+        test.info().annotations.push({
+            type: 'issue',
+            description: `## see github issues
+    - [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
+    - [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
+    `
+        });
+
+        test.info().annotations.push({
+            type: 'other',
+            description: `## stats
+    - ![npm](https://img.shields.io/npm/v/monocart-reporter)
+    - ![npm](https://img.shields.io/npm/dt/monocart-reporter)
+    `
+        });
+    });
+
+    test('case timeout 3000', async () => {
         test.setTimeout(3000);
         await Util.delay(10 * 1000);
     });
 
-    test('two', async () => {
+    test('case one', async () => {
+        // ...
+    });
+
+    test('case two', async () => {
         // ...
     });
 });
 
 
-test('after describe', () => {
+test('case after suite', () => {
 
 });
