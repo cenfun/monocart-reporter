@@ -1,3 +1,6 @@
+* 1.1.3
+  - fixed custom columns
+
 * 1.1.2
   - added onEnd hook option
   - fixed some UI issues

@@ -42,6 +42,12 @@ test.describe('suite group 1', () => {
 
         expect(result1).toBe(result2);
 
+        await test.step('step slow (500ms)', () => {
+            return new Promise((resolve) => {
+                setTimeout(resolve, 500);
+            });
+        });
+
     });
 
     test.describe('suite sub group', () => {

@@ -285,6 +285,8 @@ export const createGrid = () => {
         scrollbarRound: true,
         collapseAllVisible: false,
         rowNumberVisible: true,
+        // 9999 max
+        rowNumberWidth: 45,
         rowNumberFilter: (rowItem) => {
             if (rowItem.type === 'case') {
                 return rowNumber++;
