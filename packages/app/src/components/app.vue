@@ -2,7 +2,7 @@
   <div class="mcr vui-flex-column">
     <div class="mcr-header vui-flex-row">
       <div class="mcr-title">
-        {{ state.title }}
+        <a href="./">{{ state.title }}</a>
         <span>{{ state.date }}</span>
       </div>
       <div class="vui-flex-auto" />
@@ -421,13 +421,18 @@ icon
 }
 
 .mcr-title {
-    font-size: 24px;
+    font-size: 20px;
     text-overflow: ellipsis;
     white-space: nowrap;
 
+    a {
+        color: #fff;
+        text-decoration: none;
+    }
+
     span {
-        font-size: 16px;
-        margin-left: 5px;
+        font-size: 14px;
+        margin-left: 10px;
         color: #ccc;
     }
 }
