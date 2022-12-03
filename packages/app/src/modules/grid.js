@@ -44,12 +44,19 @@ const showTooltip = (elem, message) => {
 
 const hideFlyover = () => {
     state.flyoverVisible = false;
+    state.caseItem = null;
 };
 
 const showFlyover = (rowItem, position) => {
-    state.detailTitle = rowItem.title;
+    if (state.caseItem === rowItem) {
+        return;
+    }
+
+
     state.caseItem = rowItem;
     state.position = position;
+    state.detailTitle = rowItem.title;
+    // console.log('showFlyover position', position);
 
     let flyoverWidth = '60%';
     if (state.windowWidth < 768) {
@@ -111,6 +118,9 @@ const bindGridEvents = () => {
             return;
         }
         const rowItem = d.rowItem;
+        const columnItem = d.columnItem;
+        const position = columnItem.id;
+
         grid.setRowSelected(rowItem);
 
         const caseItem = getClickCaseItem(rowItem);
@@ -120,13 +130,12 @@ const bindGridEvents = () => {
 
         const cl = d.e.target.classList;
         if (cl.contains('mcr-icon') || cl.contains('mcr-annotation')) {
-            const position = d.columnItem.id;
             showFlyover(caseItem, position);
             return;
         }
 
         if (state.flyoverVisible) {
-            showFlyover(caseItem);
+            showFlyover(caseItem, position);
         }
     });
 

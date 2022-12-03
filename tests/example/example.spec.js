@@ -48,6 +48,10 @@ test.describe('suite group 1', () => {
             });
         });
 
+        test.step('step soft assertion failed', () => {
+            expect.soft(1).toBe(2);
+        });
+
     });
 
     test.describe('suite sub group', () => {

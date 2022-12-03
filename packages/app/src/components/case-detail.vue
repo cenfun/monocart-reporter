@@ -156,8 +156,13 @@ const renderItemColumn = (item, column) => {
         return;
     }
 
+    let anchor = '';
+    if (item.type === 'case') {
+        anchor = `<a name="${column.id}"></a>`;
+    }
+
     return `<div class="mcr-item-column mcr-item-${column.id}">
-                <a name="${column.id}"></a>
+                ${anchor}
                 <h3># ${column.name}</h3> 
                 ${content}
             </div>`;
@@ -294,14 +299,6 @@ const positionHandler = (position) => {
         return;
     }
 
-    if (!position) {
-        state.$detail.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-        return;
-    }
-
     // wait for rendered like image
     state.timeout_position = setTimeout(() => {
         renderPosition(position);
@@ -310,12 +307,19 @@ const positionHandler = (position) => {
 };
 
 const renderPosition = (position) => {
-    const elem = state.$detail.querySelector(`[name="${position}"]`);
-    if (!elem) {
-        return;
+    if (position) {
+        const elem = state.$detail.querySelector(`[name="${position}"]`);
+        if (elem) {
+            elem.scrollIntoView({
+                behavior: 'smooth'
+            });
+            return;
+        }
     }
 
-    elem.scrollIntoView({
+    // reset to top
+    state.$detail.scrollTo({
+        top: 0,
         behavior: 'smooth'
     });
 
@@ -341,12 +345,11 @@ onMounted(() => {
     state.$detail = el.value;
 });
 
-watch(() => state.caseItem, () => {
+watch([
+    () => state.caseItem,
+    () => state.position
+], () => {
     update(state.caseItem, state.position);
-});
-
-watch(() => state.position, () => {
-    positionHandler(state.position);
 });
 
 </script>
