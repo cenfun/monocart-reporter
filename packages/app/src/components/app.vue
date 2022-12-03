@@ -30,7 +30,7 @@
           :class="summaryItemClass(item)"
           @click="summaryItemClick(item)"
         >
-          {{ item.name }} <b>{{ item.value }}</b> <i>{{ item.percent }}</i>
+          <b>{{ item.name }}</b> <span>{{ item.value.toLocaleString() }}</span> <i>{{ item.percent }}</i>
         </div>
       </div>
 
@@ -233,8 +233,8 @@ const initSummaryData = () => {
     });
 
     // summary.failed.value = 0;
-
     summary.passed.classMap = summary.failed.value === 0 ? 'mcr-summary-passed' : '';
+
     summary.failed.classMap = summary.failed.value > 0 ? 'mcr-summary-failed' : 'mcr-summary-skipped';
     summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-summary-flaky' : 'mcr-summary-skipped';
     summary.skipped.classMap = 'mcr-summary-skipped';
@@ -487,12 +487,8 @@ icon
         border-left: none;
     }
 
-    b {
-        font-weight: normal;
-    }
-
     i {
-        font-style: normal;
+        font-size: 13px;
     }
 }
 
