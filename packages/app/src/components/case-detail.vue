@@ -51,8 +51,8 @@ const renderTree = () => {
         const body = renderItemBody(item);
 
         const cls = ['mcr-item'];
-        if (item.classMap) {
-            cls.push(item.classMap);
+        if (!item.level) {
+            cls.push('mcr-item-root');
         }
 
         return `<div class="${cls.join(' ')}" style="margin-left:${left}px;">
@@ -69,12 +69,10 @@ const renderTree = () => {
 
 const renderItemHead = (item) => {
 
-    const cls = ['mcr-item-head', `mcr-item-${item.type}`, 'vui-flex-row'];
+    const cls = ['mcr-item-head', `mcr-item-${item.type}`, item.classMap, 'vui-flex-row'];
+    const className = cls.filter((it) => it).join(' ');
 
     const list = [];
-    if (item.level) {
-        list.push('<div class="mcr-item-next">└</div>');
-    }
 
     if (item.type === 'case') {
         list.push(Util.getCaseIcon(item));
@@ -91,7 +89,7 @@ const renderItemHead = (item) => {
     }
     const head = list.join('');
 
-    return `<div class="${cls.join(' ')}">
+    return `<div class="${className}">
               ${head}
             </div>`;
 };
@@ -161,9 +159,25 @@ const renderItemColumn = (item, column) => {
         anchor = `<a name="${column.id}"></a>`;
     }
 
+    const icons = {
+        annotations: 'mcr-icon-annotation',
+        errors: 'mcr-icon-error',
+        logs: 'mcr-icon-log',
+        attachments: 'mcr-icon-attachment'
+    };
+
+    const icon = icons[column.id];
+    let head = `<div class="mcr-column-head">${column.name}</div>`;
+    if (icon) {
+        head = `<div class="mcr-column-head vui-flex-row">
+            <div class="mcr-icon ${icon}"></div>
+            <div>${column.name}</div>
+        </div>`;
+    }
+
     return `<div class="mcr-item-column mcr-item-${column.id}">
                 ${anchor}
-                <h3># ${column.name}</h3> 
+                ${head}
                 ${content}
             </div>`;
 };
@@ -197,7 +211,7 @@ const renderItemAnnotations = (item) => {
         }
         // console.log(annotation);
         const ls = ['<div class="mcr-item-annotation">'];
-        ls.push(`<h3>${annotation.type}</h3>`);
+        ls.push(`<div class="mcr-annotation-head">${annotation.type}</div>`);
         if (annotation.description) {
             ls.push(`<div class="markdown-body">${annotation.description}</div>`);
         }
@@ -367,10 +381,31 @@ watch([
 
 .mcr-item {
     border-bottom: thin solid #ccc;
+    position: relative;
+
+    &::before {
+        content: "";
+        background-image: url("../images/level.svg");
+        display: block;
+        overflow: hidden;
+        width: 10px;
+        height: 20px;
+        background-size: 10px 20px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        position: absolute;
+        left: -10px;
+        top: 8px;
+    }
+
+    &.mcr-item-root::before {
+        background-image: url("../images/root.svg");
+        left: 0;
+    }
 }
 
 .mcr-item-head {
-    padding: 8px 10px 8px 0;
+    padding: 8px 5px;
     overflow-x: auto;
     white-space: nowrap;
 
@@ -381,6 +416,10 @@ watch([
     > *:first-child {
         margin-left: 0;
     }
+}
+
+.mcr-item-root .mcr-item-head {
+    padding-left: 15px;
 }
 
 .tg-case-failed {
@@ -406,19 +445,28 @@ watch([
 }
 
 .mcr-item-location {
-    font-size: 12px;
+    font-size: 13px;
+    font-style: italic;
+    text-overflow: ellipsis;
 }
 
 .mcr-item-body {
-    padding: 0 10px 10px;
-
     > *:last-child {
         margin-bottom: 0;
+        border-bottom: none;
     }
 
-    h3 {
-        padding: 5px 0;
-        margin: 0;
+    .mcr-column-head {
+        font-weight: bold;
+        align-items: end;
+
+        > div {
+            font-size: 16px;
+        }
+
+        .mcr-icon {
+            margin-right: 2px;
+        }
     }
 }
 
@@ -426,8 +474,7 @@ watch([
     background-color: #f6f8fa;
     color: #333;
     padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    border-bottom: thin solid #ddd;
     overflow-x: auto;
 
     > p {
@@ -437,19 +484,23 @@ watch([
     }
 }
 
-.mcr-item-errors > h3 {
-    color: red;
+.mcr-item-errors > .mcr-column-head {
+    color: #d00;
 }
 
 .mcr-item-annotation {
+    .mcr-annotation-head {
+        font-weight: bold;
+        padding: 5px 0;
+    }
+
     .markdown-body {
         padding: 5px;
-        border-radius: 5px;
     }
 }
 
 .mcr-item-attachment {
-    margin-bottom: 5px;
+    padding: 5px 0;
 }
 
 .mcr-item-image {

@@ -388,6 +388,10 @@ icon
     background-image: url("../images/failed.svg");
 }
 
+.mcr-icon-annotation {
+    background-image: url("../images/annotation.svg");
+}
+
 .mcr-icon-info {
     background-image: url("../images/info.svg");
 }
