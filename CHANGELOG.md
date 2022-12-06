@@ -1,3 +1,6 @@
+* 1.1.4
+  - fixed UI issues (Mac)
+
 * 1.1.3
   - fixed custom columns
 
