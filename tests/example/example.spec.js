@@ -7,7 +7,9 @@ test.use({
 });
 
 test('case before suite', () => {
-
+    test.info().annotations.push({
+        type: 'init'
+    });
 });
 
 test.describe('suite group 1', () => {
@@ -117,17 +119,17 @@ test.describe('suite group 2', () => {
         test.info().annotations.push({
             type: 'issue',
             description: `## see github issues
-    - [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-    - [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
-    `
+- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
+- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
+`
         });
 
         test.info().annotations.push({
             type: 'other',
             description: `## stats
-    - ![npm](https://img.shields.io/npm/v/monocart-reporter)
-    - ![npm](https://img.shields.io/npm/dt/monocart-reporter)
-    `
+- ![npm](https://img.shields.io/npm/v/monocart-reporter)
+- ![npm](https://img.shields.io/npm/dt/monocart-reporter)
+`
         });
     });
 
