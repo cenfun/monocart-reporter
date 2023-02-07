@@ -1,3 +1,6 @@
+* 1.1.5
+  - fixed UI issue (touch/mobile)
+
 * 1.1.4
   - fixed UI issues (Mac)
 
