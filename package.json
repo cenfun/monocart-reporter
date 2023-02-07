@@ -4,10 +4,11 @@
     "description": "A playwright test reporter",
     "main": "lib/index.js",
     "scripts": {
+        "test": "node ./scripts/link.js && npx playwright test --config=tests/playwright.config.js",
         "build": "sf lint && sf b -p",
+        "dev": "sf d",
         "patch": "npm run build && sf publish patch -r",
-        "pack": "sf lint && sf pack -o docs -q v={version}",
-        "test": "node ./scripts/link.js && npx playwright test --config=tests/playwright.config.js"
+        "pack": "sf lint && sf pack -o docs -q v={version}"
     },
     "workspaces": [
         "packages/*"

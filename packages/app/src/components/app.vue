@@ -305,24 +305,38 @@ window.addEventListener('resize', () => {
 
 </script>
 <style lang="scss">
+@media screen and (max-width: 768px) {
+    .mcr .mcr-filter {
+        display: block;
+
+        .mcr-summary {
+            margin-bottom: 5px;
+        }
+
+        .mcr-filter-auto {
+            display: none;
+        }
+    }
+}
+
 html,
 body {
-    font-family: arial, sans-serif;
-    font-size: 14px;
-    padding: 0;
-    margin: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: arial, sans-serif;
     overflow: hidden;
 }
 
 .mcr {
+    --bg-failed: #ffebe9;
+    --bg-flaky: #fcf7de;
+
     width: 100%;
     height: 100%;
     overflow: hidden;
-
-    --bg-failed: #ffebe9;
-    --bg-flaky: #fcf7de;
 }
 
 /*
@@ -331,14 +345,14 @@ icon
 
 .mcr-icon {
     display: block;
-    overflow: hidden;
     width: 20px;
     height: 20px;
-    background-size: 20px 20px;
-    background-position: center center;
     background-repeat: no-repeat;
-    opacity: 0.8;
+    background-position: center center;
+    background-size: 20px 20px;
     cursor: pointer;
+    opacity: 0.8;
+    overflow: hidden;
 }
 
 .mcr-icon:hover {
@@ -362,30 +376,30 @@ icon
 }
 
 .mcr-icon-passed {
-    opacity: 1;
     width: 18px;
     height: 18px;
+    background-image: url("../images/passed.svg");
     background-size: 18px 18px;
     cursor: default;
-    background-image: url("../images/passed.svg");
+    opacity: 1;
 }
 
 .mcr-icon-skipped {
-    opacity: 1;
     width: 18px;
     height: 18px;
+    background-image: url("../images/skipped.svg");
     background-size: 18px 18px;
     cursor: default;
-    background-image: url("../images/skipped.svg");
+    opacity: 1;
 }
 
 .mcr-icon-failed {
-    opacity: 1;
     width: 18px;
     height: 18px;
+    background-image: url("../images/failed.svg");
     background-size: 18px 18px;
     cursor: default;
-    background-image: url("../images/failed.svg");
+    opacity: 1;
 }
 
 .mcr-icon-annotation {
@@ -417,17 +431,17 @@ icon
 
 .mcr-header {
     height: 45px;
-    line-height: 44px;
     padding: 0 10px;
-    background-color: #24292f;
     color: #fff;
+    line-height: 44px;
     border-bottom: 1px solid #ddd;
+    background-color: #24292f;
 }
 
 .mcr-title {
     font-size: 20px;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    text-overflow: ellipsis;
 
     a {
         color: #fff;
@@ -435,56 +449,42 @@ icon
     }
 
     span {
-        font-size: 14px;
         margin-left: 10px;
         color: #ccc;
+        font-size: 14px;
     }
 }
 
 .mcr-filter {
-    align-items: center;
-    padding: 10px;
-    overflow: hidden;
-    border-bottom: 1px solid #ddd;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
 }
 
 .mcr-summary {
     position: relative;
+    display: flex;
+    flex-direction: row;
     border: thin solid #6c757d;
     border-radius: 5px;
     overflow: hidden;
-    display: flex;
-    flex-direction: row;
 }
 
 .mcr-filter-auto {
-    min-width: 10px;
     flex: auto;
-}
-
-@media screen and (max-width: 768px) {
-    .mcr-filter {
-        display: block;
-
-        .mcr-summary {
-            margin-bottom: 5px;
-        }
-
-        .mcr-filter-auto {
-            display: none;
-        }
-    }
+    min-width: 10px;
 }
 
 .mcr-summary-item {
     padding: 8px 10px;
-    border-left: thin solid #6c757d;
-    cursor: pointer;
     text-align: center;
     text-overflow: ellipsis;
     word-wrap: break-word;
+    border-left: thin solid #6c757d;
+    cursor: pointer;
     overflow: hidden;
 
     &:first-child {
@@ -543,30 +543,30 @@ icon
 }
 
 .mcr-summary-value {
+    width: 81px;
     margin: 0 auto 5px;
     padding: 5px;
-    width: 81px;
     font-size: 16px;
     text-align: center;
-    background-color: #f5f5f5;
     border-radius: 10px;
+    background-color: #f5f5f5;
 
     span {
         display: block;
+        height: 20px;
         margin-top: 3px;
         font-size: 12px;
-        height: 20px;
         line-height: 20px;
     }
 }
 
 .mcr-search {
     input {
+        padding-right: 23px;
+        background-image: url("../images/search.svg");
         background-repeat: no-repeat;
         background-position: 97% center;
-        background-image: url("../images/search.svg");
         background-size: 16px;
-        padding-right: 23px;
     }
 }
 
@@ -577,13 +577,13 @@ icon
     }
 
     .tg-case-failed.tg-row {
-        background-color: var(--bg-failed);
         border: none;
+        background-color: var(--bg-failed);
     }
 
     .tg-case-flaky.tg-row {
-        background-color: var(--bg-flaky);
         border: none;
+        background-color: var(--bg-flaky);
     }
 
     .tg-case-skipped.tg-row {
@@ -605,8 +605,8 @@ icon
     }
 
     .mcr-annotation {
-        cursor: pointer;
         text-decoration: underline;
+        cursor: pointer;
     }
 
     .mcr-location {
@@ -636,21 +636,21 @@ flyover
 }
 
 .vui-flyover-header {
-    background-color: #005ba4;
     padding: 0 10px;
+    background-color: #005ba4;
 }
 
 .vui-flyover-icon {
-    cursor: pointer;
     padding: 9px 0;
+    cursor: pointer;
 }
 
 .vui-flyover-title {
     height: 45px;
-    line-height: 45px;
     color: #fff;
-    font-size: 16px;
     font-weight: bold;
+    font-size: 16px;
+    line-height: 45px;
 }
 
 .vui-flyover-content {
@@ -662,9 +662,9 @@ colors
 */
 
 .inline {
+    display: inline-block;
     width: 20px;
     height: 1em;
-    display: inline-block;
 }
 
 .bold {

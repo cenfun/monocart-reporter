@@ -380,34 +380,34 @@ watch([
 }
 
 .mcr-item {
-    border-bottom: thin solid #ccc;
     position: relative;
+    border-bottom: thin solid #ccc;
 
     &::before {
+        position: absolute;
+        top: 8px;
+        left: -10px;
         content: "";
-        background-image: url("../images/level.svg");
         display: block;
-        overflow: hidden;
         width: 10px;
         height: 20px;
-        background-size: 10px 20px;
-        background-position: center center;
+        background-image: url("../images/level.svg");
         background-repeat: no-repeat;
-        position: absolute;
-        left: -10px;
-        top: 8px;
+        background-position: center center;
+        background-size: 10px 20px;
+        overflow: hidden;
     }
 
     &.mcr-item-root::before {
-        background-image: url("../images/root.svg");
         left: 0;
+        background-image: url("../images/root.svg");
     }
 }
 
 .mcr-item-head {
     padding: 8px 5px;
-    overflow-x: auto;
     white-space: nowrap;
+    overflow-x: auto;
 
     > * {
         margin-left: 5px;
@@ -423,13 +423,13 @@ watch([
 }
 
 .tg-case-failed {
-    background-color: var(--bg-failed);
     border: none;
+    background-color: var(--bg-failed);
 }
 
 .tg-case-flaky {
-    background-color: var(--bg-flaky);
     border: none;
+    background-color: var(--bg-flaky);
 }
 
 .tg-step-retry {
@@ -457,8 +457,8 @@ watch([
     }
 
     .mcr-column-head {
-        font-weight: bold;
         align-items: end;
+        font-weight: bold;
 
         > div {
             font-size: 16px;
@@ -471,16 +471,16 @@ watch([
 }
 
 .mcr-item-column {
-    background-color: #f6f8fa;
-    color: #333;
     padding: 10px;
+    color: #333;
     border-bottom: thin solid #ddd;
+    background-color: #f6f8fa;
     overflow-x: auto;
 
     > p {
-        white-space: pre;
         font-family: Menlo, Consolas, monospace;
         line-height: initial;
+        white-space: pre;
     }
 }
 
@@ -490,8 +490,8 @@ watch([
 
 .mcr-item-annotation {
     .mcr-annotation-head {
-        font-weight: bold;
         padding: 5px 0;
+        font-weight: bold;
     }
 
     .markdown-body {
@@ -509,16 +509,16 @@ watch([
     }
 
     img {
-        max-height: 350px;
         display: block;
+        max-height: 350px;
     }
 }
 
 .mcr-detail-head {
-    font-size: 16px;
-    font-weight: bold;
-    border-bottom: thin solid #ccc;
     padding: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    border-bottom: thin solid #ccc;
 }
 
 .mcr-detail-body {
