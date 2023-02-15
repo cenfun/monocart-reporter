@@ -35,9 +35,11 @@ const showTooltip = (elem, message) => {
     }
 
     state.tooltip = VuiTooltip.createComponent({
-        target: elem,
-        maxWidth: 500,
-        text: message
+        props: {
+            target: elem,
+            maxWidth: 500,
+            text: message
+        }
     });
 
 };
