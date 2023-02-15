@@ -8,7 +8,7 @@
         "build": "sf lint && sf b -p",
         "dev": "sf d",
         "patch": "npm run build && sf publish patch -r",
-        "pack": "sf lint && sf pack -o docs -q v={version}"
+        "pack": "sf pack -o docs -q v={version}"
     },
     "workspaces": [
         "packages/*"
