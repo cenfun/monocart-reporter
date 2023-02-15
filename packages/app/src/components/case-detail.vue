@@ -19,7 +19,8 @@ import {
 const convert = new Convert({
     fg: '#333',
     bg: '#F6F8FA',
-    newline: true
+    newline: true,
+    escapeXML: true
 });
 
 const renderTree = () => {
