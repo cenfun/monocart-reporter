@@ -67,6 +67,21 @@ module.exports = {
             columns: (defaultColumns) => {
                 // console.log(defaultColumns);
 
+                // custom reporter data with invisible column visitor
+                // defaultColumns.push({
+                //     id: 'my-invisible-column-id',
+                //     invisible: true,
+                //     visitor: (data, metadata) => {
+                //         if (data.type === 'step') {
+                //             if (data.title === 'Before Hooks') {
+                //                 data.title = 'My custom step title 1';
+                //             } else if (data.title.startsWith('page.goto')) {
+                //                 data.title = 'My custom step title 2';
+                //             }
+                //         }
+                //     }
+                // });
+
                 // insert custom column(s) before a default column
                 const durationColumnIndex = defaultColumns.findIndex((column) => column.id === 'duration');
                 defaultColumns.splice(durationColumnIndex, 0, {
