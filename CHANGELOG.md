@@ -1,3 +1,7 @@
+* 1.1.6
+  - fixed UI layout in small screen
+  - fixed HTML escape
+
 * 1.1.5
   - fixed UI issue (touch/mobile)
 
