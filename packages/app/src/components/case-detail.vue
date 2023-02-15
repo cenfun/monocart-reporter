@@ -70,7 +70,7 @@ const renderTree = () => {
 
 const renderItemHead = (item) => {
 
-    const cls = ['mcr-item-head', `mcr-item-${item.type}`, item.classMap, 'vui-flex-row'];
+    const cls = ['mcr-item-head', `mcr-item-${item.type}`, item.classMap];
     const className = cls.filter((it) => it).join(' ');
 
     const list = [];
@@ -80,14 +80,15 @@ const renderItemHead = (item) => {
     }
 
     list.push(`<div class="mcr-item-title">${item.title}</div>`);
-    list.push('<div class="vui-flex-auto"></div>');
+
+    if (item.location) {
+        list.push(`<div class="mcr-item-location">${item.location}</div>`);
+    }
 
     if (item.duration) {
         list.push(`<div class="mcr-item-duration">${Util.DTF(item.duration)}</div>`);
     }
-    if (item.location) {
-        list.push(`<div class="mcr-item-location">${item.location}</div>`);
-    }
+
     const head = list.join('');
 
     return `<div class="${className}">
@@ -407,8 +408,12 @@ watch([
 
 .mcr-item-head {
     padding: 8px 5px;
-    white-space: nowrap;
-    overflow-x: auto;
+
+    &::after {
+        content: "";
+        display: block;
+        clear: both;
+    }
 
     > * {
         margin-left: 5px;
@@ -416,6 +421,22 @@ watch([
 
     > *:first-child {
         margin-left: 0;
+    }
+
+    .mcr-icon,
+    .mcr-item-title {
+        float: left;
+    }
+
+    .mcr-item-duration {
+        float: right;
+        font-size: 13px;
+    }
+
+    .mcr-item-location {
+        float: right;
+        font-size: 13px;
+        font-style: italic;
     }
 }
 
@@ -443,12 +464,6 @@ watch([
 
 .mcr-item-suite .mcr-item-title {
     font-weight: bold;
-}
-
-.mcr-item-location {
-    font-size: 13px;
-    font-style: italic;
-    text-overflow: ellipsis;
 }
 
 .mcr-item-body {
