@@ -430,12 +430,10 @@ watch([
 
     .mcr-item-duration {
         float: right;
-        font-size: 13px;
     }
 
     .mcr-item-location {
         float: right;
-        font-size: 13px;
         font-style: italic;
     }
 }
