@@ -1,5 +1,7 @@
 import { components } from 'vine-ui';
 import { Grid } from 'turbogrid';
+import fuzzy from 'fuzzy';
+
 import Util from '../util/util.js';
 import formatters from './formatters.js';
 import store from '../util/store.js';
@@ -17,7 +19,6 @@ const isNodeTruncated = (node) => {
     }
     return false;
 };
-
 
 const hideTooltip = () => {
     if (state.tooltip) {
@@ -53,7 +54,6 @@ const showFlyover = (rowItem, position) => {
     if (state.caseItem === rowItem) {
         return;
     }
-
 
     state.caseItem = rowItem;
     state.position = position;
@@ -281,12 +281,62 @@ const getFilteredRows = (rows, caseType) => {
 
 };
 
+const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
+
+    if (!keywords) {
+        searchableKeys.forEach((k) => {
+            rowItem[`${k}_matched`] = null;
+        });
+        return true;
+    }
+
+    let hasMatched = false;
+    searchableKeys.forEach((k) => {
+
+        let matched = null;
+        const str = rowItem[k];
+        if (str) {
+            const res = fuzzy.match(keywords, rowItem[k], {
+                pre: '<b>',
+                post: '</b>'
+            });
+            if (res) {
+                //  console.log(res);
+                hasMatched = true;
+                matched = res.rendered;
+            }
+        }
+        rowItem[`${k}_matched`] = matched;
+    });
+
+    return hasMatched;
+};
+
+const getSearchableColumns = (columns) => {
+    const map = {};
+    Util.forEachTree(columns, (column) => {
+        if (column.searchable) {
+            map[column.id] = column.name;
+            if (column.classMap) {
+                column.classMap += ' mcr-searchable';
+            } else {
+                column.classMap = 'mcr-searchable';
+            }
+        }
+    });
+    return map;
+};
+
 
 export const createGrid = () => {
     const grid = new Grid('.mcr-grid');
     state.grid = grid;
 
     bindGridEvents();
+
+    const searchableColumns = getSearchableColumns(state.gridDataAll.columns);
+    const searchableKeys = Object.keys(searchableColumns);
+    state.searchableTitle = `searchable: ${Object.values(searchableColumns).join(', ')}`;
 
     let rowNumber = 1;
 
@@ -309,23 +359,15 @@ export const createGrid = () => {
             title: 'tree'
         },
         rowFilter: (rowItem) => {
-            if (!state.keywords) {
-                return true;
-            }
-            const arr = state.keywords.toLowerCase().split(/\s+/g);
-            const name = (`${rowItem.title}`).toLowerCase();
-            for (const item of arr) {
-                if (item && name.indexOf(item) !== -1) {
-                    return true;
-                }
-            }
-            return false;
+            return rowFilterHandler(rowItem, searchableKeys, state.keywords);
         }
     });
     grid.setFormatter(formatters);
+
     // first render
     const data = getGridData();
     grid.setData(data);
+
     grid.render();
 };
 

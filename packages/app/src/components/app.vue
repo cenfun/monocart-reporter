@@ -44,6 +44,7 @@
           width="150px"
           class="mcr-search"
           placeholder="keywords"
+          :title="state.searchableTitle"
         />
 
         <VuiSwitch v-model="state.suiteVisible">
@@ -611,6 +612,10 @@ icon
 
     .mcr-location {
         font-weight: normal;
+    }
+
+    .mcr-searchable b {
+        color: red;
     }
 }
 

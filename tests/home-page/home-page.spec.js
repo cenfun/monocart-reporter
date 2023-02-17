@@ -25,6 +25,9 @@ test('test home page', async ({ page, context }) => {
 });
 
 test('test screenshot and video', async ({ page, context }) => {
+    test.info().annotations.push({
+        owner: '大强'
+    });
     const homePage = new HomePage(page, context, config);
     await homePage.init();
     await homePage.goto();

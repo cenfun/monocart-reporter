@@ -1,5 +1,14 @@
 import Util from '../util/util.js';
 
+const matchedFormatter = function(value, rowItem, columnItem) {
+    const id = columnItem.id;
+    const matched = rowItem[`${id}_matched`];
+    if (matched) {
+        value = matched;
+    }
+    return value;
+};
+
 export default {
 
     null: function(value) {
@@ -21,7 +30,11 @@ export default {
         return Util.getCaseIcon(rowItem);
     },
 
+    string: matchedFormatter,
+
     tree: function(value, rowItem, columnItem, cellNode) {
+        value = matchedFormatter(value, rowItem, columnItem);
+
         const defaultFormatter = this.getDefaultFormatter('tree');
         if (rowItem.type === 'suite') {
             value = `${value} (${rowItem.tests})`;
