@@ -102,6 +102,7 @@ module.exports = {
                     id: 'owner',
                     name: 'Owner',
                     align: 'center',
+                    searchable: true,
                     styleMap: {
                         'font-weight': 'normal'
                     },
