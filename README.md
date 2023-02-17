@@ -1,5 +1,5 @@
 # monocart-reporter
-> A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style, markdown annotations, custom columns.
+> A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style, console logs, markdown annotations, custom columns, fuzzy search.
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)

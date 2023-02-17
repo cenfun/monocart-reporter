@@ -1,3 +1,6 @@
+* 1.1.7
+  - added fuzzy search in reporter
+
 * 1.1.6
   - fixed UI layout in small screen
   - fixed HTML escape
