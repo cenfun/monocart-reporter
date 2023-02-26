@@ -344,7 +344,8 @@ export const createGrid = () => {
         selectMultiple: false,
         bindWindowResize: true,
         scrollbarRound: true,
-        collapseAllVisible: false,
+        textSelectable: true,
+        collapseAllVisible: true,
         rowNumberVisible: true,
         // 9999 max
         rowNumberWidth: 45,

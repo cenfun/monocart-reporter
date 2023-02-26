@@ -269,8 +269,14 @@ onMounted(() => {
     createGrid();
 });
 
+let timeout_search;
 watch(() => state.keywords, () => {
-    updateGrid();
+
+    clearTimeout(timeout_search);
+    timeout_search = setTimeout(() => {
+        updateGrid();
+    }, 200);
+
 });
 
 watch([
