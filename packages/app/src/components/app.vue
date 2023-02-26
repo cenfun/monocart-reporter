@@ -396,6 +396,10 @@ icon
 
 .mcr-icon-suite {
     background-image: url("../images/suite.svg");
+
+    ~ .mcr-item-title {
+        margin-left: 3px;
+    }
 }
 
 .mcr-icon-case {
@@ -404,6 +408,10 @@ icon
 
 .mcr-icon-step {
     background-image: url("../images/step.svg");
+
+    ~ .mcr-item-title {
+        margin-left: 0;
+    }
 }
 
 .mcr-icon-annotation {

@@ -77,6 +77,8 @@ const renderItemHead = (item) => {
 
     if (item.type === 'case') {
         list.push(Util.getIconOk(item));
+    } else {
+        list.push(Util.getIconType(item.type));
     }
 
     list.push(`<div class="mcr-item-title">${item.title}</div>`);

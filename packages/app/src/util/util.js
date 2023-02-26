@@ -59,6 +59,21 @@ const Util = {
         return `<div class="${cls}"></div>`;
     },
 
+    getIconType: function(value) {
+        const types = {
+            suite: 'suite',
+            case: 'case',
+            step: 'step'
+        };
+        const type = types[value];
+        if (!type) {
+            return '';
+        }
+        const list = ['mcr-icon', 'mcr-icon-type', `mcr-icon-${type}`];
+        const cls = list.join(' ');
+        return `<div class="${cls}"></div>`;
+    },
+
     // =============================================================================
     // hash
     getHash(key) {
