@@ -8,7 +8,11 @@ test.use({
 
 test('case before suite', () => {
     test.info().annotations.push({
-        type: 'init'
+        type: 'markdown',
+        description: `## see github issues
+- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
+- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
+`
     });
 });
 
@@ -59,6 +63,25 @@ test.describe('suite group 1', () => {
     test.describe('suite sub group', () => {
         test('case first', async () => {
             // ...
+        });
+
+        // https://playwright.dev/docs/test-annotations#custom-annotations
+        test('case custom annotations', () => {
+            test.info().annotations.push({
+                type: 'issue',
+                description: `## see github issues
+- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
+- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
+`
+            });
+
+            test.info().annotations.push({
+                type: 'other',
+                description: `## stats
+- ![npm](https://img.shields.io/npm/v/monocart-reporter)
+- ![npm](https://img.shields.io/npm/dt/monocart-reporter)
+`
+            });
         });
 
         test('case failed', () => {
@@ -112,25 +135,6 @@ test.describe('suite group 2', () => {
         console.log(`retry: ${testInfo.retry}`);
         expect(testInfo.retry).toBe(1);
 
-    });
-
-    // https://playwright.dev/docs/test-annotations#custom-annotations
-    test('case custom annotations', () => {
-        test.info().annotations.push({
-            type: 'issue',
-            description: `## see github issues
-- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
-`
-        });
-
-        test.info().annotations.push({
-            type: 'other',
-            description: `## stats
-- ![npm](https://img.shields.io/npm/v/monocart-reporter)
-- ![npm](https://img.shields.io/npm/dt/monocart-reporter)
-`
-        });
     });
 
     test('case timeout 3000', async () => {
