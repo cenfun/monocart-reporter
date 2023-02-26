@@ -137,56 +137,27 @@ const renderItemColumn = (item, column) => {
     }
 
     const defaultHandler = {
-        annotations: renderItemAnnotations,
         errors: renderItemErrors,
         logs: renderItemLogs,
+        annotations: renderItemAnnotations,
         attachments: renderItemAttachments
     };
 
-    let handler = defaultHandler[column.id];
-    if (!handler && column.visitor) {
-        // custom visitor column
-        handler = renderItemCustom;
+    const handler = defaultHandler[column.id];
+    if (handler) {
+        return handler(item, column);
     }
 
-    if (!handler) {
-        return;
-    }
+    // custom visitor column
+    return renderItemCustom(item, column);
 
-    const content = handler(item, column);
-    if (!content) {
-        return;
-    }
-
-    let anchor = '';
-    if (item.type === 'case') {
-        anchor = `<a name="${column.id}"></a>`;
-    }
-
-    const icons = {
-        annotations: 'mcr-icon-annotation',
-        errors: 'mcr-icon-error',
-        logs: 'mcr-icon-log',
-        attachments: 'mcr-icon-attachment'
-    };
-
-    const icon = icons[column.id];
-    let head = `<div class="mcr-column-head">${column.name}</div>`;
-    if (icon) {
-        head = `<div class="mcr-column-head vui-flex-row">
-            <div class="mcr-icon ${icon}"></div>
-            <div>${column.name}</div>
-        </div>`;
-    }
-
-    return `<div class="mcr-item-column mcr-item-${column.id}">
-                ${anchor}
-                ${head}
-                ${content}
-            </div>`;
 };
 
 const renderItemCustom = (item, column) => {
+    if (!column.visitor) {
+        return;
+    }
+
     let value = item[column.id];
 
     // do not show null value
@@ -200,10 +171,81 @@ const renderItemCustom = (item, column) => {
         value = formatter(value, item, column);
     }
 
-    return value;
+    return `<div class="mcr-item-column mcr-item-${column.id}">
+                <div class="mcr-column-custom vui-flex-row">
+                    <div class="mcr-column-head">${column.name}</div>
+                    <div>${value}</div>
+                </div> 
+            </div>`;
 };
 
-const renderItemAnnotations = (item) => {
+const isErrorInSubs = (err, subs) => {
+    if (!Util.isList(subs)) {
+        return false;
+    }
+    const foundItem = subs.find((item) => {
+        if (Util.isList(item.errors) && item.errors.includes(err)) {
+            return true;
+        }
+        return isErrorInSubs(err, item.subs);
+    });
+    if (foundItem) {
+        return true;
+    }
+    return false;
+};
+
+const renderItemErrors = (item, column) => {
+    const errors = item.errors;
+    if (!Util.isList(errors)) {
+        return;
+    }
+
+    const list = errors.map((err) => {
+        if (isErrorInSubs(err, item.subs)) {
+            return '';
+        }
+        return convertHtml(err);
+    });
+
+    const content = list.join('');
+    if (!content) {
+        return;
+    }
+
+    return `<div class="mcr-item-column mcr-item-${column.id}">
+                <a name="${column.id}"></a>
+                <div class="mcr-column-head vui-flex-row">
+                    <div class="mcr-icon mcr-icon-error"></div>
+                    <div>${column.name}</div>
+                </div>
+                <p>${content}</p>
+            </div>`;
+};
+
+const renderItemLogs = (item, column) => {
+    const logs = item.logs;
+    if (!Util.isList(logs)) {
+        return;
+    }
+
+    const list = logs.map((log) => {
+        return convertHtml(log);
+    });
+
+    const content = `<p>${list.join('')}</p>`;
+
+    return `<div class="mcr-item-column mcr-item-${column.id}">
+                <a name="${column.id}"></a>
+                <div class="mcr-column-head vui-flex-row">
+                    <div class="mcr-icon mcr-icon-log"></div>
+                    <div>${column.name}</div>
+                </div>
+                ${content}
+            </div>`;
+};
+
+const renderItemAnnotations = (item, column) => {
     const annotations = item.annotations;
     if (!Util.isList(annotations)) {
         return;
@@ -214,8 +256,13 @@ const renderItemAnnotations = (item) => {
             return '';
         }
         // console.log(annotation);
-        const ls = ['<div class="mcr-item-annotation">'];
-        ls.push(`<div class="mcr-annotation-head">${annotation.type}</div>`);
+        const ls = ['<div class="mcr-annotation-item">'];
+
+        ls.push('<div class="mcr-annotation-head vui-flex-row">');
+        ls.push(`<div class="mcr-icon mcr-icon-annotation" tooltip="${column.name}"></div>`);
+        ls.push(`<div>${annotation.type}</div>`);
+        ls.push('</div>');
+
         if (annotation.description) {
             ls.push(`<div class="markdown-body">${annotation.description}</div>`);
         }
@@ -223,36 +270,20 @@ const renderItemAnnotations = (item) => {
         return ls.join('');
     });
 
-    return list.join('');
-};
-
-const renderItemErrors = (item) => {
-    const errors = item.errors;
-    if (!Util.isList(errors)) {
+    const content = list.join('');
+    if (!content) {
         return;
     }
 
-    const list = errors.map((err) => {
-        return convertHtml(err);
-    });
-
-    return `<p>${list.join('')}</p>`;
+    return `<div class="mcr-item-column mcr-item-annotations">
+                <a name="${column.id}"></a>
+                <div class="mcr-column-annotations">
+                    ${content}
+                </div>
+            </div>`;
 };
 
-const renderItemLogs = (item) => {
-    const logs = item.logs;
-    if (!Util.isList(logs)) {
-        return;
-    }
-
-    const list = logs.map((log) => {
-        return convertHtml(log);
-    });
-
-    return `<p>${list.join('')}</p>`;
-};
-
-const renderItemAttachments = (item) => {
+const renderItemAttachments = (item, column) => {
     const attachments = item.attachments;
     if (!Util.isList(attachments)) {
         return;
@@ -283,7 +314,17 @@ const renderItemAttachments = (item) => {
                 </div>`;
     });
 
-    return list.join('');
+    const content = list.join('');
+
+    return `<div class="mcr-item-column mcr-item-${column.id}">
+                <a name="${column.id}"></a>
+                <div class="mcr-column-head vui-flex-row">
+                    <div class="mcr-icon mcr-icon-attachment"></div>
+                    <div>${column.name}</div>
+                </div>
+                ${content}
+            </div>`;
+
 };
 
 const generateSteps = (list, steps) => {
@@ -466,8 +507,24 @@ watch([
     font-weight: bold;
 }
 
+.mcr-column-annotations {
+    &::after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    > div {
+        float: left;
+    }
+
+    .mcr-column-head {
+        margin-right: 10px;
+    }
+}
+
 .mcr-item-body {
-    > *:last-child {
+    > div:last-child {
         margin-bottom: 0;
         border-bottom: none;
     }
@@ -476,12 +533,12 @@ watch([
         align-items: end;
         font-weight: bold;
 
-        > div {
-            font-size: 16px;
-        }
-
         .mcr-icon {
             margin-right: 2px;
+
+            ~ div {
+                font-size: 16px;
+            }
         }
     }
 }
@@ -489,7 +546,7 @@ watch([
 .mcr-item-column {
     padding: 10px;
     color: #333;
-    border-bottom: thin solid #ddd;
+    border-bottom: thin solid #d7e0e4;
     background-color: #f6f8fa;
     overflow-x: auto;
 
@@ -504,13 +561,25 @@ watch([
     color: #d00;
 }
 
-.mcr-item-annotation {
+.mcr-column-custom .mcr-column-head {
+    margin-right: 10px;
+}
+
+.mcr-annotation-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-weight: normal;
+
     .mcr-annotation-head {
-        padding: 5px 0;
         font-weight: bold;
+
+        .mcr-icon {
+            margin-right: 5px;
+        }
     }
 
     .markdown-body {
+        margin-top: 5px;
         padding: 5px;
     }
 }

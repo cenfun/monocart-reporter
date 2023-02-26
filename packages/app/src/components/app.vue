@@ -9,13 +9,13 @@
       <VuiFlex spacing="10px">
         <a
           class="mcr-icon mcr-icon-playwright"
-          :title="state.titlePlaywright"
+          :tooltip="state.titlePlaywright"
           href="https://github.com/microsoft/playwright"
           target="_blank"
         />
         <a
           class="mcr-icon mcr-icon-github"
-          :title="state.titleReporter"
+          :tooltip="state.titleReporter"
           href="https://github.com/cenfun/monocart-reporter"
           target="_blank"
         />
@@ -44,7 +44,7 @@
           width="150px"
           class="mcr-search"
           placeholder="keywords"
-          :title="state.searchableTitle"
+          :tooltip="state.searchableTitle"
         />
 
         <VuiSwitch v-model="state.suiteVisible">
@@ -111,7 +111,8 @@ const {
     VuiInput,
     VuiFlex,
     VuiFlyover,
-    VuiSwitch
+    VuiSwitch,
+    VuiTooltip
 } = components;
 
 const initStore = () => {
@@ -244,6 +245,44 @@ const initSummaryData = () => {
 
 };
 
+const show_tooltip = function(target, text) {
+    hide_tooltip(target);
+    if (target.$tooltip) {
+        return;
+    }
+    target.$tooltip = VuiTooltip.createComponent({
+        props: {
+            target,
+            text
+        }
+    });
+};
+
+const hide_tooltip = function(target) {
+    if (!target.$tooltip) {
+        return;
+    }
+    target.$tooltip.unmount();
+    target.$tooltip = null;
+};
+
+
+const init_tooltip = () => {
+    setTimeout(() => {
+        document.body.addEventListener('mouseenter', (e) => {
+            const target = e.target;
+            const text = target.getAttribute('tooltip');
+            if (text) {
+                show_tooltip(target, text);
+            }
+        }, true);
+        document.body.addEventListener('mouseleave', (e) => {
+            const target = e.target;
+            hide_tooltip(target);
+        }, true);
+    }, 100);
+};
+
 onMounted(() => {
 
     const reportData = JSON.parse(decompress(window.reportData));
@@ -267,6 +306,8 @@ onMounted(() => {
     initSummaryData();
 
     createGrid();
+
+    init_tooltip();
 });
 
 let timeout_search;
@@ -287,7 +328,10 @@ watch([
     renderGrid();
 });
 
-watch(() => state.flyoverVisible, () => {
+watch([
+    () => state.flyoverVisible,
+    () => state.caseItem
+], () => {
     if (state.flyoverVisible) {
         if (state.caseItem) {
             Util.setHash({
