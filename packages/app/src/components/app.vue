@@ -383,30 +383,27 @@ icon
 }
 
 .mcr-icon-passed {
-    width: 18px;
-    height: 18px;
     background-image: url("../images/passed.svg");
-    background-size: 18px 18px;
-    cursor: default;
-    opacity: 1;
 }
 
 .mcr-icon-skipped {
-    width: 18px;
-    height: 18px;
     background-image: url("../images/skipped.svg");
-    background-size: 18px 18px;
-    cursor: default;
-    opacity: 1;
 }
 
 .mcr-icon-failed {
-    width: 18px;
-    height: 18px;
     background-image: url("../images/failed.svg");
-    background-size: 18px 18px;
-    cursor: default;
-    opacity: 1;
+}
+
+.mcr-icon-suite {
+    background-image: url("../images/suite.svg");
+}
+
+.mcr-icon-case {
+    background-image: url("../images/case.svg");
+}
+
+.mcr-icon-step {
+    background-image: url("../images/step.svg");
 }
 
 .mcr-icon-annotation {
@@ -427,6 +424,22 @@ icon
 
 .mcr-icon-attachment {
     background-image: url("../images/attachment.svg");
+}
+
+.mcr-icon-ok {
+    width: 18px;
+    height: 18px;
+    background-size: 18px 18px;
+    cursor: default;
+    opacity: 1;
+}
+
+.mcr-icon-type {
+    width: 16px;
+    height: 16px;
+    background-size: 16px 16px;
+    cursor: default;
+    opacity: 1;
 }
 
 .tg-cell .mcr-icon {

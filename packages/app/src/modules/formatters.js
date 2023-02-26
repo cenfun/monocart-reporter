@@ -23,11 +23,26 @@ export default {
         return Util.replace(value, rowItem);
     },
 
-    caseIcon: function(value, rowItem, columnItem, cellNode) {
+    iconOk: function(value, rowItem, columnItem, cellNode) {
         if (typeof value !== 'boolean') {
             return '';
         }
-        return Util.getCaseIcon(rowItem);
+        return Util.getIconOk(rowItem);
+    },
+
+    iconType: function(value, rowItem, columnItem, cellNode) {
+        const types = {
+            suite: 'suite',
+            case: 'case',
+            step: 'step'
+        };
+        const type = types[value];
+        if (!type) {
+            return '';
+        }
+        const list = ['mcr-icon', 'mcr-icon-type', `mcr-icon-${type}`];
+        const cls = list.join(' ');
+        return `<div class="${cls}"></div>`;
     },
 
     string: matchedFormatter,

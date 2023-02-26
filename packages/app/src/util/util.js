@@ -42,8 +42,8 @@ const Util = {
         return item.status === 'skipped' || item.outcome === 'skipped';
     },
 
-    getCaseIcon: function(item) {
-        const list = ['mcr-icon'];
+    getIconOk: function(item) {
+        const list = ['mcr-icon', 'mcr-icon-ok'];
         if (item.ok) {
             if (Util.isSkipped(item)) {
                 list.push('mcr-icon-skipped');
