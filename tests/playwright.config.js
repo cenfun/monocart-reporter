@@ -148,7 +148,7 @@ module.exports = {
                         if (data.type === 'case') {
                             const annotation = metadata.annotations.find((item) => item.jira);
                             if (annotation) {
-                                return `<a href="#" target="_blank">${annotation.jira}</a>`;
+                                return `<a href="#title=${data.title}" target="_blank">${annotation.jira}</a>`;
                             }
                         }
 
