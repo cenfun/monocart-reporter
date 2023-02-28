@@ -1,3 +1,12 @@
+
+* 1.2.0
+  - removed repeated errors
+  - updated the order of columns
+  - fixed UI layout (icon)
+
+---
+
+
 * 1.1.7
   - added fuzzy search in reporter
 
@@ -27,6 +36,7 @@
   - fixed tooltips
 
 ---
+
 * 1.0.10
   - fixed "id" argument must be of type string
 

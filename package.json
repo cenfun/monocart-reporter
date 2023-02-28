@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter",
-    "version": "1.1.7",
+    "version": "1.2.0",
     "description": "A playwright test reporter. Shows suites/cases/steps with tree style, console logs, markdown annotations, custom columns, fuzzy search.",
     "main": "lib/index.js",
     "scripts": {
