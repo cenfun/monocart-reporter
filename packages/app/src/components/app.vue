@@ -6,7 +6,7 @@
         <span>{{ state.date }}</span>
       </div>
       <div class="vui-flex-auto" />
-      <VuiFlex spacing="10px">
+      <VuiFlex gap="10px">
         <a
           class="mcr-icon mcr-icon-playwright"
           :tooltip="state.titlePlaywright"
@@ -22,7 +22,12 @@
       </VuiFlex>
     </div>
 
-    <div class="mcr-filter">
+    <VuiFlex
+      class="mcr-filter"
+      gap="10px"
+      padding="10px"
+      wrap
+    >
       <div class="mcr-summary">
         <div
           v-for="(item, i) in state.summary"
@@ -34,10 +39,11 @@
         </div>
       </div>
 
-      <div class="mcr-filter-auto" />
+      <div class="vui-flex-auto" />
 
       <VuiFlex
-        spacing="10px"
+        gap="10px"
+        padding="5px"
       >
         <VuiInput
           v-model="state.keywords"
@@ -54,7 +60,7 @@
           Step
         </VuiSwitch>
       </VuiFlex>
-    </div>
+    </VuiFlex>
 
     <div class="mcr-grid vui-flex-auto" />
 
@@ -66,7 +72,7 @@
     >
       <div class="vui-flyover-main vui-flex-column">
         <div class="vui-flyover-header">
-          <VuiFlex spacing="10px">
+          <VuiFlex gap="10px">
             <div
               class="vui-flyover-icon"
               @click="state.flyoverVisible=false"
@@ -89,13 +95,20 @@
         </div>
       </div>
     </VuiFlyover>
+
+    <VuiTooltip
+      :visible="tooltip.visible"
+      :target="tooltip.target"
+      :text="tooltip.text"
+    />
   </div>
 </template>
 <script setup>
+import {
+    watch, onMounted, reactive
+} from 'vue';
+import { components, generateTooltips } from 'vine-ui';
 import decompress from 'lz-utils/lib/decompress.js';
-import { watch, onMounted } from 'vue';
-
-import { components } from 'vine-ui';
 
 import Util from '../util/util.js';
 import {
@@ -114,6 +127,14 @@ const {
     VuiSwitch,
     VuiTooltip
 } = components;
+
+const tooltip = reactive({
+    visible: false,
+    target: null,
+    text: ''
+});
+
+state.tooltip = tooltip;
 
 const initStore = () => {
     const booleans = {
@@ -245,42 +266,45 @@ const initSummaryData = () => {
 
 };
 
-const show_tooltip = function(target, text) {
-    hide_tooltip(target);
-    if (target.$tooltip) {
-        return;
-    }
-    target.$tooltip = VuiTooltip.createComponent({
-        props: {
-            target,
-            text
-        }
+const initTooltip = () => {
+    generateTooltips((target, text) => {
+        tooltip.visible = true;
+        tooltip.target = target;
+        tooltip.text = text;
+    }, (target) => {
+        tooltip.visible = false;
+        tooltip.text = '';
     });
 };
 
-const hide_tooltip = function(target) {
-    if (!target.$tooltip) {
-        return;
+// do not show the error if in subs
+const isErrorInSubs = (i, subs) => {
+    if (!Util.isList(subs)) {
+        return false;
     }
-    target.$tooltip.unmount();
-    target.$tooltip = null;
+    const foundItem = subs.find((item) => {
+        if (Util.isList(item.errors) && item.errors.includes(i)) {
+            return true;
+        }
+        return isErrorInSubs(i, item.subs);
+    });
+    if (foundItem) {
+        return true;
+    }
+    return false;
 };
 
-
-const init_tooltip = () => {
-    setTimeout(() => {
-        document.body.addEventListener('mouseenter', (e) => {
-            const target = e.target;
-            const text = target.getAttribute('tooltip');
-            if (text) {
-                show_tooltip(target, text);
-            }
-        }, true);
-        document.body.addEventListener('mouseleave', (e) => {
-            const target = e.target;
-            hide_tooltip(target);
-        }, true);
-    }, 100);
+const initErrors = (rows, errors) => {
+    if (!Util.isList(rows)) {
+        return;
+    }
+    rows.forEach((row) => {
+        if (Util.isList(row.errors)) {
+            // empty array in case to show error icon
+            row.errors = row.errors.filter((i) => !isErrorInSubs(i, row.subs)).map((i) => errors[i]);
+        }
+        initErrors(row.subs, errors);
+    });
 };
 
 onMounted(() => {
@@ -288,8 +312,8 @@ onMounted(() => {
     const reportData = JSON.parse(decompress(window.reportData));
     console.log(reportData);
 
-    // for get errors by index
-    state.reportData = reportData;
+    // init all errors (index to message)
+    initErrors(reportData.rows, reportData.errors);
 
     state.gridDataAll = {
         columns: reportData.columns,
@@ -307,7 +331,7 @@ onMounted(() => {
 
     createGrid();
 
-    init_tooltip();
+    initTooltip();
 });
 
 let timeout_search;
@@ -356,20 +380,6 @@ window.addEventListener('resize', () => {
 
 </script>
 <style lang="scss">
-@media screen and (max-width: 768px) {
-    .mcr .mcr-filter {
-        display: block;
-
-        .mcr-summary {
-            margin-bottom: 5px;
-        }
-
-        .mcr-filter-auto {
-            display: none;
-        }
-    }
-}
-
 html,
 body {
     width: 100%;
@@ -382,7 +392,7 @@ body {
 }
 
 .mcr {
-    --bg-failed: #ffebe9;
+    --bg-failed: #fff0ef;
     --bg-flaky: #fcf7de;
 
     width: 100%;
@@ -528,10 +538,6 @@ icon
 }
 
 .mcr-filter {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
     border-bottom: 1px solid #ddd;
     overflow: hidden;
 }
@@ -540,14 +546,10 @@ icon
     position: relative;
     display: flex;
     flex-direction: row;
+    flex-shrink: 1;
     border: thin solid #6c757d;
     border-radius: 5px;
     overflow: hidden;
-}
-
-.mcr-filter-auto {
-    flex: auto;
-    min-width: 10px;
 }
 
 .mcr-summary-item {

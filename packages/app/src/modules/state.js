@@ -27,7 +27,6 @@ const state = shallowReactive({
     position: 0,
 
     // grid data
-    reportData: null,
     gridDataAll: null,
     gridDataMap: {},
     grid: null

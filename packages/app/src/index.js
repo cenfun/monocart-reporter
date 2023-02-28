@@ -1,4 +1,4 @@
-import { createComponent } from 'vine-ui';
+import { createApp } from 'vue';
 import App from './components/app.vue';
-App.createComponent = createComponent;
-App.createComponent();
+const app = createApp(App);
+app.mount('body');

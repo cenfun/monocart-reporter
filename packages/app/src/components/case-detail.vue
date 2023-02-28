@@ -179,22 +179,6 @@ const renderItemCustom = (item, column) => {
             </div>`;
 };
 
-const isErrorInSubs = (err, subs) => {
-    if (!Util.isList(subs)) {
-        return false;
-    }
-    const foundItem = subs.find((item) => {
-        if (Util.isList(item.errors) && item.errors.includes(err)) {
-            return true;
-        }
-        return isErrorInSubs(err, item.subs);
-    });
-    if (foundItem) {
-        return true;
-    }
-    return false;
-};
-
 const renderItemErrors = (item, column) => {
     const errors = item.errors;
     if (!Util.isList(errors)) {
@@ -202,9 +186,6 @@ const renderItemErrors = (item, column) => {
     }
 
     const list = errors.map((err) => {
-        if (isErrorInSubs(err, item.subs)) {
-            return '';
-        }
         return convertHtml(err);
     });
 
@@ -557,8 +538,12 @@ watch([
     }
 }
 
-.mcr-item-errors > .mcr-column-head {
-    color: #d00;
+.mcr-item-errors {
+    background-color: var(--bg-failed);
+
+    > .mcr-column-head {
+        color: #d00;
+    }
 }
 
 .mcr-column-custom .mcr-column-head {

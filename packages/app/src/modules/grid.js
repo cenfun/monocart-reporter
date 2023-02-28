@@ -1,4 +1,3 @@
-import { components } from 'vine-ui';
 import { Grid } from 'turbogrid';
 import fuzzy from 'fuzzy';
 
@@ -6,8 +5,6 @@ import Util from '../util/util.js';
 import formatters from './formatters.js';
 import store from '../util/store.js';
 import state from '../modules/state.js';
-
-const { VuiTooltip } = components;
 
 const isNodeTruncated = (node) => {
     if (!node) {
@@ -22,8 +19,8 @@ const isNodeTruncated = (node) => {
 
 const hideTooltip = () => {
     if (state.tooltip) {
-        state.tooltip.unmount();
-        state.tooltip = null;
+        state.tooltip.visible = false;
+        state.tooltip.text = '';
     }
 };
 
@@ -34,14 +31,11 @@ const showTooltip = (elem, message) => {
     if (!message) {
         return;
     }
-
-    state.tooltip = VuiTooltip.createComponent({
-        props: {
-            target: elem,
-            maxWidth: 500,
-            text: message
-        }
-    });
+    if (state.tooltip) {
+        state.tooltip.target = elem;
+        state.tooltip.text = message;
+        state.tooltip.visible = true;
+    }
 
 };
 
@@ -198,17 +192,7 @@ const initTreeList = (list, parent, level) => {
         if (item.type === 'case') {
             item.steps = item.subs;
         }
-        initItemErrors(item);
         initTreeList(item.subs, item, level);
-    });
-};
-
-const initItemErrors = (item) => {
-    if (!item.errors) {
-        return;
-    }
-    item.errors = item.errors.map((index) => {
-        return state.reportData.errors[index];
     });
 };
 
