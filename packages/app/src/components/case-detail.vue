@@ -193,8 +193,6 @@ const renderItemCustom = (item, column) => {
         value = column.formatter(value, item, column);
     }
 
-    console.log(column);
-
     // if markdown is true
     const content = column.markdown ? markdownParse(value) : `<div>${value}</div>`;
 

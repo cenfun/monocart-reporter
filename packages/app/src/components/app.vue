@@ -393,6 +393,12 @@ window.addEventListener('resize', () => {
     state.windowWidth = window.innerWidth;
 });
 
+window.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape') {
+        state.flyoverVisible = false;
+    }
+});
+
 </script>
 <style lang="scss">
 html,
