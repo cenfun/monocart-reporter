@@ -9,7 +9,11 @@ const matchedFormatter = function(value, rowItem, columnItem) {
     return value;
 };
 
-export default {
+const annotationsFormatter = (list) => {
+    return list.map((it) => it.type).filter((it) => it).join(' ');
+};
+
+const formatters = {
 
     null: function(value) {
         if (value === null || typeof value === 'undefined') {
@@ -52,10 +56,13 @@ export default {
         return Util.DTF(value);
     },
 
-    annotations: function(value, rowItem) {
+    annotations: function(value, rowItem, columnItem) {
+
+        value = matchedFormatter(value, rowItem, columnItem);
+
         if (Util.isList(value)) {
             // only show type in grid
-            value = value.map((item) => item.type).filter((item) => item).join(' ');
+            value = annotationsFormatter(value);
         }
         if (value) {
             return `<span class="mcr-clickable">${value}</span>`;
@@ -84,4 +91,11 @@ export default {
         return '<div class="mcr-icon mcr-icon-attachment" />';
     }
 
+};
+
+
+export {
+    formatters,
+    matchedFormatter,
+    annotationsFormatter
 };

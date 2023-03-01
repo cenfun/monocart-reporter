@@ -112,7 +112,7 @@ import decompress from 'lz-utils/lib/decompress.js';
 
 import Util from '../util/util.js';
 import {
-    createGrid, renderGrid, updateGrid, displayFlyover
+    createGrid, renderGrid, updateGrid, displayFlyover, initCustomsFormatters
 } from '../modules/grid.js';
 
 import CaseDetail from './case-detail.vue';
@@ -330,8 +330,12 @@ onMounted(() => {
         rows: reportData.rows
     };
 
-    state.columns = reportData.columns;
+    // for custom column  formatters
     state.formatters = reportData.formatters;
+
+    const cloneColumns = JSON.parse(JSON.stringify(reportData.columns));
+    initCustomsFormatters(cloneColumns, state.formatters);
+    state.columns = cloneColumns;
 
     state.title = reportData.name;
     state.date = new Date(reportData.date).toLocaleString();
@@ -691,6 +695,10 @@ icon
 
     .mcr-clickable {
         cursor: pointer;
+
+        b {
+            pointer-events: none;
+        }
     }
 
     .mcr-location {

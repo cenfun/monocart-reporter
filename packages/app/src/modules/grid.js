@@ -2,7 +2,9 @@ import { Grid } from 'turbogrid';
 import fuzzy from 'fuzzy';
 
 import Util from '../util/util.js';
-import formatters from './formatters.js';
+import {
+    formatters, matchedFormatter, annotationsFormatter
+} from './formatters.js';
 import store from '../util/store.js';
 import state from '../modules/state.js';
 
@@ -186,7 +188,7 @@ const getGridData = () => {
     return data;
 };
 
-const initCustomsFormatters = (list, customFormatters) => {
+export const initCustomsFormatters = (list, customFormatters) => {
     if (!Util.isList(list)) {
         return;
     }
@@ -207,11 +209,7 @@ const initCustomsFormatters = (list, customFormatters) => {
             if (formatter) {
                 item.formatter = function(value, rowItem, columnItem, cellNode) {
 
-                    // string formatter is matched
-                    const matchedFormatter = this.getFormatter('string');
-                    if (matchedFormatter) {
-                        value = matchedFormatter(value, rowItem, columnItem);
-                    }
+                    value = matchedFormatter(value, rowItem, columnItem);
 
                     return formatter.apply(this, [value, rowItem, columnItem, cellNode]);
                 };
@@ -313,6 +311,7 @@ const getFilteredRows = (rows, caseType) => {
 
 };
 
+
 const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
 
     if (!keywords) {
@@ -326,7 +325,14 @@ const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
     searchableKeys.forEach((k) => {
 
         let matched = null;
-        const str = rowItem[k];
+
+        let str = rowItem[k];
+
+        // annotations array
+        if (k === 'annotations' && Util.isList(str)) {
+            str = annotationsFormatter(str);
+        }
+
         if (typeof str === 'string') {
             const res = fuzzy.match(keywords, str, {
                 pre: '<b>',

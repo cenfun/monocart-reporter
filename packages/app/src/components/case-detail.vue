@@ -182,12 +182,18 @@ const renderItemCustom = (item, column) => {
         return;
     }
 
-    const value = item[column.id];
+    let value = item[column.id];
 
     // do not show null value
     if (value === null || typeof value === 'undefined') {
         return;
     }
+
+    if (typeof column.formatter === 'function') {
+        value = column.formatter(value, item, column);
+    }
+
+    console.log(column);
 
     // if markdown is true
     const content = column.markdown ? markdownParse(value) : `<div>${value}</div>`;

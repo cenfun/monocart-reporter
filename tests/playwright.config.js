@@ -80,9 +80,8 @@ module.exports = {
                 }, {
                     // another column for JIRA link
                     id: 'jira',
-                    name: 'JIRA Link',
+                    name: 'JIRA Key',
                     width: 100,
-                    align: 'right',
                     searchable: true,
                     styleMap: 'font-weight:normal;',
                     formatter: (valueFormatted, rowItem, columnItem) => {
