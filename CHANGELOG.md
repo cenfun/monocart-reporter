@@ -1,4 +1,10 @@
 
+* 1.3.0
+  - new custom columns visitor from comments
+  - added custom formatter for custom columns
+
+---
+
 * 1.2.0
   - removed repeated errors
   - updated the order of columns

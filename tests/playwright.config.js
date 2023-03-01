@@ -115,6 +115,12 @@ module.exports = {
 
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
+                // auto collect data from nearest comments
+                /**
+                 * @owner Kevin
+                 * @jira MCR-16888
+                 */
+                // test('owner and jira will be collected from above comments', () => {});
                 const comments = collect.comments();
                 if (comments) {
                     Object.assign(data, comments);

@@ -1,5 +1,5 @@
 # monocart-reporter
-> A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style, console logs, markdown annotations, custom columns, fuzzy search.
+> A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style, console logs, markdown annotations, custom columns/formatters/data visitors, fuzzy search.
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -63,6 +63,10 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     columns: null,
     // columns: (defaultColumns) => {},
 
+    // additional custom visitor for columns
+    visitor: null,
+    // visitor: (data, metadata, collect) => {},
+
     // async hook after report data generated
     onEnd: null
     // onEnd: async (reportData, config, root) => {}
@@ -70,20 +74,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 ```
 See [lib/options.js](lib/options.js)
 
-## Custom Annotations with markdown description
-```js
-test('test custom annotations', () => {
-    test.info().annotations.push({
-        type: 'issue',
-        description: `## see github issues
-- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
-`
-    });
-});
-```
-See [playwright test annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
-## Advanced: Custom Columns
+## Advanced: Data Collection for Custom Columns
 ```js
 module.exports = {
     reporter: [
@@ -93,7 +84,6 @@ module.exports = {
 
             // custom columns
             columns: (defaultColumns) => {
-                // console.log(defaultColumns);
 
                 // insert custom column(s) before a default column
                 const durationColumnIndex = defaultColumns.findIndex((column) => column.id === 'duration');
@@ -105,99 +95,34 @@ module.exports = {
                     searchable: true,
                     styleMap: {
                         'font-weight': 'normal'
-                    },
-
-                    // generate the column data from playwright metadata
-                    // data.type is suite, metadata is Suite, https://playwright.dev/docs/api/class-suite
-                    // data.type is case, metadata is TestCase, https://playwright.dev/docs/api/class-testcase
-                    // data.type is step, metadata is TestStep, https://playwright.dev/docs/api/class-teststep (seems useless for now)
-                    visitor: (data, metadata) => {
-
-                        if (data.type === 'suite') {
-                            // currently we can customize suite data through test.use(obj), for example:
-                            // test.use({
-                            //     owner: 'Kevin',
-                            //     jira: 'Epic #16888'
-                            // });
-                            // and get custom data like following:
-                            const suiteUse = metadata._use && metadata._use.find((item) => item.fixtures);
-                            if (suiteUse) {
-                                return suiteUse.fixtures.owner;
-                            }
-                        }
-
-                        if (data.type === 'case') {
-                            // currently we can customize case data through custom annotations, for example:
-                            // test.info().annotations.push({
-                            //     owner: 'Musk',
-                            //     jira: 'Task #16933'
-                            // });
-                            // and get custom data like following:
-                            const annotation = metadata.annotations.find((item) => item.owner);
-                            if (annotation) {
-                                return annotation.owner;
-                            }
-
-                        }
-
                     }
                 }, {
                     // another column for JIRA link
                     id: 'jira',
-                    name: 'JIRA Link',
+                    name: 'JIRA Key',
                     width: 100,
-                    align: 'right',
+                    searchable: true,
                     styleMap: 'font-weight:normal;',
-
-                    visitor: (data, metadata) => {
-
-                        if (data.type === 'suite') {
-                            const suiteUse = metadata._use && metadata._use.find((item) => item.fixtures);
-                            if (suiteUse) {
-                                return `<a href="#" target="_blank">${suiteUse.fixtures.jira}</a>`;
-                            }
-                        }
-
-                        if (data.type === 'case') {
-                            const annotation = metadata.annotations.find((item) => item.jira);
-                            if (annotation) {
-                                return `<a href="#" target="_blank">${annotation.jira}</a>`;
-                            }
-                        }
-
+                    formatter: (valueFormatted, rowItem, columnItem) => {
+                        const valueOriginal = rowItem[columnItem.id];
+                        return `<a href="${valueOriginal}" target="_blank">${valueFormatted}</a>`;
                     }
                 });
 
-                // support grouped columns
-                defaultColumns.push({
-                    id: 'group',
-                    name: 'Group',
-                    subs: [{
-                        id: 'comments',
-                        name: 'Comments',
-                        width: 150,
-                        // using replace formatter
-                        formatter: 'replace',
+            },
 
-                        visitor: (data, metadata) => {
-                            if (data.type === 'case' && data.owner && data.jira) {
-                                return '{owner} {jira}';
-                            }
-                        }
-                    }, {
-                        id: 'item2',
-                        name: 'Test Item'
-                    }]
-                });
-
-                // hide a default column
-                // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
-                // retryColumn.invisible = true;
-
-                // update a default column width
-                const locationColumn = defaultColumns.find((column) => column.id === 'location');
-                locationColumn.width = 150;
-
+            // additional custom visitor for columns
+            visitor: (data, metadata, collect) => {
+                // auto collect data from nearest comments
+                /**
+                 * @owner Kevin
+                 * @jira MCR-16888
+                 */
+                // test('owner and jira will be collected from above comments', () => {});
+                const comments = collect.comments();
+                if (comments) {
+                    Object.assign(data, comments);
+                }
             }
         }]
     ]
