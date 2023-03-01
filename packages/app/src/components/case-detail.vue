@@ -7,14 +7,18 @@
   </div>
 </template>
 <script setup>
-import 'github-markdown-css/github-markdown-light.css';
-import Convert from 'ansi-to-html';
-import Util from '../util/util.js';
-import formatters from '../modules/formatters.js';
-import state from '../modules/state.js';
 import {
     onMounted, ref, watch
 } from 'vue';
+
+import 'github-markdown-css/github-markdown-light.css';
+
+import Convert from 'ansi-to-html';
+import { marked } from 'marked';
+
+import Util from '../util/util.js';
+import formatters from '../modules/formatters.js';
+import state from '../modules/state.js';
 
 const convert = new Convert({
     fg: '#333',
@@ -22,6 +26,24 @@ const convert = new Convert({
     newline: true,
     escapeXML: true
 });
+
+// add target="_blank" for link
+const renderer = new marked.Renderer();
+renderer.link = function(href, title, text) {
+    const link = marked.Renderer.prototype.link.apply(this, arguments);
+    return link.replace('<a', '<a target="_blank"');
+};
+marked.setOptions({
+    renderer: renderer
+});
+
+const markdownParse = (str) => {
+    const html = marked.parse(str);
+    if (html) {
+        return `<div class="markdown-body">${html}</div>`;
+    }
+    return str;
+};
 
 const renderTree = () => {
 
@@ -217,7 +239,10 @@ const renderItemLogs = (item, column) => {
         return convertHtml(log);
     });
 
-    const content = `<p>${list.join('')}</p>`;
+    const content = list.join('');
+    if (!content) {
+        return;
+    }
 
     return `<div class="mcr-item-column mcr-item-${column.id}">
                 <a name="${column.id}"></a>
@@ -225,7 +250,7 @@ const renderItemLogs = (item, column) => {
                     <div class="mcr-icon mcr-icon-log"></div>
                     <div>${column.name}</div>
                 </div>
-                ${content}
+                <p>${content}</p>
             </div>`;
 };
 
@@ -235,29 +260,34 @@ const renderItemAnnotations = (item, column) => {
         return;
     }
 
+    // string
     if (!Util.isList(annotations)) {
         annotations = [{
-            type: annotations
+            description: annotations
         }];
     }
 
     const list = annotations.map((annotation) => {
-        if (!annotation.type) {
+
+        if (column.markdown) {
+            const ls = Object.keys(annotation).filter((k) => annotation[k]).map((k) => {
+                if (k === 'type') {
+                    return `* ${annotation[k]}`;
+                }
+                return annotation[k];
+            });
+            if (ls.length) {
+                return markdownParse(ls.join('\r\n'));
+            }
             return '';
         }
-        // console.log(annotation);
-        const ls = ['<div class="mcr-annotation-item">'];
 
-        ls.push('<div class="mcr-annotation-head vui-flex-row">');
-        ls.push(`<div class="mcr-icon mcr-icon-annotation" tooltip="${column.name}"></div>`);
-        ls.push(`<div>${annotation.type}</div>`);
-        ls.push('</div>');
-
-        if (annotation.description) {
-            ls.push(`<div class="markdown-body">${annotation.description}</div>`);
+        const ls = Object.values(annotation).filter((v) => v);
+        if (ls.length) {
+            return `<p>${ls.join('</p><p>')}</p>`;
         }
-        ls.push('</div>');
-        return ls.join('');
+
+        return '';
     });
 
     const content = list.join('');
@@ -265,11 +295,13 @@ const renderItemAnnotations = (item, column) => {
         return;
     }
 
-    return `<div class="mcr-item-column mcr-item-annotations">
+    return `<div class="mcr-item-column mcr-item-${column.id}">
                 <a name="${column.id}"></a>
-                <div class="mcr-column-annotations">
-                    ${content}
+                <div class="mcr-column-head vui-flex-row">
+                    <div class="mcr-icon mcr-icon-annotation"></div>
+                    <div>${column.name}</div>
                 </div>
+                ${content}
             </div>`;
 };
 
@@ -497,22 +529,6 @@ watch([
     font-weight: bold;
 }
 
-.mcr-column-annotations {
-    &::after {
-        content: "";
-        display: block;
-        clear: both;
-    }
-
-    > div {
-        float: left;
-    }
-
-    .mcr-column-head {
-        margin-right: 10px;
-    }
-}
-
 .mcr-item-body {
     > div:last-child {
         margin-bottom: 0;
@@ -555,29 +571,20 @@ watch([
     }
 }
 
-.mcr-column-custom .mcr-column-head {
-    margin-right: 10px;
-}
-
-.mcr-annotation-item {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    font-weight: normal;
-
-    .mcr-annotation-head {
-        .mcr-icon {
-            margin-right: 5px;
-        }
-    }
-
+.mcr-item-annotations {
     .markdown-body {
         margin-top: 5px;
         padding: 5px;
+        border-radius: 5px;
     }
 }
 
 .mcr-item-attachment {
     padding: 5px 0;
+}
+
+.mcr-column-custom .mcr-column-head {
+    margin-right: 10px;
 }
 
 .mcr-item-image {
