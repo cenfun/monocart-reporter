@@ -3,7 +3,7 @@ const Util = require('../common/util.js');
 
 /**
  * @owner Kevin
- * @jira Epic #16888
+ * @jira #16888
  */
 test('case before suite', () => {
 
@@ -11,7 +11,7 @@ test('case before suite', () => {
 
 /**
  * @owner Mark
- * @jira Story #16900
+ * @jira #16900
  */
 test.describe('suite group 1', () => {
 
@@ -19,7 +19,7 @@ test.describe('suite group 1', () => {
     // First argument must use the object destructuring pattern: fixtures
     /**
      * @owner Mark
-     * @jira Task #16933
+     * @jira #16933
      */
     test('case info', ({ browserName }, testInfo) => {
 
@@ -58,17 +58,25 @@ test.describe('suite group 1', () => {
         });
 
         // https://playwright.dev/docs/test-annotations#custom-annotations
+        test('custom annotations', () => {
+            test.info().annotations.push({
+                type: 'markdown',
+                description: `- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
+- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)`
+            });
+        });
+
         /**
          * @annotations issue [link](https://github.com/cenfun/monocart-reporter)
-         * @jira Task #16933
+         * @jira #16933
          */
-        test('case custom annotations', () => {
+        test('annotations from comments', () => {
 
         });
 
         /**
          * @owner Mark
-         * @jira Task #16936
+         * @jira #16936
          */
         test('case failed', () => {
 

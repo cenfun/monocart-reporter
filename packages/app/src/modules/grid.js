@@ -174,25 +174,73 @@ const getGridData = () => {
     }
     // console.log(key);
     const allData = JSON.parse(JSON.stringify(state.gridDataAll));
-    initTreeList(allData.rows, null, -1);
+
+    initCustomsFormatters(allData.columns, state.formatters);
+
+    initRowsToTreeList(allData.rows, null, -1);
+
     const data = getGridDataByType(allData, state.caseType, state.suiteVisible, state.stepVisible);
+
     console.log(key, data);
     state.gridDataMap[key] = data;
     return data;
 };
 
-const initTreeList = (list, parent, level) => {
+const initCustomsFormatters = (list, customFormatters) => {
     if (!Util.isList(list)) {
         return;
     }
-    level += 1;
     list.forEach((item) => {
+        const formatterStr = customFormatters[item.id];
+        if (formatterStr) {
+
+            let formatter;
+
+            try {
+                formatter = new Function(`return (${formatterStr}).apply(this, arguments);`);
+            } catch (e) {
+                console.error('failed to deserialize formatter function');
+            }
+
+            // console.log(formatter);
+
+            if (formatter) {
+                item.formatter = function(value, rowItem, columnItem, cellNode) {
+
+                    // string formatter is matched
+                    const matchedFormatter = this.getFormatter('string');
+                    if (matchedFormatter) {
+                        value = matchedFormatter(value, rowItem, columnItem);
+                    }
+
+                    return formatter.apply(this, [value, rowItem, columnItem, cellNode]);
+                };
+            }
+
+        }
+
+        // into subs
+        initCustomsFormatters(item.subs, customFormatters);
+    });
+};
+
+const initRowsToTreeList = (list, parent, level) => {
+    if (!Util.isList(list)) {
+        return;
+    }
+
+    level += 1;
+
+    list.forEach((item) => {
+
         item.parent = parent;
         item.level = level;
         if (item.type === 'case') {
             item.steps = item.subs;
         }
-        initTreeList(item.subs, item, level);
+
+        // into subs
+        initRowsToTreeList(item.subs, item, level);
     });
 };
 
@@ -279,8 +327,8 @@ const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
 
         let matched = null;
         const str = rowItem[k];
-        if (str) {
-            const res = fuzzy.match(keywords, rowItem[k], {
+        if (typeof str === 'string') {
+            const res = fuzzy.match(keywords, str, {
                 pre: '<b>',
                 post: '</b>'
             });

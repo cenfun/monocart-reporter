@@ -4,7 +4,7 @@ const matchedFormatter = function(value, rowItem, columnItem) {
     const id = columnItem.id;
     const matched = rowItem[`${id}_matched`];
     if (matched) {
-        value = matched;
+        return matched;
     }
     return value;
 };
@@ -16,11 +16,6 @@ export default {
             return '';
         }
         return value;
-    },
-
-    replace: function(value, rowItem) {
-        // replace in turbo grid Util
-        return Util.replace(value, rowItem);
     },
 
     iconOk: function(value, rowItem, columnItem, cellNode) {

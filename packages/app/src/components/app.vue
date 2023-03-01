@@ -266,12 +266,22 @@ const initSummaryData = () => {
 
 };
 
+let timeout_tooltip;
 const initTooltip = () => {
     generateTooltips((target, text) => {
+        clearTimeout(timeout_tooltip);
+
         tooltip.visible = true;
         tooltip.target = target;
         tooltip.text = text;
+
+        timeout_tooltip = setTimeout(() => {
+            tooltip.visible = false;
+            tooltip.text = '';
+        }, 2000);
+
     }, (target) => {
+        clearTimeout(timeout_tooltip);
         tooltip.visible = false;
         tooltip.text = '';
     });
@@ -321,6 +331,7 @@ onMounted(() => {
     };
 
     state.columns = reportData.columns;
+    state.formatters = reportData.formatters;
 
     state.title = reportData.name;
     state.date = new Date(reportData.date).toLocaleString();

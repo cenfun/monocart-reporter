@@ -17,7 +17,6 @@ import Convert from 'ansi-to-html';
 import { marked } from 'marked';
 
 import Util from '../util/util.js';
-import formatters from '../modules/formatters.js';
 import state from '../modules/state.js';
 
 const convert = new Convert({
@@ -183,23 +182,20 @@ const renderItemCustom = (item, column) => {
         return;
     }
 
-    let value = item[column.id];
+    const value = item[column.id];
 
     // do not show null value
     if (value === null || typeof value === 'undefined') {
         return;
     }
 
-    // using grid formatter
-    const formatter = formatters[column.formatter];
-    if (formatter) {
-        value = formatter(value, item, column);
-    }
+    // if markdown is true
+    const content = column.markdown ? markdownParse(value) : `<div>${value}</div>`;
 
     return `<div class="mcr-item-column mcr-item-${column.id}">
                 <div class="mcr-column-custom vui-flex-row">
                     <div class="mcr-column-head">${column.name}</div>
-                    <div>${value}</div>
+                    ${content}
                 </div> 
             </div>`;
 };
@@ -272,7 +268,7 @@ const renderItemAnnotations = (item, column) => {
         if (column.markdown) {
             const ls = Object.keys(annotation).filter((k) => annotation[k]).map((k) => {
                 if (k === 'type') {
-                    return `* ${annotation[k]}`;
+                    return `> ${annotation[k]}`;
                 }
                 return annotation[k];
             });
@@ -571,11 +567,14 @@ watch([
     }
 }
 
+.markdown-body {
+    padding: 5px;
+    border-radius: 5px;
+}
+
 .mcr-item-annotations {
     .markdown-body {
         margin-top: 5px;
-        padding: 5px;
-        border-radius: 5px;
     }
 }
 

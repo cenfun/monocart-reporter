@@ -77,40 +77,40 @@ module.exports = {
                     styleMap: {
                         'font-weight': 'normal'
                     }
-                    // custom visitor for current column
-                    // visitor: (data, metadata) => { }
                 }, {
                     // another column for JIRA link
                     id: 'jira',
                     name: 'JIRA Link',
                     width: 100,
                     align: 'right',
-                    styleMap: 'font-weight:normal;'
+                    searchable: true,
+                    styleMap: 'font-weight:normal;',
+                    formatter: (valueFormatted, rowItem, columnItem) => {
+                        const valueOriginal = rowItem[columnItem.id];
+                        return `<a href="${valueOriginal}" target="_blank">${valueFormatted}</a>`;
+                    }
                 });
 
                 // append grouped columns
-                defaultColumns.push({
-                    id: 'group',
-                    name: 'Group',
-                    subs: [{
-                        id: 'comments',
-                        name: 'Comments',
-                        width: 150,
-                        // using replace formatter
-                        formatter: 'replace'
-                    }, {
-                        id: 'item2',
-                        name: 'Test Item'
-                    }]
-                });
+                // defaultColumns.push({
+                //     id: 'group',
+                //     name: 'Group',
+                //     subs: [{
+                //         id: 'item1',
+                //         name: 'Item 1'
+                //     }, {
+                //         id: 'item2',
+                //         name: 'Item 2'
+                //     }]
+                // });
 
                 // hide a default column
                 // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
                 // retryColumn.invisible = true;
 
                 // update a default column width
-                const locationColumn = defaultColumns.find((column) => column.id === 'location');
-                locationColumn.width = 150;
+                // const locationColumn = defaultColumns.find((column) => column.id === 'location');
+                // locationColumn.width = 150;
 
             },
 
