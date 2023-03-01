@@ -708,6 +708,22 @@ icon
     .mcr-searchable b {
         color: red;
     }
+
+    .tg-body-message {
+        .mcr-no-results {
+            top: 20px;
+            left: 30px;
+            height: 35px;
+            padding-left: 45px;
+            font-size: 20px;
+            line-height: 35px;
+            background-image: url("../images/search-results.svg");
+            background-repeat: no-repeat;
+            background-position: left center;
+            background-size: 30px 30px;
+            transform: none;
+        }
+    }
 }
 
 /*

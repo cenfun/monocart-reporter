@@ -392,7 +392,7 @@ export const createGrid = () => {
                 return rowNumber++;
             }
         },
-        rowNotFound: 'No Results',
+        rowNotFound: '<div class="mcr-no-results">No Results</div>',
         frozenColumn: state.windowWidth < 768 ? -1 : 1,
         columnTypes: {
             title: 'tree'
