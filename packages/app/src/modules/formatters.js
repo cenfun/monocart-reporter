@@ -58,32 +58,32 @@ export default {
     },
 
     annotations: function(value, rowItem) {
-        const annotations = rowItem.annotations;
-        if (!Util.isList(annotations)) {
-            return '';
+        if (Util.isList(value)) {
+            // only show type in grid
+            value = value.map((item) => item.type).filter((item) => item).join(' ');
         }
-        return annotations.map((item) => item.type).filter((item) => item).map((item) => `<span class="mcr-annotation">${item}</span>`).join(' ');
+        if (value) {
+            return `<span class="mcr-clickable">${value}</span>`;
+        }
+        return '';
     },
 
     errors: function(value, rowItem) {
-        const errors = rowItem.errors;
-        if (!errors) {
+        if (!value) {
             return '';
         }
         return '<div class="mcr-icon mcr-icon-error" />';
     },
 
     logs: function(value, rowItem) {
-        const logs = rowItem.logs;
-        if (!logs) {
+        if (!value) {
             return '';
         }
         return '<div class="mcr-icon mcr-icon-log" />';
     },
 
     attachments: function(value, rowItem) {
-        const attachments = rowItem.attachments;
-        if (!attachments) {
+        if (!value) {
             return '';
         }
         return '<div class="mcr-icon mcr-icon-attachment" />';

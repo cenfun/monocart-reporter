@@ -65,22 +65,6 @@ module.exports = {
 
             // custom columns
             columns: (defaultColumns) => {
-                // console.log(defaultColumns);
-
-                // custom reporter data with invisible column visitor
-                // defaultColumns.push({
-                //     id: 'my-invisible-column-id',
-                //     invisible: true,
-                //     visitor: (data, metadata) => {
-                //         if (data.type === 'step') {
-                //             if (data.title === 'Before Hooks') {
-                //                 data.title = 'My custom step title 1';
-                //             } else if (data.title.startsWith('page.goto')) {
-                //                 data.title = 'My custom step title 2';
-                //             }
-                //         }
-                //     }
-                // });
 
                 // insert custom column(s) before a default column
                 const durationColumnIndex = defaultColumns.findIndex((column) => column.id === 'duration');
@@ -92,70 +76,19 @@ module.exports = {
                     searchable: true,
                     styleMap: {
                         'font-weight': 'normal'
-                    },
-
-                    // generate the column data from playwright metadata
-                    // data.type is suite, metadata is Suite, https://playwright.dev/docs/api/class-suite
-                    // data.type is case, metadata is TestCase, https://playwright.dev/docs/api/class-testcase
-                    // data.type is step, metadata is TestStep, https://playwright.dev/docs/api/class-teststep (seems useless for now)
-                    visitor: (data, metadata) => {
-
-                        if (data.type === 'suite') {
-                            // currently we can customize suite data through test.use(obj), for example:
-                            // test.use({
-                            //     owner: 'Kevin',
-                            //     jira: 'Epic #16888'
-                            // });
-                            // and get custom data like following:
-                            const suiteUse = metadata._use && metadata._use.find((item) => item.fixtures);
-                            if (suiteUse) {
-                                return suiteUse.fixtures.owner;
-                            }
-                        }
-
-                        if (data.type === 'case') {
-                            // currently we can customize case data through custom annotations, for example:
-                            // test.info().annotations.push({
-                            //     owner: 'Musk',
-                            //     jira: 'Task #16933'
-                            // });
-                            // and get custom data like following:
-                            const annotation = metadata.annotations.find((item) => item.owner);
-                            if (annotation) {
-                                return annotation.owner;
-                            }
-
-                        }
-
                     }
+                    // custom visitor for current column
+                    // visitor: (data, metadata) => { }
                 }, {
                     // another column for JIRA link
                     id: 'jira',
                     name: 'JIRA Link',
                     width: 100,
                     align: 'right',
-                    styleMap: 'font-weight:normal;',
-
-                    visitor: (data, metadata) => {
-
-                        if (data.type === 'suite') {
-                            const suiteUse = metadata._use && metadata._use.find((item) => item.fixtures);
-                            if (suiteUse) {
-                                return `<a href="#" target="_blank">${suiteUse.fixtures.jira}</a>`;
-                            }
-                        }
-
-                        if (data.type === 'case') {
-                            const annotation = metadata.annotations.find((item) => item.jira);
-                            if (annotation) {
-                                return `<a href="#title=${data.title}" target="_blank">${annotation.jira}</a>`;
-                            }
-                        }
-
-                    }
+                    styleMap: 'font-weight:normal;'
                 });
 
-                // support grouped columns
+                // append grouped columns
                 defaultColumns.push({
                     id: 'group',
                     name: 'Group',
@@ -164,13 +97,7 @@ module.exports = {
                         name: 'Comments',
                         width: 150,
                         // using replace formatter
-                        formatter: 'replace',
-
-                        visitor: (data, metadata) => {
-                            if (data.type === 'case' && data.owner && data.jira) {
-                                return '{owner} {jira}';
-                            }
-                        }
+                        formatter: 'replace'
                     }, {
                         id: 'item2',
                         name: 'Test Item'
@@ -185,6 +112,14 @@ module.exports = {
                 const locationColumn = defaultColumns.find((column) => column.id === 'location');
                 locationColumn.width = 150;
 
+            },
+
+            // additional custom visitor for columns
+            visitor: (data, metadata, collect) => {
+                const comments = collect.comments();
+                if (comments) {
+                    Object.assign(data, comments);
+                }
             },
 
             // async hook after report data generated

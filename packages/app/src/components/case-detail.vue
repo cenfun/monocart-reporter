@@ -148,13 +148,16 @@ const renderItemColumn = (item, column) => {
         return handler(item, column);
     }
 
-    // custom visitor column
+    // custom column
     return renderItemCustom(item, column);
 
 };
 
 const renderItemCustom = (item, column) => {
-    if (!column.visitor) {
+
+    // not detailed default columns here
+    // must be boolean false not undefined
+    if (column.detailed === false) {
         return;
     }
 
@@ -227,9 +230,15 @@ const renderItemLogs = (item, column) => {
 };
 
 const renderItemAnnotations = (item, column) => {
-    const annotations = item.annotations;
-    if (!Util.isList(annotations)) {
+    let annotations = item.annotations;
+    if (!annotations) {
         return;
+    }
+
+    if (!Util.isList(annotations)) {
+        annotations = [{
+            type: annotations
+        }];
     }
 
     const list = annotations.map((annotation) => {
@@ -556,8 +565,6 @@ watch([
     font-weight: normal;
 
     .mcr-annotation-head {
-        font-weight: bold;
-
         .mcr-icon {
             margin-right: 5px;
         }

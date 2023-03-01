@@ -678,8 +678,7 @@ icon
         }
     }
 
-    .mcr-annotation {
-        text-decoration: underline;
+    .mcr-clickable {
         cursor: pointer;
     }
 

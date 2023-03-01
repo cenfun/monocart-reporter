@@ -125,7 +125,7 @@ const bindGridEvents = () => {
         }
 
         const cl = d.e.target.classList;
-        if (cl.contains('mcr-icon') || cl.contains('mcr-annotation')) {
+        if (cl.contains('mcr-icon') || cl.contains('mcr-clickable')) {
             showFlyover(caseItem, position);
             return;
         }

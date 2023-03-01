@@ -1,38 +1,29 @@
 const { test, expect } = require('@playwright/test');
 const Util = require('../common/util.js');
 
-test.use({
-    owner: 'Kevin',
-    jira: 'Epic #16888'
-});
-
+/**
+ * @owner Kevin
+ * @jira Epic #16888
+ */
 test('case before suite', () => {
-    test.info().annotations.push({
-        type: 'markdown',
-        description: `## see github issues
-- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
-`
-    });
+
 });
 
+/**
+ * @owner Mark
+ * @jira Story #16900
+ */
 test.describe('suite group 1', () => {
-
-    test.use({
-        owner: 'Mark',
-        jira: 'Story #16900'
-    });
 
     // https://playwright.dev/docs/test-fixtures
     // First argument must use the object destructuring pattern: fixtures
+    /**
+     * @owner Mark
+     * @jira Task #16933
+     */
     test('case info', ({ browserName }, testInfo) => {
 
         expect(testInfo).toBe(test.info());
-
-        test.info().annotations.push({
-            owner: 'Musk',
-            jira: 'Task #16933'
-        });
 
     });
 
@@ -48,6 +39,7 @@ test.describe('suite group 1', () => {
 
         expect(result1).toBe(result2);
 
+        // @owner Steve
         await test.step('step slow (500ms)', () => {
             return new Promise((resolve) => {
                 setTimeout(resolve, 500);
@@ -66,30 +58,19 @@ test.describe('suite group 1', () => {
         });
 
         // https://playwright.dev/docs/test-annotations#custom-annotations
+        /**
+         * @annotations issue [link](https://github.com/cenfun/monocart-reporter)
+         * @jira Task #16933
+         */
         test('case custom annotations', () => {
-            test.info().annotations.push({
-                type: 'issue',
-                description: `## see github issues
-- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)
-`
-            });
 
-            test.info().annotations.push({
-                type: 'other',
-                description: `## stats
-- ![npm](https://img.shields.io/npm/v/monocart-reporter)
-- ![npm](https://img.shields.io/npm/dt/monocart-reporter)
-`
-            });
         });
 
+        /**
+         * @owner Mark
+         * @jira Task #16936
+         */
         test('case failed', () => {
-
-            test.info().annotations.push({
-                owner: 'Musk',
-                jira: 'Task #16936'
-            });
 
             console.log('stdout: failed case log');
 
