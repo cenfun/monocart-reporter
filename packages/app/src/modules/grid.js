@@ -20,6 +20,10 @@ const isNodeTruncated = (node) => {
 };
 
 const hideTooltip = () => {
+    if (Util.isTouchDevice()) {
+        return;
+    }
+
     if (state.tooltip) {
         state.tooltip.visible = false;
         state.tooltip.text = '';
@@ -27,6 +31,9 @@ const hideTooltip = () => {
 };
 
 const showTooltip = (elem, message) => {
+    if (Util.isTouchDevice()) {
+        return;
+    }
 
     hideTooltip();
 

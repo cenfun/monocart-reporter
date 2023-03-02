@@ -35,6 +35,10 @@ const Util = {
         return s.padStart(l, '0');
     },
 
+    isTouchDevice: function() {
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+    },
+
     // =============================================================================
 
     // ok is outcome === 'expected' || 'flaky' || 'skipped'

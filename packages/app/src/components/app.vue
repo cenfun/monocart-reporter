@@ -233,6 +233,10 @@ const initTooltip = () => {
     generateTooltips((target, text) => {
         clearTimeout(timeout_tooltip);
 
+        if (Util.isTouchDevice()) {
+            return;
+        }
+
         tooltip.visible = true;
         tooltip.target = target;
         tooltip.text = text;
