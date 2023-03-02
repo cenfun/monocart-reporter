@@ -1,6 +1,7 @@
 # monocart-reporter
 > A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style, console logs, markdown annotations, custom columns/formatters/data visitors, fuzzy search, send email.
 
+![](/docs/report.png)
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
@@ -210,6 +211,7 @@ module.exports = {
     ]
 };
 ```
+![](/docs/email.png)
 
 ## Example
 - [tests/playwright.config.js](tests/playwright.config.js)
