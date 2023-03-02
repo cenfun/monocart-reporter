@@ -131,6 +131,15 @@ module.exports = {
             onEnd: async (reportData, { sendEmail, config }) => {
                 console.log('onEnd hook start');
 
+                console.log(reportData.summary);
+                // {
+                //     tests: { name: 'Tests', value: 22, type: 'tests', percent: '' },
+                //     passed: { name: 'Passed', value: 13, type: 'passed', percent: '59.1%' },
+                //     failed: { name: 'Failed', value: 5, type: 'failed', percent: '22.7%' },
+                //     flaky: { name: 'Flaky', value: 1, type: 'flaky', percent: '4.5%' },
+                //     skipped: { name: 'Skipped', value: 3, type: 'skipped', percent: '13.6%' }
+                //   }
+
                 const emailOptions = {
                     // https://nodemailer.com/smtp/
                     transport: {

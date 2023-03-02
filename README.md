@@ -76,6 +76,7 @@ See [lib/options.js](lib/options.js)
 
 ## Advanced: Data Collection for Custom Columns
 ```js
+// playwright.config.js
 module.exports = {
     reporter: [
         ['monocart-reporter', {  
@@ -131,6 +132,7 @@ module.exports = {
 
 ## onEnd hook
 ```js
+// playwright.config.js
 module.exports = {
     reporter: [
         ['monocart-reporter', {  
@@ -148,6 +150,7 @@ module.exports = {
 
 ## Send Email
 ```js
+// playwright.config.js
 module.exports = {
     reporter: [
         ['monocart-reporter', {  
