@@ -156,7 +156,7 @@ const summaryItemClass = (item) => {
 const summaryItemClick = (item) => {
     if (item.caseType !== state.caseType) {
         state.caseType = item.caseType;
-        if (item.caseType === 'all') {
+        if (item.caseType === 'tests') {
             Util.delHash('caseType');
         } else {
             Util.setHash('caseType', item.caseType);
@@ -168,10 +168,10 @@ const summaryItemClick = (item) => {
 const initSummaryData = () => {
 
     const summary = {
-        all: {
-            name: 'All',
+        tests: {
+            name: 'Tests',
             value: 0,
-            caseType: 'all'
+            caseType: 'tests'
         },
         passed: {
             name: 'Passed',
@@ -199,7 +199,7 @@ const initSummaryData = () => {
         if (item.subs) {
             item.collapsed = true;
         }
-        summary.all.value += 1;
+        summary.tests.value += 1;
         if (item.ok) {
             if (Util.isSkipped(item)) {
                 summary.skipped.value += 1;
@@ -247,11 +247,11 @@ const initSummaryData = () => {
 
     // percent handler
     Object.values(summary).forEach((item) => {
-        if (item.value === 0 || item.caseType === 'all') {
+        if (item.value === 0 || item.caseType === 'tests') {
             item.percent = '';
             return;
         }
-        const p = Util.PF(item.value, summary.all.value);
+        const p = Util.PF(item.value, summary.tests.value);
         item.percent = `(${p})`;
     });
 
@@ -385,7 +385,7 @@ watch([
 
 window.addEventListener('popstate', (e) => {
     const caseType = Util.getHash('caseType');
-    state.caseType = caseType || 'all';
+    state.caseType = caseType || 'tests';
     displayFlyover();
 });
 

@@ -270,7 +270,7 @@ const getGridDataByType = (allData, caseType, suiteVisible, stepVisible) => {
 
 const getFilteredRows = (rows, caseType) => {
 
-    if (caseType === 'all') {
+    if (caseType === 'tests') {
         return rows;
     }
 

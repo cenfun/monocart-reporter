@@ -12,7 +12,7 @@ const state = shallowReactive({
     keywords: '',
     searchableTitle: '',
 
-    caseType: Util.getHash('caseType') || 'all',
+    caseType: Util.getHash('caseType') || 'tests',
     suiteVisible: true,
     stepVisible: true,
 

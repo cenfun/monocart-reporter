@@ -128,8 +128,57 @@ module.exports = {
             },
 
             // async hook after report data generated
-            onEnd: (reportData, config, root) => {
+            onEnd: async (reportData, { sendEmail, config }) => {
                 console.log('onEnd hook start');
+
+                const emailOptions = {
+                    // https://nodemailer.com/smtp/
+                    transport: {
+                        service: 'Hotmail',
+                        auth: {
+                            user: '',
+                            pass: ''
+                        }
+                    },
+                    // https://nodemailer.com/message/
+                    message: {
+                        from: '',
+                        to: '',
+                        cc: '',
+                        bcc: '',
+
+                        subject: `${reportData.name} - ${reportData.dateH}`,
+                        attachments: [{
+                            path: reportData.htmlPath
+                        }],
+
+                        html: `
+                            <h3>${reportData.name}</h3>
+                            <ul>
+                                <li>Env: STG</li>
+                                <li>Type: Smoke</li>
+                                <li>Url: ${reportData.use.url}</li>
+                                <li>Workers: ${config.workers}</li>
+                                <li>Date: ${reportData.dateH}</li>
+                                <li>Duration: ${reportData.durationH}</li>
+                            </ul>
+                            
+                            ${reportData.summaryTable}
+
+                            <p>Please check attachment html for detail.</p>
+
+                            <p>Thanks,</p>
+                        `
+                    }
+                };
+
+                const info = await sendEmail(emailOptions).catch((e) => {
+                    console.error(e);
+                });
+                if (info) {
+                    console.log(info);
+                }
+
                 return new Promise((resolve) => {
                     // you can send email or call some API here
                     console.log('onEnd hook do something slow (async) ...');
