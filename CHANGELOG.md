@@ -1,4 +1,7 @@
 
+* 1.3.1
+  - added new feature: send email
+
 * 1.3.0
   - new custom columns visitor from comments
   - added custom formatter for custom columns
