@@ -1,5 +1,15 @@
-# monocart-reporter
-> A [playwright](https://github.com/microsoft/playwright) test reporter (Node.js). Shows suites/cases/steps with tree style, console logs, markdown annotations, custom columns/formatters/data visitors, fuzzy search, send email.
+# Monocart Reporter
+
+* A [Playwright](https://github.com/microsoft/playwright) test reporter (Node.js)
+* Shows suites/cases/steps with tree style
+* Logging console
+* Fuzzy search
+* Markdown annotations
+* Custom columns and formatters (extra information for suites/cases/steps)
+* Custom column data visitor 
+* Auto data collection from nearest comments (like JsDoc)
+* Tests summary
+* Send email with [nodemailer](https://nodemailer.com) (attachments/html)
 
 ![](/docs/report.png)
 ## Preview
