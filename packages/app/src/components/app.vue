@@ -150,83 +150,45 @@ const initStore = () => {
 };
 
 const summaryItemClass = (item) => {
-    return ['mcr-summary-item', item.classMap, item.caseType === state.caseType ? 'mcr-summary-selected' : ''];
+    return ['mcr-summary-item', item.classMap, item.type === state.caseType ? 'mcr-summary-selected' : ''];
 };
 
 const summaryItemClick = (item) => {
-    if (item.caseType !== state.caseType) {
-        state.caseType = item.caseType;
-        if (item.caseType === 'tests') {
+    if (item.type !== state.caseType) {
+        state.caseType = item.type;
+        if (item.type === 'tests') {
             Util.delHash('caseType');
         } else {
-            Util.setHash('caseType', item.caseType);
+            Util.setHash('caseType', item.type);
         }
 
     }
 };
 
-const initSummaryData = () => {
-
-    const summary = {
-        tests: {
-            name: 'Tests',
-            value: 0,
-            caseType: 'tests'
-        },
-        passed: {
-            name: 'Passed',
-            value: 0,
-            caseType: 'passed'
-        },
-        failed: {
-            name: 'Failed',
-            value: 0,
-            caseType: 'failed'
-        },
-        flaky: {
-            name: 'Flaky',
-            value: 0,
-            caseType: 'flaky'
-        },
-        skipped: {
-            name: 'Skipped',
-            value: 0,
-            caseType: 'skipped'
-        }
-    };
+const initSummary = (rows, summary) => {
 
     const caseHandler = (item) => {
         if (item.subs) {
             item.collapsed = true;
         }
-        summary.tests.value += 1;
         if (item.ok) {
             if (Util.isSkipped(item)) {
-                summary.skipped.value += 1;
                 item.classMap = 'tg-case-skipped';
                 item.caseType = 'skipped';
             } else if (item.outcome === 'flaky') {
-                summary.flaky.value += 1;
                 item.classMap = 'tg-case-flaky';
                 item.caseType = 'flaky';
             } else {
-                summary.passed.value += 1;
                 item.classMap = 'tg-case-passed';
                 item.caseType = 'passed';
             }
         } else {
             item.classMap = 'tg-case-failed';
             item.caseType = 'failed';
-            summary.failed.value += 1;
-            if (parent.failedCases) {
-                parent.failedCases += 1;
-            } else {
-                parent.failedCases = 1;
-            }
         }
     };
 
-    Util.forEachTree(state.gridDataAll.rows, function(item, i, parent) {
+    Util.forEachTree(rows, function(item) {
         item.selectable = true;
         if (item.type === 'step') {
             if (item.subs) {
@@ -247,7 +209,7 @@ const initSummaryData = () => {
 
     // percent handler
     Object.values(summary).forEach((item) => {
-        if (item.value === 0 || item.caseType === 'tests') {
+        if (item.type === 'tests') {
             item.percent = '';
             return;
         }
@@ -324,6 +286,7 @@ onMounted(() => {
 
     // init all errors (index to message)
     initErrors(reportData.rows, reportData.errors);
+    initSummary(reportData.rows, reportData.summary);
 
     state.gridDataAll = {
         columns: reportData.columns,
@@ -341,8 +304,6 @@ onMounted(() => {
     state.date = new Date(reportData.date).toLocaleString();
     state.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
     initStore();
-
-    initSummaryData();
 
     createGrid();
 
@@ -574,6 +535,7 @@ icon
 }
 
 .mcr-summary-item {
+    flex-shrink: 1;
     padding: 8px 10px;
     text-align: center;
     text-overflow: ellipsis;
