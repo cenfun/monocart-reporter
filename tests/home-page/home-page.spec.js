@@ -16,12 +16,27 @@ test.afterAll(() => {
 
 // let pageCurrent;
 
-test('test home page', async ({ page, context }) => {
+test('test home page', async ({ page, context }, testInfo) => {
     const homePage = new HomePage(page, context, config);
     await homePage.init();
     await homePage.goto();
     await homePage.checkClientScript();
     await homePage.checkName();
+
+    console.log('snapshotDir', testInfo.snapshotDir);
+    const snapshotPath = testInfo.snapshotPath('screenshot.png');
+    console.log('snapshotPath', snapshotPath);
+
+    console.log('outputDir', testInfo.outputDir);
+    const outputPath = testInfo.outputPath('screenshot.png');
+    console.log('outputPath', outputPath);
+
+    const screenshot = await page.screenshot();
+    await testInfo.attach('screenshot', {
+        body: screenshot,
+        contentType: 'image/png'
+    });
+
 });
 
 /**
