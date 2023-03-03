@@ -1,4 +1,11 @@
 # Monocart Reporter
+![](/docs/monocart.jpg)
+
+![](https://img.shields.io/npm/v/monocart-reporter)
+![](https://img.shields.io/librariesio/github/cenfun/monocart-reporter)
+![](https://img.shields.io/librariesio/dependents/npm/monocart-reporter)
+[![](https://badgen.net/npm/dw/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
+![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 
 * A [Playwright](https://github.com/microsoft/playwright) test reporter (Node.js)
 * Shows suites/cases/steps with tree style
