@@ -3,25 +3,35 @@ const Util = require('../common/util.js');
 
 class HomePage {
 
-    constructor(page, context, config) {
+    constructor(page, context, use) {
         this.page = page;
         this.context = context;
-        this.config = config;
-        console.log('config', config);
+        this.use = use;
+        console.log('use', use);
     }
 
     async init() {
         // for client script
-        console.log(`addInitScript: ${this.config.clientPath}`);
+        console.log(`addInitScript: ${this.use.clientPath}`);
+
+        /**
+         * override title
+         * @title Add Init Script
+         */
         await this.context.addInitScript({
-            path: this.config.clientPath
+            path: this.use.clientPath
         });
         await Util.delay(500);
     }
 
     async goto() {
-        const url = this.config.url;
+        const url = this.use.url;
         console.log(`goto: ${url}`);
+
+        /**
+         * override title
+         * @title Open my home page and delay 1s
+         */
         await this.page.goto(url);
         await Util.delay(1000);
     }

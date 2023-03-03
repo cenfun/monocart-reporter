@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test');
 const Util = require('../common/util.js');
 
 /**
+ * add extra information for case
  * @owner Kevin
  * @jira MCR-16888
  */
@@ -10,6 +11,7 @@ test('case before suite', () => {
 });
 
 /**
+ * add extra information for suite
  * @owner Mark
  * @jira MCR-16900
  */
@@ -23,6 +25,11 @@ test.describe('suite group 1', () => {
      */
     test('case info', ({ browserName }, testInfo) => {
 
+        /**
+         * override assert step title "expect.toBe" to
+         * @title my custom assert step title
+         * @annotations important
+         */
         expect(testInfo).toBe(test.info());
 
     });
