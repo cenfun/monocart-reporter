@@ -2,14 +2,14 @@
 
 * A [Playwright](https://github.com/microsoft/playwright) test reporter (Node.js)
 * Shows suites/cases/steps with tree style
-* Logging console
+* Console logs
 * Fuzzy search
-* Markdown annotations
+* Custom annotations with Markdown
 * Custom columns and formatters (extra information for suites/cases/steps)
-* Custom column data visitor 
-* Auto data collection from nearest comments (like JsDoc)
-* Tests summary
-* Send email with [nodemailer](https://nodemailer.com) (attachments/html)
+* Custom data collection visitor 
+* Collect data from comments (like JsDoc)
+* Output report data and summary (json)
+* Send Email with [nodemailer](https://nodemailer.com) (attachments/html)
 
 ![](/docs/report.png)
 ## Preview
