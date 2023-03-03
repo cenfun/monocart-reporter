@@ -354,6 +354,14 @@ const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
         rowItem[`${k}_matched`] = matched;
     });
 
+    if (hasMatched) {
+        let row = rowItem;
+        while (row.tg_parent) {
+            row = row.tg_parent;
+            row.collapsed = false;
+        }
+    }
+
     return hasMatched;
 };
 

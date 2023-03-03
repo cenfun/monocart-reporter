@@ -138,7 +138,7 @@ module.exports = {
 
 ## Adding Comments to Your Tests
 > Compared to importing external libraries and calling its interface, Comments is a better way, no dependence, cleaner, easy to read, and never break the existing code.
-* for Suite
+* for suite
 ```js
 /**
  * add extra information for suite
