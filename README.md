@@ -7,12 +7,12 @@
 [![](https://badgen.net/npm/dw/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 
-* A [Playwright](https://github.com/microsoft/playwright) test reporter (Node.js)
-* Shows suites/cases/steps with tree style
+* A [Playwright](https://github.com/microsoft/playwright) test [reporter](https://playwright.dev/docs/test-reporters) (Node.js)
+* Shows [suites](https://playwright.dev/docs/api/class-suite)/[cases](https://playwright.dev/docs/api/class-testcase)/[steps](https://playwright.dev/docs/api/class-teststep) with tree style
 * Console logs
 * Fuzzy search
-* Custom annotations with Markdown
-* Custom columns and formatters (extra information for suites/cases/steps)
+* Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
+* Custom columns and formatters (extra information for suite/case/step)
 * Custom data collection visitor 
 * Collect data from comments (similar to JsDoc)
 * Output report data and summary (json)
