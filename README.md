@@ -85,7 +85,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 ```
 See [lib/options.js](lib/options.js)
 
-## Advanced: Data Collection for Custom Columns
+## Custom Columns and Data Collection Visitor
 ```js
 // playwright.config.js
 module.exports = {
@@ -141,7 +141,55 @@ module.exports = {
 };
 ```
 
-## onEnd hook
+## Adding Comments to Your Tests
+> Compared to importing external libraries and calling its interface, Comments is a better way, no dependence, cleaner, easy to read, and never break the existing code.
+* for Suite
+```js
+/**
+ * add extra information for suite
+ * @owner Mark
+ * @jira MCR-16900
+ */
+test.describe('suite title', () => { ... });
+```
+* for case
+```js
+/**
+ * add extra information for case
+ * @owner Kevin
+ * @jira MCR-16888
+ */
+test('case title', () => { ... });
+```
+* for step
+```js
+test('case title', ({ browserName }, testInfo) => {
+
+    /**
+     * override assert step title "expect.toBe" to
+     * @title my custom assert step title
+     * @annotations important
+     */
+    expect(testInfo).toBe(test.info());
+
+});
+```
+* for hooks
+```js
+/**
+ * override "beforeAll hook" title to
+ * @title do something before all
+ */
+test.beforeAll(() => { ... });
+
+/**
+ * override "beforeEach hook" title to
+ * @title do something before each
+ */
+test.beforeEach(() => { ... });
+```
+
+## onEnd Hook
 ```js
 // playwright.config.js
 module.exports = {
@@ -159,7 +207,7 @@ module.exports = {
 };
 ```
 
-## Send Email
+## Send Email with nodemailer
 ```js
 // playwright.config.js
 module.exports = {
