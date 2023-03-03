@@ -14,7 +14,7 @@
 * Custom annotations with Markdown
 * Custom columns and formatters (extra information for suites/cases/steps)
 * Custom data collection visitor 
-* Collect data from comments (like JsDoc)
+* Collect data from comments (similar to JsDoc)
 * Output report data and summary (json)
 * Send Email with [nodemailer](https://nodemailer.com) (attachments/html)
 
