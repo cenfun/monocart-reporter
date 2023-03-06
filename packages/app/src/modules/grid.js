@@ -399,9 +399,10 @@ export const createGrid = () => {
         scrollbarRound: true,
         textSelectable: true,
         collapseAllVisible: true,
+        rowHeight: 36,
         rowNumberVisible: true,
         // 9999 max
-        rowNumberWidth: 45,
+        rowNumberWidth: 46,
         rowNumberFilter: (rowItem) => {
             if (rowItem.type === 'case') {
                 return rowNumber++;
