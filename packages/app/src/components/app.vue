@@ -10,7 +10,7 @@
         <a href="./">{{ state.title }}</a>
       </div>
       <span>{{ state.date }}</span>
-      <span>(Total time: {{ state.duration }})</span>
+      <span>(duration: {{ state.duration }})</span>
       <div class="vui-flex-auto" />
       <a
         class="mcr-icon mcr-icon-playwright"
