@@ -18,9 +18,10 @@
 * Output report data and summary (json)
 * Send Email with [nodemailer](https://nodemailer.com) (attachments/html)
 
-![](/docs/report.png)
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
+
+![](/docs/report.png)
 
 ## Install
 ```sh
@@ -274,17 +275,16 @@ module.exports = {
 ### Preview in Gmail
 ![](/docs/email.png)
 
-## Example
+## Examples
 - [tests/playwright.config.js](tests/playwright.config.js)
 - [tests/example/example.spec.js](tests/example/example.spec.js)
 - [tests/home-page/home-page.spec.js](tests/home-page/home-page.spec.js)
 
-## Reporter UI [packages/app](packages/app)
+## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
  - Lightweight UI components [vine-ui](https://github.com/cenfun/vine-ui)
  - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
  - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
-
 
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)

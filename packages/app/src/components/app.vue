@@ -1,26 +1,30 @@
 <template>
   <div class="mcr vui-flex-column">
-    <div class="mcr-header vui-flex-row">
+    <VuiFlex
+      class="mcr-header"
+      padding="10px"
+      gap="10px"
+      wrap
+    >
       <div class="mcr-title">
         <a href="./">{{ state.title }}</a>
-        <span>{{ state.date }}</span>
       </div>
+      <span>{{ state.date }}</span>
+      <span>(Total time: {{ state.duration }})</span>
       <div class="vui-flex-auto" />
-      <VuiFlex gap="10px">
-        <a
-          class="mcr-icon mcr-icon-playwright"
-          :tooltip="state.titlePlaywright"
-          href="https://github.com/microsoft/playwright"
-          target="_blank"
-        />
-        <a
-          class="mcr-icon mcr-icon-github"
-          :tooltip="state.titleReporter"
-          href="https://github.com/cenfun/monocart-reporter"
-          target="_blank"
-        />
-      </VuiFlex>
-    </div>
+      <a
+        class="mcr-icon mcr-icon-playwright"
+        :tooltip="state.titlePlaywright"
+        href="https://github.com/microsoft/playwright"
+        target="_blank"
+      />
+      <a
+        class="mcr-icon mcr-icon-github"
+        :tooltip="state.titleReporter"
+        href="https://github.com/cenfun/monocart-reporter"
+        target="_blank"
+      />
+    </VuiFlex>
 
     <VuiFlex
       class="mcr-filter"
@@ -35,7 +39,15 @@
           :class="summaryItemClass(item)"
           @click="summaryItemClick(item)"
         >
-          <b>{{ item.name }}</b> <span>{{ item.value.toLocaleString() }}</span> <i>{{ item.percent }}</i>
+          <VuiFlex
+            gap="5px"
+            wrap
+            center
+          >
+            <b>{{ item.name }}</b>
+            <span>{{ item.value.toLocaleString() }}</span>
+            <i>{{ item.percent }}</i>
+          </VuiFlex>
         </div>
       </div>
 
@@ -306,6 +318,7 @@ onMounted(() => {
 
     state.title = reportData.name;
     state.date = new Date(reportData.date).toLocaleString();
+    state.duration = reportData.durationH;
     state.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
     initStore();
 
@@ -498,28 +511,29 @@ icon
 }
 
 .mcr-header {
-    height: 45px;
-    padding: 0 10px;
+    align-items: baseline;
     color: #fff;
-    line-height: 44px;
     border-bottom: 1px solid #ddd;
     background-color: #24292f;
-}
 
-.mcr-title {
-    font-size: 20px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    .mcr-title {
+        font-size: 20px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
 
-    a {
-        color: #fff;
-        text-decoration: none;
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
     }
 
     span {
-        margin-left: 10px;
         color: #ccc;
         font-size: 14px;
+    }
+
+    a.mcr-icon {
+        opacity: 0.6;
     }
 }
 
@@ -539,14 +553,9 @@ icon
 }
 
 .mcr-summary-item {
-    flex-shrink: 1;
     padding: 8px 10px;
-    text-align: center;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
     border-left: thin solid #6c757d;
     cursor: pointer;
-    overflow: hidden;
 
     &:first-child {
         border-left: none;
