@@ -1,5 +1,4 @@
 # Monocart Reporter
-![](/docs/monocart.jpg)
 
 [![](https://img.shields.io/npm/v/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
 ![](https://img.shields.io/librariesio/github/cenfun/monocart-reporter)

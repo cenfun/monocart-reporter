@@ -10,6 +10,14 @@ test('case before suite', () => {
 
 });
 
+test('Test login page @fast', async () => {
+
+});
+
+test('Test full report @slow', async () => {
+
+});
+
 /**
  * add extra information for suite
  * @owner Mark
