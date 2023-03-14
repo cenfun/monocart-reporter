@@ -46,7 +46,7 @@
           >
             <b>{{ item.name }}</b>
             <span>{{ item.value.toLocaleString() }}</span>
-            <i>{{ item.percent }}</i>
+            <i v-if="item.percent">({{ item.percent }})</i>
           </VuiFlex>
         </div>
       </div>
@@ -217,16 +217,6 @@ const initSummary = (rows, summary) => {
         if (item.type === 'case') {
             caseHandler(item);
         }
-    });
-
-    // percent handler
-    Object.values(summary).forEach((item) => {
-        if (item.type === 'tests') {
-            item.percent = '';
-            return;
-        }
-        const p = Util.PF(item.value, summary.tests.value);
-        item.percent = `(${p})`;
     });
 
     // summary.failed.value = 0;

@@ -63,6 +63,11 @@ module.exports = {
             name: 'My Test Report',
             outputFile: '.temp/monocart/index.html',
 
+            // attachmentPath: (relativePath) => {
+            //     console.log(relativePath);
+            //     return `https://cenfun.github.io/monocart-reporter/${relativePath}`;
+            // },
+
             // custom columns
             columns: (defaultColumns) => {
 

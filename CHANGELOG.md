@@ -1,4 +1,7 @@
 
+* 1.3.2
+  - added new option attachmentPath
+
 * 1.3.1
   - added new feature: send email
 
