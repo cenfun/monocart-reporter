@@ -127,8 +127,8 @@ module.exports = {
                     searchable: true,
                     styleMap: 'font-weight:normal;',
                     formatter: (valueFormatted, rowItem, columnItem) => {
-                        const valueOriginal = rowItem[columnItem.id];
-                        return `<a href="${valueOriginal}" target="_blank">${valueFormatted}</a>`;
+                        const key = rowItem[columnItem.id];
+                        return `<a href="https://your-jira-key-link.com/${key}" target="_blank">${valueFormatted}</a>`;
                     }
                 });
 
