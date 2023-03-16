@@ -128,74 +128,19 @@ module.exports = {
             },
 
             // async hook after report data generated
-            onEnd: async (reportData, { sendEmail, config }) => {
+            onEnd: async (reportData, capacity) => {
                 console.log('onEnd hook start');
 
-                console.log(reportData.summary);
-                // {
-                //     tests: { name: 'Tests', value: 22, type: 'tests', percent: '' },
-                //     passed: { name: 'Passed', value: 13, type: 'passed', percent: '59.1%' },
-                //     failed: { name: 'Failed', value: 5, type: 'failed', percent: '22.7%' },
-                //     flaky: { name: 'Flaky', value: 1, type: 'flaky', percent: '4.5%' },
-                //     skipped: { name: 'Skipped', value: 3, type: 'skipped', percent: '13.6%' }
-                //   }
+                // console.log(reportData.summary);
 
-                const emailOptions = {
-                    // https://nodemailer.com/smtp/
-                    transport: {
-                        service: 'Hotmail',
-                        auth: {
-                            user: '',
-                            pass: ''
-                        }
-                    },
-                    // https://nodemailer.com/message/
-                    message: {
-                        from: '',
-                        to: '',
-                        cc: '',
-                        bcc: '',
+                // send email
+                const sendEmail = require('./common/send-email.js');
+                await sendEmail(reportData, capacity);
 
-                        subject: `${reportData.name} - ${reportData.dateH}`,
-                        attachments: [{
-                            path: reportData.htmlPath
-                        }],
+                // testrail integration
+                const testrail = require('./common/testrail.js');
+                await testrail(reportData, capacity);
 
-                        html: `
-                            <h3>${reportData.name}</h3>
-                            <ul>
-                                <li>Env: STG</li>
-                                <li>Type: Smoke</li>
-                                <li>Url: ${reportData.use.url}</li>
-                                <li>Workers: ${config.workers}</li>
-                                <li>Date: ${reportData.dateH}</li>
-                                <li>Duration: ${reportData.durationH}</li>
-                            </ul>
-                            
-                            ${reportData.summaryTable}
-
-                            <p>Please check attachment html for detail.</p>
-
-                            <p>Thanks,</p>
-                        `
-                    }
-                };
-
-                const info = await sendEmail(emailOptions).catch((e) => {
-                    console.error(e);
-                });
-                if (info) {
-                    console.log(info);
-                }
-
-                return new Promise((resolve) => {
-                    // you can send email or call some API here
-                    console.log('onEnd hook do something slow (async) ...');
-                    setTimeout(() => {
-                        console.log(`onEnd hook end: ${reportData.name} - ${reportData.htmlPath}`);
-                        resolve();
-                    }, 2000);
-                });
             }
         }]
     ]

@@ -5,15 +5,22 @@ const Util = require('../common/util.js');
  * add extra information for case
  * @owner Kevin
  * @jira MCR-16888
+ * @testrail 2125
  */
 test('case before suite', () => {
 
 });
 
+/**
+ * @testrail 2126
+ */
 test('Test login page @fast', async () => {
 
 });
 
+/**
+ * @testrail 2127
+ */
 test('Test full report @slow', async () => {
 
 });
@@ -30,6 +37,7 @@ test.describe('suite group 1', () => {
     /**
      * @owner Mark
      * @jira MCR-16933
+     * @testrail 2128
      */
     test('case info', ({ browserName }, testInfo) => {
 
@@ -42,6 +50,9 @@ test.describe('suite group 1', () => {
 
     });
 
+    /**
+     * @testrail 2129
+     */
     test('case steps', async () => {
 
         const result1 = await test.step('step 1', () => {
