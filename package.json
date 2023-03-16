@@ -1,7 +1,7 @@
 {
     "name": "monocart-reporter",
-    "version": "1.3.2",
-    "description": "A playwright test reporter. Shows suites/cases/steps with tree style, console logs, fuzzy search, markdown annotations, custom columns/formatters/data collection visitors, send email.",
+    "version": "1.3.3",
+    "description": "A playwright test reporter. Shows suites/cases/steps with tree style, console logs, fuzzy search, markdown annotations, custom columns/formatters/data collection visitors, send email, testrail integration.",
     "main": "lib/index.js",
     "scripts": {
         "test": "node ./scripts/link.js && npx playwright test --config=tests/playwright.config.js",

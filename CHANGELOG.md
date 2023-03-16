@@ -1,4 +1,7 @@
 
+* 1.3.3
+  - added Testrail Integration
+
 * 1.3.2
   - added new option attachmentPath
 

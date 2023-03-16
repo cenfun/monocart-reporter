@@ -15,7 +15,8 @@
 * Custom data collection visitor 
 * Collect data from comments (similar to JsDoc)
 * Output report data and summary (json)
-* Send Email with [nodemailer](https://nodemailer.com) (attachments/html)
+* [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
+* [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -203,7 +204,6 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-
             // async hook after report data generated
             onEnd: async (reportData, capacity) => {
                 //await myAsyncFunction();
@@ -213,7 +213,8 @@ module.exports = {
 };
 ```
 
-## Send Email with nodemailer
+## Send Email
+### Check example: [send-email.js](/tests/common/send-email.js)
 ```js
 // playwright.config.js
 module.exports = {
@@ -221,55 +222,9 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-
-            onEnd: async (reportData, { sendEmail, config }) => {
-                const emailOptions = {
-                    // https://nodemailer.com/smtp/
-                    transport: {
-                        service: 'Hotmail',
-                        auth: {
-                            user: '',
-                            pass: ''
-                        }
-                    },
-                    // https://nodemailer.com/message/
-                    message: {
-                        from: 'cenfun@gmail.com',
-                        to: 'cenfun@gmail.com',
-                        cc: '',
-                        bcc: '',
-
-                        subject: `${reportData.name} - ${reportData.dateH}`,
-                        attachments: [{
-                            path: reportData.htmlPath
-                        }],
-
-                        html: `
-                            <h3>${reportData.name}</h3>
-                            <ul>
-                                <li>Env: STG</li>
-                                <li>Type: Smoke</li>
-                                <li>Url: ${reportData.use.url}</li>
-                                <li>Workers: ${config.workers}</li>
-                                <li>Date: ${reportData.dateH}</li>
-                                <li>Duration: ${reportData.durationH}</li>
-                            </ul>
-                            
-                            ${reportData.summaryTable}
-
-                            <p>Please check attachment html for detail.</p>
-
-                            <p>Thanks,</p>
-                        `
-                    }
-                };
-
-                const info = await sendEmail(emailOptions).catch((e) => {
-                    console.error(e);
-                });
-                if (info) {
-                    console.log(info);
-                }
+            onEnd: async (reportData, capacity) => {
+                const sendEmail = require('./common/send-email.js');
+                await sendEmail(reportData, capacity);
             }
         }]
     ]
@@ -278,7 +233,29 @@ module.exports = {
 ### Preview in Gmail
 ![](/docs/email.png)
 
-## Examples
+
+## Testrail Integration
+### Check example: [testrail.js](/tests/common/testrail.js)
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            onEnd: async (reportData, capacity) => {
+                const testrail = require('./common/testrail.js');
+                await testrail(reportData, capacity);
+            }
+        }]
+    ]
+};
+```
+
+### Preview Testrail Run/Results
+![](/docs/testrail.png)
+
+## Test Examples
 - [tests/playwright.config.js](tests/playwright.config.js)
 - [tests/example/example.spec.js](tests/example/example.spec.js)
 - [tests/home-page/home-page.spec.js](tests/home-page/home-page.spec.js)
