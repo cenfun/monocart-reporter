@@ -38,6 +38,13 @@ module.exports = async (reportData, capacity) => {
 
     EC.logCyan('[testrail] collect test results ...');
     const results = [];
+
+    // add testrail case id to comments
+    /**
+     * @testrail 2126
+     */
+    // test('Test case', async () => { });
+
     capacity.forEach((item) => {
         if (item.type === 'case' && item.testrail) {
             // 1 Passed

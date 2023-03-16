@@ -682,16 +682,20 @@ icon
 
     .tg-body-message {
         .mcr-no-results {
-            top: 20px;
-            left: 30px;
-            height: 35px;
-            padding-left: 45px;
+            position: relative;
+            top: 0;
+            left: 0;
+            margin: 10px;
+            padding: 20px 20px 20px 70px;
+            color: gray;
             font-size: 20px;
-            line-height: 35px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
             background-image: url("../images/search-results.svg");
             background-repeat: no-repeat;
-            background-position: left center;
+            background-position: 20px center;
             background-size: 30px 30px;
+            opacity: 0.8;
             transform: none;
         }
     }
