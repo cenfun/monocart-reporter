@@ -1,5 +1,5 @@
 import { shallowReactive } from 'vue';
-import Util from '../util/util.js';
+import Util from '../utils/util.js';
 
 const state = shallowReactive({
     title: '',

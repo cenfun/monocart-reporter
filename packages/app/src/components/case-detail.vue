@@ -16,7 +16,7 @@ import 'github-markdown-css/github-markdown-light.css';
 import Convert from 'ansi-to-html';
 import { marked } from 'marked';
 
-import Util from '../util/util.js';
+import Util from '../utils/util.js';
 import state from '../modules/state.js';
 
 const convert = new Convert({

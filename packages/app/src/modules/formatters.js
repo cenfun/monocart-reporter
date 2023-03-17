@@ -1,4 +1,4 @@
-import Util from '../util/util.js';
+import Util from '../utils/util.js';
 
 const matchedFormatter = function(value, rowItem, columnItem) {
     const id = columnItem.id;

@@ -9,21 +9,41 @@
       <div class="mcr-title">
         <a href="./">{{ state.title }}</a>
       </div>
-      <span>{{ state.date }}</span>
-      <span>(duration: {{ state.duration }})</span>
+
+      <IconLabel
+        icon="calendar"
+        size="16px"
+        :button="false"
+      >
+        {{ state.date }}
+      </IconLabel>
+
+      <IconLabel
+        icon="time"
+        size="16px"
+        :button="false"
+      >
+        {{ state.duration }}
+      </IconLabel>
+
       <div class="vui-flex-auto" />
       <a
-        class="mcr-icon mcr-icon-playwright"
         :tooltip="state.titlePlaywright"
         href="https://github.com/microsoft/playwright"
         target="_blank"
-      />
+      ><IconLabel
+        icon="playwright"
+        size="20px"
+      /></a>
+
       <a
-        class="mcr-icon mcr-icon-github"
         :tooltip="state.titleReporter"
         href="https://github.com/cenfun/monocart-reporter"
         target="_blank"
-      />
+      ><IconLabel
+        icon="github"
+        size="20px"
+      /></a>
     </VuiFlex>
 
     <VuiFlex
@@ -83,25 +103,25 @@
       :width="state.flyoverWidth"
     >
       <div class="vui-flyover-main vui-flex-column">
-        <div class="vui-flyover-header">
-          <VuiFlex gap="10px">
-            <div
-              class="vui-flyover-icon"
-              @click="state.flyoverVisible=false"
-            >
-              <div class="mcr-icon mcr-icon-arrow-right" />
-            </div>
-            <div class="vui-flyover-title vui-flex-auto">
-              {{ state.detailTitle }}
-            </div>
-            <div
-              class="vui-flyover-icon"
-              @click="state.flyoverVisible=false"
-            >
-              <div class="mcr-icon mcr-icon-close" />
-            </div>
-          </VuiFlex>
-        </div>
+        <VuiFlex
+          gap="10px"
+          padding="10px"
+          class="vui-flyover-header"
+        >
+          <IconLabel
+            icon="arrow-right"
+            size="20px"
+            @click="state.flyoverVisible=false"
+          />
+          <div class="vui-flyover-title vui-flex-auto">
+            {{ state.detailTitle }}
+          </div>
+          <IconLabel
+            icon="close"
+            size="20px"
+            @click="state.flyoverVisible=false"
+          />
+        </VuiFlex>
         <div class="vui-flyover-content vui-flex-auto">
           <CaseDetail />
         </div>
@@ -122,14 +142,15 @@ import {
 import { components, generateTooltips } from 'vine-ui';
 import decompress from 'lz-utils/lib/decompress.js';
 
-import Util from '../util/util.js';
+import Util from '../utils/util.js';
 import {
     createGrid, renderGrid, updateGrid, displayFlyover, initCustomsFormatters
 } from '../modules/grid.js';
 
 import CaseDetail from './case-detail.vue';
+import IconLabel from './icon-label.vue';
 
-import store from '../util/store.js';
+import store from '../utils/store.js';
 import state from '../modules/state.js';
 
 const {
@@ -409,22 +430,6 @@ icon
     opacity: 1;
 }
 
-.mcr-icon-playwright {
-    background-image: url("../images/playwright.svg");
-}
-
-.mcr-icon-github {
-    background-image: url("../images/github.svg");
-}
-
-.mcr-icon-close {
-    background-image: url("../images/close.svg");
-}
-
-.mcr-icon-arrow-right {
-    background-image: url("../images/arrow-right.svg");
-}
-
 .mcr-icon-passed {
     background-image: url("../images/passed.svg");
 }
@@ -497,17 +502,18 @@ icon
     position: absolute;
     top: 50%;
     left: 50%;
+    width: 20px;
+    height: 20px;
     transform: translate(-50%, -50%);
 }
 
 .mcr-header {
-    align-items: baseline;
     color: #fff;
-    border-bottom: 1px solid #ddd;
     background-color: #24292f;
 
     .mcr-title {
-        font-size: 20px;
+        font-size: 18px;
+        line-height: 22px;
         white-space: nowrap;
         text-overflow: ellipsis;
 
@@ -517,13 +523,9 @@ icon
         }
     }
 
-    span {
+    .mcr-icon-label {
         color: #ccc;
         font-size: 14px;
-    }
-
-    a.mcr-icon {
-        opacity: 0.6;
     }
 }
 
@@ -723,21 +725,14 @@ flyover
 }
 
 .vui-flyover-header {
-    padding: 0 10px;
+    color: #fff;
     background-color: #005ba4;
 }
 
-.vui-flyover-icon {
-    padding: 9px 0;
-    cursor: pointer;
-}
-
 .vui-flyover-title {
-    height: 45px;
-    color: #fff;
     font-weight: bold;
     font-size: 16px;
-    line-height: 45px;
+    line-height: 22px;
 }
 
 .vui-flyover-content {

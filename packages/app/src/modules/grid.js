@@ -1,11 +1,11 @@
 import { Grid } from 'turbogrid';
 import fuzzy from 'fuzzy';
 
-import Util from '../util/util.js';
+import Util from '../utils/util.js';
 import {
     formatters, matchedFormatter, annotationsFormatter
 } from './formatters.js';
-import store from '../util/store.js';
+import store from '../utils/store.js';
 import state from '../modules/state.js';
 
 const isNodeTruncated = (node) => {
