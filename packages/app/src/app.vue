@@ -27,23 +27,12 @@
       </IconLabel>
 
       <div class="vui-flex-auto" />
-      <a
-        :tooltip="state.titlePlaywright"
-        href="https://github.com/microsoft/playwright"
-        target="_blank"
-      ><IconLabel
-        icon="playwright"
-        size="20px"
-      /></a>
 
-      <a
-        :tooltip="state.titleReporter"
-        href="https://github.com/cenfun/monocart-reporter"
-        target="_blank"
-      ><IconLabel
-        icon="github"
+      <IconLabel
+        icon="menu"
         size="20px"
-      /></a>
+        @click="onMenuClick"
+      />
     </VuiFlex>
 
     <VuiFlex
@@ -66,7 +55,7 @@
           >
             <b>{{ item.name }}</b>
             <span>{{ item.value.toLocaleString() }}</span>
-            <i v-if="item.percent">({{ item.percent }})</i>
+            <span v-if="item.percent">(<i>{{ item.percent }}</i>)</span>
           </VuiFlex>
         </div>
       </div>
@@ -102,30 +91,7 @@
       :visible="state.flyoverVisible"
       :width="state.flyoverWidth"
     >
-      <div class="vui-flyover-main vui-flex-column">
-        <VuiFlex
-          gap="10px"
-          padding="10px"
-          class="vui-flyover-header"
-        >
-          <IconLabel
-            icon="arrow-right"
-            size="20px"
-            @click="state.flyoverVisible=false"
-          />
-          <div class="vui-flyover-title vui-flex-auto">
-            {{ state.detailTitle }}
-          </div>
-          <IconLabel
-            icon="close"
-            size="20px"
-            @click="state.flyoverVisible=false"
-          />
-        </VuiFlex>
-        <div class="vui-flyover-content vui-flex-auto">
-          <CaseDetail />
-        </div>
-      </div>
+      <Flyover />
     </VuiFlyover>
 
     <VuiTooltip
@@ -142,16 +108,16 @@ import {
 import { components, generateTooltips } from 'vine-ui';
 import decompress from 'lz-utils/lib/decompress.js';
 
-import Util from '../utils/util.js';
+import Util from './utils/util.js';
 import {
     createGrid, renderGrid, updateGrid, displayFlyover, initCustomsFormatters
-} from '../modules/grid.js';
+} from './modules/grid.js';
 
-import CaseDetail from './case-detail.vue';
-import IconLabel from './icon-label.vue';
+import Flyover from './components/flyover.vue';
+import IconLabel from './components/icon-label.vue';
 
-import store from '../utils/store.js';
-import state from '../modules/state.js';
+import store from './utils/store.js';
+import state from './modules/state.js';
 
 const {
     VuiInput,
@@ -221,9 +187,29 @@ const initSummary = (rows, summary) => {
         }
     };
 
+    const suites = {
+        name: 'Suites',
+        icon: 'suite',
+        value: 0
+    };
+    const tests = {
+        name: 'Tests',
+        icon: 'case',
+        value: 0
+    };
+    const steps = {
+        name: 'Steps',
+        icon: 'step',
+        value: 0
+    };
+    state.testInfo.push(suites);
+    state.testInfo.push(tests);
+    state.testInfo.push(steps);
+
     Util.forEachTree(rows, function(item) {
         item.selectable = true;
         if (item.type === 'step') {
+            steps.value += 1;
             if (item.subs) {
                 item.collapsed = true;
             }
@@ -236,19 +222,50 @@ const initSummary = (rows, summary) => {
         }
 
         if (item.type === 'case') {
+            tests.value += 1;
             caseHandler(item);
+            return;
         }
+        suites.value += 1;
     });
 
     // summary.failed.value = 0;
+    summary.passed.color = 'green';
     summary.passed.classMap = summary.failed.value === 0 ? 'mcr-summary-passed' : '';
 
+    summary.failed.color = '#d00';
     summary.failed.classMap = summary.failed.value > 0 ? 'mcr-summary-failed' : 'mcr-summary-skipped';
+
+    summary.flaky.color = 'orange';
     summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-summary-flaky' : 'mcr-summary-skipped';
+
+    summary.skipped.color = 'gray';
     summary.skipped.classMap = 'mcr-summary-skipped';
 
-    state.summary = summary;
+    const pieData = [];
+    Object.keys(summary).forEach((k) => {
+        if (k === 'tests') {
+            return;
+        }
 
+        const item = summary[k];
+        pieData.push({
+            id: k,
+            name: item.name,
+            value: item.value,
+            percent: item.percent,
+            color: item.color
+        });
+    });
+
+    state.summary = summary;
+    state.pieData = pieData;
+
+};
+
+const onMenuClick = (e) => {
+    state.flyoverTitle = state.title;
+    state.flyoverVisible = true;
 };
 
 let timeout_tooltip;
@@ -306,6 +323,18 @@ const initErrors = (rows, errors) => {
     });
 };
 
+const updateSize = () => {
+    state.windowWidth = window.innerWidth;
+
+    let flyoverWidth = '60%';
+    if (state.windowWidth < 768) {
+        flyoverWidth = '100%';
+    } else if (state.windowWidth < 1024) {
+        flyoverWidth = '80%';
+    }
+    state.flyoverWidth = flyoverWidth;
+};
+
 onMounted(() => {
 
     const reportData = JSON.parse(decompress(window.reportData));
@@ -329,13 +358,30 @@ onMounted(() => {
 
     state.title = reportData.name;
     state.date = new Date(reportData.date).toLocaleString();
+    state.testInfo.push({
+        name: 'Date',
+        icon: 'calendar',
+        value: state.date
+    });
     state.duration = reportData.durationH;
+    state.testInfo.push({
+        name: 'Duration',
+        icon: 'time',
+        value: state.duration
+    });
+
     state.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
     initStore();
+
+    updateSize();
 
     createGrid();
 
     initTooltip();
+
+    setTimeout(() => {
+        onMenuClick();
+    });
 });
 
 let timeout_search;
@@ -379,7 +425,7 @@ window.addEventListener('popstate', (e) => {
 });
 
 window.addEventListener('resize', () => {
-    state.windowWidth = window.innerWidth;
+    updateSize();
 });
 
 window.addEventListener('keydown', (e) => {
@@ -431,19 +477,19 @@ icon
 }
 
 .mcr-icon-passed {
-    background-image: url("../images/passed.svg");
+    background-image: url("./images/passed.svg");
 }
 
 .mcr-icon-skipped {
-    background-image: url("../images/skipped.svg");
+    background-image: url("./images/skipped.svg");
 }
 
 .mcr-icon-failed {
-    background-image: url("../images/failed.svg");
+    background-image: url("./images/failed.svg");
 }
 
 .mcr-icon-suite {
-    background-image: url("../images/suite.svg");
+    background-image: url("./images/suite.svg");
 
     ~ .mcr-item-title {
         margin-left: 3px;
@@ -451,11 +497,11 @@ icon
 }
 
 .mcr-icon-case {
-    background-image: url("../images/case.svg");
+    background-image: url("./images/case.svg");
 }
 
 .mcr-icon-step {
-    background-image: url("../images/step.svg");
+    background-image: url("./images/step.svg");
 
     ~ .mcr-item-title {
         margin-left: 0;
@@ -463,23 +509,23 @@ icon
 }
 
 .mcr-icon-annotation {
-    background-image: url("../images/annotation.svg");
+    background-image: url("./images/annotation.svg");
 }
 
 .mcr-icon-info {
-    background-image: url("../images/info.svg");
+    background-image: url("./images/info.svg");
 }
 
 .mcr-icon-error {
-    background-image: url("../images/error.svg");
+    background-image: url("./images/error.svg");
 }
 
 .mcr-icon-log {
-    background-image: url("../images/log.svg");
+    background-image: url("./images/log.svg");
 }
 
 .mcr-icon-attachment {
-    background-image: url("../images/attachment.svg");
+    background-image: url("./images/attachment.svg");
 }
 
 .mcr-icon-ok {
@@ -551,6 +597,10 @@ icon
 
     &:first-child {
         border-left: none;
+    }
+
+    .vui-flex {
+        align-items: baseline;
     }
 
     i {
@@ -625,7 +675,7 @@ icon
 .mcr-search {
     input {
         padding-right: 23px;
-        background-image: url("../images/search.svg");
+        background-image: url("./images/search.svg");
         background-repeat: no-repeat;
         background-position: 97% center;
         background-size: 16px;
@@ -693,7 +743,7 @@ icon
             font-size: 20px;
             border: 1px solid #ddd;
             border-radius: 10px;
-            background-image: url("../images/search-results.svg");
+            background-image: url("./images/search-results.svg");
             background-repeat: no-repeat;
             background-position: 20px center;
             background-size: 30px 30px;

@@ -96,7 +96,6 @@ onMounted(() => {
 
     label {
         margin-left: 3px;
-        user-select: none;
     }
 }
 

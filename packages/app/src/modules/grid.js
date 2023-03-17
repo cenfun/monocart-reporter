@@ -60,17 +60,8 @@ const showFlyover = (rowItem, position) => {
 
     state.caseItem = rowItem;
     state.position = position;
-    state.detailTitle = rowItem.title;
+    state.flyoverTitle = rowItem.title;
     // console.log('showFlyover position', position);
-
-    let flyoverWidth = '60%';
-    if (state.windowWidth < 768) {
-        flyoverWidth = '100%';
-    } else if (state.windowWidth < 1024) {
-        flyoverWidth = '80%';
-    }
-    state.flyoverWidth = flyoverWidth;
-
     state.flyoverVisible = true;
 };
 

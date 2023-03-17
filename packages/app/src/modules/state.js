@@ -1,7 +1,7 @@
-import { shallowReactive } from 'vue';
+import { reactive } from 'vue';
 import Util from '../utils/util.js';
 
-const state = shallowReactive({
+const state = reactive({
     title: '',
     date: '',
     titlePlaywright: '',
@@ -21,7 +21,8 @@ const state = shallowReactive({
     // flyover detail
     flyoverVisible: false,
     flyoverWidth: '60%',
-    detailTitle: '',
+    flyoverTitle: '',
+
     $detail: null,
     caseItem: null,
     position: 0,
@@ -29,7 +30,10 @@ const state = shallowReactive({
     // grid data
     gridDataAll: null,
     gridDataMap: {},
-    grid: null
+    grid: null,
+
+    pieData: null,
+    testInfo: []
 
 });
 
