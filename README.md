@@ -266,6 +266,11 @@ module.exports = {
  - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
  - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
 
+
+
+ ## Articles
+ - [Test automation|Test Reporting| |Playwright|Monocart](https://medium.com/@kbalaji.kks/test-automation-test-reporting-playwright-monocart-d4bb35ef12ad)
+
 ## Dependencies
 ```sh
 nmls -p
