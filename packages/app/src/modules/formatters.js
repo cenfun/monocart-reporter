@@ -1,3 +1,5 @@
+import { createApp } from 'vue';
+import IconLabel from '../components/icon-label.vue';
 import Util from '../utils/util.js';
 
 const matchedFormatter = function(value, rowItem, columnItem) {
@@ -13,6 +15,16 @@ const annotationsFormatter = (list) => {
     return list.map((it) => it.type).filter((it) => it).join(' ');
 };
 
+const iconFormatter = (icon, size = '16px', button = false) => {
+    const div = document.createElement('div');
+    createApp(IconLabel, {
+        icon,
+        size,
+        button
+    }).mount(div);
+    return div;
+};
+
 const formatters = {
 
     null: function(value) {
@@ -26,11 +38,20 @@ const formatters = {
         if (typeof value !== 'boolean') {
             return '';
         }
-        return Util.getIconOk(rowItem);
+        return iconFormatter(rowItem.okIcon, '20px');
     },
 
     iconType: function(value, rowItem, columnItem, cellNode) {
-        return Util.getIconType(value);
+        const types = {
+            suite: 'suite',
+            case: 'case',
+            step: 'step'
+        };
+        const icon = types[value];
+        if (!icon) {
+            return '';
+        }
+        return iconFormatter(icon);
     },
 
     string: matchedFormatter,
@@ -74,21 +95,21 @@ const formatters = {
         if (!value) {
             return '';
         }
-        return '<div class="mcr-icon mcr-icon-error" />';
+        return iconFormatter('error', '20px', true);
     },
 
     logs: function(value, rowItem) {
         if (!value) {
             return '';
         }
-        return '<div class="mcr-icon mcr-icon-log" />';
+        return iconFormatter('log', '20px', true);
     },
 
     attachments: function(value, rowItem) {
         if (!value) {
             return '';
         }
-        return '<div class="mcr-icon mcr-icon-attachment" />';
+        return iconFormatter('attachment', '20px', true);
     }
 
 };

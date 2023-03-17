@@ -5,7 +5,7 @@
   >
     <div class="mcr-menu-main vui-flex-auto">
       <VuiFlex
-        gap="20px"
+        gap="15px"
         direction="column"
         padding="20px"
       >
@@ -16,7 +16,10 @@
           gap="10px"
           class="mcr-menu-info"
         >
-          <IconLabel :icon="item.icon">
+          <IconLabel
+            :icon="item.icon"
+            :button="false"
+          >
             {{ item.name }}
           </IconLabel>
           <div>{{ item.value }}</div>
@@ -70,6 +73,12 @@ const { VuiFlex } = components;
 }
 
 .mcr-menu-info {
+    padding-left: 10px;
+
+    .mcr-icon-label {
+        width: 80px;
+    }
+
     label {
         font-weight: bold;
     }

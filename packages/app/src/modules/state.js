@@ -23,7 +23,6 @@ const state = reactive({
     flyoverWidth: '60%',
     flyoverTitle: '',
 
-    $detail: null,
     caseItem: null,
     position: 0,
 

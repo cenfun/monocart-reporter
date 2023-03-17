@@ -124,8 +124,19 @@ const bindGridEvents = () => {
             return;
         }
 
-        const cl = d.e.target.classList;
-        if (cl.contains('mcr-icon') || cl.contains('mcr-clickable')) {
+        const cls = d.e.target.classList;
+
+        const isInfo = position === 'title' && cls.contains('mcr-icon-info');
+
+        const isClickColumn = [
+            'ok',
+            'errors',
+            'logs',
+            'annotations',
+            'attachments'
+        ].includes(position) && !cls.contains('tg-cell');
+
+        if (isInfo || isClickColumn) {
             showFlyover(caseItem, position);
             return;
         }

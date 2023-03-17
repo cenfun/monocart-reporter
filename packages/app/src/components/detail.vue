@@ -3,13 +3,91 @@
     ref="el"
     class="mcr-detail"
   >
-    <div class="mcr-tree" />
+    <div class="mcr-tree">
+      <div
+        v-for="item in data.list"
+        :key="item.key"
+        :class="itemClass(item.data)"
+        :style="item.style"
+      >
+        <VuiFlex
+          :class="itemHeadClass(item.data)"
+          gap="10px"
+          padding="8px 5px"
+          wrap
+        >
+          <VuiFlex :gap="item.gap">
+            <IconLabel
+              :icon="item.icon"
+              :size="item.size"
+              :button="false"
+            />
+            <div class="mcr-item-title">
+              {{ item.data.title }}
+            </div>
+          </VuiFlex>
+
+          <div class="vui-flex-auto" />
+          <div
+            v-if="item.data.location"
+            class="mcr-item-location"
+          >
+            {{ item.data.location }}
+          </div>
+          <div
+            v-if="Util.isNum(item.data.duration)"
+            class="mcr-item-duration"
+          >
+            {{ Util.DTF(item.data.duration) }}
+          </div>
+        </VuiFlex>
+        <div
+          v-if="item.columns"
+          class="mcr-item-body"
+        >
+          <div
+            v-for="column in item.columns"
+            :key="column.key"
+            :class="itemColumnClass(column.data)"
+          >
+            <a :name="column.data.id" />
+
+            <template v-if="column.custom">
+              <VuiFlex
+                gap="5px"
+                wrap
+              >
+                <div class="mcr-column-head">
+                  {{ column.data.name }}
+                </div>
+                <div v-html="column.content" />
+              </VuiFlex>
+            </template>
+            <template v-else>
+              <IconLabel
+                :icon="column.icon"
+                size="20px"
+                :button="false"
+                class="mcr-column-head"
+              >
+                {{ column.data.name }}
+              </IconLabel>
+              <div
+                class="mcr-column-content"
+                v-html="column.content"
+              />
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
 import {
-    onMounted, ref, watch
+    ref, watch, shallowReactive
 } from 'vue';
+import { components } from 'vine-ui';
 
 import 'github-markdown-css/github-markdown-light.css';
 
@@ -19,12 +97,57 @@ import { marked } from 'marked';
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
 
+import IconLabel from './icon-label.vue';
+
+const { VuiFlex } = components;
+
+const data = shallowReactive({
+    list: []
+});
+
+const el = ref(null);
+
+const itemClass = (item) => {
+    const cls = ['mcr-item'];
+    if (!item.level) {
+        cls.push('mcr-item-root');
+    }
+    return cls;
+};
+
+const itemHeadClass = (item) => {
+    return ['mcr-item-head', `mcr-item-${item.type}`, item.classMap];
+};
+
+const itemColumnClass = (item) => {
+    return ['mcr-item-column', `mcr-item-${item.id}`];
+};
+
+// ===========================================================================
+// errors logs html
+
 const convert = new Convert({
     fg: '#333',
     bg: '#F6F8FA',
     newline: true,
     escapeXML: true
 });
+
+const convertHtml = (str) => {
+
+    // link
+    // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
+    // str = str.replace(re, function(a) {
+    //     return `<a href="${a}" target="_blank">${a}</a>`;
+    // });
+
+    str = convert.toHtml(str);
+
+    return str;
+};
+
+// ===========================================================================
+// annotations markdown html
 
 // add target="_blank" for link
 const renderer = new marked.Renderer();
@@ -44,101 +167,13 @@ const markdownParse = (str) => {
     return str;
 };
 
-const renderTree = () => {
-
-    if (!state.$detail) {
-        return;
-    }
-
-    const list = [];
-
-    // suites
-    let suite = state.caseItem.parent;
-    while (suite) {
-        list.push(suite);
-        suite = suite.parent;
-    }
-    list.reverse();
-
-    // case
-    list.push(state.caseItem);
-
-    // steps
-    generateSteps(list, state.caseItem.steps);
-
-    let left = 0;
-    const ls = list.map((item) => {
-        left = item.level * 10;
-        const head = renderItemHead(item);
-        const body = renderItemBody(item);
-
-        const cls = ['mcr-item'];
-        if (!item.level) {
-            cls.push('mcr-item-root');
-        }
-
-        return `<div class="${cls.join(' ')}" style="margin-left:${left}px;">
-                  ${head}
-                  ${body}
-                </div>`;
-    });
-
-    const $tree = state.$detail.querySelector('.mcr-tree');
-    if ($tree) {
-        $tree.innerHTML = ls.join('');
-    }
-};
-
-const renderItemHead = (item) => {
-
-    const cls = ['mcr-item-head', `mcr-item-${item.type}`, item.classMap];
-    const className = cls.filter((it) => it).join(' ');
-
-    const list = [];
-
-    if (item.type === 'case') {
-        list.push(Util.getIconOk(item));
-    } else {
-        list.push(Util.getIconType(item.type));
-    }
-
-    list.push(`<div class="mcr-item-title">${item.title}</div>`);
-
-    if (item.location) {
-        list.push(`<div class="mcr-item-location">${item.location}</div>`);
-    }
-
-    if (item.duration) {
-        list.push(`<div class="mcr-item-duration">${Util.DTF(item.duration)}</div>`);
-    }
-
-    const head = list.join('');
-
-    return `<div class="${className}">
-              ${head}
-            </div>`;
-};
-
-const renderItemBody = (item) => {
-
-    const list = [];
-    // columns maybe a tree
-    generateItemColumns(list, item, state.columns);
-
-    if (!list.length) {
-        return '';
-    }
-
-    return `<div class="mcr-item-body">
-                ${list.join('')}
-            </div>`;
-};
+// ===========================================================================
 
 const generateItemColumns = (list, item, columns) => {
 
     columns.forEach((column) => {
 
-        const result = renderItemColumn(item, column);
+        const result = generateItemColumn(item, column);
         if (result) {
             list.push(result);
         }
@@ -151,7 +186,7 @@ const generateItemColumns = (list, item, columns) => {
 
 };
 
-const renderItemColumn = (item, column) => {
+const generateItemColumn = (item, column) => {
 
     if (!column.name) {
         return;
@@ -164,45 +199,17 @@ const renderItemColumn = (item, column) => {
         attachments: renderItemAttachments
     };
 
-    const handler = defaultHandler[column.id];
-    if (handler) {
-        return handler(item, column);
+    const handler = defaultHandler[column.id] || renderItemCustom;
+
+    const res = handler(item, column);
+    if (res) {
+        res.data = column;
     }
 
-    // custom column
-    return renderItemCustom(item, column);
-
+    return res;
 };
 
-const renderItemCustom = (item, column) => {
-
-    // not detailed default columns here
-    // must be boolean false not undefined
-    if (column.detailed === false) {
-        return;
-    }
-
-    let value = item[column.id];
-
-    // do not show null value
-    if (value === null || typeof value === 'undefined') {
-        return;
-    }
-
-    if (typeof column.formatter === 'function') {
-        value = column.formatter(value, item, column);
-    }
-
-    // if markdown is true
-    const content = column.markdown ? markdownParse(value) : `<div>${value}</div>`;
-
-    return `<div class="mcr-item-column mcr-item-${column.id}">
-                <div class="mcr-column-custom vui-flex-row">
-                    <div class="mcr-column-head">${column.name}</div>
-                    ${content}
-                </div> 
-            </div>`;
-};
+// ===========================================================================
 
 const renderItemErrors = (item, column) => {
     const errors = item.errors;
@@ -219,14 +226,10 @@ const renderItemErrors = (item, column) => {
         return;
     }
 
-    return `<div class="mcr-item-column mcr-item-${column.id}">
-                <a name="${column.id}"></a>
-                <div class="mcr-column-head vui-flex-row">
-                    <div class="mcr-icon mcr-icon-error"></div>
-                    <div>${column.name}</div>
-                </div>
-                <p>${content}</p>
-            </div>`;
+    return {
+        icon: 'error',
+        content
+    };
 };
 
 const renderItemLogs = (item, column) => {
@@ -244,14 +247,10 @@ const renderItemLogs = (item, column) => {
         return;
     }
 
-    return `<div class="mcr-item-column mcr-item-${column.id}">
-                <a name="${column.id}"></a>
-                <div class="mcr-column-head vui-flex-row">
-                    <div class="mcr-icon mcr-icon-log"></div>
-                    <div>${column.name}</div>
-                </div>
-                <p>${content}</p>
-            </div>`;
+    return {
+        icon: 'log',
+        content
+    };
 };
 
 const renderItemAnnotations = (item, column) => {
@@ -295,14 +294,10 @@ const renderItemAnnotations = (item, column) => {
         return;
     }
 
-    return `<div class="mcr-item-column mcr-item-${column.id}">
-                <a name="${column.id}"></a>
-                <div class="mcr-column-head vui-flex-row">
-                    <div class="mcr-icon mcr-icon-annotation"></div>
-                    <div>${column.name}</div>
-                </div>
-                ${content}
-            </div>`;
+    return {
+        icon: 'annotation',
+        content
+    };
 };
 
 const renderItemAttachments = (item, column) => {
@@ -337,17 +332,47 @@ const renderItemAttachments = (item, column) => {
     });
 
     const content = list.join('');
+    if (!content) {
+        return;
+    }
 
-    return `<div class="mcr-item-column mcr-item-${column.id}">
-                <a name="${column.id}"></a>
-                <div class="mcr-column-head vui-flex-row">
-                    <div class="mcr-icon mcr-icon-attachment"></div>
-                    <div>${column.name}</div>
-                </div>
-                ${content}
-            </div>`;
-
+    return {
+        icon: 'attachment',
+        content
+    };
 };
+
+// ===========================================================================
+
+const renderItemCustom = (item, column) => {
+
+    // not detailed default columns here
+    // must be boolean false not undefined
+    if (column.detailed === false) {
+        return;
+    }
+
+    let value = item[column.id];
+
+    // do not show null value
+    if (value === null || typeof value === 'undefined') {
+        return;
+    }
+
+    if (typeof column.formatter === 'function') {
+        value = column.formatter(value, item, column);
+    }
+
+    // if markdown is true
+    const content = column.markdown ? markdownParse(value) : `<div>${value}</div>`;
+
+    return {
+        custom: true,
+        content
+    };
+};
+
+// ===========================================================================
 
 const generateSteps = (list, steps) => {
     if (!Util.isList(steps)) {
@@ -359,26 +384,10 @@ const generateSteps = (list, steps) => {
     });
 };
 
-const convertHtml = (str) => {
-
-    // link
-    // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
-    // str = str.replace(re, function(a) {
-    //     return `<a href="${a}" target="_blank">${a}</a>`;
-    // });
-
-    str = convert.toHtml(str);
-
-    return str;
-};
-
 const positionHandler = (position) => {
     // console.log('position', position);
 
     clearTimeout(state.timeout_position);
-    if (!state.$detail) {
-        return;
-    }
 
     // wait for rendered like image
     state.timeout_position = setTimeout(() => {
@@ -388,8 +397,14 @@ const positionHandler = (position) => {
 };
 
 const renderPosition = (position) => {
+
+    const $el = el.value;
+    if (!$el) {
+        return;
+    }
+
     if (position) {
-        const elem = state.$detail.querySelector(`[name="${position}"]`);
+        const elem = $el.querySelector(`[name="${position}"]`);
         if (elem) {
             elem.scrollIntoView({
                 behavior: 'smooth'
@@ -399,9 +414,55 @@ const renderPosition = (position) => {
     }
 
     // reset to top
-    state.$detail.scrollTo({
+    $el.scrollTo({
         top: 0,
         behavior: 'smooth'
+    });
+
+};
+
+const initDataList = (caseItem) => {
+
+    const list = [];
+
+    // suites
+    let suite = caseItem.parent;
+    while (suite) {
+        list.push(suite);
+        suite = suite.parent;
+    }
+    list.reverse();
+
+    // case
+    list.push(caseItem);
+
+    // steps
+    generateSteps(list, caseItem.steps);
+
+    data.list = list.map((item) => {
+
+        let columns = [];
+        generateItemColumns(columns, item, state.columns);
+
+        if (columns.length) {
+            columns.forEach((c) => {
+                c.key = Math.random().toString().slice(2);
+            });
+        } else {
+            columns = null;
+        }
+
+        const left = item.level * 15;
+
+        return {
+            data: item,
+            key: Math.random().toString().slice(2),
+            style: `margin-left:${left}px;`,
+            icon: item.okIcon || item.type,
+            size: item.okIcon ? '20px' : '16px',
+            gap: item.type === 'step' ? '0' : '5px',
+            columns
+        };
     });
 
 };
@@ -415,16 +476,11 @@ const update = (caseItem, position) => {
 
     state.caseItem = caseItem;
 
-    renderTree();
+    initDataList(caseItem);
 
     positionHandler(position);
 
 };
-
-const el = ref(null);
-onMounted(() => {
-    state.$detail = el.value;
-});
 
 watch([
     () => state.caseItem,
@@ -466,45 +522,15 @@ watch([
     }
 
     &.mcr-item-root::before {
-        left: 0;
-        background-image: url("../images/root.svg");
+        background-image: none;
     }
 }
 
 .mcr-item-head {
-    padding: 8px 5px;
-
-    &::after {
-        content: "";
-        display: block;
-        clear: both;
-    }
-
-    > * {
-        margin-left: 5px;
-    }
-
-    > *:first-child {
-        margin-left: 0;
-    }
-
-    .mcr-icon,
-    .mcr-item-title {
-        float: left;
-    }
-
-    .mcr-item-duration {
-        float: right;
-    }
-
     .mcr-item-location {
-        float: right;
         font-style: italic;
+        opacity: 0.6;
     }
-}
-
-.mcr-item-root .mcr-item-head {
-    padding-left: 15px;
 }
 
 .tg-case-failed {
@@ -525,27 +551,9 @@ watch([
     color: red;
 }
 
-.mcr-item-suite .mcr-item-title {
-    font-weight: bold;
-}
-
-.mcr-item-body {
-    > div:last-child {
-        margin-bottom: 0;
-        border-bottom: none;
-    }
-
-    .mcr-column-head {
-        align-items: end;
+.mcr-item-suite {
+    .mcr-item-title {
         font-weight: bold;
-
-        .mcr-icon {
-            margin-right: 2px;
-
-            ~ div {
-                font-size: 16px;
-            }
-        }
     }
 }
 
@@ -555,19 +563,34 @@ watch([
     border-bottom: thin solid #d7e0e4;
     background-color: #f6f8fa;
     overflow-x: auto;
+}
 
-    > p {
-        font-family: Menlo, Consolas, monospace;
-        line-height: initial;
-        white-space: pre;
+.mcr-item-body {
+    .mcr-item-column:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .mcr-column-head {
+        font-weight: bold;
     }
 }
 
 .mcr-item-errors {
     background-color: var(--bg-failed);
 
-    > .mcr-column-head {
+    .mcr-column-head {
         color: #d00;
+    }
+}
+
+.mcr-item-errors,
+.mcr-item-logs {
+    .mcr-column-content {
+        margin-top: 10px;
+        font-family: Menlo, Consolas, monospace;
+        line-height: initial;
+        white-space: pre;
     }
 }
 
@@ -586,10 +609,6 @@ watch([
     padding: 5px 0;
 }
 
-.mcr-column-custom .mcr-column-head {
-    margin-right: 10px;
-}
-
 .mcr-item-image {
     a {
         display: block;
@@ -599,21 +618,6 @@ watch([
         display: block;
         max-height: 350px;
     }
-}
-
-.mcr-detail-head {
-    padding: 10px;
-    font-weight: bold;
-    font-size: 16px;
-    border-bottom: thin solid #ccc;
-}
-
-.mcr-detail-body {
-    padding: 10px;
-}
-
-.mcr-error {
-    overflow: auto;
 }
 
 </style>

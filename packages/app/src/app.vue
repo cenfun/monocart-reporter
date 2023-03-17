@@ -171,9 +171,11 @@ const initSummary = (rows, summary) => {
             item.collapsed = true;
         }
         if (item.ok) {
+            item.okIcon = 'passed';
             if (Util.isSkipped(item)) {
                 item.classMap = 'tg-case-skipped';
                 item.caseType = 'skipped';
+                item.okIcon = 'skipped';
             } else if (item.outcome === 'flaky') {
                 item.classMap = 'tg-case-flaky';
                 item.caseType = 'flaky';
@@ -184,6 +186,7 @@ const initSummary = (rows, summary) => {
         } else {
             item.classMap = 'tg-case-failed';
             item.caseType = 'failed';
+            item.okIcon = 'failed';
         }
     };
 
@@ -379,9 +382,9 @@ onMounted(() => {
 
     initTooltip();
 
-    setTimeout(() => {
-        onMenuClick();
-    });
+    // setTimeout(() => {
+    //     onMenuClick();
+    // });
 });
 
 let timeout_search;
@@ -476,56 +479,8 @@ icon
     opacity: 1;
 }
 
-.mcr-icon-passed {
-    background-image: url("./images/passed.svg");
-}
-
-.mcr-icon-skipped {
-    background-image: url("./images/skipped.svg");
-}
-
-.mcr-icon-failed {
-    background-image: url("./images/failed.svg");
-}
-
-.mcr-icon-suite {
-    background-image: url("./images/suite.svg");
-
-    ~ .mcr-item-title {
-        margin-left: 3px;
-    }
-}
-
-.mcr-icon-case {
-    background-image: url("./images/case.svg");
-}
-
-.mcr-icon-step {
-    background-image: url("./images/step.svg");
-
-    ~ .mcr-item-title {
-        margin-left: 0;
-    }
-}
-
-.mcr-icon-annotation {
-    background-image: url("./images/annotation.svg");
-}
-
 .mcr-icon-info {
     background-image: url("./images/info.svg");
-}
-
-.mcr-icon-error {
-    background-image: url("./images/error.svg");
-}
-
-.mcr-icon-log {
-    background-image: url("./images/log.svg");
-}
-
-.mcr-icon-attachment {
-    background-image: url("./images/attachment.svg");
 }
 
 .mcr-icon-ok {
@@ -542,15 +497,6 @@ icon
     background-size: 16px 16px;
     cursor: default;
     opacity: 1;
-}
-
-.tg-cell .mcr-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    transform: translate(-50%, -50%);
 }
 
 .mcr-header {
@@ -682,6 +628,16 @@ icon
     }
 }
 
+.tg-cell .mcr-icon,
+.tg-cell .mcr-icon-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+}
+
 .mcr-grid {
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {
@@ -763,10 +719,6 @@ flyover
     right: 0;
     width: 20px;
     height: 100%;
-
-    .mcr-icon {
-        opacity: 1;
-    }
 }
 
 .vui-flyover-main {

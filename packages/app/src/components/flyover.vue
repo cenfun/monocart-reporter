@@ -20,19 +20,19 @@
       />
     </VuiFlex>
     <div class="vui-flyover-content vui-flex-auto">
-      <CaseDetail v-show="state.caseItem" />
-      <MenuDetail v-show="!state.caseItem" />
+      <Detail v-show="state.caseItem" />
+      <Report v-show="!state.caseItem" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { components } from 'vine-ui';
-import CaseDetail from './case-detail.vue';
-import MenuDetail from './menu-detail.vue';
-import IconLabel from './icon-label.vue';
-
 import state from '../modules/state.js';
+
+import Detail from './detail.vue';
+import Report from './report.vue';
+import IconLabel from './icon-label.vue';
 
 const { VuiFlex } = components;
 

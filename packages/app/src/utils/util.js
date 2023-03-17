@@ -46,38 +46,6 @@ const Util = {
         return item.status === 'skipped' || item.outcome === 'skipped';
     },
 
-    getIconOk: function(item) {
-        const list = ['mcr-icon', 'mcr-icon-ok'];
-        if (item.ok) {
-            if (Util.isSkipped(item)) {
-                list.push('mcr-icon-skipped');
-            } else {
-                list.push('mcr-icon-passed');
-            }
-        } else {
-            list.push('mcr-icon-failed');
-        }
-
-        const cls = list.join(' ');
-
-        return `<div class="${cls}"></div>`;
-    },
-
-    getIconType: function(value) {
-        const types = {
-            suite: 'suite',
-            case: 'case',
-            step: 'step'
-        };
-        const type = types[value];
-        if (!type) {
-            return '';
-        }
-        const list = ['mcr-icon', 'mcr-icon-type', `mcr-icon-${type}`];
-        const cls = list.join(' ');
-        return `<div class="${cls}"></div>`;
-    },
-
     // =============================================================================
     // hash
     getHash(key) {
