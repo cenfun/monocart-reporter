@@ -18,8 +18,14 @@
         >
           <VuiFlex :gap="item.gap">
             <IconLabel
+              v-if="item.data.okIcon"
+              :icon="item.data.okIcon"
+              size="20px"
+              :button="false"
+            />
+            <IconLabel
+              v-else
               :icon="item.icon"
-              :size="item.size"
               :button="false"
             />
             <div class="mcr-item-title">
@@ -452,15 +458,14 @@ const initDataList = (caseItem) => {
             columns = null;
         }
 
-        const left = item.level * 15;
+        const left = item.level * 13;
 
         return {
             data: item,
             key: Math.random().toString().slice(2),
             style: `margin-left:${left}px;`,
-            icon: item.okIcon || item.type,
-            size: item.okIcon ? '20px' : '16px',
-            gap: item.type === 'step' ? '0' : '5px',
+            icon: item.type,
+            gap: item.type === 'step' ? '2px' : '5px',
             columns
         };
     });
@@ -542,7 +547,7 @@ watch([
 .mcr-item-column {
     padding: 8px 5px;
     color: #333;
-    border-top: thin dashed #d7e0e4;
+    border-top: thin dashed #eee;
     overflow-x: auto;
 }
 
