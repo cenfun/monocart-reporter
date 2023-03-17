@@ -110,6 +110,8 @@ test.describe('suite group 1', () => {
 
             console.error('stderr: failed case error');
 
+            console.log(test.info().config.reporter);
+
             expect('passed').toBe('failed');
         });
 

@@ -505,25 +505,7 @@ watch([
 .mcr-item {
     position: relative;
     border-bottom: thin solid #ccc;
-
-    &::before {
-        position: absolute;
-        top: 8px;
-        left: -10px;
-        content: "";
-        display: block;
-        width: 10px;
-        height: 20px;
-        background-image: url("../images/level.svg");
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: 10px 20px;
-        overflow: hidden;
-    }
-
-    &.mcr-item-root::before {
-        background-image: none;
-    }
+    border-left: thin solid #ccc;
 }
 
 .mcr-item-head {
@@ -558,22 +540,20 @@ watch([
 }
 
 .mcr-item-column {
-    padding: 10px;
+    padding: 8px 5px;
     color: #333;
-    border-bottom: thin solid #d7e0e4;
-    background-color: #f6f8fa;
+    border-top: thin dashed #d7e0e4;
     overflow-x: auto;
 }
 
 .mcr-item-body {
-    .mcr-item-column:last-child {
-        margin-bottom: 0;
-        border-bottom: none;
-    }
-
     .mcr-column-head {
         font-weight: bold;
     }
+}
+
+.mcr-item-logs {
+    background-color: #fcfcfc;
 }
 
 .mcr-item-errors {
@@ -587,7 +567,7 @@ watch([
 .mcr-item-errors,
 .mcr-item-logs {
     .mcr-column-content {
-        margin-top: 10px;
+        padding: 5px;
         font-family: Menlo, Consolas, monospace;
         line-height: initial;
         white-space: pre;
@@ -600,6 +580,8 @@ watch([
 }
 
 .mcr-item-annotations {
+    background-color: #f6f8fa;
+
     .markdown-body {
         margin-top: 5px;
     }
