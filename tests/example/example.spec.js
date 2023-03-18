@@ -126,6 +126,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
          * @annotations issue [link](https://github.com/cenfun/monocart-reporter)
          * @jira MCR-16933
          */
+
         test('annotations from comments', () => {
 
         });
@@ -134,6 +135,8 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
          * @owner Mark
          * @jira MCR-16936
          */
+
+
         test('case failed', () => {
 
             console.log('stdout: failed case log');
