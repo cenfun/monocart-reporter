@@ -109,8 +109,8 @@ module.exports = {
                 // });
 
                 defaultColumns.push({
-                    id: 'spec',
-                    name: 'Spec',
+                    id: 'description',
+                    name: 'Description',
                     markdown: true,
                     searchable: true
                 });
