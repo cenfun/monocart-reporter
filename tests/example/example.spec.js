@@ -86,9 +86,11 @@ test.describe('suite group 1', () => {
         // https://playwright.dev/docs/test-annotations#custom-annotations
         test('custom annotations', () => {
             test.info().annotations.push({
+                type: 'issues', description: ['MCR-666', 'MCR-888']
+            });
+            test.info().annotations.push({
                 type: 'markdown',
-                description: `- [monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)
-- [playwright/custom-annotations](https://playwright.dev/docs/test-annotations#custom-annotations)`
+                description: '[monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)'
             });
         });
 

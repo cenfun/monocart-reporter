@@ -14,7 +14,12 @@ const matchedFormatter = function(value, rowItem, columnItem) {
     return value;
 };
 
-const annotationListFormatter = (list) => {
+// for row filter, must be list
+const annotationSearchFormatter = (list) => {
+    return list.map((it) => Object.values(it).join(' ')).filter((it) => it).join(' ');
+};
+
+const annotationTypeFormatter = (list) => {
     return list.map((it) => it.type).filter((it) => it).join(' ');
 };
 
@@ -109,8 +114,8 @@ const formatters = {
         if (formattedValue === value) {
             if (Util.isList(value)) {
                 // only show type in grid
-                formattedValue = annotationListFormatter(value);
-            } else if (typeof value === 'string' && columnItem.markdown) {
+                formattedValue = annotationTypeFormatter(value);
+            } else if (columnItem.markdown) {
                 formattedValue = markdownFormatter(value, true);
             }
         }
@@ -148,5 +153,5 @@ export {
     formatters,
     matchedFormatter,
     markdownFormatter,
-    annotationListFormatter
+    annotationSearchFormatter
 };

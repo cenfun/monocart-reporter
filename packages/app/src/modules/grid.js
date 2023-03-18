@@ -3,7 +3,7 @@ import fuzzy from 'fuzzy';
 
 import Util from '../utils/util.js';
 import {
-    formatters, matchedFormatter, annotationListFormatter
+    formatters, matchedFormatter, annotationSearchFormatter
 } from './formatters.js';
 import store from '../utils/store.js';
 import state from '../modules/state.js';
@@ -339,7 +339,7 @@ const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
 
         // annotations array
         if (k === 'annotations' && Util.isList(str)) {
-            str = annotationListFormatter(str);
+            str = annotationSearchFormatter(str);
         }
 
         if (typeof str === 'string') {

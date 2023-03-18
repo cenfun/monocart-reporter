@@ -246,38 +246,37 @@ const getLogs = (item, column) => {
 
 const getAnnotations = (item, column) => {
     let annotations = item.annotations;
-    if (!annotations) {
-        return;
-    }
 
-    // string
-    if (!Util.isList(annotations)) {
+    // must be list or string
+    if (typeof annotations === 'string' && annotations) {
         annotations = [{
             description: annotations
         }];
     }
 
+    if (!Util.isList(annotations)) {
+        return;
+    }
+
     const list = annotations.map((annotation) => {
+        return Object.keys(annotation).map((k) => {
+            const v = annotation[k];
+            if (v === null || typeof v === 'undefined') {
+                return '';
+            }
+            if (k === 'type') {
+                return `<div class="mcr-annotation-type">${v}</div>`;
+            }
 
-        if (column.markdown) {
-            return Object.keys(annotation).map((k) => {
-                const v = annotation[k];
-                if (v === null || typeof v === 'undefined') {
-                    return '';
-                }
-                if (k === 'type') {
-                    return `<div class="mcr-annotation-type">${v}</div>`;
-                }
-                return markdownFormatter(v);
-            }).filter((it) => it).join('');
-        }
+            // test.info().annotations.push({ type: 'issues', description: ['foo', 'bar'] });
+            // description is object or array
+            if (typeof v === 'object') {
+                // console.log(annotations, k, v);
+                return `<pre><code>${JSON.stringify(v, null, 4)}</code></pre>`;
+            }
 
-        const ls = Object.values(annotation).filter((v) => v);
-        if (ls.length) {
-            return `<p>${ls.join('</p><p>')}</p>`;
-        }
-
-        return '';
+            return markdownFormatter(v);
+        }).filter((it) => it).join('');
     });
 
     const content = list.join('');
@@ -604,7 +603,7 @@ watch([
     .mcr-column-content {
         margin-top: 5px;
         padding: 5px;
-        font-family: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
+        font-family: var(--font-monospace);
         line-height: initial;
         white-space: pre;
     }
@@ -618,13 +617,21 @@ watch([
         flex-direction: column;
         gap: 5px;
         margin-top: 5px;
-        padding: 5px;
+        padding: 10px;
         border-radius: 5px;
         background-color: #fff;
+
+        pre {
+            margin: 0;
+            padding: 5px 0;
+
+            code {
+                font-family: var(--font-monospace);
+            }
+        }
     }
 
     .mcr-annotation-type {
-        padding: 5px;
         font-weight: bold;
     }
 }

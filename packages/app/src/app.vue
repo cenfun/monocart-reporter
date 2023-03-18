@@ -442,6 +442,8 @@ window.addEventListener('keydown', (e) => {
 <style lang="scss">
 html,
 body {
+    --font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
+
     width: 100%;
     height: 100%;
     margin: 0;
