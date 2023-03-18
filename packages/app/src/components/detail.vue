@@ -104,10 +104,10 @@ import { components } from 'vine-ui';
 import 'github-markdown-css/github-markdown-light.css';
 
 import Convert from 'ansi-to-html';
-import { marked } from 'marked';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
+import { markdownFormatter } from '../modules/formatters.js';
 
 import IconLabel from './icon-label.vue';
 
@@ -155,27 +155,6 @@ const convertHtml = (str) => {
 
     str = convert.toHtml(str);
 
-    return str;
-};
-
-// ===========================================================================
-// annotations markdown html
-
-// add target="_blank" for link
-const renderer = new marked.Renderer();
-renderer.link = function(href, title, text) {
-    const link = marked.Renderer.prototype.link.apply(this, arguments);
-    return link.replace('<a', '<a target="_blank"');
-};
-marked.setOptions({
-    renderer: renderer
-});
-
-const markdownParse = (str) => {
-    const html = marked.parse(str);
-    if (html) {
-        return `<div class="markdown-body">${html}</div>`;
-    }
     return str;
 };
 
@@ -281,16 +260,16 @@ const getAnnotations = (item, column) => {
     const list = annotations.map((annotation) => {
 
         if (column.markdown) {
-            const ls = Object.keys(annotation).filter((k) => annotation[k]).map((k) => {
-                if (k === 'type') {
-                    return `> ${annotation[k]}`;
+            return Object.keys(annotation).map((k) => {
+                const v = annotation[k];
+                if (v === null || typeof v === 'undefined') {
+                    return '';
                 }
-                return annotation[k];
-            });
-            if (ls.length) {
-                return markdownParse(ls.join('\r\n'));
-            }
-            return '';
+                if (k === 'type') {
+                    return `<div class="mcr-annotation-type">${v}</div>`;
+                }
+                return markdownFormatter(v);
+            }).filter((it) => it).join('');
         }
 
         const ls = Object.values(annotation).filter((v) => v);
@@ -380,7 +359,7 @@ const getCustom = (item, column) => {
     if (typeof column.formatter === 'function') {
         content = column.formatter(value, item, column);
     } else if (column.markdown) {
-        content = markdownParse(value);
+        content = markdownFormatter(value);
     }
 
     return {
@@ -634,11 +613,19 @@ watch([
 .mcr-item-annotations {
     background-color: #f6f8fa;
 
-    .markdown-body {
+    .mcr-column-content {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
         margin-top: 5px;
-        margin-right: 5px;
         padding: 5px;
         border-radius: 5px;
+        background-color: #fff;
+    }
+
+    .mcr-annotation-type {
+        padding: 5px;
+        font-weight: bold;
     }
 }
 

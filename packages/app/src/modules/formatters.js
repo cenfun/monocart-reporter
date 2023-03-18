@@ -1,6 +1,9 @@
 import { createApp } from 'vue';
+import { marked } from 'marked';
+
 import IconLabel from '../components/icon-label.vue';
 import Util from '../utils/util.js';
+
 
 const matchedFormatter = function(value, rowItem, columnItem) {
     const id = columnItem.id;
@@ -11,7 +14,7 @@ const matchedFormatter = function(value, rowItem, columnItem) {
     return value;
 };
 
-const annotationsFormatter = (list) => {
+const annotationListFormatter = (list) => {
     return list.map((it) => it.type).filter((it) => it).join(' ');
 };
 
@@ -23,6 +26,29 @@ const iconFormatter = (icon, size = '16px', button = false) => {
         button
     }).mount(div);
     return div;
+};
+
+// ===========================================================================
+// annotations markdown html
+
+// add target="_blank" for link
+const renderer = new marked.Renderer();
+renderer.link = function(href, title, text) {
+    const link = marked.Renderer.prototype.link.apply(this, arguments);
+    return link.replace('<a', '<a target="_blank"');
+};
+marked.setOptions({
+    renderer: renderer
+});
+
+const markdownFormatter = (str, inline) => {
+    if (typeof str !== 'string') {
+        return str;
+    }
+    if (inline) {
+        return marked.parseInline(str);
+    }
+    return `<div class="markdown-body">${marked.parse(str)}</div>`;
 };
 
 const formatters = {
@@ -79,14 +105,17 @@ const formatters = {
 
     annotations: function(value, rowItem, columnItem) {
 
-        value = matchedFormatter(value, rowItem, columnItem);
-
-        if (Util.isList(value)) {
-            // only show type in grid
-            value = annotationsFormatter(value);
+        let formattedValue = matchedFormatter(value, rowItem, columnItem);
+        if (formattedValue === value) {
+            if (Util.isList(value)) {
+                // only show type in grid
+                formattedValue = annotationListFormatter(value);
+            } else if (typeof value === 'string' && columnItem.markdown) {
+                formattedValue = markdownFormatter(value, true);
+            }
         }
-        if (value) {
-            return `<span class="mcr-clickable">${value}</span>`;
+        if (formattedValue) {
+            return `<span class="mcr-clickable">${formattedValue}</span>`;
         }
         return '';
     },
@@ -118,5 +147,6 @@ const formatters = {
 export {
     formatters,
     matchedFormatter,
-    annotationsFormatter
+    markdownFormatter,
+    annotationListFormatter
 };
