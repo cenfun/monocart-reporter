@@ -108,6 +108,13 @@ module.exports = {
                 //     }]
                 // });
 
+                defaultColumns.push({
+                    id: 'spec',
+                    name: 'Spec',
+                    markdown: true,
+                    searchable: true
+                });
+
                 // hide a default column
                 // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
                 // retryColumn.invisible = true;

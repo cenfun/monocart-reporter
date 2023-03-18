@@ -358,6 +358,7 @@ const getCustom = (item, column) => {
 
     return {
         simple,
+        icon: 'custom',
         content
     };
 };
@@ -593,13 +594,15 @@ watch([
     }
 }
 
+.mcr-column-content {
+    padding: 5px;
+}
+
 .mcr-item-errors,
 .mcr-item-logs {
     .mcr-column-content {
         margin-top: 5px;
-        padding: 5px;
         font-family: var(--font-monospace);
-        line-height: initial;
         white-space: pre;
     }
 }
