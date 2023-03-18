@@ -1,3 +1,10 @@
+* 1.4.0
+  - fixed collection of comments (support skipped empty lines)
+  - fixed annotations formatter
+  - updated UI/icons
+  - added pie chart
+
+---
 
 * 1.3.3
   - added Testrail Integration
