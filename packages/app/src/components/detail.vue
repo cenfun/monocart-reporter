@@ -33,56 +33,61 @@
             </div>
           </VuiFlex>
 
+          <template v-if="item.customColumns">
+            <VuiFlex
+              v-for="custom in item.customColumns"
+              :key="custom.key"
+              gap="5px"
+              wrap
+              class="mcr-column-custom"
+            >
+              <div class="mcr-column-head">
+                {{ custom.data.name }}:
+              </div>
+              <div v-html="custom.content" />
+            </VuiFlex>
+          </template>
+
+
           <div class="vui-flex-auto" />
-          <div
-            v-if="item.data.location"
-            class="mcr-item-location"
-          >
-            {{ item.data.location }}
-          </div>
+
           <div
             v-if="Util.isNum(item.data.duration)"
             class="mcr-item-duration"
           >
             {{ Util.DTF(item.data.duration) }}
           </div>
+
+          <div
+            v-if="item.data.location"
+            class="mcr-item-location"
+          >
+            {{ item.data.location }}
+          </div>
         </VuiFlex>
         <div
-          v-if="item.columns"
+          v-if="item.detailColumns"
           class="mcr-item-body"
         >
           <div
-            v-for="column in item.columns"
+            v-for="column in item.detailColumns"
             :key="column.key"
             :class="itemColumnClass(column.data)"
           >
             <a :name="column.data.id" />
 
-            <template v-if="column.custom">
-              <VuiFlex
-                gap="5px"
-                wrap
-              >
-                <div class="mcr-column-head">
-                  {{ column.data.name }}
-                </div>
-                <div v-html="column.content" />
-              </VuiFlex>
-            </template>
-            <template v-else>
-              <IconLabel
-                :icon="column.icon"
-                size="20px"
-                :button="false"
-                class="mcr-column-head"
-              >
-                {{ column.data.name }}
-              </IconLabel>
-              <div
-                class="mcr-column-content"
-                v-html="column.content"
-              />
-            </template>
+            <IconLabel
+              :icon="column.icon"
+              size="20px"
+              :button="false"
+              class="mcr-column-head"
+            >
+              {{ column.data.name }}
+            </IconLabel>
+            <div
+              class="mcr-column-content"
+              v-html="column.content"
+            />
           </div>
         </div>
       </div>
@@ -175,37 +180,37 @@ const markdownParse = (str) => {
 
 // ===========================================================================
 
-const generateItemColumns = (list, item, columns) => {
+const getColumns = (list, item, columns) => {
 
     columns.forEach((column) => {
 
-        const result = generateItemColumn(item, column);
+        const result = getColumn(item, column);
         if (result) {
             list.push(result);
         }
 
         if (Util.isList(column.subs)) {
-            generateItemColumns(list, item, column.subs);
+            getColumns(list, item, column.subs);
         }
 
     });
 
 };
 
-const generateItemColumn = (item, column) => {
+const getColumn = (item, column) => {
 
     if (!column.name) {
         return;
     }
 
     const defaultHandler = {
-        errors: renderItemErrors,
-        logs: renderItemLogs,
-        annotations: renderItemAnnotations,
-        attachments: renderItemAttachments
+        errors: getErrors,
+        logs: getLogs,
+        annotations: getAnnotations,
+        attachments: getAttachments
     };
 
-    const handler = defaultHandler[column.id] || renderItemCustom;
+    const handler = defaultHandler[column.id] || getCustom;
 
     const res = handler(item, column);
     if (res) {
@@ -217,7 +222,7 @@ const generateItemColumn = (item, column) => {
 
 // ===========================================================================
 
-const renderItemErrors = (item, column) => {
+const getErrors = (item, column) => {
     const errors = item.errors;
     if (!Util.isList(errors)) {
         return;
@@ -238,7 +243,7 @@ const renderItemErrors = (item, column) => {
     };
 };
 
-const renderItemLogs = (item, column) => {
+const getLogs = (item, column) => {
     const logs = item.logs;
     if (!Util.isList(logs)) {
         return;
@@ -259,7 +264,7 @@ const renderItemLogs = (item, column) => {
     };
 };
 
-const renderItemAnnotations = (item, column) => {
+const getAnnotations = (item, column) => {
     let annotations = item.annotations;
     if (!annotations) {
         return;
@@ -306,7 +311,7 @@ const renderItemAnnotations = (item, column) => {
     };
 };
 
-const renderItemAttachments = (item, column) => {
+const getAttachments = (item, column) => {
     const attachments = item.attachments;
     if (!Util.isList(attachments)) {
         return;
@@ -350,7 +355,7 @@ const renderItemAttachments = (item, column) => {
 
 // ===========================================================================
 
-const renderItemCustom = (item, column) => {
+const getCustom = (item, column) => {
 
     // not detailed default columns here
     // must be boolean false not undefined
@@ -380,13 +385,13 @@ const renderItemCustom = (item, column) => {
 
 // ===========================================================================
 
-const generateSteps = (list, steps) => {
+const getSteps = (list, steps) => {
     if (!Util.isList(steps)) {
         return;
     }
     steps.forEach((item) => {
         list.push(item);
-        generateSteps(list, item.subs);
+        getSteps(list, item.subs);
     });
 };
 
@@ -397,12 +402,12 @@ const positionHandler = (position) => {
 
     // wait for rendered like image
     state.timeout_position = setTimeout(() => {
-        renderPosition(position);
+        updatePosition(position);
     }, 100);
 
 };
 
-const renderPosition = (position) => {
+const updatePosition = (position) => {
 
     const $el = el.value;
     if (!$el) {
@@ -443,19 +448,31 @@ const initDataList = (caseItem) => {
     list.push(caseItem);
 
     // steps
-    generateSteps(list, caseItem.steps);
+    getSteps(list, caseItem.steps);
 
     data.list = list.map((item) => {
 
-        let columns = [];
-        generateItemColumns(columns, item, state.columns);
+        let customColumns;
+        let detailColumns;
+        const allColumns = [];
+        getColumns(allColumns, item, state.columns);
 
-        if (columns.length) {
-            columns.forEach((c) => {
+        if (allColumns.length) {
+            allColumns.forEach((c) => {
                 c.key = Math.random().toString().slice(2);
+                if (c.custom) {
+                    if (!customColumns) {
+                        customColumns = [];
+                    }
+                    customColumns.push(c);
+                } else {
+
+                    if (!detailColumns) {
+                        detailColumns = [];
+                    }
+                    detailColumns.push(c);
+                }
             });
-        } else {
-            columns = null;
         }
 
         const left = item.level * 13;
@@ -466,7 +483,8 @@ const initDataList = (caseItem) => {
             style: `margin-left:${left}px;`,
             icon: item.type,
             gap: item.type === 'step' ? '2px' : '5px',
-            columns
+            customColumns,
+            detailColumns
         };
     });
 
@@ -514,6 +532,18 @@ watch([
 }
 
 .mcr-item-head {
+    &:hover::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(0 0 0 / 2%);
+        pointer-events: none;
+    }
+
     .mcr-item-location {
         font-style: italic;
         opacity: 0.6;
