@@ -107,7 +107,7 @@ import Convert from 'ansi-to-html';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
-import { markdownFormatter } from '../modules/formatters.js';
+import { markdownFormatter, mergeAnnotations } from '../modules/formatters.js';
 
 import IconLabel from './icon-label.vue';
 
@@ -245,39 +245,34 @@ const getLogs = (item, column) => {
 };
 
 const getAnnotations = (item, column) => {
-    let annotations = item.annotations;
+    const annotations = item.annotations;
 
-    // must be list or string
+    // string
     if (typeof annotations === 'string' && annotations) {
-        annotations = [{
-            description: annotations
-        }];
+        return {
+            icon: 'annotation',
+            content: `<div class="mcr-column-annotation">${markdownFormatter(annotations, true)}</div>`
+        };
     }
 
     if (!Util.isList(annotations)) {
         return;
     }
+    // must be list
+    const map = mergeAnnotations(annotations);
+    console.log(map);
 
-    const list = annotations.map((annotation) => {
-        return Object.keys(annotation).map((k) => {
-            const v = annotation[k];
-            if (v === null || typeof v === 'undefined') {
-                return '';
+    const list = Object.keys(map).map((k) => {
+        const res = [`<b>${k}</b>`];
+        const v = map[k];
+        v.forEach((des) => {
+            if (des) {
+                res.push(`<span>${markdownFormatter(des, true)}</span>`);
             }
-            if (k === 'type') {
-                return `<div class="mcr-annotation-type">${v}</div>`;
-            }
-
-            // test.info().annotations.push({ type: 'issues', description: ['foo', 'bar'] });
-            // description is object or array
-            if (typeof v === 'object') {
-                // console.log(annotations, k, v);
-                return `<pre><code>${JSON.stringify(v, null, 4)}</code></pre>`;
-            }
-
-            return markdownFormatter(v);
-        }).filter((it) => it).join('');
+        });
+        return `<div class="mcr-column-annotation">${res.join('')}</div>`;
     });
+    console.log(list);
 
     const content = list.join('');
     if (!content) {
@@ -621,18 +616,11 @@ watch([
         border-radius: 5px;
         background-color: #fff;
 
-        pre {
-            margin: 0;
-            padding: 5px 0;
-
-            code {
-                font-family: var(--font-monospace);
-            }
+        .mcr-column-annotation {
+            display: flex;
+            flex-flow: row wrap;
+            gap: 10px;
         }
-    }
-
-    .mcr-annotation-type {
-        font-weight: bold;
     }
 }
 

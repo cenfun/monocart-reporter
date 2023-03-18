@@ -86,12 +86,32 @@ test.describe('suite group 1', () => {
         // https://playwright.dev/docs/test-annotations#custom-annotations
         test('custom annotations', () => {
             test.info().annotations.push({
-                type: 'issues', description: ['MCR-666', 'MCR-888']
+                type: 'issues',
+                description: ['MCR-666', 'MCR-888']
             });
             test.info().annotations.push({
                 type: 'markdown',
                 description: '[monocart-reporter/issues](https://github.com/cenfun/monocart-reporter/issues)'
             });
+        });
+
+        test('skipped test annotations', () => {
+            test.info().annotations.push({
+                type: 'issue', description: '#123'
+            });
+            test.info().annotations.push({
+                type: 'issue', description: '[#456](https://github.com/cenfun/monocart-reporter)'
+            });
+            test.info().annotations.push({
+                type: 'issue', description: 'https://github.com/cenfun/monocart-reporter'
+            });
+            test.info().annotations.push({
+                type: 'issue'
+            });
+            test.info().annotations.push({
+                type: 'empty'
+            });
+            test.skip(true, 'I am not interested in this test');
         });
 
         /**

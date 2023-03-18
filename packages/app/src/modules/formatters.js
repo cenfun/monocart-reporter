@@ -14,13 +14,39 @@ const matchedFormatter = function(value, rowItem, columnItem) {
     return value;
 };
 
+const mergeAnnotations = (list) => {
+    const map = {};
+    list.forEach((item) => {
+        const { type, description } = item;
+        if (!type) {
+            return;
+        }
+
+        if (!map[type]) {
+            map[type] = [];
+        }
+
+        if (description) {
+            if (Array.isArray(description)) {
+                map[type] = map[type].concat(description);
+            } else {
+                map[type].push(description);
+            }
+        }
+
+    });
+    return map;
+};
+
 // for row filter, must be list
 const annotationSearchFormatter = (list) => {
-    return list.map((it) => Object.values(it).join(' ')).filter((it) => it).join(' ');
+    const map = mergeAnnotations(list);
+    return Object.keys(map).map((k) => [k, map[k].join(' ')].join(' ')).join(' ');
 };
 
 const annotationTypeFormatter = (list) => {
-    return list.map((it) => it.type).filter((it) => it).join(' ');
+    const map = mergeAnnotations(list);
+    return Object.keys(map).join(' ');
 };
 
 const iconFormatter = (icon, size = '16px', button = false) => {
@@ -115,7 +141,7 @@ const formatters = {
             if (Util.isList(value)) {
                 // only show type in grid
                 formattedValue = annotationTypeFormatter(value);
-            } else if (columnItem.markdown) {
+            } else {
                 formattedValue = markdownFormatter(value, true);
             }
         }
@@ -153,5 +179,6 @@ export {
     formatters,
     matchedFormatter,
     markdownFormatter,
+    mergeAnnotations,
     annotationSearchFormatter
 };
