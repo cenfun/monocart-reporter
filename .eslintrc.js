@@ -32,6 +32,7 @@ module.exports = {
 
     'rules': {
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
-        'vue/multi-word-component-names': 'off'
+        'vue/multi-word-component-names': 'off',
+        'vue/no-v-html': 'off'
     }
 };

@@ -171,7 +171,6 @@ const initSummary = (rows, summary) => {
             item.collapsed = true;
         }
         if (item.ok) {
-            item.okIcon = 'passed';
             if (Util.isSkipped(item)) {
                 item.classMap = 'tg-case-skipped';
                 item.caseType = 'skipped';
@@ -179,9 +178,11 @@ const initSummary = (rows, summary) => {
             } else if (item.outcome === 'flaky') {
                 item.classMap = 'tg-case-flaky';
                 item.caseType = 'flaky';
+                item.okIcon = 'flaky';
             } else {
                 item.classMap = 'tg-case-passed';
                 item.caseType = 'passed';
+                item.okIcon = 'passed';
             }
         } else {
             item.classMap = 'tg-case-failed';
@@ -496,22 +497,6 @@ icon
 
 .mcr-icon-open {
     background-image: url("./images/open.svg");
-}
-
-.mcr-icon-ok {
-    width: 18px;
-    height: 18px;
-    background-size: 18px 18px;
-    cursor: default;
-    opacity: 1;
-}
-
-.mcr-icon-type {
-    width: 16px;
-    height: 16px;
-    background-size: 16px 16px;
-    cursor: default;
-    opacity: 1;
 }
 
 .mcr-header {

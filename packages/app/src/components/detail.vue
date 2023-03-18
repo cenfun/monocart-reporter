@@ -33,18 +33,18 @@
             </div>
           </VuiFlex>
 
-          <template v-if="item.customColumns">
+          <template v-if="item.simpleColumns">
             <VuiFlex
-              v-for="custom in item.customColumns"
-              :key="custom.key"
+              v-for="column in item.simpleColumns"
+              :key="column.key"
               gap="5px"
               wrap
-              class="mcr-column-custom"
+              class="mcr-column-simple"
             >
               <div class="mcr-column-head">
-                {{ custom.data.name }}
+                {{ column.data.name }}
               </div>
-              <div v-html="custom.content" />
+              <div v-html="column.content" />
             </VuiFlex>
           </template>
 
@@ -324,11 +324,14 @@ const getAttachments = (item, column) => {
         // contentType 'application/json' 'image/png' 'video/webm'
         const contentType = attachment.contentType;
         if (contentType) {
+
             if (contentType.startsWith('image')) {
                 return `<div class="mcr-item-attachment mcr-item-image">
                             <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
                         </div>`;
-            } else if (contentType.startsWith('video')) {
+            }
+
+            if (contentType.startsWith('video')) {
                 return `<div class="mcr-item-attachment mcr-item-video">
                             <video controls height="350">
                                 <source src="${attachment.path}" type="${contentType}">
@@ -364,22 +367,24 @@ const getCustom = (item, column) => {
         return;
     }
 
-    let value = item[column.id];
+    const value = item[column.id];
 
     // do not show null value
     if (value === null || typeof value === 'undefined') {
         return;
     }
 
+    const simple = !column.markdown && !column.detailed;
+
+    let content = value;
     if (typeof column.formatter === 'function') {
-        value = column.formatter(value, item, column);
+        content = column.formatter(value, item, column);
+    } else if (column.markdown) {
+        content = markdownParse(value);
     }
 
-    // if markdown is true
-    const content = column.markdown ? markdownParse(value) : `<div>${value}</div>`;
-
     return {
-        custom: true,
+        simple,
         content
     };
 };
@@ -453,7 +458,7 @@ const initDataList = (caseItem) => {
 
     data.list = list.map((item) => {
 
-        let customColumns;
+        let simpleColumns;
         let detailColumns;
         const allColumns = [];
         getColumns(allColumns, item, state.columns);
@@ -461,13 +466,12 @@ const initDataList = (caseItem) => {
         if (allColumns.length) {
             allColumns.forEach((c) => {
                 c.key = Math.random().toString().slice(2);
-                if (c.custom) {
-                    if (!customColumns) {
-                        customColumns = [];
+                if (c.simple) {
+                    if (!simpleColumns) {
+                        simpleColumns = [];
                     }
-                    customColumns.push(c);
+                    simpleColumns.push(c);
                 } else {
-
                     if (!detailColumns) {
                         detailColumns = [];
                     }
@@ -483,7 +487,7 @@ const initDataList = (caseItem) => {
             key: Math.random().toString().slice(2),
             style: `margin-left:${left}px;`,
             icon: item.type,
-            customColumns,
+            simpleColumns,
             detailColumns
         };
     });
@@ -585,7 +589,7 @@ watch([
     overflow-x: auto;
 }
 
-.mcr-column-custom {
+.mcr-column-simple {
     padding: 3px 8px;
     font-size: 13px;
     border: 1px solid #ddd;
