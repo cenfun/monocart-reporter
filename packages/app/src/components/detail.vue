@@ -13,7 +13,7 @@
         <VuiFlex
           :class="itemHeadClass(item.data)"
           gap="10px"
-          padding="8px 5px"
+          padding="5px"
           wrap
         >
           <VuiFlex gap="5px">
@@ -74,8 +74,9 @@
             :key="column.key"
             :class="itemColumnClass(column.data)"
           >
-            <a :name="column.data.id" />
-
+            <div class="mcr-column-anchor">
+              <a :name="column.data.id" />
+            </div>
             <IconLabel
               :icon="column.icon"
               size="20px"
@@ -318,7 +319,7 @@ const getAttachments = (item, column) => {
     }
 
     const list = attachments.map((attachment) => {
-        console.log(attachment);
+        // console.log(attachment);
 
         // contentType 'application/json' 'image/png' 'video/webm'
         const contentType = attachment.contentType;
@@ -531,6 +532,8 @@ watch([
 }
 
 .mcr-item-head {
+    min-height: 35px;
+
     &:hover::after {
         position: absolute;
         top: 0;
@@ -575,6 +578,7 @@ watch([
 }
 
 .mcr-item-column {
+    position: relative;
     padding: 5px;
     color: #333;
     border-top: thin dashed #eee;
@@ -593,6 +597,11 @@ watch([
     .mcr-column-head {
         font-weight: bold;
     }
+}
+
+.mcr-column-anchor {
+    position: absolute;
+    top: 0;
 }
 
 .mcr-item-logs {
@@ -630,7 +639,7 @@ watch([
 }
 
 .mcr-item-attachment {
-    padding: 5px 0;
+    padding: 5px;
 }
 
 .mcr-item-image {

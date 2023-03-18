@@ -126,7 +126,7 @@ const bindGridEvents = () => {
 
         const cls = d.e.target.classList;
 
-        const isInfo = position === 'title' && cls.contains('mcr-icon-info');
+        const isInfo = position === 'title' && cls.contains('mcr-icon-open');
 
         const isClickColumn = [
             'ok',

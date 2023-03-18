@@ -64,7 +64,7 @@ const formatters = {
             value = `${value} (${rowItem.tests})`;
         } else if (rowItem.type === 'case') {
             value = `${value} <div class="tg-cell-hover-icon tg-flyover-icon">
-                <div class="mcr-icon mcr-icon-info" />
+                <div class="mcr-icon mcr-icon-open" />
             </div>`;
         }
         return defaultFormatter(value, rowItem, columnItem, cellNode);

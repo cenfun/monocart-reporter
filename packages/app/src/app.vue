@@ -494,8 +494,8 @@ icon
     opacity: 1;
 }
 
-.mcr-icon-info {
-    background-image: url("./images/info.svg");
+.mcr-icon-open {
+    background-image: url("./images/open.svg");
 }
 
 .mcr-icon-ok {
