@@ -16,7 +16,7 @@
           padding="8px 5px"
           wrap
         >
-          <VuiFlex :gap="item.gap">
+          <VuiFlex gap="5px">
             <IconLabel
               v-if="item.data.okIcon"
               :icon="item.data.okIcon"
@@ -42,7 +42,7 @@
               class="mcr-column-custom"
             >
               <div class="mcr-column-head">
-                {{ custom.data.name }}:
+                {{ custom.data.name }}
               </div>
               <div v-html="custom.content" />
             </VuiFlex>
@@ -482,7 +482,6 @@ const initDataList = (caseItem) => {
             key: Math.random().toString().slice(2),
             style: `margin-left:${left}px;`,
             icon: item.type,
-            gap: item.type === 'step' ? '2px' : '5px',
             customColumns,
             detailColumns
         };
@@ -522,7 +521,7 @@ watch([
 }
 
 .mcr-tree {
-    padding: 0 0 10px 10px;
+    padding: 0 0 5px 5px;
 }
 
 .mcr-item {
@@ -545,6 +544,7 @@ watch([
     }
 
     .mcr-item-location {
+        font-size: 13px;
         font-style: italic;
         opacity: 0.6;
     }
@@ -575,10 +575,18 @@ watch([
 }
 
 .mcr-item-column {
-    padding: 8px 5px;
+    padding: 5px;
     color: #333;
     border-top: thin dashed #eee;
     overflow-x: auto;
+}
+
+.mcr-column-custom {
+    padding: 3px 8px;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f6f8fa;
 }
 
 .mcr-item-body {
@@ -602,16 +610,12 @@ watch([
 .mcr-item-errors,
 .mcr-item-logs {
     .mcr-column-content {
+        margin-top: 5px;
         padding: 5px;
-        font-family: Menlo, Consolas, monospace;
+        font-family: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
         line-height: initial;
         white-space: pre;
     }
-}
-
-.markdown-body {
-    padding: 5px;
-    border-radius: 5px;
 }
 
 .mcr-item-annotations {
@@ -619,6 +623,9 @@ watch([
 
     .markdown-body {
         margin-top: 5px;
+        margin-right: 5px;
+        padding: 5px;
+        border-radius: 5px;
     }
 }
 

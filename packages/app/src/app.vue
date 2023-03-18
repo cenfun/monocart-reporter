@@ -450,6 +450,21 @@ body {
     overflow: hidden;
 }
 
+a {
+    color: #0d6efd;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #0a58ca;
+}
+
+a:not([href], [class]),
+a:not([href], [class]):hover {
+    color: inherit;
+    text-decoration: none;
+}
+
 .mcr {
     --bg-failed: #fff0ef;
     --bg-flaky: #fcf7de;
