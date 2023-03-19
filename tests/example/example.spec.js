@@ -21,7 +21,7 @@ test('Test login page @fast', async () => {
 /**
  * @testrail 2127
  */
-test('Test full report @slow', async () => {
+test('Test full report', async () => {
 
 });
 
@@ -30,7 +30,7 @@ test('Test full report @slow', async () => {
  * @owner Mark
  * @jira MCR-16900
  */
-test.describe('suite group 1', () => {
+test.describe('suite group 1 @beta', () => {
 
     // https://playwright.dev/docs/test-fixtures
     // First argument must use the object destructuring pattern: fixtures
@@ -39,7 +39,7 @@ test.describe('suite group 1', () => {
      * @jira MCR-16933
      * @testrail 2128
      */
-    test('case info', ({ browserName }, testInfo) => {
+    test('@smoke case info', ({ browserName }, testInfo) => {
 
         /**
          * override assert step title "expect.toBe" to
@@ -53,7 +53,7 @@ test.describe('suite group 1', () => {
     /**
      * @testrail 2129
      */
-    test('case steps', async () => {
+    test('@regression case steps @slow', async () => {
 
         const result1 = await test.step('step 1', () => {
             return 'result';
@@ -66,7 +66,7 @@ test.describe('suite group 1', () => {
         expect(result1).toBe(result2);
 
         // @owner Steve
-        await test.step('step slow (500ms)', () => {
+        await test.step('step @slow (500ms)', () => {
             return new Promise((resolve) => {
                 setTimeout(resolve, 500);
             });
@@ -192,16 +192,16 @@ test.describe('suite group 2', () => {
         await Util.delay(10 * 1000);
     });
 
-    test('case one', async () => {
+    test('case one @smoke@fast', async () => {
         // ...
     });
 
-    test('case two', async () => {
+    test('case two @regression@custom_tag', async () => {
         // ...
     });
 });
 
 
-test('case after suite', () => {
+test('@smoke case after suite', () => {
 
 });

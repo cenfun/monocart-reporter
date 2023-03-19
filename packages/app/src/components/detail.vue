@@ -28,9 +28,10 @@
               :icon="item.icon"
               :button="false"
             />
-            <div class="mcr-item-title">
-              {{ item.data.title }}
-            </div>
+            <div
+              class="mcr-item-title"
+              v-html="tagFormatter(item.data.title)"
+            />
           </VuiFlex>
 
           <template v-if="item.simpleColumns">
@@ -107,7 +108,9 @@ import Convert from 'ansi-to-html';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
-import { markdownFormatter, mergeAnnotations } from '../modules/formatters.js';
+import {
+    tagFormatter, markdownFormatter, mergeAnnotations
+} from '../modules/formatters.js';
 
 import IconLabel from './icon-label.vue';
 

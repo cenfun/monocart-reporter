@@ -40,13 +40,6 @@ const Util = {
     },
 
     // =============================================================================
-
-    // ok is outcome === 'expected' || 'flaky' || 'skipped'
-    isSkipped: function(item) {
-        return item.status === 'skipped' || item.outcome === 'skipped';
-    },
-
-    // =============================================================================
     // hash
     getHash(key) {
         let hash = {};

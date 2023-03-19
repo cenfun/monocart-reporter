@@ -14,6 +14,8 @@ const matchedFormatter = function(value, rowItem, columnItem) {
     return value;
 };
 
+// ===========================================================================
+
 const mergeAnnotations = (list) => {
     const map = {};
     list.forEach((item) => {
@@ -49,6 +51,8 @@ const annotationTypeFormatter = (list) => {
     return Object.keys(map).join(' ');
 };
 
+// ===========================================================================
+
 const iconFormatter = (icon, size = '16px', button = false) => {
     const div = document.createElement('div');
     createApp(IconLabel, {
@@ -82,6 +86,17 @@ const markdownFormatter = (str, inline) => {
     return `<div class="markdown-body">${marked.parse(str)}</div>`;
 };
 
+// ===========================================================================
+
+const tagPattern = /@([^@\s]+)/g;
+const tagFormatter = (str) => {
+    return str.replace(tagPattern, function(match, key) {
+        return `<span class="mcr-case-tag">${key}</span>`;
+    });
+};
+
+// ===========================================================================
+
 const formatters = {
 
     null: function(value) {
@@ -114,17 +129,19 @@ const formatters = {
     string: matchedFormatter,
 
     tree: function(value, rowItem, columnItem, cellNode) {
-        value = matchedFormatter(value, rowItem, columnItem);
-
+        let formattedValue = matchedFormatter(value, rowItem, columnItem);
+        if (formattedValue === value) {
+            formattedValue = tagFormatter(value);
+        }
         const defaultFormatter = this.getDefaultFormatter('tree');
         if (rowItem.type === 'suite') {
-            value = `${value} (${rowItem.tests})`;
+            formattedValue = `${formattedValue} <span class="mcr-case-num">${rowItem.tests}</span>`;
         } else if (rowItem.type === 'case') {
-            value = `${value} <div class="tg-cell-hover-icon tg-flyover-icon">
+            formattedValue = `${formattedValue} <div class="tg-cell-hover-icon tg-flyover-icon">
                 <div class="mcr-icon mcr-icon-open" />
             </div>`;
         }
-        return defaultFormatter(value, rowItem, columnItem, cellNode);
+        return defaultFormatter(formattedValue, rowItem, columnItem, cellNode);
     },
 
     duration: function(value) {
@@ -177,6 +194,7 @@ const formatters = {
 
 export {
     formatters,
+    tagFormatter,
     matchedFormatter,
     markdownFormatter,
     mergeAnnotations,

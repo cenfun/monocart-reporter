@@ -41,12 +41,12 @@
       padding="10px"
       wrap
     >
-      <div class="mcr-summary">
+      <div class="mcr-nav">
         <div
-          v-for="(item, i) in state.summary"
+          v-for="(item, i) in state.navList"
           :key="i"
-          :class="summaryItemClass(item)"
-          @click="summaryItemClick(item)"
+          :class="navItemClass(item)"
+          @click="navItemClick(item)"
         >
           <VuiFlex
             gap="5px"
@@ -148,11 +148,11 @@ const initStore = () => {
     });
 };
 
-const summaryItemClass = (item) => {
-    return ['mcr-summary-item', item.classMap, item.type === state.caseType ? 'mcr-summary-selected' : ''];
+const navItemClass = (item) => {
+    return ['mcr-nav-item', item.classMap, item.type === state.caseType ? 'mcr-nav-selected' : ''];
 };
 
-const summaryItemClick = (item) => {
+const navItemClick = (item) => {
     if (item.type !== state.caseType) {
         state.caseType = item.type;
         if (item.type === 'tests') {
@@ -164,106 +164,92 @@ const summaryItemClick = (item) => {
     }
 };
 
-const initSummary = (rows, summary) => {
 
-    const caseHandler = (item) => {
-        if (item.subs) {
-            item.collapsed = true;
-        }
-        if (item.ok) {
-            if (Util.isSkipped(item)) {
-                item.classMap = 'tg-case-skipped';
-                item.caseType = 'skipped';
-                item.okIcon = 'skipped';
-            } else if (item.outcome === 'flaky') {
-                item.classMap = 'tg-case-flaky';
-                item.caseType = 'flaky';
-                item.okIcon = 'flaky';
-            } else {
-                item.classMap = 'tg-case-passed';
-                item.caseType = 'passed';
-                item.okIcon = 'passed';
-            }
+const caseHandler = (item) => {
+    if (item.subs) {
+        item.collapsed = true;
+    }
+    if (item.ok) {
+        // ok is outcome === 'expected' || 'flaky' || 'skipped'
+        if (item.status === 'skipped' || item.outcome === 'skipped') {
+            item.classMap = 'tg-case-skipped';
+            item.caseType = 'skipped';
+            item.okIcon = 'skipped';
+        } else if (item.outcome === 'flaky') {
+            item.classMap = 'tg-case-flaky';
+            item.caseType = 'flaky';
+            item.okIcon = 'flaky';
         } else {
-            item.classMap = 'tg-case-failed';
-            item.caseType = 'failed';
-            item.okIcon = 'failed';
+            item.classMap = 'tg-case-passed';
+            item.caseType = 'passed';
+            item.okIcon = 'passed';
         }
-    };
+    } else {
+        item.classMap = 'tg-case-failed';
+        item.caseType = 'failed';
+        item.okIcon = 'failed';
+    }
+};
 
-    const suites = {
-        name: 'Suites',
-        icon: 'suite',
-        value: 0
-    };
-    const tests = {
-        name: 'Tests',
-        icon: 'case',
-        value: 0
-    };
-    const steps = {
-        name: 'Steps',
-        icon: 'step',
-        value: 0
-    };
-    state.testInfo.push(tests);
-    state.testInfo.push(steps);
-    state.testInfo.push(suites);
+const stepHandler = (item) => {
+    if (item.subs) {
+        item.collapsed = true;
+    }
+    if (item.errors) {
+        item.classMap = 'tg-step-error';
+    } else if (item.status === 'retry') {
+        item.classMap = 'tg-step-retry';
+    }
+};
+
+const initSummary = (rows, summary) => {
 
     Util.forEachTree(rows, function(item) {
         item.selectable = true;
-        if (item.type === 'step') {
-            steps.value += 1;
-            if (item.subs) {
-                item.collapsed = true;
-            }
-            if (item.errors) {
-                item.classMap = 'tg-step-error';
-            } else if (item.status === 'retry') {
-                item.classMap = 'tg-step-retry';
-            }
-            return;
-        }
-
         if (item.type === 'case') {
-            tests.value += 1;
+            summary.tests.icon = 'case';
             caseHandler(item);
             return;
         }
-        suites.value += 1;
+        if (item.type === 'step') {
+            summary.steps.icon = 'step';
+            stepHandler(item);
+            return;
+        }
+        summary.suites.icon = 'suite';
     });
 
     // summary.failed.value = 0;
     summary.passed.color = 'green';
-    summary.passed.classMap = summary.failed.value === 0 ? 'mcr-summary-passed' : '';
+    summary.passed.classMap = summary.failed.value === 0 ? 'mcr-nav-passed' : '';
 
     summary.failed.color = '#d00';
-    summary.failed.classMap = summary.failed.value > 0 ? 'mcr-summary-failed' : 'mcr-summary-skipped';
+    summary.failed.classMap = summary.failed.value > 0 ? 'mcr-nav-failed' : 'mcr-nav-skipped';
 
     summary.flaky.color = 'orange';
-    summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-summary-flaky' : 'mcr-summary-skipped';
+    summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-nav-flaky' : 'mcr-nav-skipped';
 
     summary.skipped.color = 'gray';
-    summary.skipped.classMap = 'mcr-summary-skipped';
+    summary.skipped.classMap = 'mcr-nav-skipped';
 
-    const pieData = [];
-    Object.keys(summary).forEach((k) => {
-        if (k === 'tests') {
-            return;
-        }
+    const navList = Object.values(summary).filter((it) => it.type);
 
-        const item = summary[k];
-        pieData.push({
-            id: k,
+    const pieData = navList.filter((it) => it.type !== 'tests').map((item) => {
+        return {
+            id: item.type,
             name: item.name,
             value: item.value,
             percent: item.percent,
             color: item.color
-        });
+        };
     });
 
-    state.summary = summary;
+    state.navList = navList;
     state.pieData = pieData;
+
+    state.testInfo.push(summary.tests);
+    state.testInfo.push(summary.steps);
+    state.testInfo.push(summary.suites);
 
 };
 
@@ -528,7 +514,7 @@ icon
     overflow: hidden;
 }
 
-.mcr-summary {
+.mcr-nav {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -538,7 +524,7 @@ icon
     overflow: hidden;
 }
 
-.mcr-summary-item {
+.mcr-nav-item {
     padding: 8px 10px;
     border-left: thin solid #6c757d;
     cursor: pointer;
@@ -556,53 +542,53 @@ icon
     }
 }
 
-.mcr-summary-item:hover,
-.mcr-summary-selected {
+.mcr-nav-item:hover,
+.mcr-nav-selected {
     color: #fff;
     background-color: #6c757d;
 }
 
-.mcr-summary-passed {
+.mcr-nav-passed {
     color: green;
 }
 
-.mcr-summary-passed:hover,
-.mcr-summary-passed.mcr-summary-selected {
+.mcr-nav-passed:hover,
+.mcr-nav-passed.mcr-nav-selected {
     color: #fff;
     background-color: green;
 }
 
-.mcr-summary-failed {
+.mcr-nav-failed {
     color: #d00;
 }
 
-.mcr-summary-failed:hover,
-.mcr-summary-failed.mcr-summary-selected {
+.mcr-nav-failed:hover,
+.mcr-nav-failed.mcr-nav-selected {
     color: #fff;
     background-color: #d00;
 }
 
-.mcr-summary-flaky {
+.mcr-nav-flaky {
     color: orange;
 }
 
-.mcr-summary-flaky:hover,
-.mcr-summary-flaky.mcr-summary-selected {
+.mcr-nav-flaky:hover,
+.mcr-nav-flaky.mcr-nav-selected {
     color: #fff;
     background-color: orange;
 }
 
-.mcr-summary-skipped {
+.mcr-nav-skipped {
     color: gray;
 }
 
-.mcr-summary-skipped:hover,
-.mcr-summary-skipped.mcr-summary-selected {
+.mcr-nav-skipped:hover,
+.mcr-nav-skipped.mcr-nav-selected {
     color: #fff;
     background-color: gray;
 }
 
-.mcr-summary-value {
+.mcr-nav-value {
     width: 81px;
     margin: 0 auto 5px;
     padding: 5px;
@@ -709,6 +695,35 @@ icon
             transform: none;
         }
     }
+}
+
+.mcr-case-tag {
+    display: inline-block;
+    min-width: 20px;
+    min-height: 20px;
+    margin-left: 5px;
+    padding: 0 5px;
+    font-weight: normal;
+    line-height: 20px;
+    text-align: center;
+    border: 1px solid #888;
+    border-radius: 5px;
+}
+
+.mcr-case-num {
+    display: inline-block;
+    min-width: 18px;
+    min-height: 18px;
+    margin-left: 5px;
+    padding: 0 5px;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #99adb6;
 }
 
 /*

@@ -42,8 +42,7 @@
         :key="i"
         :class="'mcr-legend-'+item.id"
         gap="10px"
-        @mouseenter="onPieAnimate(item)"
-        @mouseleave="onPieAnimate(item)"
+        @click="onPieAnimate(item)"
       >
         <div
           class="mcr-legend-icon"
@@ -209,7 +208,7 @@ watch(() => state.pieData, (v) => {
     font-size: 18px;
 
     > div {
-        cursor: default;
+        cursor: pointer;
 
         &:hover {
             opacity: 0.8;
