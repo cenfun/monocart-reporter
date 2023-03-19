@@ -66,17 +66,40 @@
 
       <div class="mcr-report-item">
         <div class="mcr-report-head">
-          <VuiFlex>
+          <VuiFlex gap="15px">
             <IconLabel
               icon="parallel"
               :button="false"
             >
               <b>Workers</b> <span class="mcr-num">{{ Util.NF(state.workers) }}</span>
             </IconLabel>
+
+            <IconLabel
+              icon="time"
+              :button="false"
+            >
+              <b>Duration</b> <span class="mcr-num">{{ state.duration }}</span>
+            </IconLabel>
           </VuiFlex>
         </div>
         <div class="mcr-report-chart">
-          chart
+          <VuiFlex
+            v-for="(item, i) in state.workerList"
+            :key="i"
+            class="mcr-report-worker"
+            gap="10px"
+            padding="5px"
+          >
+            <div>
+              <span class="mcr-num">{{ item.index }}</span>
+            </div>
+            <div class="vui-flex-auto">
+              bar
+            </div>
+            <div>
+              {{ Util.TF(item.duration) }}
+            </div>
+          </VuiFlex>
         </div>
       </div>
     </div>

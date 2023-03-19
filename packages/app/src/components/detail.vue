@@ -56,7 +56,7 @@
             v-if="Util.isNum(item.data.duration)"
             class="mcr-item-duration"
           >
-            {{ Util.DTF(item.data.duration) }}
+            {{ Util.TF(item.data.duration) }}
           </div>
 
           <div
@@ -567,11 +567,14 @@ watch([
 }
 
 .mcr-column-simple {
-    padding: 3px 8px;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 0 5px;
     font-size: 13px;
+    line-height: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #f6f8fa;
+    background: #f6f8fa;
 }
 
 .mcr-item-body {

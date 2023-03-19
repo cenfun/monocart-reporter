@@ -82,6 +82,17 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     attachmentPath: null,
     // attachmentPath: (relativePath) => `https://cenfun.github.io/monocart-reporter/${relativePath}`,
 
+    // custom tags style
+    tags: null,
+    // tags: {
+    //     smoke: {
+    //         'background': '#6F9913'
+    //     },
+    //     sanity: {
+    //         'background': '#178F43'
+    //     }
+    // },
+
     // custom columns
     columns: null,
     // columns: (defaultColumns) => {},

@@ -70,19 +70,16 @@ module.exports = {
 
             tags: {
                 smoke: {
-                    'color': '#fff',
-                    'border-color': '#587a10',
-                    'background-color': '#6F9913'
+                    'background': '#6F9913'
                 },
-                regression: {
-                    'color': '#fff',
-                    'border-color': '#137436',
-                    'background-color': '#178F43'
+                sanity: {
+                    'background': '#178F43'
                 },
                 critical: {
-                    'color': '#fff',
-                    'border-color': '#c00',
-                    'background-color': '#f00'
+                    'background': '#c00'
+                },
+                slow: {
+                    'background': 'orange'
                 }
             },
 

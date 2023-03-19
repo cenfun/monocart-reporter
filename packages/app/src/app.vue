@@ -202,17 +202,85 @@ const stepHandler = (item) => {
     }
 };
 
+const tagsHandler = (tags) => {
+    // tags and style
+    const tagList = [];
+    Object.keys(tags).forEach((tag) => {
+        tagList.push({
+            name: tag,
+            ... tags[tag]
+        });
+    });
+
+    tagList.sort((a, b) => {
+        return b.value - a.value;
+    });
+
+    state.tagList = tagList;
+    state.tagMap = tags;
+};
+
+const workersHandler = (workers, list) => {
+    state.workers = workers;
+    const map = new Map();
+    list.forEach((item) => {
+        const pi = item.parallelIndex;
+        if (!map.get(pi)) {
+            map.set(pi, []);
+        }
+        map.get(pi).push(item);
+    });
+
+    const workerList = [];
+    let maxDuration = 1;
+    map.forEach((v, k) => {
+        const duration = v.reduce((p, item) => p + item.duration, 0);
+        if (duration > maxDuration) {
+            maxDuration = duration;
+        }
+        workerList.push({
+            index: k,
+            list: v,
+            duration
+        });
+    });
+
+    workerList.forEach((item) => {
+        item.list.forEach((it) => {
+            it.percent = it.duration / maxDuration;
+        });
+    });
+
+    workerList.sort((a, b) => {
+        return a.index - b.index;
+    });
+
+    console.log(workerList);
+
+    state.workerList = workerList;
+
+};
+
 const initData = (reportData) => {
 
     const {
-        rows, summary, tags
+        rows, summary, tags, workers
     } = reportData;
+
+    const workerList = [];
 
     Util.forEachTree(rows, function(item) {
         item.selectable = true;
         if (item.type === 'case') {
             summary.tests.icon = 'case';
             caseHandler(item);
+            item.workers.forEach((w) => {
+                workerList.push({
+                    ... w,
+                    title: item.title,
+                    type: item.caseType
+                });
+            });
             return;
         }
         if (item.type === 'step') {
@@ -252,23 +320,9 @@ const initData = (reportData) => {
     state.pieData = pieData;
     state.pieHeads = [summary.suites, summary.tests, summary.steps];
 
-    // tags and style
-    const tagList = [];
-    Object.keys(tags).forEach((tag) => {
-        tagList.push({
-            name: tag,
-            ... tags[tag]
-        });
-    });
+    tagsHandler(tags);
+    workersHandler(workers, workerList);
 
-    tagList.sort((a, b) => {
-        return b.value - a.value;
-    });
-
-    state.tagList = tagList;
-    state.tagMap = tags;
-
-    state.workers = reportData.workers;
 };
 
 const onMenuClick = (e) => {
@@ -715,11 +769,12 @@ icon
     min-width: 20px;
     min-height: 20px;
     padding: 0 5px;
+    color: #fff;
     font-weight: normal;
     line-height: 20px;
     text-align: center;
-    border: 1px solid #888;
     border-radius: 5px;
+    background: gray;
 }
 
 .mcr-num {
@@ -734,7 +789,7 @@ icon
     line-height: 18px;
     text-align: center;
     border-radius: 10px;
-    background-color: #99adb6;
+    background: #99adb6;
 }
 
 /*

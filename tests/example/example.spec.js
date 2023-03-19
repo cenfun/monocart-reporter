@@ -21,7 +21,7 @@ test('Test login page @fast', () => {
 /**
  * @testrail 2127
  */
-test('Test full report', () => {
+test('@smoke Test full report', () => {
 
 });
 
@@ -53,7 +53,7 @@ test.describe('suite group 1 @beta', () => {
     /**
      * @testrail 2129
      */
-    test('@regression case steps @slow', async () => {
+    test('@sanity case steps @slow', async () => {
 
         const result1 = await test.step('step 1', () => {
             return 'result';
@@ -78,7 +78,7 @@ test.describe('suite group 1 @beta', () => {
 
     });
 
-    test.describe('@smoke suite sub group', () => {
+    test.describe('suite sub group @beta', () => {
         test('@smoke case first', async () => {
             // ...
         });
@@ -103,7 +103,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
 - test.fixme() marks the test as failing. Playwright Test will not run this test, as opposed to the fail annotation. Use fixme when running the test is slow or crashes.
 - test.slow() marks the test as slow and triples the test timeout.
          */
-        test('skipped test annotations', () => {
+        test('@todo skipped test annotations', () => {
             test.info().annotations.push({
                 type: 'issue', description: '#123'
             });
@@ -137,7 +137,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
          */
 
 
-        test('@regression case failed', () => {
+        test('@sanity case failed', () => {
 
             console.log('stdout: failed case log');
 
@@ -196,7 +196,7 @@ test.describe('suite group 2', () => {
         // ...
     });
 
-    test('@regression @critical two', () => {
+    test('@sanity @critical two', () => {
         // ...
     });
 });

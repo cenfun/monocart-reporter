@@ -153,7 +153,7 @@ const formatters = {
         if (typeof value !== 'number') {
             return '';
         }
-        return Util.DTF(value);
+        return Util.TF(value);
     },
 
     annotations: function(value, rowItem, columnItem) {
