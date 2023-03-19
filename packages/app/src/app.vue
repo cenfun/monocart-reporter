@@ -332,11 +332,13 @@ const initErrors = (rows, errors) => {
 const updateSize = () => {
     state.windowWidth = window.innerWidth;
 
-    let flyoverWidth = '60%';
-    if (state.windowWidth < 768) {
+    let flyoverWidth = '50%';
+    if (state.windowWidth < 600) {
         flyoverWidth = '100%';
-    } else if (state.windowWidth < 1024) {
+    } else if (state.windowWidth < 768) {
         flyoverWidth = '80%';
+    } else if (state.windowWidth < 1200) {
+        flyoverWidth = '60%';
     }
     state.flyoverWidth = flyoverWidth;
 };

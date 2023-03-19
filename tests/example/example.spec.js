@@ -78,13 +78,13 @@ test.describe('suite group 1 @beta', () => {
 
     });
 
-    test.describe('suite sub group', () => {
+    test.describe('@smoke suite sub group', () => {
         test('@smoke case first', async () => {
             // ...
         });
 
         // https://playwright.dev/docs/test-annotations#custom-annotations
-        test('annotations @critical', () => {
+        test('@critical annotations', () => {
             test.info().annotations.push({
                 type: 'issues',
                 description: ['MCR-666', 'MCR-888']

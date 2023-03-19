@@ -10,8 +10,9 @@ let use;
  * override "beforeAll hook" title to
  * @title do something before all
  */
-test.beforeAll(() => {
+test.beforeAll(({ browserName }, workerInfo) => {
     console.log(EC.magenta('beforeAll'));
+    console.log(`Running ${browserName} in worker #${workerInfo.workerIndex}`);
     use = test.info().project.use;
 });
 
