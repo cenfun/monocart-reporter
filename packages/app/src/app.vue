@@ -267,6 +267,8 @@ const initData = (reportData) => {
 
     state.tagList = tagList;
     state.tagMap = tags;
+
+    state.workers = reportData.workers;
 };
 
 const onMenuClick = (e) => {
@@ -365,9 +367,11 @@ onMounted(() => {
     state.columns = cloneColumns;
 
     state.title = reportData.name;
-    state.date = new Date(reportData.date).toLocaleString();
+    state.date = reportData.dateH;
+    state.duration = reportData.durationH;
 
-    state.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
+    state.playwright = ['Playwright', reportData.version].filter((it) => it).join(' v');
+
     initStore();
 
     updateSize();

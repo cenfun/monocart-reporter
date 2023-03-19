@@ -3,7 +3,7 @@
     direction="column"
     class="mcr-report"
   >
-    <div class="mcr-menu-main vui-flex-auto">
+    <div class="mcr-report-main vui-flex-auto">
       <div class="mcr-report-item">
         <div class="mcr-report-head">
           <VuiFlex
@@ -63,6 +63,22 @@
           </VuiFlex>
         </div>
       </div>
+
+      <div class="mcr-report-item">
+        <div class="mcr-report-head">
+          <VuiFlex>
+            <IconLabel
+              icon="parallel"
+              :button="false"
+            >
+              <b>Workers</b> <span class="mcr-num">{{ Util.NF(state.workers) }}</span>
+            </IconLabel>
+          </VuiFlex>
+        </div>
+        <div class="mcr-report-chart">
+          chart
+        </div>
+      </div>
     </div>
     <div class="mcr-menu-footer">
       <VuiFlex
@@ -76,7 +92,7 @@
           icon="playwright"
           size="20px"
         >
-          {{ state.titlePlaywright }}
+          {{ state.playwright }}
         </IconLabel>
         </a>
 
@@ -87,7 +103,7 @@
           icon="github"
           size="20px"
         >
-          {{ state.titleReporter }}
+          {{ state.monocart }}
         </IconLabel>
         </a>
       </VuiFlex>
@@ -116,6 +132,10 @@ const onTagClick = (tag) => {
 <style lang="scss">
 .mcr-report {
     height: 100%;
+}
+
+.mcr-report-main {
+    overflow-y: auto;
 }
 
 .mcr-report-item {

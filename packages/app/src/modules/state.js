@@ -5,8 +5,8 @@ import Util from '../utils/util.js';
 const state = shallowReactive({
     title: '',
     date: '',
-    titlePlaywright: '',
-    titleReporter: `Monocart Reporter v${window.VERSION}`,
+    playwright: '',
+    monocart: `Monocart Reporter v${window.VERSION}`,
     summary: {},
 
     // filter

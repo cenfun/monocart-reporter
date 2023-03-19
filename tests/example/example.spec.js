@@ -14,14 +14,14 @@ test('case before suite', () => {
 /**
  * @testrail 2126
  */
-test('Test login page @fast', async () => {
+test('Test login page @fast', () => {
 
 });
 
 /**
  * @testrail 2127
  */
-test('Test full report', async () => {
+test('Test full report', () => {
 
 });
 
@@ -39,14 +39,14 @@ test.describe('suite group 1 @beta', () => {
      * @jira MCR-16933
      * @testrail 2128
      */
-    test('@smoke case info', ({ browserName }, testInfo) => {
+    test('@smoke case info', () => {
 
         /**
          * override assert step title "expect.toBe" to
          * @title my custom assert step title
          * @annotations important
          */
-        expect(testInfo).toBe(test.info());
+        expect(test.info()).toBeTruthy();
 
     });
 
@@ -180,8 +180,8 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
 
 test.describe('suite group 2', () => {
 
-    test('flaky @todo', ({ browserName }, testInfo) => {
-
+    test('flaky @todo', () => {
+        const testInfo = test.info();
         console.log(`retry: ${testInfo.retry}`);
         expect(testInfo.retry).toBe(1);
 
@@ -192,11 +192,11 @@ test.describe('suite group 2', () => {
         await Util.delay(10 * 1000);
     });
 
-    test('@smoke @fast one', async () => {
+    test('@smoke @fast one', () => {
         // ...
     });
 
-    test('@regression @critical two', async () => {
+    test('@regression @critical two', () => {
         // ...
     });
 });
