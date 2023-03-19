@@ -206,9 +206,9 @@ const initSummary = (rows, summary) => {
         icon: 'step',
         value: 0
     };
-    state.testInfo.push(suites);
     state.testInfo.push(tests);
     state.testInfo.push(steps);
+    state.testInfo.push(suites);
 
     Util.forEachTree(rows, function(item) {
         item.selectable = true;

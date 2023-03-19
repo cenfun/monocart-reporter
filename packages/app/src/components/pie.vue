@@ -9,12 +9,28 @@
       height="100%"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path
+      <g
         v-for="(item, i) in data.list"
         :key="i"
-        :d="item.d"
-        :fill="item.color"
-      />
+        :class="'mcr-pie-'+item.id"
+      >
+        <path
+          :d="item.d"
+          :fill="item.color"
+          @click="onPieAnimate(item)"
+        />
+        <animateTransform
+          :class="'mcr-transform-'+item.id"
+          attributeName="transform"
+          type="translate"
+          :from="item.from"
+          :to="item.to"
+          dur="0.2s"
+          fill="freeze"
+          repeatCount="1"
+          restart="always"
+        />
+      </g>
     </svg>
     <VuiFlex
       direction="column"
@@ -24,10 +40,13 @@
       <VuiFlex
         v-for="(item, i) in data.list"
         :key="i"
+        :class="'mcr-legend-'+item.id"
         gap="10px"
+        @mouseenter="onPieAnimate(item)"
+        @mouseleave="onPieAnimate(item)"
       >
         <div
-          class="mcr-pie-color"
+          class="mcr-legend-icon"
           :style="'background:'+item.color"
         />
         <div>{{ item.value }} {{ item.name }}</div>
@@ -42,16 +61,36 @@ import {
 } from 'vue';
 import { components } from 'vine-ui';
 import state from '../modules/state.js';
-
 import Util from '../utils/util.js';
+import { nextTick } from 'process';
 
 const { VuiFlex } = components;
 
 const data = reactive({
     size: 100,
+    margin: 10,
     viewBox: '0 0 100 100',
     list: []
 });
+
+const onPieAnimate = (item) => {
+
+    if (item.to === '0,0') {
+        item.from = '0,0';
+        item.to = item.pos;
+    } else {
+        item.from = item.pos;
+        item.to = '0,0';
+    }
+
+    nextTick(() => {
+        const $transform = document.querySelector(`.mcr-transform-${item.id}`);
+        if ($transform) {
+            $transform.beginElement();
+        }
+    });
+
+};
 
 const renderChart = () => {
     const pieData = state.pieData;
@@ -63,7 +102,7 @@ const renderChart = () => {
 
     const x = data.size / 2;
     const y = data.size / 2;
-    const r = data.size / 2;
+    const r = data.size / 2 - data.margin;
 
     // start from 12 clock
     let start = 0.75;
@@ -75,12 +114,18 @@ const renderChart = () => {
         start = percent;
 
         const d = getSectorPath(x, y, r, from, till);
+        const pos = getMovePos(data.margin, from, till);
+        // console.log(pos);
 
         data.list.push({
+            id: item.id,
             name: item.name,
             value: item.value,
-            percent: item.percent,
             color: item.color,
+            percent: item.percent,
+            from: '0,0',
+            to: '0,0',
+            pos,
             d
         });
 
@@ -125,6 +170,13 @@ const getSectorPath = function(x, y, r, from, till) {
     return ds.join(' ');
 };
 
+const getMovePos = (margin, from, till) => {
+    const center = from + (till - from) * 0.5;
+    const px = Math.cos(center) * margin;
+    const py = Math.sin(center) * margin;
+    return point(px, py);
+};
+
 onMounted(() => {
     renderChart();
 });
@@ -145,6 +197,10 @@ watch(() => state.pieData, (v) => {
         display: block;
         width: 150px;
         height: 150px;
+
+        path:hover {
+            opacity: 0.8;
+        }
     }
 }
 
@@ -152,11 +208,19 @@ watch(() => state.pieData, (v) => {
     font-weight: bold;
     font-size: 18px;
 
+    > div {
+        cursor: default;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
     span {
         font-weight: normal;
     }
 
-    .mcr-pie-color {
+    .mcr-legend-icon {
         width: 20px;
         height: 20px;
         border-radius: 50%;

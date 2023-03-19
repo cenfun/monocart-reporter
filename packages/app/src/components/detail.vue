@@ -260,7 +260,7 @@ const getAnnotations = (item, column) => {
     }
     // must be list
     const map = mergeAnnotations(annotations);
-    console.log(map);
+    // console.log(map);
 
     const list = Object.keys(map).map((k) => {
         const res = [`<b>${k}</b>`];
@@ -272,7 +272,7 @@ const getAnnotations = (item, column) => {
         });
         return `<div class="mcr-column-annotation">${res.join('')}</div>`;
     });
-    console.log(list);
+    // console.log(list);
 
     const content = list.join('');
     if (!content) {
