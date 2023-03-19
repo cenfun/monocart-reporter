@@ -202,7 +202,11 @@ const stepHandler = (item) => {
     }
 };
 
-const initSummary = (rows, summary) => {
+const initData = (reportData) => {
+
+    const {
+        rows, summary, tags
+    } = reportData;
 
     Util.forEachTree(rows, function(item) {
         item.selectable = true;
@@ -246,9 +250,23 @@ const initSummary = (rows, summary) => {
 
     state.navList = navList;
     state.pieData = pieData;
+    state.pieHeads = [summary.suites, summary.tests, summary.steps];
 
-    state.testInfo = [summary.suites, summary.tests, summary.steps];
+    // tags and style
+    const tagList = [];
+    Object.keys(tags).forEach((tag) => {
+        tagList.push({
+            name: tag,
+            ... tags[tag]
+        });
+    });
 
+    tagList.sort((a, b) => {
+        return b.value - a.value;
+    });
+
+    state.tagList = tagList;
+    state.tagMap = tags;
 };
 
 const onMenuClick = (e) => {
@@ -330,7 +348,7 @@ onMounted(() => {
 
     // init all errors (index to message)
     initErrors(reportData.rows, reportData.errors);
-    initSummary(reportData.rows, reportData.summary);
+    initData(reportData);
 
     state.gridDataAll = {
         columns: reportData.columns,
@@ -340,26 +358,12 @@ onMounted(() => {
     // for custom column  formatters
     state.formatters = reportData.formatters;
 
-    // tags and style
-    state.tags = reportData.tags || {};
-
     const cloneColumns = JSON.parse(JSON.stringify(reportData.columns));
     initCustomsFormatters(cloneColumns, state.formatters);
     state.columns = cloneColumns;
 
     state.title = reportData.name;
     state.date = new Date(reportData.date).toLocaleString();
-    state.testInfo.push({
-        name: 'Date',
-        icon: 'calendar',
-        value: state.date
-    });
-    state.duration = reportData.durationH;
-    state.testInfo.push({
-        name: 'Duration',
-        icon: 'time',
-        value: state.duration
-    });
 
     state.titlePlaywright = ['Playwright', reportData.version].filter((it) => it).join(' v');
     initStore();
@@ -370,9 +374,9 @@ onMounted(() => {
 
     initTooltip();
 
-    // setTimeout(() => {
-    //     onMenuClick();
-    // });
+    setTimeout(() => {
+        onMenuClick();
+    });
 });
 
 let timeout_search;
@@ -700,7 +704,7 @@ icon
     }
 }
 
-.mcr-case-tag {
+.mcr-tag {
     display: inline-block;
     min-width: 20px;
     min-height: 20px;
@@ -712,7 +716,7 @@ icon
     border-radius: 5px;
 }
 
-.mcr-case-num {
+.mcr-num {
     display: inline-block;
     min-width: 18px;
     min-height: 18px;

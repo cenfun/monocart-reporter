@@ -1,43 +1,67 @@
 <template>
   <VuiFlex
     direction="column"
-    class="mcr-menu-detail"
+    class="mcr-report"
   >
     <div class="mcr-menu-main vui-flex-auto">
-      <VuiFlex
-        gap="15px"
-        direction="column"
-        padding="20px"
-      >
-        <Pie />
-        <VuiFlex
-          gap="10px"
-          wrap
-        >
-          <span
-            v-for="(item, k) of state.tags"
-            :key="k"
-            :style="item.style"
-            class="mcr-case-tag"
-          >{{ k }}</span>
-        </VuiFlex>
-        <template v-if="state.testInfo">
+      <div class="mcr-report-item">
+        <div class="mcr-report-head">
           <VuiFlex
-            v-for="(item, i) in state.testInfo"
-            :key="i"
-            gap="10px"
-            class="mcr-menu-info"
+            v-if="state.pieHeads"
+            gap="15px"
           >
             <IconLabel
+              v-for="(item, i) in state.pieHeads"
+              :key="i"
               :icon="item.icon"
               :button="false"
             >
-              {{ item.name }}
+              <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
             </IconLabel>
-            <div>{{ item.value }}</div>
           </VuiFlex>
-        </template>
-      </VuiFlex>
+        </div>
+        <div class="mcr-report-chart">
+          <Pie />
+        </div>
+      </div>
+
+      <div
+        v-if="state.tagList"
+        class="mcr-report-item"
+      >
+        <div class="mcr-report-head">
+          <VuiFlex>
+            <IconLabel
+              icon="tag"
+              :button="false"
+            >
+              <b>Tags</b> <span class="mcr-num">{{ Util.NF(state.tagList.length) }}</span>
+            </IconLabel>
+          </VuiFlex>
+        </div>
+        <div class="mcr-report-chart">
+          <VuiFlex
+            gap="10px"
+            wrap
+            padding="10px"
+          >
+            <div
+              v-for="(item, i) in state.tagList"
+              :key="i"
+              class="mcr-report-tag"
+            >
+              <span
+                :style="item.style"
+                class="mcr-tag"
+              >{{ item.name }}</span>
+              <span
+                v-if="item.value>1"
+                class="mcr-num"
+              >{{ Util.NF(item.value) }}</span>
+            </div>
+          </VuiFlex>
+        </div>
+      </div>
     </div>
     <div class="mcr-menu-footer">
       <VuiFlex
@@ -74,26 +98,49 @@
 import { components } from 'vine-ui';
 import IconLabel from './icon-label.vue';
 import state from '../modules/state.js';
-
+import Util from '../utils/util.js';
 import Pie from './pie.vue';
 
 const { VuiFlex } = components;
 
 </script>
 <style lang="scss">
-.mcr-menu-detail {
+.mcr-report {
     height: 100%;
 }
 
-.mcr-menu-info {
-    padding-left: 10px;
+.mcr-report-item {
+    position: relative;
+}
 
-    .mcr-icon-label {
-        width: 80px;
+.mcr-report-head {
+    padding: 10px;
+    border-bottom: 1px solid #cedbe9;
+    background-color: #eef6ff;
+
+    .mcr-num {
+        background-color: #0888f0;
+    }
+}
+
+.mcr-report-chart {
+    padding: 10px;
+}
+
+.mcr-report-tag {
+    position: relative;
+
+    .mcr-tag {
+        position: relative;
+        margin-top: 10px;
+        vertical-align: middle;
     }
 
-    label {
-        font-weight: bold;
+    .mcr-num {
+        position: relative;
+        margin-bottom: 10px;
+        margin-left: -5px;
+        vertical-align: middle;
     }
 }
 

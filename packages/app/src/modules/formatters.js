@@ -92,11 +92,11 @@ const tagPattern = /@([^@\s]+)/g;
 const tagFormatter = (str) => {
     return str.replace(tagPattern, function(match, key) {
         let style = '';
-        const tag = state.tags[key];
+        const tag = state.tagMap[key];
         if (tag && tag.style) {
             style = Util.styleMap(tag.style);
         }
-        return `<span class="mcr-case-tag" style="${style}">${key}</span>`;
+        return `<span class="mcr-tag" style="${style}">${key}</span>`;
     });
 };
 
@@ -140,7 +140,7 @@ const formatters = {
         }
         const defaultFormatter = this.getDefaultFormatter('tree');
         if (rowItem.type === 'suite') {
-            formattedValue = `${formattedValue} <span class="mcr-case-num">${rowItem.tests}</span>`;
+            formattedValue = `${formattedValue} <span class="mcr-num">${Util.NF(rowItem.tests)}</span>`;
         } else if (rowItem.type === 'case') {
             formattedValue = `${formattedValue} <div class="tg-cell-hover-icon tg-flyover-icon">
                 <div class="mcr-icon mcr-icon-open" />

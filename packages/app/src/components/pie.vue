@@ -48,7 +48,8 @@
           class="mcr-legend-icon"
           :style="'background:'+item.color"
         />
-        <div>{{ item.value }} {{ item.name }}</div>
+        <div>{{ item.name }}</div>
+        <span class="mcr-num">{{ Util.NF(item.value) }}</span>
         <span>{{ item.percent }}</span>
       </VuiFlex>
     </VuiFlex>
