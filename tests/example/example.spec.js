@@ -79,12 +79,12 @@ test.describe('suite group 1 @beta', () => {
     });
 
     test.describe('suite sub group', () => {
-        test('case first', async () => {
+        test('@smoke case first', async () => {
             // ...
         });
 
         // https://playwright.dev/docs/test-annotations#custom-annotations
-        test('custom annotations', () => {
+        test('annotations @critical', () => {
             test.info().annotations.push({
                 type: 'issues',
                 description: ['MCR-666', 'MCR-888']
@@ -127,7 +127,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
          * @jira MCR-16933
          */
 
-        test('annotations from comments', () => {
+        test('comment annotations @alpha', () => {
 
         });
 
@@ -137,7 +137,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
          */
 
 
-        test('case failed', () => {
+        test('@regression case failed', () => {
 
             console.log('stdout: failed case log');
 
@@ -180,27 +180,26 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
 
 test.describe('suite group 2', () => {
 
-    test('case flaky', ({ browserName }, testInfo) => {
+    test('flaky @todo', ({ browserName }, testInfo) => {
 
         console.log(`retry: ${testInfo.retry}`);
         expect(testInfo.retry).toBe(1);
 
     });
 
-    test('case timeout 3000', async () => {
+    test('timeout 3000', async () => {
         test.setTimeout(3000);
         await Util.delay(10 * 1000);
     });
 
-    test('case one @smoke@fast', async () => {
+    test('@smoke @fast one', async () => {
         // ...
     });
 
-    test('case two @regression@custom_tag', async () => {
+    test('@regression @critical two', async () => {
         // ...
     });
 });
-
 
 test('@smoke case after suite', () => {
 

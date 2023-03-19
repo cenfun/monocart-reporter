@@ -68,6 +68,24 @@ module.exports = {
             //     return `https://cenfun.github.io/monocart-reporter/${relativePath}`;
             // },
 
+            tags: {
+                smoke: {
+                    'color': '#fff',
+                    'border-color': '#587a10',
+                    'background-color': '#6F9913'
+                },
+                regression: {
+                    'color': '#fff',
+                    'border-color': '#137436',
+                    'background-color': '#178F43'
+                },
+                critical: {
+                    'color': '#fff',
+                    'border-color': '#c00',
+                    'background-color': '#f00'
+                }
+            },
+
             // custom columns
             columns: (defaultColumns) => {
 

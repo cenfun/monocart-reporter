@@ -3,7 +3,7 @@ import { marked } from 'marked';
 
 import IconLabel from '../components/icon-label.vue';
 import Util from '../utils/util.js';
-
+import state from '../modules/state.js';
 
 const matchedFormatter = function(value, rowItem, columnItem) {
     const id = columnItem.id;
@@ -91,7 +91,12 @@ const markdownFormatter = (str, inline) => {
 const tagPattern = /@([^@\s]+)/g;
 const tagFormatter = (str) => {
     return str.replace(tagPattern, function(match, key) {
-        return `<span class="mcr-case-tag">${key}</span>`;
+        let style = '';
+        const tag = state.tags[key];
+        if (tag && tag.style) {
+            style = Util.styleMap(tag.style);
+        }
+        return `<span class="mcr-case-tag" style="${style}">${key}</span>`;
     });
 };
 

@@ -247,9 +247,7 @@ const initSummary = (rows, summary) => {
     state.navList = navList;
     state.pieData = pieData;
 
-    state.testInfo.push(summary.tests);
-    state.testInfo.push(summary.steps);
-    state.testInfo.push(summary.suites);
+    state.testInfo = [summary.suites, summary.tests, summary.steps];
 
 };
 
@@ -341,6 +339,9 @@ onMounted(() => {
 
     // for custom column  formatters
     state.formatters = reportData.formatters;
+
+    // tags and style
+    state.tags = reportData.tags || {};
 
     const cloneColumns = JSON.parse(JSON.stringify(reportData.columns));
     initCustomsFormatters(cloneColumns, state.formatters);
@@ -627,6 +628,8 @@ icon
 }
 
 .mcr-grid {
+    cursor: default;
+
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {
         font-weight: normal;
@@ -701,7 +704,6 @@ icon
     display: inline-block;
     min-width: 20px;
     min-height: 20px;
-    margin-left: 5px;
     padding: 0 5px;
     font-weight: normal;
     line-height: 20px;
@@ -714,7 +716,6 @@ icon
     display: inline-block;
     min-width: 18px;
     min-height: 18px;
-    margin-left: 5px;
     padding: 0 5px;
     color: #fff;
     font-weight: normal;

@@ -1,7 +1,8 @@
-import { reactive } from 'vue';
+import { shallowReactive } from 'vue';
 import Util from '../utils/util.js';
 
-const state = reactive({
+// dot not use reactive for grid data
+const state = shallowReactive({
     title: '',
     date: '',
     titlePlaywright: '',
@@ -32,7 +33,7 @@ const state = reactive({
     grid: null,
 
     pieData: null,
-    testInfo: []
+    testInfo: null
 
 });
 

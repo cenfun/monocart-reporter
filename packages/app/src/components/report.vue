@@ -11,19 +11,32 @@
       >
         <Pie />
         <VuiFlex
-          v-for="(item, i) in state.testInfo"
-          :key="i"
           gap="10px"
-          class="mcr-menu-info"
+          wrap
         >
-          <IconLabel
-            :icon="item.icon"
-            :button="false"
-          >
-            {{ item.name }}
-          </IconLabel>
-          <div>{{ item.value }}</div>
+          <span
+            v-for="(item, k) of state.tags"
+            :key="k"
+            :style="item.style"
+            class="mcr-case-tag"
+          >{{ k }}</span>
         </VuiFlex>
+        <template v-if="state.testInfo">
+          <VuiFlex
+            v-for="(item, i) in state.testInfo"
+            :key="i"
+            gap="10px"
+            class="mcr-menu-info"
+          >
+            <IconLabel
+              :icon="item.icon"
+              :button="false"
+            >
+              {{ item.name }}
+            </IconLabel>
+            <div>{{ item.value }}</div>
+          </VuiFlex>
+        </template>
       </VuiFlex>
     </div>
     <div class="mcr-menu-footer">
