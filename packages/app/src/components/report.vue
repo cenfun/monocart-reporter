@@ -49,6 +49,7 @@
               v-for="(item, i) in state.tagList"
               :key="i"
               class="mcr-report-tag"
+              @click="onTagClick(item)"
             >
               <span
                 :style="item.style"
@@ -99,9 +100,17 @@ import { components } from 'vine-ui';
 import IconLabel from './icon-label.vue';
 import state from '../modules/state.js';
 import Util from '../utils/util.js';
+import { updateGrid } from '../modules/grid.js';
+
 import Pie from './pie.vue';
 
 const { VuiFlex } = components;
+
+const onTagClick = (tag) => {
+    state.flyoverVisible = false;
+    state.keywords = `@${tag.name}`;
+    updateGrid();
+};
 
 </script>
 <style lang="scss">
@@ -129,6 +138,11 @@ const { VuiFlex } = components;
 
 .mcr-report-tag {
     position: relative;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.8;
+    }
 
     .mcr-tag {
         position: relative;
