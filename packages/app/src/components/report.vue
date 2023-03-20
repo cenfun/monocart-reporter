@@ -90,7 +90,7 @@
             gap="10px"
             padding="5px"
           >
-            <div :tooltip="'parallel index ' + item.index">
+            <div :tooltip="'Parallel Index ' + item.index">
               <span class="mcr-num">{{ item.index }}</span>
             </div>
             <div class="vui-flex-auto">
@@ -101,6 +101,11 @@
                 height="100%"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <rect
+                  :width="item.width"
+                  :height="item.height"
+                  fill="#eee"
+                />
                 <g>
                   <path
                     v-for="(bar, j) in item.bars"
@@ -214,10 +219,6 @@ const onTagClick = (tag) => {
 }
 
 .mcr-report-worker {
-    &:hover {
-        background-color: #f5f5f5;
-    }
-
     svg {
         max-width: 800px;
     }

@@ -254,6 +254,8 @@ const workersHandler = (workers, list) => {
         if (!data) {
             data = {
                 index: pi,
+                width,
+                height,
                 viewBox: `0 0 ${width} ${height}`,
                 list: [],
                 // failed, passed ...
