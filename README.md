@@ -22,7 +22,7 @@
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
-![](/docs/report.png)
+![](/docs/report.gif)
 
 ## Install
 ```sh
