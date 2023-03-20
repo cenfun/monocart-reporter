@@ -37,6 +37,15 @@
             >
               <b>Tags</b> <span class="mcr-num">{{ Util.NF(state.tagList.length) }}</span>
             </IconLabel>
+            <div class="vui-flex-auto" />
+            <a
+              href="https://playwright.dev/docs/test-annotations#tag-tests"
+              target="_blank"
+            >
+              <IconLabel icon="help">
+                Tag Tests
+              </IconLabel>
+            </a>
           </VuiFlex>
         </div>
         <div class="mcr-report-chart">
@@ -80,6 +89,17 @@
             >
               <b>Parallel Duration</b> <span class="mcr-num">{{ state.parallelDuration }}</span>
             </IconLabel>
+
+            <div class="vui-flex-auto" />
+
+            <a
+              href="https://playwright.dev/docs/test-parallel"
+              target="_blank"
+            >
+              <IconLabel icon="help">
+                Test Parallel
+              </IconLabel>
+            </a>
           </VuiFlex>
         </div>
         <div class="mcr-report-chart">
@@ -88,7 +108,7 @@
             :key="i"
             class="mcr-report-worker"
             gap="10px"
-            padding="5px"
+            padding="10px 5px"
           >
             <div :tooltip="'Parallel Index ' + item.index">
               <span class="mcr-num">{{ item.index }}</span>
