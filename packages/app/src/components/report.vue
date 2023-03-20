@@ -100,13 +100,15 @@
                 width="100%"
                 height="100%"
                 xmlns="http://www.w3.org/2000/svg"
+                @mouseleave="hideResultPopover"
               >
                 <rect
                   :width="item.width"
                   :height="item.height"
                   fill="#eee"
+                  @mousemove="onBarMouseMove(item, $event)"
                 />
-                <g>
+                <g pointer-events="none">
                   <path
                     v-for="(bar, j) in item.bars"
                     :key="j"
@@ -148,25 +150,145 @@
         </a>
       </VuiFlex>
     </div>
+    <VuiPopover
+      ref="popover"
+      v-model="data.popoverVisible"
+      :positions="['top','bottom']"
+      class="mcr-report-popover"
+      :target="data.popoverTarget"
+      width="260px"
+    >
+      <VuiFlex
+        v-if="data.result"
+        direction="column"
+        gap="10px"
+      >
+        <IconLabel :icon="data.result.type">
+          <b>{{ data.result.title }}</b>
+        </IconLabel>
+        <IconLabel icon="calendar">
+          {{ new Date(data.result.timestamp).toLocaleString() }}
+        </IconLabel>
+        <IconLabel icon="time">
+          {{ Util.TF(data.result.duration) }}
+        </IconLabel>
+        <IconLabel icon="parallel">
+          Parallel Index: {{ data.result.parallelIndex }}
+        </IconLabel>
+        <IconLabel icon="parallel">
+          Worker Index: {{ data.result.workerIndex }}
+        </IconLabel>
+      </VuiFlex>
+    </VuiPopover>
   </VuiFlex>
 </template>
 
 <script setup>
+import {
+    reactive, watch, ref
+} from 'vue';
 import { components } from 'vine-ui';
-import IconLabel from './icon-label.vue';
+
 import state from '../modules/state.js';
 import Util from '../utils/util.js';
 import { updateGrid } from '../modules/grid.js';
 
+import IconLabel from './icon-label.vue';
 import Pie from './pie.vue';
 
-const { VuiFlex } = components;
+const { VuiFlex, VuiPopover } = components;
+
+const popover = ref(null);
+
+const data = reactive({
+    item: null,
+    offsetX: 0,
+    barWidth: 0,
+
+    result: null,
+    popoverTarget: null,
+    popoverVisible: false
+});
 
 const onTagClick = (tag) => {
     state.flyoverVisible = false;
     state.keywords = `@${tag.name}`;
     updateGrid();
 };
+
+// ====================================================================================
+
+const hideResultPopover = () => {
+    data.popoverVisible = false;
+    data.item = null;
+    data.result = null;
+};
+
+const showResultPopover = (result) => {
+    if (!result) {
+        hideResultPopover();
+        return;
+    }
+    data.popoverVisible = true;
+};
+
+const onBarMouseMove = (item, e) => {
+    data.item = item;
+    data.offsetX = e.offsetX;
+
+    const br = e.target.getBoundingClientRect();
+    data.barX = br.x;
+    data.barY = br.y;
+    data.barWidth = br.width;
+    data.barHeight = br.height;
+};
+
+watch([
+    () => data.item,
+    () => data.offsetX,
+    () => data.barWidth
+], () => {
+    if (!data.item) {
+        return;
+    }
+    const t = Math.round(data.offsetX / data.barWidth * data.item.duration) + data.item.time_start;
+    const result = data.item.list.find((it) => {
+        if (t >= it.timestamp && t <= it.timestamp + it.duration) {
+            return true;
+        }
+    });
+
+    data.result = result;
+    if (!result) {
+        return;
+    }
+
+    // console.log(result);
+
+    const left = (result.timestamp - data.item.time_start) / data.item.duration * data.barWidth;
+    const width = result.duration / data.item.duration * data.barWidth;
+
+    const padding = 10;
+    const target = {
+        left: data.barX + left - padding,
+        top: data.barY - padding,
+        width: width + padding * 2,
+        height: data.barHeight + padding * 2
+    };
+
+    data.popoverTarget = target;
+
+});
+
+watch(() => data.result, (result) => {
+    showResultPopover(result);
+});
+
+watch(() => data.popoverTarget, () => {
+    if (data.popoverVisible && popover.value) {
+        popover.value.update();
+    }
+});
 
 </script>
 <style lang="scss">
@@ -227,6 +349,10 @@ const onTagClick = (tag) => {
         background: #888;
         cursor: default;
     }
+}
+
+.mcr-report-popover {
+    pointer-events: none;
 }
 
 .mcr-menu-footer {

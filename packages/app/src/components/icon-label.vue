@@ -15,7 +15,7 @@
 </template>
 <script setup>
 import {
-    computed, onMounted, ref, useSlots
+    computed, onMounted, ref, useSlots, watch
 } from 'vue';
 
 import icons from '../utils/icons.js';
@@ -84,6 +84,10 @@ const showIcon = () => {
 };
 
 onMounted(() => {
+    showIcon();
+});
+
+watch(() => props.icon, () => {
     showIcon();
 });
 
