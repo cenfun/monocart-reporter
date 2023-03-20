@@ -104,7 +104,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 
     // async hook after report data generated
     onEnd: null
-    // onEnd: async (reportData, config, root) => {}
+    // onEnd: async (reportData, capacity) => {}
 }
 ```
 See [lib/options.js](lib/options.js)
