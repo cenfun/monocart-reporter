@@ -104,40 +104,45 @@
         </div>
         <div class="mcr-report-chart">
           <VuiFlex
-            v-for="(item, i) in state.workerList"
-            :key="i"
-            class="mcr-report-worker"
-            gap="10px"
-            padding="10px 5px"
+            direction="column"
+            gap="15px"
+            padding="10px"
           >
-            <div :tooltip="'Parallel Index ' + item.index">
-              <span class="mcr-num">{{ item.index }}</span>
-            </div>
-            <div class="vui-flex-auto">
-              <svg
-                v-if="item.bars"
-                :viewBox="item.viewBox"
-                width="100%"
-                height="100%"
-                xmlns="http://www.w3.org/2000/svg"
-                @mouseleave="hideResultPopover"
-              >
-                <rect
-                  :width="item.width"
-                  :height="item.height"
-                  fill="#eee"
-                  @mousemove="onBarMouseMove(item, $event)"
-                />
-                <g pointer-events="none">
-                  <path
-                    v-for="(bar, j) in item.bars"
-                    :key="j"
-                    :d="bar.d"
-                    :fill="bar.color"
+            <VuiFlex
+              v-for="(item, i) in state.workerList"
+              :key="i"
+              class="mcr-report-worker"
+              gap="10px"
+            >
+              <div :tooltip="'Parallel Index ' + item.index">
+                <span class="mcr-num">{{ item.index }}</span>
+              </div>
+              <div class="vui-flex-auto">
+                <svg
+                  v-if="item.bars"
+                  :viewBox="item.viewBox"
+                  width="100%"
+                  height="100%"
+                  xmlns="http://www.w3.org/2000/svg"
+                  @mouseleave="hideResultPopover"
+                >
+                  <rect
+                    :width="item.width"
+                    :height="item.height"
+                    fill="#eee"
+                    @mousemove="onBarMouseMove(item, $event)"
                   />
-                </g>
-              </svg>
-            </div>
+                  <g pointer-events="none">
+                    <path
+                      v-for="(bar, j) in item.bars"
+                      :key="j"
+                      :d="bar.d"
+                      :fill="bar.color"
+                    />
+                  </g>
+                </svg>
+              </div>
+            </VuiFlex>
           </VuiFlex>
         </div>
       </div>

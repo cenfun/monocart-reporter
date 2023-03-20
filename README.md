@@ -10,6 +10,7 @@
 * Shows [suites](https://playwright.dev/docs/api/class-suite)/[cases](https://playwright.dev/docs/api/class-testcase)/[steps](https://playwright.dev/docs/api/class-teststep) with tree style
 * Console logs
 * Fuzzy search
+* Style Tags
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Custom columns and formatters (extra information for suite/case/step)
 * Custom data collection visitor 
@@ -278,7 +279,6 @@ module.exports = {
  - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
 
 
-
  ## Articles
  - [Test automation|Test Reporting| |Playwright|Monocart](https://medium.com/@kbalaji.kks/test-automation-test-reporting-playwright-monocart-d4bb35ef12ad)
 
@@ -288,18 +288,18 @@ nmls -p
 ┌────────────────────────────┬─────────┬──────────┬──────┬───────────┬────────┐
 │  Name                      │ Version │     Size │ Deps │ Deps Size │ Nested │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
-│ └ monocart-reporter        │ 1.4.0   │ 510.5 KB │   18 │   2.50 MB │      1 │
+│ └ monocart-reporter        │ 1.5.0   │ 525.2 KB │   18 │   2.50 MB │      1 │
 │   ├ dependencies           │         │          │      │           │        │
 │   │ ├ @babel/code-frame    │ 7.18.6  │  6.82 KB │   10 │  153.0 KB │      0 │
 │   │ ├ @babel/parser        │ 7.21.3  │  1.79 MB │    0 │       0 B │      0 │
 │   │ ├ console-grid         │ 2.0.1   │  36.9 KB │    0 │       0 B │      0 │
-│   │ ├ eight-colors         │ 1.0.2   │  13.8 KB │    0 │       0 B │      0 │
+│   │ ├ eight-colors         │ 1.0.3   │  14.9 KB │    0 │       0 B │      0 │
 │   │ ├ lz-utils             │ 1.0.5   │  25.2 KB │    0 │       0 B │      0 │
 │   │ ├ nodemailer           │ 6.9.1   │ 476.0 KB │    0 │       0 B │      0 │
 │   │ └ stack-utils          │ 2.0.6   │  14.3 KB │    1 │   3.18 KB │      1 │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
 │   └ packages in workspaces │         │          │      │           │        │
-│     └ monocart-reporter    │ 1.4.0   │ 465.8 KB │    0 │       0 B │      0 │
+│     └ monocart-reporter    │ 1.5.0   │ 482.3 KB │    0 │       0 B │      0 │
 └────────────────────────────┴─────────┴──────────┴──────┴───────────┴────────┘
 ```
 
