@@ -90,6 +90,7 @@
       position="right"
       :visible="state.flyoverVisible"
       :width="state.flyoverWidth"
+      @end="onFlyoverEnd"
     >
       <Flyover />
     </VuiFlyover>
@@ -383,6 +384,13 @@ const onMenuClick = (e) => {
     showFlyover();
 };
 
+// remove tag till flyover animation end
+const onFlyoverEnd = () => {
+    if (!state.flyoverVisible) {
+        Util.delHash('page');
+    }
+};
+
 let timeout_tooltip;
 const initTooltip = () => {
     generateTooltips((target, text) => {
@@ -474,12 +482,6 @@ watch([
     () => state.stepVisible
 ], () => {
     renderGrid();
-});
-
-watch(() => state.flyoverVisible, (v) => {
-    if (!v) {
-        Util.delHash('page');
-    }
 });
 
 window.addEventListener('popstate', (e) => {
@@ -705,8 +707,6 @@ icon
 }
 
 .mcr-grid {
-    cursor: default;
-
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {
         font-weight: normal;
@@ -835,120 +835,6 @@ flyover
 
 .vui-flyover-content {
     overflow: auto;
-}
-
-/*
-colors
-*/
-
-.inline {
-    display: inline-block;
-    width: 20px;
-    height: 1em;
-}
-
-.bold {
-    font-weight: bold;
-}
-
-.italic {
-    font-style: italic;
-}
-
-.underline {
-    text-decoration: underline;
-}
-
-.blink {
-    text-decoration: blink;
-}
-
-.inverse {
-    background: #333;
-}
-
-.strike {
-    text-decoration: line-through;
-}
-
-.c30,
-.c90 {
-    color: black;
-}
-
-.c31,
-.c91 {
-    color: red;
-}
-
-.c32,
-.c92 {
-    color: green;
-}
-
-.c33,
-.c93 {
-    color: yellow;
-}
-
-.c34,
-.c94 {
-    color: blue;
-}
-
-.c35,
-.c95 {
-    color: magenta;
-}
-
-.c36,
-.c96 {
-    color: cyan;
-}
-
-.c37,
-.c97 {
-    color: white;
-}
-
-.bg40,
-.bg100 {
-    background: black;
-}
-
-.bg41,
-.bg101 {
-    background: red;
-}
-
-.bg42,
-.bg102 {
-    background: green;
-}
-
-.bg43,
-.bg103 {
-    background: yellow;
-}
-
-.bg44,
-.bg104 {
-    background: blue;
-}
-
-.bg45,
-.bg105 {
-    background: magenta;
-}
-
-.bg46,
-.bg106 {
-    background: cyan;
-}
-
-.bg47,
-.bg107 {
-    background: white;
 }
 
 </style>
