@@ -383,36 +383,6 @@ const initTooltip = () => {
     });
 };
 
-// do not show the error if in subs
-const isErrorInSubs = (i, subs) => {
-    if (!Util.isList(subs)) {
-        return false;
-    }
-    const foundItem = subs.find((item) => {
-        if (Util.isList(item.errors) && item.errors.includes(i)) {
-            return true;
-        }
-        return isErrorInSubs(i, item.subs);
-    });
-    if (foundItem) {
-        return true;
-    }
-    return false;
-};
-
-const initErrors = (rows, errors) => {
-    if (!Util.isList(rows)) {
-        return;
-    }
-    rows.forEach((row) => {
-        if (Util.isList(row.errors)) {
-            // empty array in case to show error icon
-            row.errors = row.errors.filter((i) => !isErrorInSubs(i, row.subs)).map((i) => errors[i]);
-        }
-        initErrors(row.subs, errors);
-    });
-};
-
 const updateSize = () => {
     state.windowWidth = window.innerWidth;
 
@@ -432,8 +402,6 @@ onMounted(() => {
     const reportData = JSON.parse(decompress(window.reportData));
     console.log(reportData);
 
-    // init all errors (index to message)
-    initErrors(reportData.rows, reportData.errors);
     initData(reportData);
 
     state.gridDataAll = {

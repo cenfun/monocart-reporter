@@ -175,10 +175,10 @@ const formatters = {
     },
 
     errors: function(value, rowItem) {
-        if (!value) {
-            return '';
+        if (rowItem.hasErrors) {
+            return iconFormatter('error', '20px', true);
         }
-        return iconFormatter('error', '20px', true);
+        return '';
     },
 
     logs: function(value, rowItem) {
