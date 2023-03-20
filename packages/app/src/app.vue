@@ -243,8 +243,8 @@ const workersHandler = (workers, list) => {
 
     const point = Util.point;
     const dFixed = Util.dFixed;
-    const width = 800;
-    const height = 15;
+    const width = 1000;
+    const height = 20;
 
     // group by parallelIndex
     const map = new Map();

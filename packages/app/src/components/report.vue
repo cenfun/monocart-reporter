@@ -344,7 +344,7 @@ watch(() => data.popoverTarget, () => {
 
 .mcr-report-worker {
     svg {
-        max-width: 800px;
+        max-width: 1000px;
     }
 
     .mcr-num {
