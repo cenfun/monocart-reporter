@@ -69,7 +69,7 @@
         <VuiInput
           v-model="state.keywords"
           width="150px"
-          class="mcr-search"
+          :class="searchClass"
           placeholder="keywords"
           :tooltip="state.searchableTitle"
         />
@@ -104,7 +104,7 @@
 </template>
 <script setup>
 import {
-    watch, onMounted, reactive
+    watch, onMounted, reactive, computed
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import decompress from 'lz-utils/lib/decompress.js';
@@ -165,6 +165,13 @@ const navItemClick = (item) => {
     }
 };
 
+const searchClass = computed(() => {
+    const ls = ['mcr-search'];
+    if (state.keywords) {
+        ls.push('mcr-search-keywords');
+    }
+    return ls;
+});
 
 const caseHandler = (item) => {
     if (item.subs) {
@@ -693,6 +700,14 @@ icon
         background-repeat: no-repeat;
         background-position: 97% center;
         background-size: 16px;
+    }
+}
+
+.mcr-search-keywords {
+    input {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
     }
 }
 
