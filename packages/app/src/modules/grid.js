@@ -53,43 +53,81 @@ const hideFlyover = () => {
     state.caseItem = null;
 };
 
-const showFlyover = (rowItem, position) => {
-    if (state.caseItem === rowItem) {
-        return;
+export const showFlyover = (caseItem, position) => {
+    if (caseItem) {
+
+        if (state.caseItem === caseItem) {
+            return;
+        }
+
+        state.caseItem = caseItem;
+        state.position = position;
+        state.flyoverTitle = caseItem.title;
+
+        const { tg_index, title } = caseItem;
+        Util.setHash('page', `${tg_index}/${title}`);
+
+    } else {
+
+        state.caseItem = null;
+
+        state.flyoverTitle = state.title;
+        Util.setHash('page', 'report');
+
     }
 
-    state.caseItem = rowItem;
-    state.position = position;
-    state.flyoverTitle = rowItem.title;
-    // console.log('showFlyover position', position);
     state.flyoverVisible = true;
 };
 
-export const displayFlyover = () => {
+const displayFlyoverByIndex = (grid, index, title) => {
+    if (index) {
+        const rowItem = grid.getRowItem(parseInt(index));
+        if (rowItem && rowItem.title === title) {
+            showFlyover(rowItem);
+            return true;
+        }
+    }
+    return false;
+};
 
-    const grid = state.grid;
-    if (!grid) {
+const displayFlyoverByTitle = (grid, title) => {
+    if (title) {
+        const rowItem = grid.getRowItemBy('title', title);
+        if (rowItem) {
+            showFlyover(rowItem);
+            return true;
+        }
+    }
+    return false;
+};
+
+export const displayFlyoverWithHash = () => {
+
+    const page = Util.getHash('page');
+
+    if (page === 'report') {
+        showFlyover();
         return;
     }
 
-    const hash = Util.getHash();
+    const grid = state.grid;
+    if (page && grid) {
 
-    // match index and title
-    if (hash.index) {
-        const rowItem = grid.getRowItem(parseInt(hash.index));
-        if (rowItem && rowItem.title === hash.title) {
-            showFlyover(rowItem);
+        const list = page.split('/');
+        const index = list.shift();
+        const title = list.join('/');
+        // console.log(page, index, title);
+
+        // match index and title
+        if (displayFlyoverByIndex(grid, index, title)) {
             return;
         }
-    }
 
-    // only match title
-    if (hash.title) {
-        const rowItem = grid.getRowItemBy('title', hash.title);
-        if (rowItem) {
-            showFlyover(rowItem);
+        // only match title
+        if (displayFlyoverByTitle(grid, title)) {
             return;
         }
+
     }
 
     hideFlyover();
@@ -159,7 +197,7 @@ const bindGridEvents = () => {
     });
 
     grid.bind('onFirstUpdated', (e) => {
-        displayFlyover();
+        displayFlyoverWithHash();
     });
 };
 

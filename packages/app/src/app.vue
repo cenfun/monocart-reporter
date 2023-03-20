@@ -110,7 +110,7 @@ import decompress from 'lz-utils/lib/decompress.js';
 
 import Util from './utils/util.js';
 import {
-    createGrid, renderGrid, updateGrid, displayFlyover, initCustomsFormatters
+    createGrid, renderGrid, updateGrid, initCustomsFormatters, showFlyover, displayFlyoverWithHash
 } from './modules/grid.js';
 
 import Flyover from './components/flyover.vue';
@@ -354,8 +354,7 @@ const initData = (reportData) => {
 };
 
 const onMenuClick = (e) => {
-    state.flyoverTitle = state.title;
-    state.flyoverVisible = true;
+    showFlyover();
 };
 
 let timeout_tooltip;
@@ -430,9 +429,6 @@ onMounted(() => {
 
     initTooltip();
 
-    setTimeout(() => {
-        onMenuClick();
-    });
 });
 
 let timeout_search;
@@ -453,26 +449,16 @@ watch([
     renderGrid();
 });
 
-watch([
-    () => state.flyoverVisible,
-    () => state.caseItem
-], () => {
-    if (state.flyoverVisible) {
-        if (state.caseItem) {
-            Util.setHash({
-                index: state.caseItem.tg_index,
-                title: state.caseItem.title
-            });
-        }
-    } else {
-        Util.delHash(['index', 'title']);
+watch(() => state.flyoverVisible, (v) => {
+    if (!v) {
+        Util.delHash('page');
     }
 });
 
 window.addEventListener('popstate', (e) => {
     const caseType = Util.getHash('caseType');
     state.caseType = caseType || 'tests';
-    displayFlyover();
+    displayFlyoverWithHash();
 });
 
 window.addEventListener('resize', () => {
