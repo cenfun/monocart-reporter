@@ -79,6 +79,12 @@ test.describe('suite group 1 @beta', () => {
     });
 
     test.describe('suite sub group @beta', () => {
+
+        test.beforeEach(async () => {
+            console.log('beforeEach delay 10');
+            await Util.delay(10);
+        });
+
         test('@smoke case first', async () => {
             // ...
         });

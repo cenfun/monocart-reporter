@@ -90,7 +90,7 @@
             gap="10px"
             padding="5px"
           >
-            <div>
+            <div :tooltip="'parallel index ' + item.index">
               <span class="mcr-num">{{ item.index }}</span>
             </div>
             <div class="vui-flex-auto">
@@ -223,6 +223,7 @@ const onTagClick = (tag) => {
 
     .mcr-num {
         background: #888;
+        cursor: default;
     }
 }
 
