@@ -49,21 +49,20 @@
             </VuiFlex>
           </template>
 
-
           <div class="vui-flex-auto" />
-
-          <div
-            v-if="Util.isNum(item.data.duration)"
-            class="mcr-item-duration"
-          >
-            {{ Util.TF(item.data.duration) }}
-          </div>
 
           <div
             v-if="item.data.location"
             class="mcr-item-location"
           >
             {{ item.data.location }}
+          </div>
+
+          <div
+            v-if="Util.isNum(item.data.duration)"
+            class="mcr-item-duration"
+          >
+            {{ Util.NF(item.data.duration) }} ms
           </div>
         </VuiFlex>
         <div

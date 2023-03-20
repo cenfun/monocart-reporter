@@ -24,7 +24,7 @@
         "@babel/code-frame": "^7.18.6",
         "@babel/parser": "^7.21.3",
         "console-grid": "^2.0.1",
-        "eight-colors": "^1.0.2",
+        "eight-colors": "^1.0.3",
         "lz-utils": "^1.0.5",
         "nodemailer": "^6.9.1",
         "stack-utils": "^2.0.6"

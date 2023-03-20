@@ -139,9 +139,11 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
 
         test('@sanity case failed', () => {
 
-            console.log('stdout: failed case log');
-
-            console.error('stderr: failed case error');
+            console.log('console.log');
+            console.error('console.error');
+            console.warn('console.warn');
+            console.debug('console.debug');
+            console.info('console.info');
 
             console.log(test.info().config.reporter);
 

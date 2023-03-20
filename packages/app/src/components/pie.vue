@@ -133,22 +133,14 @@ const renderChart = () => {
 
 };
 
-const dFixed = (num, fixed = 1) => {
-    if (Number.isInteger(num)) {
-        return num;
-    }
-    return Util.toNum(num.toFixed(fixed));
-};
-
-const point = function(px, py) {
-    return `${dFixed(px)},${dFixed(py)}`;
-};
-
 const getSectorPath = function(x, y, r, from, till) {
     if (from === till) {
         return '';
     }
     const ds = [];
+
+    const point = Util.point;
+
     // move to start point
     ds.push(`M${point(x, y)}`);
 
@@ -174,7 +166,7 @@ const getMovePos = (margin, from, till) => {
     const center = from + (till - from) * 0.5;
     const px = Math.cos(center) * margin;
     const py = Math.sin(center) * margin;
-    return point(px, py);
+    return Util.point(px, py);
 };
 
 onMounted(() => {
@@ -194,7 +186,6 @@ watch(() => state.pieData, (v) => {
     overflow: hidden;
 
     svg {
-        display: block;
         width: 150px;
         height: 150px;
 

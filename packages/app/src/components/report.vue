@@ -94,7 +94,22 @@
               <span class="mcr-num">{{ item.index }}</span>
             </div>
             <div class="vui-flex-auto">
-              bar
+              <svg
+                v-if="item.bars"
+                :viewBox="item.viewBox"
+                width="100%"
+                height="100%"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g>
+                  <path
+                    v-for="(bar, j) in item.bars"
+                    :key="j"
+                    :d="bar.d"
+                    :fill="bar.color"
+                  />
+                </g>
+              </svg>
             </div>
             <div>
               {{ Util.TF(item.duration) }}
@@ -198,6 +213,16 @@ const onTagClick = (tag) => {
         margin-bottom: 10px;
         margin-left: -5px;
         vertical-align: middle;
+    }
+}
+
+.mcr-report-worker {
+    svg {
+        max-width: 800px;
+    }
+
+    .mcr-num {
+        background: #888;
     }
 }
 

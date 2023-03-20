@@ -39,6 +39,17 @@ const Util = {
         return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
     },
 
+    dFixed: (num, fixed = 1) => {
+        if (Number.isInteger(num)) {
+            return num;
+        }
+        return Util.toNum(num.toFixed(fixed));
+    },
+
+    point: (px, py) => {
+        return `${Util.dFixed(px)},${Util.dFixed(py)}`;
+    },
+
     // =============================================================================
     // hash
     getHash(key) {

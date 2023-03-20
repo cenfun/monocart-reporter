@@ -153,7 +153,8 @@ const formatters = {
         if (typeof value !== 'number') {
             return '';
         }
-        return Util.TF(value);
+        // using same unit ms
+        return `${Util.NF(value)} ms`;
     },
 
     annotations: function(value, rowItem, columnItem) {

@@ -245,10 +245,38 @@ const workersHandler = (workers, list) => {
         });
     });
 
+    const point = Util.point;
+    const dFixed = Util.dFixed;
+
     workerList.forEach((item) => {
+        const width = 800;
+        const height = 15;
+        item.viewBox = `0 0 ${width} ${height}`;
+        const cache = {};
+        let start = 0;
         item.list.forEach((it) => {
-            it.percent = it.duration / maxDuration;
+            if (!cache[it.type]) {
+                cache[it.type] = [];
+            }
+            const dur = it.duration;
+            const x = start / maxDuration * width;
+            const w = dur / maxDuration * width;
+            if (w > 0.1) {
+                const sw = dFixed(w);
+                cache[it.type].push(`M${point(x, 0)} h${sw} v${height} h-${sw} v-${height}`);
+            }
+
+            start += dur;
         });
+
+        const bars = Object.keys(cache).map((k) => {
+            return {
+                d: cache[k],
+                color: state.colors[k]
+            };
+        });
+
+        item.bars = bars;
     });
 
     workerList.sort((a, b) => {
@@ -291,18 +319,18 @@ const initData = (reportData) => {
         summary.suites.icon = 'suite';
     });
 
+    state.colors = {
+        passed: 'green',
+        failed: '#d00',
+        flaky: 'orange',
+        skipped: 'gray'
+    };
+
     // summary.failed.value = 0;
-    summary.passed.color = 'green';
     summary.passed.classMap = summary.failed.value === 0 ? 'mcr-nav-passed' : '';
-
-    summary.failed.color = '#d00';
-    summary.failed.classMap = summary.failed.value > 0 ? 'mcr-nav-failed' : 'mcr-nav-skipped';
-
-    summary.flaky.color = 'orange';
     summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-nav-flaky' : 'mcr-nav-skipped';
-
-    summary.skipped.color = 'gray';
     summary.skipped.classMap = 'mcr-nav-skipped';
+    summary.failed.classMap = summary.failed.value > 0 ? 'mcr-nav-failed' : 'mcr-nav-skipped';
 
     const navList = Object.values(summary).filter((it) => it.type);
 
@@ -312,7 +340,7 @@ const initData = (reportData) => {
             name: item.name,
             value: item.value,
             percent: item.percent,
-            color: item.color
+            color: state.colors[item.type]
         };
     });
 
@@ -502,6 +530,10 @@ body {
     font-size: 14px;
     font-family: arial, sans-serif;
     overflow: hidden;
+}
+
+svg {
+    display: block;
 }
 
 a {
