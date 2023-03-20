@@ -221,69 +221,90 @@ const tagsHandler = (tags) => {
 };
 
 const workersHandler = (workers, list) => {
+    // max works, default is 4
     state.workers = workers;
-    const map = new Map();
-    list.forEach((item) => {
-        const pi = item.parallelIndex;
-        if (!map.get(pi)) {
-            map.set(pi, []);
+
+    console.assert(list.length);
+
+    // sort by timestamp
+    list.sort((a, b) => {
+        if (a.timestamp === b.timestamp) {
+            return a.parallelIndex - b.parallelIndex;
         }
-        map.get(pi).push(item);
+        return a.timestamp - b.timestamp;
     });
 
-    const workerList = [];
-    let maxDuration = 1;
-    map.forEach((v, k) => {
-        const duration = v.reduce((p, item) => p + item.duration, 0);
-        if (duration > maxDuration) {
-            maxDuration = duration;
-        }
-        workerList.push({
-            index: k,
-            list: v,
-            duration
-        });
-    });
+    // console.log(list);
+    const time_start = list[0].timestamp;
+    const time_end = list[list.length - 1].timestamp;
+    const duration = time_end - time_start;
+    state.parallelDuration = Util.TF(duration);
+    // console.log('duration', duration);
 
     const point = Util.point;
     const dFixed = Util.dFixed;
+    const width = 800;
+    const height = 15;
 
-    workerList.forEach((item) => {
-        const width = 800;
-        const height = 15;
-        item.viewBox = `0 0 ${width} ${height}`;
-        const cache = {};
-        let start = 0;
-        item.list.forEach((it) => {
-            if (!cache[it.type]) {
-                cache[it.type] = [];
-            }
-            const dur = it.duration;
-            const x = start / maxDuration * width;
-            const w = dur / maxDuration * width;
-            if (w > 0.1) {
-                const sw = dFixed(w);
-                cache[it.type].push(`M${point(x, 0)} h${sw} v${height} h-${sw} v-${height}`);
-            }
+    // group by parallelIndex
+    const map = new Map();
+    list.forEach((item) => {
+        const pi = item.parallelIndex;
+        let data = map.get(pi);
+        if (!data) {
+            data = {
+                index: pi,
+                viewBox: `0 0 ${width} ${height}`,
+                list: [],
+                // failed, passed ...
+                types: {}
+            };
+            map.set(pi, data);
+        }
 
-            start += dur;
+        // console.log(item);
+
+        const x = (item.timestamp - time_start) / duration * width;
+        const w = item.duration / duration * width;
+        if (w === 0) {
+            return;
+        }
+
+        data.list.push({
+            ... item,
+            x,
+            w
         });
 
-        const bars = Object.keys(cache).map((k) => {
+        // bar type d list
+        let ds = data.types[item.type];
+        if (!ds) {
+            ds = [];
+            data.types[item.type] = ds;
+        }
+
+        const sw = dFixed(w);
+        ds.push(`M${point(x, 0)} h${sw} v${height} h-${sw} v-${height}z`);
+
+    });
+
+    const workerList = [];
+    map.forEach((item, k) => {
+        item.bars = Object.keys(item.types).map((type) => {
             return {
-                d: cache[k],
-                color: state.colors[k]
+                d: item.types[type].join(' '),
+                color: state.colors[type]
             };
         });
 
-        item.bars = bars;
+        workerList.push(item);
     });
 
     workerList.sort((a, b) => {
         return a.index - b.index;
     });
 
-    console.log(workerList);
+    // console.log('workerList', workerList);
 
     state.workerList = workerList;
 
@@ -397,9 +418,10 @@ const updateSize = () => {
 };
 
 onMounted(() => {
-
     const reportData = JSON.parse(decompress(window.reportData));
     console.log(reportData);
+
+    console.assert(reportData.rows.length);
 
     initData(reportData);
 

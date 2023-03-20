@@ -71,14 +71,14 @@
               icon="parallel"
               :button="false"
             >
-              <b>Workers</b> <span class="mcr-num">{{ Util.NF(state.workers) }}</span>
+              <b>Max Workers</b> <span class="mcr-num">{{ Util.NF(state.workers) }}</span>
             </IconLabel>
 
             <IconLabel
               icon="time"
               :button="false"
             >
-              <b>Duration</b> <span class="mcr-num">{{ state.duration }}</span>
+              <b>Parallel Duration</b> <span class="mcr-num">{{ state.parallelDuration }}</span>
             </IconLabel>
           </VuiFlex>
         </div>
@@ -110,9 +110,6 @@
                   />
                 </g>
               </svg>
-            </div>
-            <div>
-              {{ Util.TF(item.duration) }}
             </div>
           </VuiFlex>
         </div>
@@ -217,6 +214,10 @@ const onTagClick = (tag) => {
 }
 
 .mcr-report-worker {
+    &:hover {
+        background-color: #f5f5f5;
+    }
+
     svg {
         max-width: 800px;
     }

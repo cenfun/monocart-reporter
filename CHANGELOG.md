@@ -1,3 +1,10 @@
+* 1.4.1
+  - added pie chart animation
+  - added tags feature
+  - fixed retry logs
+  - optimized errors (removed duplicated errors)
+  - added workers summary
+
 * 1.4.0
   - fixed collection of comments (support skipped empty lines)
   - fixed annotations formatter
