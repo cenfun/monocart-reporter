@@ -164,19 +164,21 @@
         gap="10px"
       >
         <IconLabel :icon="data.result.type">
-          <b>{{ data.result.title }}</b>
+          {{ data.result.title }}
         </IconLabel>
-        <IconLabel icon="calendar">
-          {{ new Date(data.result.timestamp).toLocaleString() }}
-        </IconLabel>
-        <IconLabel icon="time">
-          {{ Util.TF(data.result.duration) }}
-        </IconLabel>
+        <VuiFlex gap="10px">
+          <IconLabel icon="calendar">
+            {{ new Date(data.result.timestamp).toLocaleString() }}
+          </IconLabel>
+          <IconLabel icon="time">
+            {{ Util.TF(data.result.duration) }}
+          </IconLabel>
+        </VuiFlex>
         <IconLabel icon="parallel">
-          Parallel Index: {{ data.result.parallelIndex }}
-        </IconLabel>
-        <IconLabel icon="parallel">
-          Worker Index: {{ data.result.workerIndex }}
+          <VuiFlex gap="10px">
+            <div>Parallel Index: {{ data.result.parallelIndex }}</div>
+            <div>Worker Index: {{ data.result.workerIndex }}</div>
+          </VuiFlex>
         </IconLabel>
       </VuiFlex>
     </VuiPopover>
