@@ -744,7 +744,9 @@ icon
 }
 
 .mcr-grid {
-    cursor: default;
+    .tg-column-name {
+        user-select: none;
+    }
 
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {

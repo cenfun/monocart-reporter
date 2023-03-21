@@ -446,6 +446,29 @@ const getGridOption = () => {
         sortField: state.sortField,
         sortAsc: state.sortAsc,
         sortOnInit: true,
+        sortComparers: {
+            errors: function(a, b, o) {
+                const av = a.hasErrors;
+                const bv = b.hasErrors;
+
+                // undefined always bottom, sortBlankFactor is 1 default (sortBlankValueBottom)
+                if (av && !bv) {
+                    return -1;
+                }
+                if (!av && bv) {
+                    return 1;
+                }
+
+                const indexComparer = this.getDefaultComparer('index');
+                let i = indexComparer(a, b, o);
+
+                if (av && bv) {
+                    i *= o.sortFactor;
+                }
+
+                return i;
+            }
+        },
 
         columnTypes: {
             title: 'tree'
