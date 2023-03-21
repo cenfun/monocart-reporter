@@ -705,6 +705,8 @@ icon
 }
 
 .mcr-grid {
+    cursor: default;
+
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {
         font-weight: normal;
@@ -740,10 +742,6 @@ icon
 
     .mcr-clickable {
         cursor: pointer;
-
-        b {
-            pointer-events: none;
-        }
     }
 
     .mcr-location {

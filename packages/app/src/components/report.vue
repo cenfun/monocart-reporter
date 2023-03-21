@@ -30,15 +30,14 @@
             gap="10px"
             wrap
           >
-            <IconLabel
+            <div
               v-for="(item, i) in state.pieOthers"
               :key="i"
               :tooltip="item.description"
-              :icon="item.icon"
               :button="false"
             >
-              <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-            </IconLabel>
+              {{ item.name }}: {{ Util.NF(item.value) }}
+            </div>
           </VuiFlex>
         </div>
       </div>
