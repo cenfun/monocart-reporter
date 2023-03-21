@@ -448,25 +448,38 @@ const getGridOption = () => {
         sortOnInit: true,
         sortComparers: {
             errors: function(a, b, o) {
-                const av = a.hasErrors;
-                const bv = b.hasErrors;
-
-                // undefined always bottom, sortBlankFactor is 1 default (sortBlankValueBottom)
-                if (av && !bv) {
-                    return -1;
-                }
-                if (!av && bv) {
-                    return 1;
-                }
-
-                const indexComparer = this.getDefaultComparer('index');
-                let i = indexComparer(a, b, o);
-
-                if (av && bv) {
-                    i *= o.sortFactor;
-                }
-
-                return i;
+                const valueComparer = this.getDefaultComparer('value');
+                const numberValueComparer = this.getDefaultComparer('numberValue');
+                o.sortField = 'numErrors';
+                return valueComparer(a, b, o, (av, bv) => {
+                    return numberValueComparer(av, bv);
+                });
+            },
+            logs: function(a, b, o) {
+                const valueComparer = this.getDefaultComparer('value');
+                const numberValueComparer = this.getDefaultComparer('numberValue');
+                return valueComparer(a, b, o, (av, bv) => {
+                    if (Array.isArray(av)) {
+                        av = av.length;
+                    }
+                    if (Array.isArray(bv)) {
+                        bv = bv.length;
+                    }
+                    return numberValueComparer(av, bv);
+                });
+            },
+            annotations: function(a, b, o) {
+                const valueComparer = this.getDefaultComparer('value');
+                const stringValueComparer = this.getDefaultComparer('stringValue');
+                return valueComparer(a, b, o, (av, bv) => {
+                    if (Array.isArray(av)) {
+                        av = av.map((it) => it.type).join(' ');
+                    }
+                    if (Array.isArray(bv)) {
+                        bv = bv.map((it) => it.type).join(' ');
+                    }
+                    return stringValueComparer(av, bv);
+                });
             }
         },
 

@@ -155,8 +155,11 @@ const formatters = {
         return `${Util.NF(value)} ms`;
     },
 
+    // array or string
     annotations: function(value, rowItem, columnItem) {
-
+        if (!value) {
+            return '';
+        }
         let formattedValue = matchedFormatter(value, rowItem, columnItem);
         if (formattedValue === value) {
             if (Util.isList(value)) {
@@ -173,7 +176,7 @@ const formatters = {
     },
 
     errors: function(value, rowItem) {
-        if (rowItem.hasErrors) {
+        if (rowItem.numErrors) {
             return iconFormatter('error', '20px', true);
         }
         return '';
