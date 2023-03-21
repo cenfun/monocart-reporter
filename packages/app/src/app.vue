@@ -54,7 +54,7 @@
             center
           >
             <b>{{ item.name }}</b>
-            <span>{{ item.value.toLocaleString() }}</span>
+            <span>{{ Util.NF(item.value) }}</span>
             <span v-if="item.percent">(<i>{{ item.percent }}</i>)</span>
           </VuiFlex>
         </div>
@@ -71,7 +71,7 @@
           width="150px"
           :class="searchClass"
           placeholder="keywords"
-          :tooltip="state.searchableTitle"
+          :title="state.searchableTitle"
         />
 
         <VuiSwitch v-model="state.suiteVisible">
