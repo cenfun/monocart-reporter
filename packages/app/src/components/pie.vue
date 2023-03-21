@@ -181,8 +181,6 @@ watch(() => state.pieData, (v) => {
 <style lang="scss">
 .mcr-pie-chart {
     position: relative;
-    width: 100%;
-    height: 100%;
     overflow: hidden;
 
     svg {

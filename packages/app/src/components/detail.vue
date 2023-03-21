@@ -18,8 +18,8 @@
         >
           <VuiFlex gap="5px">
             <IconLabel
-              v-if="item.data.okIcon"
-              :icon="item.data.okIcon"
+              v-if="item.data.caseType"
+              :icon="item.data.caseType"
               size="20px"
               :button="false"
             />

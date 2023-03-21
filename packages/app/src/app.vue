@@ -177,26 +177,7 @@ const caseHandler = (item) => {
     if (item.subs) {
         item.collapsed = true;
     }
-    if (item.ok) {
-        // ok is outcome === 'expected' || 'flaky' || 'skipped'
-        if (item.status === 'skipped' || item.outcome === 'skipped') {
-            item.classMap = 'tg-case-skipped';
-            item.caseType = 'skipped';
-            item.okIcon = 'skipped';
-        } else if (item.outcome === 'flaky') {
-            item.classMap = 'tg-case-flaky';
-            item.caseType = 'flaky';
-            item.okIcon = 'flaky';
-        } else {
-            item.classMap = 'tg-case-passed';
-            item.caseType = 'passed';
-            item.okIcon = 'passed';
-        }
-    } else {
-        item.classMap = 'tg-case-failed';
-        item.caseType = 'failed';
-        item.okIcon = 'failed';
-    }
+    item.classMap = `tg-case-${item.caseType}`;
 };
 
 const stepHandler = (item) => {
@@ -380,7 +361,8 @@ const initData = (reportData) => {
 
     state.navList = navList;
     state.pieData = pieData;
-    state.pieHeads = [summary.suites, summary.tests, summary.steps];
+    state.pieHeads = [summary.tests, summary.steps, summary.suites];
+    state.pieOthers = [summary.retries, summary.projects, summary.files, summary.describes];
 
     tagsHandler(tags);
     workersHandler(workers, workerList);

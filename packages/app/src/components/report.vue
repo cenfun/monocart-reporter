@@ -9,6 +9,7 @@
           <VuiFlex
             v-if="state.pieHeads"
             gap="15px"
+            wrap
           >
             <IconLabel
               v-for="(item, i) in state.pieHeads"
@@ -23,6 +24,22 @@
         <div class="mcr-report-chart">
           <Pie />
         </div>
+        <div class="mcr-report-info">
+          <VuiFlex
+            v-if="state.pieOthers"
+            gap="10px"
+            wrap
+          >
+            <IconLabel
+              v-for="(item, i) in state.pieOthers"
+              :key="i"
+              :icon="item.icon"
+              :button="false"
+            >
+              <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
+            </IconLabel>
+          </VuiFlex>
+        </div>
       </div>
 
       <div
@@ -30,7 +47,10 @@
         class="mcr-report-item"
       >
         <div class="mcr-report-head">
-          <VuiFlex>
+          <VuiFlex
+            gap="15px"
+            wrap
+          >
             <IconLabel
               icon="tag"
               :button="false"
@@ -75,7 +95,10 @@
 
       <div class="mcr-report-item">
         <div class="mcr-report-head">
-          <VuiFlex gap="15px">
+          <VuiFlex
+            gap="15px"
+            wrap
+          >
             <IconLabel
               icon="parallel"
               :button="false"
@@ -147,7 +170,7 @@
         </div>
       </div>
     </div>
-    <div class="mcr-menu-footer">
+    <div class="mcr-report-footer">
       <VuiFlex
         gap="10px"
         padding="10px"
@@ -341,6 +364,10 @@ watch(() => data.popoverTarget, () => {
     }
 }
 
+.mcr-report-info {
+    padding: 0 10px 10px;
+}
+
 .mcr-report-chart {
     padding: 10px;
 }
@@ -382,7 +409,7 @@ watch(() => data.popoverTarget, () => {
     pointer-events: none;
 }
 
-.mcr-menu-footer {
+.mcr-report-footer {
     border-top: 1px solid #ddd;
     background-color: #eee;
 

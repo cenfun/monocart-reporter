@@ -112,10 +112,10 @@ const formatters = {
     },
 
     iconOk: function(value, rowItem, columnItem, cellNode) {
-        if (typeof value !== 'boolean') {
+        if (!rowItem.caseType) {
             return '';
         }
-        return iconFormatter(rowItem.okIcon, '20px');
+        return iconFormatter(rowItem.caseType, '20px');
     },
 
     iconType: function(value, rowItem, columnItem, cellNode) {
