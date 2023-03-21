@@ -33,6 +33,7 @@
             <IconLabel
               v-for="(item, i) in state.pieOthers"
               :key="i"
+              :tooltip="item.description"
               :icon="item.icon"
               :button="false"
             >

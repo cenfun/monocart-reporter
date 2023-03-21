@@ -160,6 +160,7 @@ const navItemClick = (item) => {
             Util.delHash('caseType');
         } else {
             Util.setHash('caseType', item.type);
+            Util.delHash('page');
         }
 
     }
@@ -362,7 +363,7 @@ const initData = (reportData) => {
     state.navList = navList;
     state.pieData = pieData;
     state.pieHeads = [summary.tests, summary.steps, summary.suites];
-    state.pieOthers = [summary.retries, summary.projects, summary.files, summary.describes];
+    state.pieOthers = [summary.retries, summary.projects, summary.files, summary.describes, summary.errors, summary.logs, summary.attachments];
 
     tagsHandler(tags);
     workersHandler(workers, workerList);
@@ -411,7 +412,7 @@ const updateSize = () => {
     let flyoverWidth = '50%';
     if (state.windowWidth < 600) {
         flyoverWidth = '100%';
-    } else if (state.windowWidth < 768) {
+    } else if (state.windowWidth < 900) {
         flyoverWidth = '80%';
     } else if (state.windowWidth < 1200) {
         flyoverWidth = '60%';
