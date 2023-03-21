@@ -91,12 +91,19 @@ const markdownFormatter = (str, inline) => {
 const tagPattern = /@([^@\s]+)/g;
 const tagFormatter = (str) => {
     return str.replace(tagPattern, function(match, key) {
-        let style = '';
+        let styleStr = '';
+        let titleStr = '';
         const tag = state.tagMap[key];
-        if (tag && tag.style) {
-            style = Util.styleMap(tag.style);
+        if (tag) {
+            const { style, description } = tag;
+            if (style) {
+                styleStr = ` style="${Util.quoteAttr(Util.styleMap(style))}"`;
+            }
+            if (description) {
+                titleStr = ` title="${Util.quoteAttr(description)}"`;
+            }
         }
-        return `<span class="mcr-tag" style="${style}">${key}</span>`;
+        return `<span class="mcr-tag"${styleStr}${titleStr}>${key}</span>`;
     });
 };
 

@@ -362,8 +362,17 @@ const initData = (reportData) => {
 
     state.navList = navList;
     state.pieData = pieData;
-    state.pieHeads = [summary.tests, summary.steps, summary.suites];
-    state.pieOthers = [summary.retries, summary.projects, summary.files, summary.describes, summary.errors, summary.logs, summary.attachments];
+    state.pieHeads = [summary.tests, summary.suites, summary.steps];
+    state.pieOthers = [
+        summary.projects,
+        summary.files,
+        summary.describes,
+
+        summary.retries,
+        summary.errors,
+        summary.logs,
+        summary.attachments
+    ];
 
     tagsHandler(tags);
     workersHandler(workers, workerList);

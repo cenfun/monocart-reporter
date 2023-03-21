@@ -15,6 +15,7 @@
               v-for="(item, i) in state.pieHeads"
               :key="i"
               :icon="item.icon"
+              :tooltip="item.description"
               :button="false"
             >
               <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
@@ -27,17 +28,19 @@
         <div class="mcr-report-other">
           <VuiFlex
             v-if="state.pieOthers"
-            gap="10px"
+            gap="15px"
             wrap
           >
-            <div
+            <IconLabel
               v-for="(item, i) in state.pieOthers"
               :key="i"
+              icon="dot"
+              size="10px"
               :tooltip="item.description"
               :button="false"
             >
               {{ item.name }}: {{ Util.NF(item.value) }}
-            </div>
+            </IconLabel>
           </VuiFlex>
         </div>
       </div>
@@ -82,6 +85,7 @@
             >
               <span
                 :style="item.style"
+                :tooltip="item.description"
                 class="mcr-tag"
               >{{ item.name }}</span>
               <span

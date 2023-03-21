@@ -50,6 +50,17 @@ const Util = {
         return `${Util.dFixed(px)},${Util.dFixed(py)}`;
     },
 
+    quoteAttr: (s) => {
+        return `${s}`
+            // This MUST be the 1st replacement.
+            .replace(/&/g, '&amp;')
+            // The 4 other predefined entities, required.
+            .replace(/'/g, '&apos;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    },
+
     // =============================================================================
     // hash
     getHash(key) {

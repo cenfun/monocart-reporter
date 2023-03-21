@@ -70,17 +70,24 @@ module.exports = {
 
             tags: {
                 smoke: {
-                    'background': '#6F9913'
+                    style: {
+                        background: '#6F9913'
+                    },
+                    // description shows in tooltip
+                    description: '"Smoke Testing" is a software testing technique performed post software build to verify that the <critical functionalities> of software are working fine.'
                 },
                 sanity: {
-                    'background': '#178F43'
+                    style: {
+                        background: '#178F43'
+                    },
+                    description: '"Sanity testing" is a kind of Software Testing performed after receiving a software build, with minor changes in code, or functionality, to ascertain that the bugs have been fixed and no further issues are introduced due to these changes.'
                 },
                 critical: {
-                    'background': '#c00'
+                    // only style
+                    background: '#c00'
                 },
-                slow: {
-                    'background': 'orange'
-                }
+                // css string style
+                slow: 'background:orange;'
             },
 
             // custom columns
