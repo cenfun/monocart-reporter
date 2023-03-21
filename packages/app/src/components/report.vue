@@ -51,14 +51,14 @@
           >
             <IconLabel
               icon="top"
-              @click="onTopDurationClick('tests')"
+              @click="onSortClick('tests','duration')"
             >
               Top slowest cases
             </IconLabel>
 
             <IconLabel
               icon="top"
-              @click="onTopDurationClick('failed')"
+              @click="onSortClick('failed','duration')"
             >
               Top slowest failed cases
             </IconLabel>
@@ -288,12 +288,24 @@ const data = reactive({
 });
 
 const onAmountClick = (item) => {
-    hideFlyover(true);
+
+    const sortFields = {
+        errors: 'errors',
+        logs: 'logs',
+        attachments: 'attachments',
+        retries: 'retry'
+    };
+
+    const sortField = sortFields[item.id];
+    if (sortField) {
+        onSortClick('tests', sortField);
+    }
+
 };
 
-const onTopDurationClick = (caseType) => {
+const onSortClick = (caseType, sortField) => {
     hideFlyover(true);
-    state.sortField = 'duration';
+    state.sortField = sortField;
     state.sortAsc = false;
 
     if (state.suiteVisible === false && state.caseType === caseType) {
