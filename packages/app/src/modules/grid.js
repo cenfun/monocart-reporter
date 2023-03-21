@@ -5,7 +5,6 @@ import Util from '../utils/util.js';
 import {
     formatters, matchedFormatter, annotationSearchFormatter
 } from './formatters.js';
-import store from '../utils/store.js';
 import state from '../modules/state.js';
 
 const isNodeTruncated = (node) => {
@@ -48,9 +47,12 @@ const showTooltip = (elem, message) => {
 
 };
 
-const hideFlyover = () => {
+export const hideFlyover = (immediately) => {
     state.flyoverVisible = false;
     state.caseItem = null;
+    if (immediately) {
+        Util.delHash('page');
+    }
 };
 
 export const showFlyover = (caseItem, position) => {
@@ -193,6 +195,14 @@ const bindGridEvents = () => {
             showFlyover(rowItem);
         } else {
             hideFlyover();
+        }
+    });
+
+    grid.bind('onSort', (e, d) => {
+        const { columnItem } = d;
+        if (columnItem) {
+            state.sortField = columnItem.id;
+            state.sortAsc = columnItem.sortAsc;
         }
     });
 
@@ -358,8 +368,19 @@ const getFilteredRows = (rows, caseType) => {
 
 };
 
+const getRowNumberFilter = () => {
+    let rowNumber = 1;
+    return (rowItem) => {
+        if (rowItem.type === 'case') {
+            return rowNumber++;
+        }
+    };
+};
 
-const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
+const rowFilterHandler = (rowItem) => {
+
+    const keywords = state.keywords;
+    const searchableKeys = state.searchableKeys;
 
     if (!keywords) {
         searchableKeys.forEach((k) => {
@@ -405,35 +426,8 @@ const rowFilterHandler = (rowItem, searchableKeys, keywords) => {
     return hasMatched;
 };
 
-const getSearchableColumns = (columns) => {
-    const map = {};
-    Util.forEachTree(columns, (column) => {
-        if (column.searchable) {
-            map[column.id] = column.name;
-            if (column.classMap) {
-                column.classMap += ' mcr-searchable';
-            } else {
-                column.classMap = 'mcr-searchable';
-            }
-        }
-    });
-    return map;
-};
-
-
-export const createGrid = () => {
-    const grid = new Grid('.mcr-grid');
-    state.grid = grid;
-
-    bindGridEvents();
-
-    const searchableColumns = getSearchableColumns(state.gridDataAll.columns);
-    const searchableKeys = Object.keys(searchableColumns);
-    state.searchableTitle = `searchable: ${Object.values(searchableColumns).join(', ')}`;
-
-    let rowNumber = 1;
-
-    grid.setOption({
+const getGridOption = () => {
+    const options = {
         selectMultiple: false,
         bindWindowResize: true,
         scrollbarRound: true,
@@ -443,43 +437,56 @@ export const createGrid = () => {
         rowNumberVisible: true,
         // 9999 max
         rowNumberWidth: 46,
-        rowNumberFilter: (rowItem) => {
-            if (rowItem.type === 'case') {
-                return rowNumber++;
-            }
-        },
+        rowNumberFilter: getRowNumberFilter(),
+        rowFilter: rowFilterHandler,
         rowNotFound: '<div class="mcr-no-results">No Results</div>',
-        frozenColumn: state.windowWidth < 768 ? -1 : 1,
+        frozenColumn: 1,
+
+        // do not watch sort in state
+        sortField: state.sortField,
+        sortAsc: state.sortAsc,
+        sortOnInit: true,
+
         columnTypes: {
             title: 'tree'
-        },
-        rowFilter: (rowItem) => {
-            return rowFilterHandler(rowItem, searchableKeys, state.keywords);
         }
-    });
+    };
+
+    // no frozen in mini size
+    if (state.windowWidth < 800) {
+        options.frozenColumn = -1;
+    }
+
+    return options;
+};
+
+export const createGrid = () => {
+    const grid = new Grid('.mcr-grid');
+    state.grid = grid;
+
+    bindGridEvents();
+
     grid.setFormatter(formatters);
-
-    // first render
-    const data = getGridData();
-    grid.setData(data);
-
+    grid.setOption(getGridOption());
+    grid.setData(getGridData());
     grid.render();
 };
 
 export const renderGrid = () => {
-    hideFlyover();
-    store.set('suiteVisible', state.suiteVisible);
-    store.set('stepVisible', state.stepVisible);
-    if (state.grid) {
-        const data = getGridData();
-        state.grid.setData(data);
-        state.grid.render();
+    const grid = state.grid;
+    if (!grid) {
+        return;
     }
+    // console.log('render grid');
+    grid.setOption(getGridOption());
+    grid.setData(getGridData());
+    grid.render();
 };
 
 export const updateGrid = () => {
-    if (state.grid) {
-        state.grid.update();
+    const grid = state.grid;
+    if (!grid) {
+        return;
     }
+    grid.update();
 };
-

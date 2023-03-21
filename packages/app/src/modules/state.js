@@ -11,6 +11,7 @@ const state = shallowReactive({
 
     // filter
     keywords: '',
+    searchableKeys: [],
     searchableTitle: '',
 
     caseType: Util.getHash('caseType') || 'tests',

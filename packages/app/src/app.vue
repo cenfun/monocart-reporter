@@ -156,13 +156,6 @@ const navItemClass = (item) => {
 const navItemClick = (item) => {
     if (item.type !== state.caseType) {
         state.caseType = item.type;
-        if (item.type === 'tests') {
-            Util.delHash('caseType');
-        } else {
-            Util.setHash('caseType', item.type);
-            Util.delHash('page');
-        }
-
     }
 };
 
@@ -173,6 +166,21 @@ const searchClass = computed(() => {
     }
     return ls;
 });
+
+const getSearchableColumns = (columns) => {
+    const map = {};
+    Util.forEachTree(columns, (column) => {
+        if (column.searchable) {
+            map[column.id] = column.name;
+            if (column.classMap) {
+                column.classMap += ' mcr-searchable';
+            } else {
+                column.classMap = 'mcr-searchable';
+            }
+        }
+    });
+    return map;
+};
 
 const caseHandler = (item) => {
     if (item.subs) {
@@ -308,8 +316,17 @@ const workersHandler = (workers, list) => {
 const initData = (reportData) => {
 
     const {
-        rows, summary, tags, workers
+        columns, rows, summary, tags, workers
     } = reportData;
+
+    const searchableColumns = getSearchableColumns(columns);
+    state.searchableKeys = Object.keys(searchableColumns);
+    state.searchableTitle = `searchable: ${Object.values(searchableColumns).join(', ')}`;
+
+    // add id for summary
+    Object.keys(summary).forEach((k) => {
+        summary[k].id = k;
+    });
 
     const workerList = [];
 
@@ -361,9 +378,11 @@ const initData = (reportData) => {
     });
 
     state.navList = navList;
-    state.pieData = pieData;
+
     state.pieHeads = [summary.tests, summary.suites, summary.steps];
-    state.pieOthers = [
+    state.pieData = pieData;
+
+    state.amounts = [
         summary.projects,
         summary.files,
         summary.describes,
@@ -475,11 +494,22 @@ watch(() => state.keywords, () => {
 
 });
 
+watch(() => state.caseType, (v) => {
+    if (v === 'tests') {
+        Util.delHash('caseType');
+    } else {
+        Util.setHash('caseType', v);
+        Util.delHash('page');
+    }
+});
+
 watch([
     () => state.caseType,
     () => state.suiteVisible,
     () => state.stepVisible
 ], () => {
+    store.set('suiteVisible', state.suiteVisible);
+    store.set('stepVisible', state.stepVisible);
     renderGrid();
 });
 

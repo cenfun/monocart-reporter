@@ -25,24 +25,45 @@
         <div class="mcr-report-chart">
           <Pie />
         </div>
-        <div class="mcr-report-other">
+        <VuiFlex
+          gap="15px"
+          direction="column"
+          padding="0 15px 15px 15px"
+        >
           <VuiFlex
-            v-if="state.pieOthers"
+            v-if="state.amounts"
             gap="15px"
             wrap
           >
             <IconLabel
-              v-for="(item, i) in state.pieOthers"
+              v-for="(item, i) in state.amounts"
               :key="i"
               icon="dot"
-              size="10px"
               :tooltip="item.description"
-              :button="false"
+              @click="onAmountClick(item)"
             >
               {{ item.name }}: {{ Util.NF(item.value) }}
             </IconLabel>
           </VuiFlex>
-        </div>
+          <VuiFlex
+            gap="15px"
+            wrap
+          >
+            <IconLabel
+              icon="top"
+              @click="onTopDurationClick('tests')"
+            >
+              Top slowest cases
+            </IconLabel>
+
+            <IconLabel
+              icon="top"
+              @click="onTopDurationClick('failed')"
+            >
+              Top slowest failed cases
+            </IconLabel>
+          </VuiFlex>
+        </VuiFlex>
       </div>
 
       <div
@@ -245,7 +266,9 @@ import { components } from 'vine-ui';
 
 import state from '../modules/state.js';
 import Util from '../utils/util.js';
-import { updateGrid } from '../modules/grid.js';
+import {
+    renderGrid, updateGrid, hideFlyover
+} from '../modules/grid.js';
 
 import IconLabel from './icon-label.vue';
 import Pie from './pie.vue';
@@ -263,6 +286,27 @@ const data = reactive({
     popoverTarget: null,
     popoverVisible: false
 });
+
+const onAmountClick = (item) => {
+    hideFlyover(true);
+};
+
+const onTopDurationClick = (caseType) => {
+    hideFlyover(true);
+    state.sortField = 'duration';
+    state.sortAsc = false;
+
+    if (state.suiteVisible === false && state.caseType === caseType) {
+        // manual render when same value
+        renderGrid();
+        return;
+    }
+
+    // auto renderGrid by watch state change
+    state.suiteVisible = false;
+    state.caseType = caseType;
+
+};
 
 const onTagClick = (tag) => {
     state.flyoverVisible = false;
@@ -366,10 +410,6 @@ watch(() => data.popoverTarget, () => {
     .mcr-num {
         background-color: #0888f0;
     }
-}
-
-.mcr-report-other {
-    padding: 0 15px 15px;
 }
 
 .mcr-report-chart {
