@@ -24,7 +24,7 @@
         <div class="mcr-report-chart">
           <Pie />
         </div>
-        <div class="mcr-report-info">
+        <div class="mcr-report-other">
           <VuiFlex
             v-if="state.pieOthers"
             gap="10px"
@@ -364,8 +364,8 @@ watch(() => data.popoverTarget, () => {
     }
 }
 
-.mcr-report-info {
-    padding: 0 10px 10px;
+.mcr-report-other {
+    padding: 0 15px 15px;
 }
 
 .mcr-report-chart {

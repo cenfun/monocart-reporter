@@ -104,6 +104,8 @@ const tagFormatter = (str) => {
 
 const formatters = {
 
+    string: matchedFormatter,
+
     null: function(value) {
         if (value === null || typeof value === 'undefined') {
             return '';
@@ -111,27 +113,16 @@ const formatters = {
         return value;
     },
 
-    iconOk: function(value, rowItem, columnItem, cellNode) {
-        if (!rowItem.caseType) {
+    iconCaseType: function(value, rowItem, columnItem, cellNode) {
+        if (!value) {
             return '';
         }
-        return iconFormatter(rowItem.caseType, '20px');
+        return iconFormatter(value, '20px');
     },
 
     iconType: function(value, rowItem, columnItem, cellNode) {
-        const types = {
-            suite: 'suite',
-            case: 'case',
-            step: 'step'
-        };
-        const icon = types[value];
-        if (!icon) {
-            return '';
-        }
-        return iconFormatter(icon);
+        return iconFormatter(value);
     },
-
-    string: matchedFormatter,
 
     tree: function(value, rowItem, columnItem, cellNode) {
         let formattedValue = matchedFormatter(value, rowItem, columnItem);
