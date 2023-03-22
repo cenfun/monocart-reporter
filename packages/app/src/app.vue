@@ -351,13 +351,6 @@ const initData = (reportData) => {
         summary.suites.icon = 'suite';
     });
 
-    state.colors = {
-        passed: 'green',
-        failed: '#d00',
-        flaky: 'orange',
-        skipped: 'gray'
-    };
-
     // summary.failed.value = 0;
     summary.passed.classMap = summary.failed.value === 0 ? 'mcr-nav-passed' : '';
     summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-nav-flaky' : 'mcr-nav-skipped';
@@ -544,6 +537,13 @@ window.addEventListener('keydown', (e) => {
         state.flyoverVisible = false;
     }
 });
+
+state.colors = {
+    passed: 'green',
+    failed: '#d00',
+    flaky: 'orange',
+    skipped: 'gray'
+};
 
 </script>
 <style lang="scss">
