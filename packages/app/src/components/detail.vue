@@ -458,11 +458,13 @@ const initDataList = (caseItem) => {
 
         const left = item.level * 13;
 
+        const icon = Util.getTypeIcon(item.suiteType, item.type);
+
         return {
             data: item,
             key: Math.random().toString().slice(2),
             style: `margin-left:${left}px;`,
-            icon: item.type,
+            icon,
             simpleColumns,
             detailColumns
         };

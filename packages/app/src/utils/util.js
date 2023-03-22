@@ -61,6 +61,17 @@ const Util = {
             .replace(/>/g, '&gt;');
     },
 
+    getTypeIcon: (subType, type) => {
+        const icons = {
+            suite: 'suite',
+            project: 'project',
+            file: 'file',
+            case: 'case',
+            step: 'step'
+        };
+        return icons[subType] || icons[type];
+    },
+
     // =============================================================================
     // hash
     getHash(key) {

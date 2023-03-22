@@ -128,7 +128,11 @@ const formatters = {
     },
 
     iconType: function(value, rowItem, columnItem, cellNode) {
-        return iconFormatter(value);
+        const icon = Util.getTypeIcon(rowItem.suiteType, value);
+        if (!icon) {
+            return '';
+        }
+        return iconFormatter(icon);
     },
 
     tree: function(value, rowItem, columnItem, cellNode) {

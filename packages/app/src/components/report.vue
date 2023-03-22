@@ -40,7 +40,7 @@
               <IconLabel
                 v-for="(item, j) in group.list"
                 :key="j"
-                :icon="group.icon"
+                :icon="item.icon || group.icon"
                 :tooltip="item.description"
                 @click="onAmountClick(item)"
               >

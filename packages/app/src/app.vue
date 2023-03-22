@@ -382,6 +382,9 @@ const initData = (reportData) => {
     state.pieHeads = [summary.tests, summary.suites, summary.steps];
     state.pieData = pieData;
 
+    summary.projects.icon = 'project';
+    summary.files.icon = 'file';
+
     state.amounts = [
         {
             icon: 'suite',
