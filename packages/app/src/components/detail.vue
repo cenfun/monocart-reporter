@@ -497,11 +497,11 @@ watch([
 .mcr-detail-item {
     position: relative;
     border-bottom: thin solid #ccc;
-    border-left: thin solid #ccc;
 }
 
 .mcr-detail-head {
     min-height: 35px;
+    border-left: thin solid #ccc;
 
     &:hover::after {
         position: absolute;
@@ -513,6 +513,21 @@ watch([
         height: 100%;
         background-color: rgb(0 0 0 / 2%);
         pointer-events: none;
+    }
+
+    &.mcr-detail-step,
+    &.mcr-case-passed {
+        border-left-color: var(--color-passed);
+    }
+
+    &.mcr-step-error,
+    &.mcr-case-failed {
+        border-left-color: var(--color-failed);
+    }
+
+    &.mcr-step-retry,
+    &.mcr-case-flaky {
+        border-left-color: var(--color-flaky);
     }
 }
 
@@ -533,13 +548,8 @@ watch([
     padding: 5px;
     color: #333;
     border-top: thin dashed #eee;
+    border-left: thin solid #ccc;
     overflow-x: auto;
-}
-
-.mcr-detail-body {
-    .mcr-column-head {
-        font-weight: bold;
-    }
 }
 
 .mcr-column-simple {
@@ -562,11 +572,19 @@ watch([
     padding: 5px;
 }
 
+.mcr-detail-body {
+    .mcr-column-head {
+        font-weight: bold;
+    }
+}
+
 .mcr-detail-logs {
+    border-left-color: #999;
     background-color: #fcfcfc;
 }
 
 .mcr-detail-errors {
+    border-left-color: var(--color-failed);
     background-color: var(--bg-failed);
 
     .mcr-column-head {
@@ -584,6 +602,7 @@ watch([
 }
 
 .mcr-detail-annotations {
+    border-left-color: #4399f0;
     background-color: #f6f8fa;
 
     .mcr-column-content {
@@ -603,8 +622,12 @@ watch([
     }
 }
 
-.mcr-detail-attachment {
-    padding: 5px;
+.mcr-detail-attachments {
+    border-left-color: #999;
+
+    .mcr-detail-attachment {
+        padding: 5px;
+    }
 }
 
 .mcr-detail-image {

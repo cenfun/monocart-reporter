@@ -144,7 +144,7 @@ const formatters = {
         if (rowItem.type === 'suite') {
             formattedValue = `${formattedValue} <span class="mcr-num">${Util.NF(rowItem.tests)}</span>`;
         } else if (rowItem.type === 'case') {
-            formattedValue = `${formattedValue} <div class="tg-cell-hover-icon tg-flyover-icon">
+            formattedValue = `${formattedValue} <div class="tg-cell-hover-icon mcr-flyover-icon">
                 <div class="mcr-icon mcr-icon-open" />
             </div>`;
         }

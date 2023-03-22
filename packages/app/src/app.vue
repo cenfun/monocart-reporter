@@ -185,7 +185,7 @@ const caseHandler = (item) => {
     if (item.subs) {
         item.collapsed = true;
     }
-    item.classMap = `tg-case-${item.caseType}`;
+    item.classMap = `mcr-case-${item.caseType}`;
 };
 
 const stepHandler = (item) => {
@@ -193,9 +193,9 @@ const stepHandler = (item) => {
         item.collapsed = true;
     }
     if (item.numErrors) {
-        item.classMap = 'tg-step-error';
+        item.classMap = 'mcr-step-error';
     } else if (item.status === 'retry') {
-        item.classMap = 'tg-step-retry';
+        item.classMap = 'mcr-step-retry';
     }
 };
 
@@ -752,31 +752,21 @@ icon
     }
 }
 
-.tg-cell .mcr-icon,
-.tg-cell .mcr-icon-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    transform: translate(-50%, -50%);
-}
-
-.tg-case-failed {
+.mcr-case-failed {
     background-color: var(--bg-failed);
 }
 
-.tg-case-flaky {
+.mcr-case-flaky {
     background-color: var(--bg-flaky);
 }
 
-.tg-step-retry,
-.tg-step-retry.tg-row .tg-cell {
+.mcr-step-retry,
+.mcr-step-retry.tg-row .tg-cell {
     color: var(--color-flaky);
 }
 
-.tg-step-error,
-.tg-step-error.tg-row .tg-cell {
+.mcr-step-error,
+.mcr-step-error.tg-row .tg-cell {
     color: var(--color-failed);
 }
 
@@ -785,26 +775,20 @@ icon
         user-select: none;
     }
 
+    // group normal by row type
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {
         font-weight: normal;
     }
 
-    // only grid tests type
-    .tg-case-skipped.tg-row .tg-cell {
-        color: var(--color-skipped);
-    }
-
-    .mcr-clickable {
-        cursor: pointer;
-    }
-
-    .mcr-location {
-        font-weight: normal;
-    }
-
-    .mcr-searchable b {
-        color: red;
+    .tg-cell .mcr-icon,
+    .tg-cell .mcr-icon-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        transform: translate(-50%, -50%);
     }
 
     .tg-body-message {
@@ -825,6 +809,23 @@ icon
             opacity: 0.8;
             transform: none;
         }
+    }
+
+    // only grid tests type
+    .mcr-case-skipped.tg-row .tg-cell {
+        color: var(--color-skipped);
+    }
+
+    .mcr-clickable {
+        cursor: pointer;
+    }
+
+    .mcr-location {
+        font-weight: normal;
+    }
+
+    .mcr-searchable b {
+        color: red;
     }
 }
 
@@ -860,7 +861,7 @@ icon
 flyover
 */
 
-.tg-flyover-icon {
+.mcr-flyover-icon {
     position: absolute;
     top: 0;
     right: 0;
