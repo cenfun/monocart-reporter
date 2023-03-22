@@ -28,7 +28,7 @@
         <VuiFlex
           gap="15px"
           direction="column"
-          padding="0 15px 15px 15px"
+          padding="15px"
           class="mcr-report-amounts"
         >
           <template v-if="state.amounts">
@@ -313,6 +313,7 @@ const onSortClick = (caseType, sortField) => {
     hideFlyover(true);
     state.sortField = sortField;
     state.sortAsc = false;
+    state.keywords = '';
 
     if (state.suiteVisible === false && state.caseType === caseType) {
         // manual render when same value
@@ -328,6 +329,7 @@ const onSortClick = (caseType, sortField) => {
 
 const onTagClick = (tag) => {
     state.flyoverVisible = false;
+    state.caseType = 'tests';
     state.keywords = `@${tag.name}`;
     updateGrid();
 };
@@ -422,7 +424,7 @@ watch(() => data.popoverTarget, () => {
 
 .mcr-report-head {
     padding: 10px;
-    border-bottom: 1px solid #cedbe9;
+    border-bottom: 1px solid #dae9fa;
     background-color: #eef6ff;
 
     .mcr-num {
@@ -436,6 +438,7 @@ watch(() => data.popoverTarget, () => {
 
 .mcr-report-amounts {
     position: relative;
+    border-top: 1px solid #dae9fa;
 }
 
 .mcr-report-tag {
