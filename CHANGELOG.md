@@ -1,3 +1,9 @@
+* 1.5.1
+  - updated UI/icons
+  - fixed grid sort
+  - added more summary information to report
+
+
 * 1.5.0
   - added pie chart animation
   - added tags feature
