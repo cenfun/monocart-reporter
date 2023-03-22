@@ -535,24 +535,6 @@ watch([
     }
 }
 
-.tg-case-failed {
-    border: none;
-    background-color: var(--bg-failed);
-}
-
-.tg-case-flaky {
-    border: none;
-    background-color: var(--bg-flaky);
-}
-
-.tg-step-retry {
-    color: orange;
-}
-
-.tg-step-error {
-    color: red;
-}
-
 .mcr-item-suite {
     .mcr-item-title {
         font-weight: bold;

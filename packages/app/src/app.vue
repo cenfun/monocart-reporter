@@ -192,7 +192,7 @@ const stepHandler = (item) => {
     if (item.subs) {
         item.collapsed = true;
     }
-    if (item.errors) {
+    if (item.numErrors) {
         item.classMap = 'tg-step-error';
     } else if (item.status === 'retry') {
         item.classMap = 'tg-step-retry';
@@ -550,6 +550,12 @@ window.addEventListener('keydown', (e) => {
 html,
 body {
     --font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
+    --bg-failed: #fff0ef;
+    --bg-flaky: #fcf7de;
+    --color-passed: green;
+    --color-failed: #d00;
+    --color-flaky: orange;
+    --color-skipped: gray;
 
     width: 100%;
     height: 100%;
@@ -580,9 +586,6 @@ a:not([href], [class]):hover {
 }
 
 .mcr {
-    --bg-failed: #fff0ef;
-    --bg-flaky: #fcf7de;
-
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -674,43 +677,43 @@ icon
 }
 
 .mcr-nav-passed {
-    color: green;
+    color: var(--color-passed);
 }
 
 .mcr-nav-passed:hover,
 .mcr-nav-passed.mcr-nav-selected {
     color: #fff;
-    background-color: green;
+    background-color: var(--color-passed);
 }
 
 .mcr-nav-failed {
-    color: #d00;
+    color: var(--color-failed);
 }
 
 .mcr-nav-failed:hover,
 .mcr-nav-failed.mcr-nav-selected {
     color: #fff;
-    background-color: #d00;
+    background-color: var(--color-failed);
 }
 
 .mcr-nav-flaky {
-    color: orange;
+    color: var(--color-flaky);
 }
 
 .mcr-nav-flaky:hover,
 .mcr-nav-flaky.mcr-nav-selected {
     color: #fff;
-    background-color: orange;
+    background-color: var(--color-flaky);
 }
 
 .mcr-nav-skipped {
-    color: gray;
+    color: var(--color-skipped);
 }
 
 .mcr-nav-skipped:hover,
 .mcr-nav-skipped.mcr-nav-selected {
     color: #fff;
-    background-color: gray;
+    background-color: var(--color-skipped);
 }
 
 .mcr-nav-value {
@@ -759,6 +762,24 @@ icon
     transform: translate(-50%, -50%);
 }
 
+.tg-case-failed {
+    background-color: var(--bg-failed);
+}
+
+.tg-case-flaky {
+    background-color: var(--bg-flaky);
+}
+
+.tg-step-retry,
+.tg-step-retry.tg-row .tg-cell {
+    color: var(--color-flaky);
+}
+
+.tg-step-error,
+.tg-step-error.tg-row .tg-cell {
+    color: var(--color-failed);
+}
+
 .mcr-grid {
     .tg-column-name {
         user-select: none;
@@ -769,32 +790,9 @@ icon
         font-weight: normal;
     }
 
-    .tg-case-failed.tg-row {
-        border: none;
-        background-color: var(--bg-failed);
-    }
-
-    .tg-case-flaky.tg-row {
-        border: none;
-        background-color: var(--bg-flaky);
-    }
-
-    .tg-case-skipped.tg-row {
-        .tg-cell {
-            color: gray;
-        }
-    }
-
-    .tg-step-retry.tg-row {
-        .tg-cell {
-            color: orange;
-        }
-    }
-
-    .tg-step-error.tg-row {
-        .tg-cell {
-            color: red;
-        }
+    // only grid tests type
+    .tg-case-skipped.tg-row .tg-cell {
+        color: var(--color-skipped);
     }
 
     .mcr-clickable {
