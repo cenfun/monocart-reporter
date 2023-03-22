@@ -3,93 +3,91 @@
     ref="el"
     class="mcr-detail"
   >
-    <div class="mcr-tree">
-      <div
-        v-for="item in data.list"
-        :key="item.key"
-        :class="itemClass(item.data)"
-        :style="item.style"
+    <div
+      v-for="item in data.list"
+      :key="item.key"
+      class="mcr-detail-item"
+      :style="item.style"
+    >
+      <VuiFlex
+        :class="itemHeadClass(item.data)"
+        gap="10px"
+        padding="5px"
+        wrap
       >
-        <VuiFlex
-          :class="itemHeadClass(item.data)"
-          gap="10px"
-          padding="5px"
-          wrap
-        >
-          <VuiFlex gap="5px">
-            <IconLabel
-              v-if="item.data.caseType"
-              :icon="item.data.caseType"
-              size="20px"
-              :button="false"
-            />
-            <IconLabel
-              v-else
-              :icon="item.icon"
-              :button="false"
-            />
-            <div
-              class="mcr-item-title"
-              v-html="tagFormatter(item.data.title)"
-            />
-          </VuiFlex>
-
-          <template v-if="item.simpleColumns">
-            <VuiFlex
-              v-for="column in item.simpleColumns"
-              :key="column.key"
-              gap="5px"
-              wrap
-              class="mcr-column-simple"
-            >
-              <div class="mcr-column-head">
-                {{ column.data.name }}
-              </div>
-              <div v-html="column.content" />
-            </VuiFlex>
-          </template>
-
-          <div class="vui-flex-auto" />
-
+        <VuiFlex gap="5px">
+          <IconLabel
+            v-if="item.data.caseType"
+            :icon="item.data.caseType"
+            size="20px"
+            :button="false"
+          />
+          <IconLabel
+            v-else
+            :icon="item.icon"
+            :button="false"
+          />
           <div
-            v-if="item.data.location"
-            class="mcr-item-location"
-          >
-            {{ item.data.location }}
-          </div>
-
-          <div
-            v-if="Util.isNum(item.data.duration)"
-            class="mcr-item-duration"
-          >
-            {{ Util.NF(item.data.duration) }} ms
-          </div>
+            class="mcr-detail-title"
+            v-html="tagFormatter(item.data.title)"
+          />
         </VuiFlex>
-        <div
-          v-if="item.detailColumns"
-          class="mcr-item-body"
-        >
-          <div
-            v-for="column in item.detailColumns"
+
+        <template v-if="item.simpleColumns">
+          <VuiFlex
+            v-for="column in item.simpleColumns"
             :key="column.key"
-            :class="itemColumnClass(column.data)"
+            gap="5px"
+            wrap
+            class="mcr-column-simple"
           >
-            <div class="mcr-column-anchor">
-              <a :name="column.data.id" />
-            </div>
-            <IconLabel
-              :icon="column.icon"
-              size="20px"
-              :button="false"
-              class="mcr-column-head"
-            >
+            <div class="mcr-column-head">
               {{ column.data.name }}
-            </IconLabel>
-            <div
-              class="mcr-column-content"
-              v-html="column.content"
-            />
+            </div>
+            <div v-html="column.content" />
+          </VuiFlex>
+        </template>
+
+        <div class="vui-flex-auto" />
+
+        <div
+          v-if="item.data.location"
+          class="mcr-detail-location"
+        >
+          {{ item.data.location }}
+        </div>
+
+        <div
+          v-if="Util.isNum(item.data.duration)"
+          class="mcr-detail-duration"
+        >
+          {{ Util.NF(item.data.duration) }} ms
+        </div>
+      </VuiFlex>
+      <div
+        v-if="item.detailColumns"
+        class="mcr-detail-body"
+      >
+        <div
+          v-for="column in item.detailColumns"
+          :key="column.key"
+          :class="itemColumnClass(column.data)"
+        >
+          <div class="mcr-column-anchor">
+            <a :name="column.data.id" />
           </div>
+          <IconLabel
+            :icon="column.icon"
+            size="20px"
+            :button="false"
+            class="mcr-column-head"
+          >
+            {{ column.data.name }}
+          </IconLabel>
+          <div
+            class="mcr-column-content"
+            v-html="column.content"
+          />
         </div>
       </div>
     </div>
@@ -121,20 +119,12 @@ const data = shallowReactive({
 
 const el = ref(null);
 
-const itemClass = (item) => {
-    const cls = ['mcr-item'];
-    if (!item.level) {
-        cls.push('mcr-item-root');
-    }
-    return cls;
-};
-
 const itemHeadClass = (item) => {
-    return ['mcr-item-head', `mcr-item-${item.type}`, item.classMap];
+    return ['mcr-detail-head', `mcr-detail-${item.type}`, item.classMap];
 };
 
 const itemColumnClass = (item) => {
-    return ['mcr-item-column', `mcr-item-${item.id}`];
+    return ['mcr-detail-column', `mcr-detail-${item.id}`];
 };
 
 // ===========================================================================
@@ -301,13 +291,13 @@ const getAttachments = (item, column) => {
         if (contentType) {
 
             if (contentType.startsWith('image')) {
-                return `<div class="mcr-item-attachment mcr-item-image">
+                return `<div class="mcr-detail-attachment mcr-detail-image">
                             <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
                         </div>`;
             }
 
             if (contentType.startsWith('video')) {
-                return `<div class="mcr-item-attachment mcr-item-video">
+                return `<div class="mcr-detail-attachment mcr-detail-video">
                             <video controls height="350">
                                 <source src="${attachment.path}" type="${contentType}">
                                 <p>Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead if your browser doesn't support HTML5 video.</p>
@@ -316,7 +306,7 @@ const getAttachments = (item, column) => {
             }
         }
 
-        return `<div class="mcr-item-attachment mcr-item-link">
+        return `<div class="mcr-detail-attachment mcr-detail-link">
                   <a href="${attachment.path}" target="_blank">${attachment.name}</a>
                 </div>`;
     });
@@ -499,21 +489,18 @@ watch([
 .mcr-detail {
     width: 100%;
     height: 100%;
+    padding: 0 0 5px 5px;
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-.mcr-tree {
-    padding: 0 0 5px 5px;
-}
-
-.mcr-item {
+.mcr-detail-item {
     position: relative;
     border-bottom: thin solid #ccc;
     border-left: thin solid #ccc;
 }
 
-.mcr-item-head {
+.mcr-detail-head {
     min-height: 35px;
 
     &:hover::after {
@@ -527,26 +514,32 @@ watch([
         background-color: rgb(0 0 0 / 2%);
         pointer-events: none;
     }
-
-    .mcr-item-location {
-        font-size: 13px;
-        font-style: italic;
-        opacity: 0.6;
-    }
 }
 
-.mcr-item-suite {
-    .mcr-item-title {
+.mcr-detail-location {
+    font-size: 13px;
+    font-style: italic;
+    opacity: 0.6;
+}
+
+.mcr-detail-suite {
+    .mcr-detail-title {
         font-weight: bold;
     }
 }
 
-.mcr-item-column {
+.mcr-detail-column {
     position: relative;
     padding: 5px;
     color: #333;
     border-top: thin dashed #eee;
     overflow-x: auto;
+}
+
+.mcr-detail-body {
+    .mcr-column-head {
+        font-weight: bold;
+    }
 }
 
 .mcr-column-simple {
@@ -560,35 +553,29 @@ watch([
     background: #f6f8fa;
 }
 
-.mcr-item-body {
-    .mcr-column-head {
-        font-weight: bold;
-    }
-}
-
 .mcr-column-anchor {
     position: absolute;
     top: 0;
-}
-
-.mcr-item-logs {
-    background-color: #fcfcfc;
-}
-
-.mcr-item-errors {
-    background-color: var(--bg-failed);
-
-    .mcr-column-head {
-        color: #d00;
-    }
 }
 
 .mcr-column-content {
     padding: 5px;
 }
 
-.mcr-item-errors,
-.mcr-item-logs {
+.mcr-detail-logs {
+    background-color: #fcfcfc;
+}
+
+.mcr-detail-errors {
+    background-color: var(--bg-failed);
+
+    .mcr-column-head {
+        color: var(--color-failed);
+    }
+}
+
+.mcr-detail-errors,
+.mcr-detail-logs {
     .mcr-column-content {
         margin-top: 5px;
         font-family: var(--font-monospace);
@@ -596,7 +583,7 @@ watch([
     }
 }
 
-.mcr-item-annotations {
+.mcr-detail-annotations {
     background-color: #f6f8fa;
 
     .mcr-column-content {
@@ -616,11 +603,11 @@ watch([
     }
 }
 
-.mcr-item-attachment {
+.mcr-detail-attachment {
     padding: 5px;
 }
 
-.mcr-item-image {
+.mcr-detail-image {
     a {
         display: block;
     }
