@@ -383,14 +383,23 @@ const initData = (reportData) => {
     state.pieData = pieData;
 
     state.amounts = [
-        summary.projects,
-        summary.files,
-        summary.describes,
-
-        summary.retries,
-        summary.errors,
-        summary.logs,
-        summary.attachments
+        {
+            icon: 'suite',
+            list: [
+                summary.projects,
+                summary.files,
+                summary.describes
+            ]
+        },
+        {
+            icon: 'sort',
+            list: [
+                summary.errors,
+                summary.logs,
+                summary.attachments,
+                summary.retries
+            ]
+        }
     ];
 
     tagsHandler(tags);

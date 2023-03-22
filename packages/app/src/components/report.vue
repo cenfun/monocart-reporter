@@ -30,21 +30,25 @@
           direction="column"
           padding="0 15px 15px 15px"
         >
-          <VuiFlex
-            v-if="state.amounts"
-            gap="15px"
-            wrap
-          >
-            <IconLabel
-              v-for="(item, i) in state.amounts"
+          <template v-if="state.amounts">
+            <VuiFlex
+              v-for="(group, i) in state.amounts"
               :key="i"
-              icon="dot"
-              :tooltip="item.description"
-              @click="onAmountClick(item)"
+              gap="15px"
+              wrap
             >
-              {{ item.name }}: {{ Util.NF(item.value) }}
-            </IconLabel>
-          </VuiFlex>
+              <IconLabel
+                v-for="(item, j) in group.list"
+                :key="j"
+                :icon="group.icon"
+                :tooltip="item.description"
+                @click="onAmountClick(item)"
+              >
+                {{ item.name }}: {{ Util.NF(item.value) }}
+              </IconLabel>
+            </VuiFlex>
+          </template>
+
           <VuiFlex
             gap="15px"
             wrap
@@ -53,14 +57,14 @@
               icon="top"
               @click="onSortClick('tests','duration')"
             >
-              Top slowest cases
+              Top Slowest
             </IconLabel>
 
             <IconLabel
               icon="top"
               @click="onSortClick('failed','duration')"
             >
-              Top slowest failed cases
+              Top Slowest Failed
             </IconLabel>
           </VuiFlex>
         </VuiFlex>

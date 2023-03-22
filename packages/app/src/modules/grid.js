@@ -426,6 +426,45 @@ const rowFilterHandler = (rowItem) => {
     return hasMatched;
 };
 
+const getGridSortComparers = () => {
+    return {
+        errors: function(a, b, o) {
+            const valueComparer = this.getDefaultComparer('value');
+            const numberValueComparer = this.getDefaultComparer('numberValue');
+            o.sortField = 'numErrors';
+            return valueComparer(a, b, o, (av, bv) => {
+                return numberValueComparer(av, bv);
+            });
+        },
+        logs: function(a, b, o) {
+            const valueComparer = this.getDefaultComparer('value');
+            const numberValueComparer = this.getDefaultComparer('numberValue');
+            return valueComparer(a, b, o, (av, bv) => {
+                if (Array.isArray(av)) {
+                    av = av.length;
+                }
+                if (Array.isArray(bv)) {
+                    bv = bv.length;
+                }
+                return numberValueComparer(av, bv);
+            });
+        },
+        annotations: function(a, b, o) {
+            const valueComparer = this.getDefaultComparer('value');
+            const stringValueComparer = this.getDefaultComparer('stringValue');
+            return valueComparer(a, b, o, (av, bv) => {
+                if (Array.isArray(av)) {
+                    av = av.map((it) => it.type).join(' ');
+                }
+                if (Array.isArray(bv)) {
+                    bv = bv.map((it) => it.type).join(' ');
+                }
+                return stringValueComparer(av, bv);
+            });
+        }
+    };
+};
+
 const getGridOption = () => {
     const options = {
         selectMultiple: false,
@@ -446,42 +485,7 @@ const getGridOption = () => {
         sortField: state.sortField,
         sortAsc: state.sortAsc,
         sortOnInit: true,
-        sortComparers: {
-            errors: function(a, b, o) {
-                const valueComparer = this.getDefaultComparer('value');
-                const numberValueComparer = this.getDefaultComparer('numberValue');
-                o.sortField = 'numErrors';
-                return valueComparer(a, b, o, (av, bv) => {
-                    return numberValueComparer(av, bv);
-                });
-            },
-            logs: function(a, b, o) {
-                const valueComparer = this.getDefaultComparer('value');
-                const numberValueComparer = this.getDefaultComparer('numberValue');
-                return valueComparer(a, b, o, (av, bv) => {
-                    if (Array.isArray(av)) {
-                        av = av.length;
-                    }
-                    if (Array.isArray(bv)) {
-                        bv = bv.length;
-                    }
-                    return numberValueComparer(av, bv);
-                });
-            },
-            annotations: function(a, b, o) {
-                const valueComparer = this.getDefaultComparer('value');
-                const stringValueComparer = this.getDefaultComparer('stringValue');
-                return valueComparer(a, b, o, (av, bv) => {
-                    if (Array.isArray(av)) {
-                        av = av.map((it) => it.type).join(' ');
-                    }
-                    if (Array.isArray(bv)) {
-                        bv = bv.map((it) => it.type).join(' ');
-                    }
-                    return stringValueComparer(av, bv);
-                });
-            }
-        },
+        sortComparers: getGridSortComparers(),
 
         columnTypes: {
             title: 'tree'
@@ -514,6 +518,11 @@ export const renderGrid = () => {
         return;
     }
     // console.log('render grid');
+    grid.once('onUpdated', () => {
+        if (state.sortField) {
+            grid.scrollColumnIntoView(state.sortField);
+        }
+    });
     grid.setOption(getGridOption());
     grid.setData(getGridData());
     grid.render();
