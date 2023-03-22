@@ -203,8 +203,8 @@
     </div>
     <div class="mcr-report-footer">
       <VuiFlex
-        gap="10px"
-        padding="10px"
+        gap="15px"
+        padding="10px 15px"
       >
         <a
           href="https://github.com/microsoft/playwright"
@@ -479,7 +479,6 @@ watch(() => data.popoverTarget, () => {
 }
 
 .mcr-report-footer {
-    border-top: 1px solid #ddd;
     background-color: #eee;
 
     a:visited,
