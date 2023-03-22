@@ -2,6 +2,7 @@
   - updated UI/icons
   - fixed grid sort
   - added more summary information to report
+  - added export feature
 
 
 * 1.5.0
