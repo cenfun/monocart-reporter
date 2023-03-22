@@ -30,6 +30,25 @@ const Util = {
         return false;
     },
 
+    forEach: function(rootList, callback) {
+        const forList = (list, parent) => {
+            if (!Util.isList(list)) {
+                return;
+            }
+            for (const item of list) {
+                const result = callback(item, parent);
+                if (result === false) {
+                    return false;
+                }
+                const subResult = forList(item.subs, item);
+                if (subResult === false) {
+                    return false;
+                }
+            }
+        };
+        forList(rootList);
+    },
+
     zero: function(s, l = 2) {
         s = `${s}`;
         return s.padStart(l, '0');

@@ -470,6 +470,9 @@ onMounted(() => {
 
     initData(reportData);
 
+    // for export all data
+    state.reportData = reportData;
+
     state.gridDataAll = {
         columns: reportData.columns,
         rows: reportData.rows

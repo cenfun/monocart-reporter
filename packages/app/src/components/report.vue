@@ -66,7 +66,7 @@
               icon="time"
               @click="onSortClick('failed','duration')"
             >
-              Top Slowest Failed
+              Top Failed Slowest
             </IconLabel>
           </VuiFlex>
         </VuiFlex>
@@ -100,7 +100,7 @@
         </div>
         <div class="mcr-report-chart">
           <VuiFlex
-            gap="10px"
+            gap="15px"
             wrap
             padding="10px"
           >
@@ -200,6 +200,46 @@
           </VuiFlex>
         </div>
       </div>
+
+      <div class="mcr-report-item">
+        <div class="mcr-report-head">
+          <VuiFlex
+            gap="15px"
+            wrap
+          >
+            <IconLabel
+              icon="export"
+              :button="false"
+            >
+              <b>Export Data</b>
+            </IconLabel>
+          </VuiFlex>
+        </div>
+        <div class="mcr-report-chart">
+          <VuiFlex
+            gap="15px"
+            direction="column"
+            padding="15px"
+            class="mcr-report-export"
+          >
+            <VuiFlex
+              v-for="(group, i) in exportList"
+              :key="i"
+              gap="15px"
+              wrap
+            >
+              <IconLabel
+                v-for="(item, j) in group.list"
+                :key="j"
+                :icon="item.icon"
+                @click="onExportClick(item)"
+              >
+                {{ item.name }}
+              </IconLabel>
+            </VuiFlex>
+          </VuiFlex>
+        </div>
+      </div>
     </div>
     <div class="mcr-report-footer">
       <VuiFlex
@@ -266,9 +306,10 @@
 
 <script setup>
 import {
-    reactive, watch, ref
+    shallowReactive, watch, ref
 } from 'vue';
 import { components } from 'vine-ui';
+import { saveAs } from 'file-saver';
 
 import state from '../modules/state.js';
 import Util from '../utils/util.js';
@@ -283,7 +324,7 @@ const { VuiFlex, VuiPopover } = components;
 
 const popover = ref(null);
 
-const data = reactive({
+const data = shallowReactive({
     item: null,
     offsetX: 0,
     barWidth: 0,
@@ -292,6 +333,8 @@ const data = reactive({
     popoverTarget: null,
     popoverVisible: false
 });
+
+// ====================================================================================
 
 const onAmountClick = (item) => {
 
@@ -327,11 +370,102 @@ const onSortClick = (caseType, sortField) => {
 
 };
 
+// ====================================================================================
+
 const onTagClick = (tag) => {
     state.flyoverVisible = false;
     state.caseType = 'tests';
     state.keywords = `@${tag.name}`;
     updateGrid();
+};
+
+// ====================================================================================
+
+const getExportCases = (caseType) => {
+    const list = [];
+    Util.forEach(state.reportData.rows, (item) => {
+        if (item.type === 'case' && item.caseType === caseType) {
+            const it = {
+                ... item
+            };
+            delete it.subs;
+            delete it.steps;
+            list.push(it);
+        }
+    });
+    return list;
+};
+
+const exportList = [{
+    list: [{
+        name: 'Report Data',
+        icon: 'item',
+        getData: () => {
+            return state.reportData;
+        }
+    }, {
+        name: 'Summary',
+        icon: 'item',
+        getData: () => {
+            return state.reportData.summary;
+        }
+    }, {
+        name: 'Tags',
+        icon: 'item',
+        getData: () => {
+            return state.tagList;
+        }
+    }, {
+        name: 'Workers',
+        icon: 'item',
+        getData: () => {
+            return state.workerList;
+        }
+    }]
+}, {
+    list: [{
+        name: 'Errors',
+        icon: 'item',
+        getData: () => {
+            const list = [];
+            Util.forEach(state.reportData.rows, (item) => {
+                if (item.errors) {
+                    const it = {
+                        ... item
+                    };
+                    delete it.subs;
+                    delete it.steps;
+                    list.push(it);
+                }
+            });
+            return list;
+        }
+    }, {
+        name: 'Failed Cases',
+        icon: 'item',
+        getData: () => {
+            return getExportCases('failed');
+        }
+    }, {
+        name: 'Skipped Cases',
+        icon: 'item',
+        getData: () => {
+            return getExportCases('skipped');
+        }
+    }]
+}];
+
+const onExportClick = (item) => {
+    const d = item.getData();
+    if (!d) {
+        return;
+    }
+    const string = JSON.stringify(d, null, 4);
+    const blob = new Blob([string], {
+        type: 'text/plain;charset=utf-8'
+    });
+    const filename = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
+    saveAs(blob, `${filename}.json`);
 };
 
 // ====================================================================================
@@ -360,6 +494,8 @@ const onBarMouseMove = (item, e) => {
     data.barWidth = br.width;
     data.barHeight = br.height;
 };
+
+// ====================================================================================
 
 watch([
     () => data.item,
