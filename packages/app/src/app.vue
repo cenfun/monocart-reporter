@@ -388,6 +388,7 @@ const initData = (reportData) => {
     state.amounts = [
         {
             icon: 'suite',
+            button: false,
             list: [
                 summary.projects,
                 summary.files,
@@ -396,6 +397,7 @@ const initData = (reportData) => {
         },
         {
             icon: 'sort',
+            button: true,
             list: [
                 summary.errors,
                 summary.logs,

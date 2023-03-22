@@ -29,6 +29,7 @@
           gap="15px"
           direction="column"
           padding="0 15px 15px 15px"
+          class="mcr-report-amounts"
         >
           <template v-if="state.amounts">
             <VuiFlex
@@ -41,10 +42,11 @@
                 v-for="(item, j) in group.list"
                 :key="j"
                 :icon="item.icon || group.icon"
+                :button="group.button"
                 :tooltip="item.description"
                 @click="onAmountClick(item)"
               >
-                {{ item.name }}: {{ Util.NF(item.value) }}
+                {{ item.name }} <span class="mcr-num">{{ Util.NF(item.value) }}</span>
               </IconLabel>
             </VuiFlex>
           </template>
@@ -54,14 +56,14 @@
             wrap
           >
             <IconLabel
-              icon="top"
+              icon="time"
               @click="onSortClick('tests','duration')"
             >
               Top Slowest
             </IconLabel>
 
             <IconLabel
-              icon="top"
+              icon="time"
               @click="onSortClick('failed','duration')"
             >
               Top Slowest Failed
@@ -430,6 +432,10 @@ watch(() => data.popoverTarget, () => {
 
 .mcr-report-chart {
     padding: 10px;
+}
+
+.mcr-report-amounts {
+    position: relative;
 }
 
 .mcr-report-tag {

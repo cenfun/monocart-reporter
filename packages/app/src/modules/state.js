@@ -1,7 +1,7 @@
 import { shallowReactive } from 'vue';
 import Util from '../utils/util.js';
 
-// dot not use reactive for grid data
+// do not use reactive for grid data
 const state = shallowReactive({
     title: '',
     date: '',
