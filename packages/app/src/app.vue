@@ -55,7 +55,6 @@
           >
             <b>{{ item.name }}</b>
             <span>{{ Util.NF(item.value) }}</span>
-            <span v-if="item.percent">(<i>{{ item.percent }}</i>)</span>
           </VuiFlex>
         </div>
       </div>
