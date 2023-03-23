@@ -1,11 +1,8 @@
 import { Grid } from 'turbogrid';
-import fuzzy from 'fuzzy';
-
 import Util from '../utils/util.js';
-import {
-    formatters, matchedFormatter, annotationSearchFormatter
-} from './formatters.js';
+import { formatters, matchedFormatter } from './formatters.js';
 import state from '../modules/state.js';
+import searchHandler from './search.js';
 
 const isNodeTruncated = (node) => {
     if (!node) {
@@ -377,54 +374,6 @@ const getRowNumberFilter = () => {
     };
 };
 
-const rowFilterHandler = (rowItem) => {
-
-    const keywords = state.keywords;
-    const searchableKeys = state.searchableKeys;
-
-    if (!keywords) {
-        searchableKeys.forEach((k) => {
-            rowItem[`${k}_matched`] = null;
-        });
-        return true;
-    }
-
-    let hasMatched = false;
-    searchableKeys.forEach((k) => {
-
-        let matched = null;
-
-        let str = rowItem[k];
-
-        // annotations array
-        if (k === 'annotations' && Util.isList(str)) {
-            str = annotationSearchFormatter(str);
-        }
-
-        if (typeof str === 'string') {
-            const res = fuzzy.match(keywords, str, {
-                pre: '<b>',
-                post: '</b>'
-            });
-            if (res) {
-                //  console.log(res);
-                hasMatched = true;
-                matched = res.rendered;
-            }
-        }
-        rowItem[`${k}_matched`] = matched;
-    });
-
-    if (hasMatched) {
-        let row = rowItem;
-        while (row.tg_parent) {
-            row = row.tg_parent;
-            row.collapsed = false;
-        }
-    }
-
-    return hasMatched;
-};
 
 const getGridSortComparers = () => {
     return {
@@ -477,7 +426,7 @@ const getGridOption = () => {
         // 9999 max
         rowNumberWidth: 46,
         rowNumberFilter: getRowNumberFilter(),
-        rowFilter: rowFilterHandler,
+        rowFilter: searchHandler(),
         rowNotFound: '<div class="mcr-no-results">No Results</div>',
         frozenColumn: 1,
 

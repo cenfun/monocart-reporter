@@ -40,12 +40,6 @@ const mergeAnnotations = (list) => {
     return map;
 };
 
-// for row filter, must be list
-const annotationSearchFormatter = (list) => {
-    const map = mergeAnnotations(list);
-    return Object.keys(map).map((k) => [k, map[k].join(' ')].join(' ')).join(' ');
-};
-
 const annotationTypeFormatter = (list) => {
     const map = mergeAnnotations(list);
     return Object.keys(map).join(' ');
@@ -208,6 +202,5 @@ export {
     tagFormatter,
     matchedFormatter,
     markdownFormatter,
-    mergeAnnotations,
-    annotationSearchFormatter
+    mergeAnnotations
 };

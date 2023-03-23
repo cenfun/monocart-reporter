@@ -10,6 +10,13 @@ const Util = {
         return str;
     },
 
+    isNull: function(input) {
+        if (input === null || typeof input === 'undefined') {
+            return true;
+        }
+        return false;
+    },
+
     toNum: function(num, toInt) {
         if (typeof (num) !== 'number') {
             num = parseFloat(num);
