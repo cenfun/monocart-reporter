@@ -430,6 +430,8 @@ const getGridOption = () => {
         rowNotFound: '<div class="mcr-no-results">No Results</div>',
         frozenColumn: 1,
 
+        scrollbarFade: true,
+
         // do not watch sort in state
         sortField: state.sortField,
         sortAsc: state.sortAsc,
