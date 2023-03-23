@@ -15,10 +15,10 @@
 * Output Report Data and Summary (json)
 * Console Logs (log/error/warn/debug/info)
 * Fuzzy Search
-* Style Tags
 * Pie Chart
-* Parallel Workers graph
+* Parallel Workers Graph
 * Export Data (json)
+* [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
 
@@ -165,7 +165,7 @@ module.exports = {
 
 ## Adding Comments to Your Tests
 > Compared to importing external libraries and calling its interface, Comments is a better way, no dependence, cleaner, easy to read, and never break the existing code.
-* for suite
+* Suite
 ```js
 /**
  * add extra information for suite
@@ -174,7 +174,7 @@ module.exports = {
  */
 test.describe('suite title', () => { ... });
 ```
-* for case
+* Case
 ```js
 /**
  * add extra information for case
@@ -183,7 +183,7 @@ test.describe('suite title', () => { ... });
  */
 test('case title', () => { ... });
 ```
-* for step
+* Step
 ```js
 test('case title', ({ browserName }, testInfo) => {
 
@@ -196,7 +196,7 @@ test('case title', ({ browserName }, testInfo) => {
 
 });
 ```
-* for hooks
+* Hooks
 ```js
 /**
  * override "beforeAll hook" title to
@@ -211,7 +211,36 @@ test.beforeAll(() => { ... });
 test.beforeEach(() => { ... });
 ```
 
-## onEnd Hook
+## Style Tags
+* Add tag to test title (starts with @)
+```js
+test('test title @smoke @critical', () => { ... });
+```
+* Custom tag style
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            tags: {
+                smoke: {
+                    style: {
+                        background: '#6F9913'
+                    },
+                    description: 'This is Smoke Test'
+                },
+                critical: {
+                    background: '#c00'
+                },
+            }
+        }]
+    ]
+};
+```
+
+## onEnd callback
 ```js
 // playwright.config.js
 module.exports = {
@@ -227,7 +256,6 @@ module.exports = {
     ]
 };
 ```
-
 ## Send Email
 ### Check example: [send-email.js](/tests/common/send-email.js)
 ```js
