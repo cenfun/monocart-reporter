@@ -87,9 +87,11 @@
     <Flyover />
 
     <VuiTooltip
+      :class="tooltip.classMap"
       :visible="tooltip.visible"
       :target="tooltip.target"
       :text="tooltip.text"
+      :html="tooltip.html"
     />
   </div>
 </template>
@@ -121,7 +123,8 @@ const {
 const tooltip = reactive({
     visible: false,
     target: null,
-    text: ''
+    text: '',
+    html: false
 });
 
 state.tooltip = tooltip;
@@ -573,6 +576,10 @@ a:not([href], [class]):hover {
     width: 100%;
     height: 100%;
     overflow: hidden;
+
+    .mcr-searchable b {
+        color: red;
+    }
 }
 
 /*
@@ -806,10 +813,6 @@ icon
 
     .mcr-location {
         font-weight: normal;
-    }
-
-    .mcr-searchable b {
-        color: red;
     }
 }
 
