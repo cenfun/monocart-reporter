@@ -41,10 +41,13 @@
             wrap
             class="mcr-column-simple"
           >
-            <div class="mcr-column-head">
+            <div class="mcr-simple-head">
               {{ column.data.name }}
             </div>
-            <div v-html="column.content" />
+            <div
+              class="mcr-simple-content"
+              v-html="column.content"
+            />
           </VuiFlex>
         </template>
 
@@ -77,15 +80,20 @@
             <a :name="column.data.id" />
           </div>
           <IconLabel
-            :icon="column.icon"
-            size="20px"
-            :button="false"
+            size="9px"
+            :icon="column.collapsed?'collapsed':'expanded'"
             class="mcr-column-head"
+            @click="onColumnHeadClick(column)"
           >
-            {{ column.data.name }}
+            <IconLabel
+              :icon="column.icon"
+              size="20px"
+            >
+              {{ column.data.name }}
+            </IconLabel>
           </IconLabel>
           <div
-            class="mcr-column-content"
+            :class="columnContentClass(column)"
             v-html="column.content"
           />
         </div>
@@ -125,6 +133,16 @@ const itemHeadClass = (item) => {
 
 const itemColumnClass = (item) => {
     return ['mcr-detail-column', `mcr-detail-${item.id}`];
+};
+
+const columnContentClass = (column) => {
+    const cls = ['mcr-column-content'];
+    if (column.collapsed) {
+        cls.push('mcr-column-collapsed');
+    } else {
+        cls.push('mcr-column-expanded');
+    }
+    return cls;
 };
 
 // ===========================================================================
@@ -189,7 +207,7 @@ const getColumn = (item, column) => {
         res.data = column;
     }
 
-    return res;
+    return shallowReactive(res);
 };
 
 // ===========================================================================
@@ -243,7 +261,9 @@ const getAnnotations = (item, column) => {
     if (typeof annotations === 'string' && annotations) {
         return {
             icon: 'annotation',
-            content: `<div class="mcr-column-annotation">${markdownFormatter(annotations, true)}</div>`
+            content: `<div class="mcr-annotation-list">
+                    <div class="mcr-annotation-item">${markdownFormatter(annotations, true)}</div>
+                </div>`
         };
     }
 
@@ -262,7 +282,7 @@ const getAnnotations = (item, column) => {
                 res.push(`<span>${markdownFormatter(des, true)}</span>`);
             }
         });
-        return `<div class="mcr-column-annotation">${res.join('')}</div>`;
+        return `<div class="mcr-annotation-item">${res.join('')}</div>`;
     });
     // console.log(list);
 
@@ -273,7 +293,9 @@ const getAnnotations = (item, column) => {
 
     return {
         icon: 'annotation',
-        content
+        content: `<div class="mcr-annotation-list">
+            ${content}
+        </div>`
     };
 };
 
@@ -353,6 +375,10 @@ const getCustom = (item, column) => {
         icon: 'custom',
         content
     };
+};
+
+const onColumnHeadClick = (column) => {
+    column.collapsed = !column.collapsed;
 };
 
 // ===========================================================================
@@ -570,11 +596,21 @@ watch([
 
 .mcr-column-content {
     padding: 5px;
+
+    &.mcr-column-collapsed {
+        display: none;
+    }
+
+    &.mcr-column-expanded {
+        display: block;
+    }
 }
 
 .mcr-detail-body {
     .mcr-column-head {
+        padding-left: 5px;
         font-weight: bold;
+        user-select: none;
     }
 }
 
@@ -605,7 +641,7 @@ watch([
     border-left-color: #aaa;
     background-color: #f6f8fa;
 
-    .mcr-column-content {
+    .mcr-annotation-list {
         display: flex;
         flex-direction: column;
         gap: 5px;
@@ -614,7 +650,7 @@ watch([
         border-radius: 5px;
         background-color: #fff;
 
-        .mcr-column-annotation {
+        .mcr-annotation-item {
             display: flex;
             flex-flow: row wrap;
             gap: 10px;

@@ -429,13 +429,11 @@ const initTooltip = () => {
 const updateSize = () => {
     state.windowWidth = window.innerWidth;
 
-    let flyoverWidth = '50%';
+    let flyoverWidth = '60%';
     if (state.windowWidth < 600) {
         flyoverWidth = '100%';
-    } else if (state.windowWidth < 900) {
+    } else if (state.windowWidth < 800) {
         flyoverWidth = '80%';
-    } else if (state.windowWidth < 1200) {
-        flyoverWidth = '60%';
     }
     state.flyoverWidth = flyoverWidth;
 };

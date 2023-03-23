@@ -1,4 +1,7 @@
-<svg viewBox="0 0 24 24" width="100%" height="100%" pointer-events="none"
+<svg viewBox="0 0 512 512" width="100%" height="100%" pointer-events="none"
     xmlns="http://www.w3.org/2000/svg">
-    <path d="m13 6 6 6-6 6M5 6l6 6-6 6" stroke-width="1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32">
+        <path d="M448 341.37V170.61A32 32 0 0 0 432.11 143l-152-88.46a47.94 47.94 0 0 0-48.24 0L79.89 143A32 32 0 0 0 64 170.61v170.76A32 32 0 0 0 79.89 369l152 88.46a48 48 0 0 0 48.24 0l152-88.46A32 32 0 0 0 448 341.37z"/>
+        <path d="m69 153.99 187 110 187-110m-187 310v-200"/>
+    </g>
 </svg>
