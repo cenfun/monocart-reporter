@@ -6,17 +6,19 @@
 [![](https://badgen.net/npm/dw/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 
-* A [Playwright](https://github.com/microsoft/playwright) test [reporter](https://playwright.dev/docs/test-reporters) (Node.js)
-* Shows [suites](https://playwright.dev/docs/api/class-suite)/[cases](https://playwright.dev/docs/api/class-testcase)/[steps](https://playwright.dev/docs/api/class-teststep) with tree style
-* Console logs
-* Fuzzy search
-* Style Tags
+* A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
+* Shows [Suites](https://playwright.dev/docs/api/class-suite)/[Cases](https://playwright.dev/docs/api/class-testcase)/[Steps](https://playwright.dev/docs/api/class-teststep) with Tree Style
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
-* Custom columns and formatters (extra information for suite/case/step)
-* Custom data collection visitor 
-* Collect data from comments (similar to JsDoc)
-* Output report data and summary (json)
-* Export data (json)
+* Custom Columns and Formatters (extra information for suite/case/step)
+* Custom Data Collection Visitor 
+* Collect Data from Comments (similar to JsDoc)
+* Output Report Data and Summary (json)
+* Console Logs (log/error/warn/debug/info)
+* Fuzzy Search
+* Style Tags
+* Pie Chart
+* Parallel Workers graph
+* Export Data (json)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
 

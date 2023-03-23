@@ -1,3 +1,6 @@
+* 1.5.2
+  - fixed UI issues
+
 * 1.5.1
   - updated UI/icons
   - fixed grid sort
