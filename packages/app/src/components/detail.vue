@@ -602,7 +602,7 @@ watch([
 }
 
 .mcr-detail-annotations {
-    border-left-color: #4399f0;
+    border-left-color: #aaa;
     background-color: #f6f8fa;
 
     .mcr-column-content {
@@ -623,7 +623,7 @@ watch([
 }
 
 .mcr-detail-attachments {
-    border-left-color: #999;
+    border-left-color: #aaa;
 
     .mcr-detail-attachment {
         padding: 5px;
