@@ -84,15 +84,7 @@
 
     <div class="mcr-grid vui-flex-auto" />
 
-    <VuiFlyover
-      ref="flyover"
-      position="right"
-      :visible="state.flyoverVisible"
-      :width="state.flyoverWidth"
-      @end="onFlyoverEnd"
-    >
-      <Flyover />
-    </VuiFlyover>
+    <Flyover />
 
     <VuiTooltip
       :visible="tooltip.visible"
@@ -122,7 +114,6 @@ import state from './modules/state.js';
 const {
     VuiInput,
     VuiFlex,
-    VuiFlyover,
     VuiSwitch,
     VuiTooltip
 } = components;
@@ -406,13 +397,6 @@ const initData = (reportData) => {
 
 const onMenuClick = (e) => {
     showFlyover();
-};
-
-// remove tag till flyover animation end
-const onFlyoverEnd = () => {
-    if (!state.flyoverVisible) {
-        Util.delHash('page');
-    }
 };
 
 let timeout_tooltip;
@@ -855,38 +839,6 @@ icon
     text-align: center;
     border-radius: 10px;
     background: #99adb6;
-}
-
-/*
-flyover
-*/
-
-.mcr-flyover-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 20px;
-    height: 100%;
-}
-
-.vui-flyover-main {
-    height: 100%;
-    overflow: hidden;
-}
-
-.vui-flyover-header {
-    color: #fff;
-    background-color: #005ba4;
-}
-
-.vui-flyover-title {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 22px;
-}
-
-.vui-flyover-content {
-    overflow: auto;
 }
 
 </style>
