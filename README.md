@@ -45,8 +45,12 @@ module.exports = {
     ]
 };
 ```
-Example [tests/playwright.config.js](tests/playwright.config.js)  
 Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
+
+## Examples
+- [tests/playwright.config.js](/tests/playwright.config.js)
+- [tests/example/example.spec.js](/tests/example/example.spec.js)
+- [tests/home-page/home-page.spec.js](/tests/home-page/home-page.spec.js)
 
 ## Output Assets
 - path-to/your-filename.html  
@@ -233,7 +237,7 @@ module.exports = {
                 },
                 critical: {
                     background: '#c00'
-                },
+                }
             }
         }]
     ]
@@ -297,11 +301,6 @@ module.exports = {
 
 ### Preview Testrail Run/Results
 ![](/docs/testrail.png)
-
-## Test Examples
-- [tests/playwright.config.js](tests/playwright.config.js)
-- [tests/example/example.spec.js](tests/example/example.spec.js)
-- [tests/home-page/home-page.spec.js](tests/home-page/home-page.spec.js)
 
 ## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
