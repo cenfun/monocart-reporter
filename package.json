@@ -1,7 +1,7 @@
 {
     "name": "monocart-reporter",
     "version": "1.5.3",
-    "description": "A playwright test reporter. Shows suites/cases/steps with tree style, markdown annotations, custom columns/formatters/data collection visitors, console logs, fuzzy search, style tags, send email, testrail integration.",
+    "description": "A playwright test reporter. Shows suites/cases/steps with tree style, markdown annotations, custom columns/formatters/data collection visitors, console logs, style tags, send email, testrail integration.",
     "main": "lib/index.js",
     "scripts": {
         "test": "node ./scripts/link.js && npx playwright test --config=tests/playwright.config.js",
@@ -37,7 +37,6 @@
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-vue": "^9.9.0",
         "file-saver": "^2.0.5",
-        "fuzzy": "^0.1.3",
         "github-markdown-css": "^5.2.0",
         "marked": "^4.3.0",
         "playwright": "^1.32.0",

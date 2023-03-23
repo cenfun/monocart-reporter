@@ -14,9 +14,6 @@
 * Collect Data from Comments (similar to JsDoc)
 * Output Report Data and Summary (json)
 * Console Logs (log/error/warn/debug/info)
-* Fuzzy Search
-* Pie Chart
-* Parallel Workers Graph
 * Export Data (json)
 * [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)

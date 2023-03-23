@@ -1,4 +1,3 @@
-import fuzzy from 'fuzzy';
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
 
@@ -88,6 +87,75 @@ const getSearchableValues = (rowItem, searchableKeys) => {
     return searchableValues;
 };
 
+// =================================================================================
+
+const getMatchedList = (keywordList, valueList, options) => {
+    if (!keywordList.length) {
+        return valueList;
+    }
+
+    const keyword = keywordList.shift();
+
+    let found = false;
+
+    for (let i = 0, l = valueList.length; i < l; i++) {
+        const item = valueList[i];
+        const { value, str } = item;
+        if (!str) {
+            continue;
+        }
+        const start = str.indexOf(keyword);
+        if (start === -1) {
+            continue;
+        }
+        const end = start + keyword.length;
+
+        const startValue = value.slice(0, start);
+        const matchedValue = value.slice(start, end);
+        const endValue = value.slice(end);
+
+        valueList.splice(i, 1, {
+            value: startValue,
+            str: startValue.toLowerCase()
+        }, {
+            value: matchedValue,
+            pre: options.pre,
+            post: options.post
+        }, {
+            value: endValue,
+            str: endValue.toLowerCase()
+        });
+
+        found = true;
+
+        break;
+
+    }
+
+    if (found) {
+        return getMatchedList(keywordList, valueList, options);
+    }
+
+};
+
+const getMatchedValue = (keywordList, value, options) => {
+    const valueList = [{
+        value,
+        str: value.toLowerCase()
+    }];
+    const list = getMatchedList(keywordList, valueList, options);
+
+    if (list) {
+        // console.log(list, keywordList, value);
+        return list.map((item) => {
+            return [item.pre, item.value, item.post].filter((it) => it).join('');
+        }).join('');
+    }
+    return null;
+};
+
+// =================================================================================
+
 export default () => {
 
     const searchableKeys = state.searchableKeys;
@@ -95,7 +163,7 @@ export default () => {
 
     return (rowItem) => {
 
-        const keywords = state.keywords;
+        const keywords = state.keywords.trim().toLowerCase();
 
         if (!keywords) {
             searchableKeys.forEach((k) => {
@@ -104,22 +172,22 @@ export default () => {
             return true;
         }
 
+        const keywordList = keywords.split(/\s+/g);
         const searchableValues = getSearchableValues(rowItem, searchableKeys);
 
         let hasMatched = false;
-        Object.keys(searchableValues).forEach((k) => {
-            let matched = null;
-            const v = searchableValues[k];
-            const res = fuzzy.match(keywords, v, {
+        Object.keys(searchableValues).forEach((id) => {
+            const value = searchableValues[id];
+            // clone for shift
+            const cloneList = [].concat(keywordList);
+            const matched = getMatchedValue(cloneList, value, {
                 pre: '<b>',
                 post: '</b>'
             });
-            if (res) {
-                // console.log(res);
+            if (matched) {
                 hasMatched = true;
-                matched = res.rendered;
             }
-            rowItem[`${k}_matched`] = matched;
+            rowItem[`${id}_matched`] = matched;
         });
 
         if (hasMatched) {
