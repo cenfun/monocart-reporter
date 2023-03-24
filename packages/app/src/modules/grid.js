@@ -248,7 +248,8 @@ const getGridData = () => {
 
     const data = getGridDataByType(allData, state.caseType, state.suiteVisible, state.stepVisible);
 
-    console.log(key, data);
+    // console.log(key, data);
+
     state.gridDataMap[key] = data;
     return data;
 };

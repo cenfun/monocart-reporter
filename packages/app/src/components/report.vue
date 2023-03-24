@@ -208,6 +208,46 @@
             wrap
           >
             <IconLabel
+              icon="system"
+              :button="false"
+            >
+              <b>System</b>
+            </IconLabel>
+          </VuiFlex>
+        </div>
+        <div class="mcr-report-chart">
+          <VuiFlex
+            gap="15px"
+            direction="column"
+            padding="10px"
+            class="mcr-report-system"
+          >
+            <VuiFlex
+              v-for="(group, i) in state.systemList"
+              :key="i"
+              gap="15px"
+              wrap
+            >
+              <IconLabel
+                v-for="(item, j) in group.list"
+                :key="j"
+                :icon="item.icon"
+                :button="false"
+              >
+                <b>{{ item.name }}</b> {{ item.value }}
+              </IconLabel>
+            </VuiFlex>
+          </VuiFlex>
+        </div>
+      </div>
+
+      <div class="mcr-report-item">
+        <div class="mcr-report-head">
+          <VuiFlex
+            gap="15px"
+            wrap
+          >
+            <IconLabel
               icon="export"
               :button="false"
             >
@@ -219,7 +259,7 @@
           <VuiFlex
             gap="15px"
             direction="column"
-            padding="15px"
+            padding="10px"
             class="mcr-report-export"
           >
             <VuiFlex

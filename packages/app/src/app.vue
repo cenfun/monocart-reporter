@@ -306,10 +306,30 @@ const workersHandler = (workers, list) => {
 
 };
 
+const systemHandler = (system) => {
+
+    console.log(system);
+
+
+    const systemList = [{
+        list: [{
+            name: 'CPU',
+            value: `${system.cpu.model} (${system.cpu.count}T)`
+        }, {
+            name: 'Memory',
+            value: Util.BF(system.mem.total)
+        }]
+    }];
+
+
+    state.systemList = systemList;
+
+};
+
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, tags, workers
+        columns, rows, summary, tags, workers, system
     } = reportData;
 
     const searchableColumns = getSearchableColumns(columns);
@@ -397,6 +417,7 @@ const initData = (reportData) => {
 
     tagsHandler(tags);
     workersHandler(workers, workerList);
+    systemHandler(system);
 
 };
 
