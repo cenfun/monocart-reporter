@@ -305,10 +305,76 @@ const workersHandler = (system, workers, list) => {
 const systemHandler = (system) => {
 
     // console.log(system);
-    // const time_start = system.timestampStart;
-    // const time_end = system.timestampEnd;
-    // const duration = time_end - time_start;
+    const time_start = system.timestampStart;
+    const time_end = system.timestampEnd;
+    const duration = time_end - time_start;
     // console.log('duration', duration);
+
+    const point = Util.point;
+    // const dFixed = Util.dFixed;
+    const width = 1000;
+    const height = 120;
+
+    const cpuLine = {
+        color: system.cpu.color,
+        ps: []
+    };
+
+    const memLine = {
+        color: system.mem.color,
+        ps: []
+    };
+
+    const memTotal = system.mem.total;
+    const len = system.ticks.length;
+
+    system.ticks.forEach((item, i) => {
+        const {
+            cpu, mem, timestamp
+        } = item;
+
+        const cpuPercent = cpu.percent;
+        const memFree = mem.free;
+
+        const x = (timestamp - time_start) / duration * width;
+
+        const cpuY = (1 - cpuPercent / 100) * height;
+        // fix pre
+        if (!cpuLine.ps.length) {
+            cpuLine.ps.push(point(0, cpuY));
+        }
+        cpuLine.ps.push(point(x, cpuY));
+        // fix post
+        if (i === len - 1) {
+            cpuLine.ps.push(point(width, cpuY));
+        }
+
+        const memY = memFree / memTotal * height;
+        if (!memLine.ps.length) {
+            memLine.ps.push(point(0, memY));
+        }
+        memLine.ps.push(point(x, memY));
+        if (i === len - 1) {
+            memLine.ps.push(point(width, memY));
+        }
+    });
+
+    cpuLine.dStroke = `M${cpuLine.ps.join('L')}`;
+    cpuLine.dFill = `M0,${height}L${cpuLine.ps.join('L')}V${height}`;
+
+    memLine.dStroke = `M${memLine.ps.join('L')}`;
+    memLine.dFill = `M0,${height}L${memLine.ps.join('L')}V${height}`;
+
+    const usage = {
+        width,
+        height,
+        color: '#4DA60C',
+        viewBox: `0 0 ${width} ${height}`,
+        lines: [memLine, cpuLine]
+    };
+
+
+    state.usage = usage;
 
 
     const systemList = [{

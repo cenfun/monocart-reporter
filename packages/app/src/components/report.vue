@@ -155,41 +155,35 @@
             gap="15px"
             padding="10px"
           >
-            <VuiFlex
+            <div
               v-for="(item, i) in state.workerList"
               :key="i"
               class="mcr-report-worker"
-              gap="10px"
             >
-              <div :tooltip="'Parallel Index ' + item.index">
-                <span class="mcr-num">{{ item.index }}</span>
-              </div>
-              <div class="vui-flex-auto">
-                <svg
-                  v-if="item.bars"
-                  :viewBox="item.viewBox"
-                  width="100%"
-                  height="100%"
-                  xmlns="http://www.w3.org/2000/svg"
-                  @mouseleave="hideResultPopover"
-                >
-                  <rect
-                    :width="item.width"
-                    :height="item.height"
-                    fill="#eee"
-                    @mousemove="onBarMouseMove(item, $event)"
+              <svg
+                v-if="item.bars"
+                :viewBox="item.viewBox"
+                width="100%"
+                height="100%"
+                xmlns="http://www.w3.org/2000/svg"
+                @mouseleave="hideResultPopover"
+              >
+                <rect
+                  :width="item.width"
+                  :height="item.height"
+                  fill="#eee"
+                  @mousemove="onBarMouseMove(item, $event)"
+                />
+                <g pointer-events="none">
+                  <path
+                    v-for="(bar, j) in item.bars"
+                    :key="j"
+                    :d="bar.d"
+                    :fill="bar.color"
                   />
-                  <g pointer-events="none">
-                    <path
-                      v-for="(bar, j) in item.bars"
-                      :key="j"
-                      :d="bar.d"
-                      :fill="bar.color"
-                    />
-                  </g>
-                </svg>
-              </div>
-            </VuiFlex>
+                </g>
+              </svg>
+            </div>
           </VuiFlex>
         </div>
       </div>
@@ -216,6 +210,46 @@
           </VuiFlex>
         </div>
         <div class="mcr-report-chart">
+          <VuiFlex
+            v-if="state.usage"
+            direction="column"
+            gap="15px"
+            padding="10px"
+            class="mcr-report-usage"
+          >
+            <svg
+              :viewBox="state.usage.viewBox"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0.5"
+                y="0.5"
+                :width="state.usage.width-1"
+                :height="state.usage.height-1"
+                fill="none"
+                :stroke="state.usage.color"
+              />
+              <g v-if="state.usage.lines">
+                <g
+                  v-for="(line, j) in state.usage.lines"
+                  :key="j"
+                >
+                  <path
+                    :d="line.dFill"
+                    :fill="line.color"
+                    fill-opacity="0.1"
+                  />
+                  <path
+                    :d="line.dStroke"
+                    :stroke="line.color"
+                    fill="none"
+                  />
+                </g>
+              </g>
+            </svg>
+          </VuiFlex>
           <VuiFlex
             gap="15px"
             direction="column"
@@ -328,6 +362,12 @@
         direction="column"
         gap="10px"
       >
+        <IconLabel icon="parallel">
+          <VuiFlex gap="10px">
+            <div>Parallel Index: <span class="mcr-num">{{ data.result.parallelIndex }}</span></div>
+            <div>Worker Index: {{ data.result.workerIndex }}</div>
+          </VuiFlex>
+        </IconLabel>
         <IconLabel :icon="data.result.type">
           {{ data.result.title }}
         </IconLabel>
@@ -339,12 +379,6 @@
             {{ Util.TF(data.result.duration) }}
           </IconLabel>
         </VuiFlex>
-        <IconLabel icon="parallel">
-          <VuiFlex gap="10px">
-            <div>Parallel Index: {{ data.result.parallelIndex }}</div>
-            <div>Worker Index: {{ data.result.workerIndex }}</div>
-          </VuiFlex>
-        </IconLabel>
       </VuiFlex>
     </VuiPopover>
   </VuiFlex>
@@ -653,6 +687,12 @@ watch(() => data.popoverTarget, () => {
     .mcr-num {
         background: #888;
         cursor: default;
+    }
+}
+
+.mcr-report-usage {
+    svg {
+        max-width: 1000px;
     }
 }
 
