@@ -211,14 +211,34 @@
         </div>
         <div class="mcr-report-chart">
           <VuiFlex
-            v-if="state.usage"
+            gap="15px"
+            padding="10px 10px 0 10px"
+            wrap
+          >
+            <VuiFlex
+              v-for="(item, j) in state.usageLegends"
+              :key="j"
+              gap="5px"
+            >
+              <IconLabel
+                :icon="item.icon"
+                :button="false"
+                :style="'color:'+item.color"
+              >
+                <b>{{ item.name }}</b>
+              </IconLabel>
+              <div>{{ item.value }}</div>
+            </VuiFlex>
+          </VuiFlex>
+          <VuiFlex
+            v-if="state.usageChart"
             direction="column"
             gap="15px"
             padding="10px"
             class="mcr-report-usage"
           >
             <svg
-              :viewBox="state.usage.viewBox"
+              :viewBox="state.usageChart.viewBox"
               width="100%"
               height="100%"
               xmlns="http://www.w3.org/2000/svg"
@@ -226,14 +246,14 @@
               <rect
                 x="0.5"
                 y="0.5"
-                :width="state.usage.width-1"
-                :height="state.usage.height-1"
+                :width="state.usageChart.width-1"
+                :height="state.usageChart.height-1"
                 fill="none"
-                :stroke="state.usage.color"
+                :stroke="state.usageChart.color"
               />
-              <g v-if="state.usage.lines">
+              <g v-if="state.usageChart.lines">
                 <g
-                  v-for="(line, j) in state.usage.lines"
+                  v-for="(line, j) in state.usageChart.lines"
                   :key="j"
                 >
                   <path
@@ -254,7 +274,6 @@
             gap="15px"
             direction="column"
             padding="10px"
-            class="mcr-report-system"
           >
             <VuiFlex
               v-for="(group, i) in state.systemList"

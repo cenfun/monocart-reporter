@@ -365,32 +365,27 @@ const systemHandler = (system) => {
     memLine.dStroke = `M${memLine.ps.join('L')}`;
     memLine.dFill = `M0,${height}L${memLine.ps.join('L')}V${height}`;
 
-    const usage = {
+    state.usageChart = {
         width,
         height,
-        color: '#4DA60C',
+        color: '#ccc',
         viewBox: `0 0 ${width} ${height}`,
         lines: [memLine, cpuLine]
     };
 
-
-    state.usage = usage;
-
+    state.usageLegends = [{
+        icon: 'cpu',
+        name: 'CPU',
+        value: `${system.cpu.model} (${system.cpu.count}T)`,
+        color: system.cpu.color
+    }, {
+        icon: 'memory',
+        name: 'Memory',
+        value: Util.BF(system.mem.total),
+        color: system.mem.color
+    }];
 
     const systemList = [{
-        list: [{
-            icon: 'cpu',
-            name: 'CPU',
-            value: `${system.cpu.model} (${system.cpu.count}T)`,
-            color: system.cpu.color
-        }, {
-            icon: 'memory',
-            name: 'Memory',
-            value: Util.BF(system.mem.total),
-            color: system.mem.color
-        }]
-    }, {
-
         list: [{
             icon: 'os',
             name: 'OS',
