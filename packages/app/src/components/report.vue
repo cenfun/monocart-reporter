@@ -134,14 +134,7 @@
               icon="parallel"
               :button="false"
             >
-              <b>Max Workers</b> <span class="mcr-num">{{ Util.NF(state.workers) }}</span>
-            </IconLabel>
-
-            <IconLabel
-              icon="time"
-              :button="false"
-            >
-              <b>Duration</b> <span class="mcr-num">{{ state.parallelDuration }}</span>
+              <b>Workers</b> (Max {{ Util.NF(state.workers) }})
             </IconLabel>
 
             <div class="vui-flex-auto" />
@@ -212,6 +205,13 @@
               :button="false"
             >
               <b>System</b>
+            </IconLabel>
+
+            <IconLabel
+              icon="time"
+              :button="false"
+            >
+              <b>Duration</b> <span class="mcr-num">{{ state.duration }}</span>
             </IconLabel>
           </VuiFlex>
         </div>

@@ -226,10 +226,7 @@ const workersHandler = (system, workers, list) => {
     // console.log(list);
     const time_start = system.timestampStart;
     const time_end = system.timestampEnd;
-
     const duration = time_end - time_start;
-    state.parallelDuration = Util.TF(duration);
-    // console.log('duration', duration);
 
     const point = Util.point;
     const dFixed = Util.dFixed;
@@ -308,6 +305,10 @@ const workersHandler = (system, workers, list) => {
 const systemHandler = (system) => {
 
     // console.log(system);
+    // const time_start = system.timestampStart;
+    // const time_end = system.timestampEnd;
+    // const duration = time_end - time_start;
+    // console.log('duration', duration);
 
 
     const systemList = [{
