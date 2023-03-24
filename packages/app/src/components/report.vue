@@ -141,7 +141,7 @@
               icon="time"
               :button="false"
             >
-              <b>Parallel Duration</b> <span class="mcr-num">{{ state.parallelDuration }}</span>
+              <b>Duration</b> <span class="mcr-num">{{ state.parallelDuration }}</span>
             </IconLabel>
 
             <div class="vui-flex-auto" />
@@ -228,14 +228,20 @@
               gap="15px"
               wrap
             >
-              <IconLabel
+              <VuiFlex
                 v-for="(item, j) in group.list"
                 :key="j"
-                :icon="item.icon"
-                :button="false"
+                gap="5px"
               >
-                <b>{{ item.name }}</b> {{ item.value }}
-              </IconLabel>
+                <IconLabel
+                  :icon="item.icon"
+                  :button="false"
+                  :style="'color:'+item.color"
+                >
+                  <b>{{ item.name }}</b>
+                </IconLabel>
+                <div>{{ item.value }}</div>
+              </VuiFlex>
             </VuiFlex>
           </VuiFlex>
         </div>

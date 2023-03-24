@@ -211,11 +211,9 @@ const tagsHandler = (tags) => {
     state.tagMap = tags;
 };
 
-const workersHandler = (workers, list) => {
+const workersHandler = (system, workers, list) => {
     // max works, default is 4
     state.workers = workers;
-
-    console.assert(list.length);
 
     // sort by timestamp
     list.sort((a, b) => {
@@ -226,8 +224,9 @@ const workersHandler = (workers, list) => {
     });
 
     // console.log(list);
-    const time_start = list[0].timestamp;
-    const time_end = list[list.length - 1].timestamp;
+    const time_start = system.timestampStart;
+    const time_end = system.timestampEnd;
+
     const duration = time_end - time_start;
     state.parallelDuration = Util.TF(duration);
     // console.log('duration', duration);
@@ -310,15 +309,18 @@ const systemHandler = (system) => {
 
     // console.log(system);
 
+
     const systemList = [{
         list: [{
             icon: 'cpu',
             name: 'CPU',
-            value: `${system.cpu.model} (${system.cpu.count}T)`
+            value: `${system.cpu.model} (${system.cpu.count}T)`,
+            color: system.cpu.color
         }, {
             icon: 'memory',
             name: 'Memory',
-            value: Util.BF(system.mem.total)
+            value: Util.BF(system.mem.total),
+            color: system.mem.color
         }]
     }, {
 
@@ -336,7 +338,6 @@ const systemHandler = (system) => {
             value: system.cwd
         }]
     }];
-
 
     state.systemList = systemList;
 
@@ -432,7 +433,7 @@ const initData = (reportData) => {
     ];
 
     tagsHandler(tags);
-    workersHandler(workers, workerList);
+    workersHandler(system, workers, workerList);
     systemHandler(system);
 
 };
