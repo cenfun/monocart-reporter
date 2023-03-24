@@ -134,7 +134,7 @@
               icon="parallel"
               :button="false"
             >
-              <b>Workers</b> (Max {{ Util.NF(state.workers) }})
+              <b>Workers</b> (Max: {{ Util.NF(state.workers) }})
             </IconLabel>
 
             <div class="vui-flex-auto" />
@@ -242,21 +242,27 @@
               width="100%"
               height="100%"
               xmlns="http://www.w3.org/2000/svg"
+              @mouseleave="hideUsageTooltip"
             >
               <rect
                 x="0.5"
                 y="0.5"
                 :width="state.usageChart.width-1"
                 :height="state.usageChart.height-1"
-                fill="none"
+                fill="#fff"
                 :stroke="state.usageChart.color"
+                @mousemove="showUsageTooltip($event)"
               />
               <path
                 :d="state.usageChart.grid.d"
                 :stroke="state.usageChart.grid.color"
+                pointer-events="none"
                 fill="none"
               />
-              <g v-if="state.usageChart.lines">
+              <g
+                v-if="state.usageChart.lines"
+                pointer-events="none"
+              >
                 <g
                   v-for="(line, j) in state.usageChart.lines"
                   :key="j"
@@ -272,6 +278,16 @@
                     fill="none"
                   />
                 </g>
+              </g>
+              <g v-if="ud.points">
+                <circle
+                  v-for="(item, i) in ud.points"
+                  :key="i"
+                  :cx="item.x"
+                  :cy="item.y"
+                  :fill="item.color"
+                  r="3"
+                />
               </g>
             </svg>
           </VuiFlex>
@@ -373,36 +389,68 @@
         </a>
       </VuiFlex>
     </div>
+
     <VuiPopover
-      ref="popover"
-      v-model="data.popoverVisible"
-      :positions="['top','bottom']"
-      class="mcr-report-popover"
-      :target="data.popoverTarget"
+      ref="wdPopover"
+      v-model="wd.visible"
+      :positions="['top-','bottom-']"
+      :target="wd.target"
+      class="mcr-wd-popover"
       width="260px"
     >
       <VuiFlex
-        v-if="data.result"
+        v-if="wd.result"
         direction="column"
         gap="10px"
       >
         <IconLabel icon="parallel">
           <VuiFlex gap="10px">
-            <div>Parallel Index: <span class="mcr-num">{{ data.result.parallelIndex }}</span></div>
-            <div>Worker Index: {{ data.result.workerIndex }}</div>
+            <div>Parallel Index: <span class="mcr-num">{{ wd.result.parallelIndex }}</span></div>
+            <div>Worker Index: {{ wd.result.workerIndex }}</div>
           </VuiFlex>
         </IconLabel>
-        <IconLabel :icon="data.result.type">
-          {{ data.result.title }}
+        <IconLabel :icon="wd.result.type">
+          {{ wd.result.title }}
         </IconLabel>
         <VuiFlex gap="10px">
           <IconLabel icon="calendar">
-            {{ new Date(data.result.timestamp).toLocaleString() }}
+            {{ new Date(wd.result.timestamp).toLocaleString() }}
           </IconLabel>
           <IconLabel icon="time">
-            {{ Util.TF(data.result.duration) }}
+            {{ Util.TF(wd.result.duration) }}
           </IconLabel>
         </VuiFlex>
+      </VuiFlex>
+    </VuiPopover>
+
+    <VuiPopover
+      ref="udPopover"
+      v-model="ud.visible"
+      :positions="['top-','bottom-']"
+      :target="ud.target"
+      class="mcr-ud-popover"
+    >
+      <VuiFlex
+        v-if="ud.tick"
+        direction="column"
+        gap="10px"
+      >
+        <IconLabel
+          icon="cpu"
+          :style="'color:'+ud.tick.cpu.color"
+        >
+          <b>CPU</b> {{ ud.tick.cpu.percent }}%
+        </IconLabel>
+
+        <IconLabel
+          icon="memory"
+          :style="'color:'+ud.tick.mem.color"
+        >
+          <b>Memory</b> {{ ud.tick.mem.used }} ({{ ud.tick.mem.percent }}%)
+        </IconLabel>
+        <IconLabel icon="calendar">
+          {{ new Date(ud.tick.timestamp).toLocaleString() }}
+        </IconLabel>
       </VuiFlex>
     </VuiPopover>
   </VuiFlex>
@@ -425,18 +473,6 @@ import IconLabel from './icon-label.vue';
 import Pie from './pie.vue';
 
 const { VuiFlex, VuiPopover } = components;
-
-const popover = ref(null);
-
-const data = shallowReactive({
-    item: null,
-    offsetX: 0,
-    barWidth: 0,
-
-    result: null,
-    popoverTarget: null,
-    popoverVisible: false
-});
 
 // ====================================================================================
 
@@ -572,12 +608,26 @@ const onExportClick = (item) => {
     saveAs(blob, `${filename}.json`);
 };
 
+
 // ====================================================================================
 
+const wdPopover = ref(null);
+
+const wd = shallowReactive({
+    item: null,
+    offsetX: 0,
+    barWidth: 0,
+
+    result: null,
+    target: null,
+    visible: false
+});
+
+
 const hideResultPopover = () => {
-    data.popoverVisible = false;
-    data.item = null;
-    data.result = null;
+    wd.visible = false;
+    wd.item = null;
+    wd.result = null;
 };
 
 const showResultPopover = (result) => {
@@ -585,68 +635,135 @@ const showResultPopover = (result) => {
         hideResultPopover();
         return;
     }
-    data.popoverVisible = true;
+    wd.visible = true;
 };
 
 const onBarMouseMove = (item, e) => {
-    data.item = item;
-    data.offsetX = e.offsetX;
+    wd.item = item;
+    wd.offsetX = e.offsetX;
 
     const br = e.target.getBoundingClientRect();
-    data.barX = br.x;
-    data.barY = br.y;
-    data.barWidth = br.width;
-    data.barHeight = br.height;
+    wd.barX = br.x;
+    wd.barY = br.y;
+    wd.barWidth = br.width;
+    wd.barHeight = br.height;
 };
 
-// ====================================================================================
-
 watch([
-    () => data.item,
-    () => data.offsetX,
-    () => data.barWidth
+    () => wd.item,
+    () => wd.offsetX,
+    () => wd.barWidth
 ], () => {
-    if (!data.item) {
+    if (!wd.item) {
         return;
     }
-    const t = Math.round(data.offsetX / data.barWidth * data.item.duration) + data.item.time_start;
-    const result = data.item.list.find((it) => {
+    const t = Math.round(wd.offsetX / wd.barWidth * wd.item.duration) + wd.item.time_start;
+    const result = wd.item.list.find((it) => {
         if (t >= it.timestamp && t <= it.timestamp + it.duration) {
             return true;
         }
     });
 
-    data.result = result;
+    wd.result = result;
     if (!result) {
         return;
     }
 
     // console.log(result);
 
-    const left = (result.timestamp - data.item.time_start) / data.item.duration * data.barWidth;
-    const width = result.duration / data.item.duration * data.barWidth;
+    const left = (result.timestamp - wd.item.time_start) / wd.item.duration * wd.barWidth;
+    const width = result.duration / wd.item.duration * wd.barWidth;
 
     const padding = 10;
     const target = {
-        left: data.barX + left - padding,
-        top: data.barY - padding,
+        left: wd.barX + left - padding,
+        top: wd.barY - padding,
         width: width + padding * 2,
-        height: data.barHeight + padding * 2
+        height: wd.barHeight + padding * 2
     };
 
-    data.popoverTarget = target;
+    wd.target = target;
 
 });
 
-watch(() => data.result, (result) => {
+watch(() => wd.result, (result) => {
     showResultPopover(result);
 });
 
-watch(() => data.popoverTarget, () => {
-    if (data.popoverVisible && popover.value) {
-        popover.value.update();
+watch(() => wd.target, () => {
+    if (wd.visible && wdPopover.value) {
+        wdPopover.value.update();
     }
 });
+
+// ====================================================================================
+
+const udPopover = ref(null);
+
+const ud = shallowReactive({
+    visible: false,
+    target: null,
+    tick: null,
+    points: null
+});
+
+const hideUsageTooltip = () => {
+    ud.visible = false;
+    ud.tick = null;
+    ud.points = null;
+};
+
+const showUsageTooltip = (e) => {
+    const offsetX = e.offsetX;
+    const br = e.target.getBoundingClientRect();
+    const {
+        x, y, width, height
+    } = br;
+    const ticks = state.system.ticks;
+    const i = Math.floor(offsetX / width * ticks.length);
+    const tick = ticks[i];
+
+    ud.tick = tick;
+
+    if (!tick) {
+        return;
+    }
+
+    const { cpu, mem } = tick;
+
+    ud.points = [{
+        x: cpu.x,
+        y: cpu.y,
+        color: cpu.color
+    }, {
+        x: mem.x,
+        y: mem.y,
+        color: mem.color
+    }];
+
+    const ox = cpu.x / state.usageChart.width * width;
+
+    const padding = 10;
+    const target = {
+        left: x + ox - padding,
+        top: y - padding,
+        width: padding * 2,
+        height: height + padding * 2
+    };
+
+    // console.log(target);
+
+    ud.target = target;
+
+    ud.visible = true;
+};
+
+watch(() => ud.target, () => {
+    if (ud.visible && udPopover.value) {
+        udPopover.value.update();
+    }
+});
+
 
 </script>
 <style lang="scss">
@@ -720,7 +837,7 @@ watch(() => data.popoverTarget, () => {
     }
 }
 
-.mcr-report-popover {
+.mcr-wd-popover {
     pointer-events: none;
 }
 

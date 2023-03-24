@@ -304,6 +304,8 @@ const workersHandler = (system, workers, list) => {
 
 const systemHandler = (system) => {
 
+    state.system = system;
+
     // console.log(system);
     const time_start = system.timestampStart;
     const time_end = system.timestampEnd;
@@ -311,7 +313,7 @@ const systemHandler = (system) => {
     // console.log('duration', duration);
 
     const point = Util.point;
-    // const dFixed = Util.dFixed;
+    const dFixed = Util.dFixed;
     const width = 1000;
     const height = 120;
 
@@ -337,8 +339,10 @@ const systemHandler = (system) => {
         const memFree = mem.free;
 
         const x = (timestamp - time_start) / duration * width;
-
         const cpuY = (1 - cpuPercent / 100) * height;
+        cpu.x = dFixed(x);
+        cpu.y = dFixed(cpuY);
+        cpu.color = cpuLine.color;
         // fix pre
         if (!cpuLine.ps.length) {
             cpuLine.ps.push(point(0, cpuY));
@@ -350,6 +354,11 @@ const systemHandler = (system) => {
         }
 
         const memY = memFree / memTotal * height;
+        mem.x = dFixed(x);
+        mem.y = dFixed(memY);
+        mem.color = memLine.color;
+        mem.used = Util.BF(system.mem.total - mem.free);
+        mem.percent = ((system.mem.total - mem.free) / system.mem.total * 100).toFixed(2);
         if (!memLine.ps.length) {
             memLine.ps.push(point(0, memY));
         }
