@@ -23,56 +23,57 @@
           </VuiFlex>
         </div>
         <div class="mcr-report-chart">
-          <Pie />
-        </div>
-        <VuiFlex
-          gap="15px"
-          direction="column"
-          padding="15px"
-          class="mcr-report-amounts"
-        >
-          <template v-if="state.amounts">
+          <VuiFlex wrap>
+            <Pie />
             <VuiFlex
-              v-for="(group, i) in state.amounts"
-              :key="i"
               gap="15px"
-              wrap
+              direction="column"
+              padding="10px"
             >
-              <IconLabel
-                v-for="(item, j) in group.list"
-                :key="j"
-                :icon="item.icon || group.icon"
-                :button="group.button"
-                :primary="group.primary"
-                :tooltip="item.description"
-                @click="onAmountClick(item)"
+              <template v-if="state.amounts">
+                <VuiFlex
+                  v-for="(group, i) in state.amounts"
+                  :key="i"
+                  gap="15px"
+                  wrap
+                >
+                  <IconLabel
+                    v-for="(item, j) in group.list"
+                    :key="j"
+                    :icon="item.icon || group.icon"
+                    :button="group.button"
+                    :primary="group.primary"
+                    :tooltip="item.description"
+                    @click="onAmountClick(item)"
+                  >
+                    {{ item.name }} <span class="mcr-num">{{ Util.NF(item.value) }}</span>
+                  </IconLabel>
+                </VuiFlex>
+              </template>
+
+              <VuiFlex
+                gap="15px"
+                wrap
               >
-                {{ item.name }} <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-              </IconLabel>
+                <IconLabel
+                  icon="time"
+                  primary
+                  @click="onSortClick('tests','duration')"
+                >
+                  Top Slowest
+                </IconLabel>
+
+                <IconLabel
+                  icon="time"
+                  primary
+                  @click="onSortClick('failed','duration')"
+                >
+                  Top Failed Slowest
+                </IconLabel>
+              </VuiFlex>
             </VuiFlex>
-          </template>
-
-          <VuiFlex
-            gap="15px"
-            wrap
-          >
-            <IconLabel
-              icon="time"
-              primary
-              @click="onSortClick('tests','duration')"
-            >
-              Top Slowest
-            </IconLabel>
-
-            <IconLabel
-              icon="time"
-              primary
-              @click="onSortClick('failed','duration')"
-            >
-              Top Failed Slowest
-            </IconLabel>
           </VuiFlex>
-        </VuiFlex>
+        </div>
       </div>
 
       <div
@@ -799,11 +800,10 @@ watch(() => ud.target, () => {
 
 .mcr-report-chart {
     padding: 10px;
-}
 
-.mcr-report-amounts {
-    position: relative;
-    border-top: 1px solid #dae9fa;
+    .vui-flex {
+        flex-shrink: 1;
+    }
 }
 
 .mcr-report-tag {

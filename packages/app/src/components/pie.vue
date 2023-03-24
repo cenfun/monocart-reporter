@@ -48,9 +48,14 @@
           class="mcr-legend-icon"
           :style="'background:'+item.color"
         />
-        <div>{{ item.name }}</div>
+        <div class="mcr-legend-name">
+          {{ item.name }}
+        </div>
+        <div class="vui-flex-auto" />
         <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-        <span>{{ item.percent }}</span>
+        <div class="mcr-legend-percent">
+          {{ item.percent }}
+        </div>
       </VuiFlex>
     </VuiFlex>
   </VuiFlex>
@@ -181,6 +186,7 @@ watch(() => state.pieData, (v) => {
 <style lang="scss">
 .mcr-pie-chart {
     position: relative;
+    margin-right: 20px;
     overflow: hidden;
 
     svg {
@@ -205,8 +211,10 @@ watch(() => state.pieData, (v) => {
         }
     }
 
-    span {
+    .mcr-legend-percent {
+        width: 50px;
         font-weight: normal;
+        text-align: right;
     }
 
     .mcr-legend-icon {
