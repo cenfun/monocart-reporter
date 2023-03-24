@@ -308,16 +308,32 @@ const workersHandler = (workers, list) => {
 
 const systemHandler = (system) => {
 
-    console.log(system);
-
+    // console.log(system);
 
     const systemList = [{
         list: [{
+            icon: 'cpu',
             name: 'CPU',
             value: `${system.cpu.model} (${system.cpu.count}T)`
         }, {
+            icon: 'memory',
             name: 'Memory',
             value: Util.BF(system.mem.total)
+        }]
+    }, {
+
+        list: [{
+            icon: 'os',
+            name: 'OS',
+            value: `${system.version} (${system.arch})`
+        }, {
+            icon: 'host',
+            name: 'Host',
+            value: system.hostname
+        }, {
+            icon: 'cwd',
+            name: 'CWD',
+            value: system.cwd
         }]
     }];
 
