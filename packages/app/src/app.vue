@@ -512,6 +512,7 @@ const initData = (reportData) => {
         {
             icon: 'sort',
             button: true,
+            primary: true,
             list: [
                 summary.errors,
                 summary.logs,
@@ -968,7 +969,7 @@ icon
     line-height: 18px;
     text-align: center;
     border-radius: 10px;
-    background: #99adb6;
+    background: #7e939c;
 }
 
 </style>

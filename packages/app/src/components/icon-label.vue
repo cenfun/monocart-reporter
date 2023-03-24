@@ -36,6 +36,10 @@ const props = defineProps({
     button: {
         type: Boolean,
         default: true
+    },
+    primary: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -45,6 +49,9 @@ const classMap = computed(() => {
     const list = ['mcr-icon-label', 'vui-flex-row'];
     if (props.button) {
         list.push('mcr-icon-label-button');
+        if (props.primary) {
+            list.push('mcr-icon-label-primary');
+        }
     }
     return list;
 });
@@ -124,6 +131,14 @@ watch(() => props.icon, () => {
 
 .mcr-icon-label-button:hover {
     opacity: 1;
+}
+
+.mcr-icon-label-primary {
+    opacity: 1;
+}
+
+.mcr-icon-label-primary:hover {
+    color: #0a58ca;
 }
 
 </style>

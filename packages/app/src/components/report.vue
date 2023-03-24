@@ -43,6 +43,7 @@
                 :key="j"
                 :icon="item.icon || group.icon"
                 :button="group.button"
+                :primary="group.primary"
                 :tooltip="item.description"
                 @click="onAmountClick(item)"
               >
@@ -57,6 +58,7 @@
           >
             <IconLabel
               icon="time"
+              primary
               @click="onSortClick('tests','duration')"
             >
               Top Slowest
@@ -64,6 +66,7 @@
 
             <IconLabel
               icon="time"
+              primary
               @click="onSortClick('failed','duration')"
             >
               Top Failed Slowest
@@ -352,6 +355,7 @@
                 v-for="(item, j) in group.list"
                 :key="j"
                 :icon="item.icon"
+                primary
                 @click="onExportClick(item)"
               >
                 {{ item.name }}
@@ -786,6 +790,10 @@ watch(() => ud.target, () => {
 
     .mcr-num {
         background-color: #0888f0;
+    }
+
+    a {
+        color: #333;
     }
 }
 
