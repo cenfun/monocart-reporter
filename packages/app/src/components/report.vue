@@ -251,6 +251,11 @@
                 fill="none"
                 :stroke="state.usageChart.color"
               />
+              <path
+                :d="state.usageChart.grid.d"
+                :stroke="state.usageChart.grid.color"
+                fill="none"
+              />
               <g v-if="state.usageChart.lines">
                 <g
                   v-for="(line, j) in state.usageChart.lines"

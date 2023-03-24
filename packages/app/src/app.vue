@@ -365,10 +365,28 @@ const systemHandler = (system) => {
     memLine.dStroke = `M${memLine.ps.join('L')}`;
     memLine.dFill = `M0,${height}L${memLine.ps.join('L')}V${height}`;
 
+    const gridList = [];
+    const gridColumns = 10;
+    const gridWidth = width / gridColumns;
+    for (let i = 0; i < gridColumns; i++) {
+        const x = i * gridWidth;
+        gridList.push(`M${point(x, 0)}L${point(x, height)}`);
+    }
+    const gridRows = 4;
+    const gridHeight = height / gridRows;
+    for (let i = 0; i < gridRows; i++) {
+        const y = i * gridHeight;
+        gridList.push(`M${point(0, y)}L${point(width, y)}`);
+    }
+
     state.usageChart = {
         width,
         height,
         color: '#ccc',
+        grid: {
+            d: gridList.join(''),
+            color: '#ececec'
+        },
         viewBox: `0 0 ${width} ${height}`,
         lines: [memLine, cpuLine]
     };
