@@ -24,6 +24,8 @@
 
 ![](/docs/report.gif)
 
+[More Test Reports](https://github.com/cenfun/monocart-reporter-test)
+
 ## Install
 ```sh
 npm i monocart-reporter

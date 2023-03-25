@@ -237,6 +237,7 @@ const workersHandler = (system, workers, list) => {
     const map = new Map();
     list.forEach((item) => {
         const pi = item.parallelIndex;
+
         let data = map.get(pi);
         if (!data) {
             data = {
@@ -258,9 +259,6 @@ const workersHandler = (system, workers, list) => {
 
         const x = (item.timestamp - time_start) / duration * width;
         const w = item.duration / duration * width;
-        if (w === 0) {
-            return;
-        }
 
         data.list.push({
             ... item,
@@ -275,7 +273,8 @@ const workersHandler = (system, workers, list) => {
             data.types[item.type] = ds;
         }
 
-        const sw = dFixed(w);
+        // min width 1px
+        const sw = dFixed(Math.max(w, 1));
         ds.push(`M${point(x, 0)} h${sw} v${height} h-${sw} v-${height}z`);
 
     });
