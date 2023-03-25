@@ -1,3 +1,6 @@
+* 1.5.4
+  - fixed UI issues
+
 * 1.5.3
   - fixed UI issues
 
