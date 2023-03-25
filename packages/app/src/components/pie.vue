@@ -9,6 +9,13 @@
       height="100%"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <circle
+        v-if="data.nothingR"
+        cx="50%"
+        cy="50%"
+        :r="data.nothingR"
+        fill="#f5f5f5"
+      />
       <g
         v-for="(item, i) in data.list"
         :key="i"
@@ -98,8 +105,8 @@ const onPieAnimate = (item) => {
 };
 
 const renderChart = () => {
-    const pieData = state.pieData;
-    if (!pieData) {
+    const pieList = state.pieList;
+    if (!pieList) {
         return;
     }
 
@@ -111,7 +118,7 @@ const renderChart = () => {
 
     // start from 12 clock
     let start = 0.75;
-    pieData.forEach((item, i) => {
+    pieList.forEach((item, i) => {
 
         const from = 2 * Math.PI * start;
         const percent = parseFloat(item.percent) / 100 + start;
@@ -135,6 +142,13 @@ const renderChart = () => {
         });
 
     });
+
+
+    // draw nothing bg
+    const total = pieList.map((item) => item.value).reduce((a, v) => a + v, 0);
+    if (total === 0) {
+        data.nothingR = r;
+    }
 
 };
 
@@ -178,7 +192,7 @@ onMounted(() => {
     renderChart();
 });
 
-watch(() => state.pieData, (v) => {
+watch(() => state.pieList, (v) => {
     renderChart();
 });
 

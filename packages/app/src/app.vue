@@ -319,12 +319,16 @@ const systemHandler = (system) => {
 
     const cpuLine = {
         color: system.cpu.color,
-        ps: []
+        ps: [],
+        dStroke: '',
+        dFill: ''
     };
 
     const memLine = {
         color: system.mem.color,
-        ps: []
+        ps: [],
+        dStroke: '',
+        dFill: ''
     };
 
     const memTotal = system.mem.total;
@@ -368,11 +372,15 @@ const systemHandler = (system) => {
         }
     });
 
-    cpuLine.dStroke = `M${cpuLine.ps.join('L')}`;
-    cpuLine.dFill = `M0,${height}L${cpuLine.ps.join('L')}V${height}`;
+    if (cpuLine.ps.length) {
+        cpuLine.dStroke = `M${cpuLine.ps.join('L')}`;
+        cpuLine.dFill = `M0,${height}L${cpuLine.ps.join('L')}V${height}`;
+    }
 
-    memLine.dStroke = `M${memLine.ps.join('L')}`;
-    memLine.dFill = `M0,${height}L${memLine.ps.join('L')}V${height}`;
+    if (memLine.ps.length) {
+        memLine.dStroke = `M${memLine.ps.join('L')}`;
+        memLine.dFill = `M0,${height}L${memLine.ps.join('L')}V${height}`;
+    }
 
     const gridList = [];
     const gridColumns = 10;
@@ -480,8 +488,11 @@ const initData = (reportData) => {
     summary.failed.classMap = summary.failed.value > 0 ? 'mcr-nav-failed' : 'mcr-nav-skipped';
 
     const navList = Object.values(summary).filter((it) => it.type);
+    state.navList = navList;
 
-    const pieData = navList.filter((it) => it.type !== 'tests').map((item) => {
+    state.pieHeads = [summary.tests, summary.suites, summary.steps];
+
+    const pieList = navList.filter((it) => it.type !== 'tests').map((item) => {
         return {
             id: item.type,
             name: item.name,
@@ -490,11 +501,7 @@ const initData = (reportData) => {
             color: state.colors[item.type]
         };
     });
-
-    state.navList = navList;
-
-    state.pieHeads = [summary.tests, summary.suites, summary.steps];
-    state.pieData = pieData;
+    state.pieList = pieList;
 
     summary.projects.icon = 'project';
     summary.files.icon = 'file';
@@ -572,8 +579,6 @@ const updateSize = () => {
 onMounted(() => {
     const reportData = JSON.parse(decompress(window.reportData));
     console.log(reportData);
-
-    console.assert(reportData.rows.length);
 
     initData(reportData);
 

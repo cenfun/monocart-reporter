@@ -31,10 +31,7 @@ const state = shallowReactive({
     // grid data
     gridDataAll: null,
     gridDataMap: {},
-    grid: null,
-
-    pieData: null,
-    testInfo: null
+    grid: null
 
 });
 
