@@ -377,9 +377,19 @@ const systemHandler = (system) => {
         dFill: ''
     };
 
-    const memTotal = system.mem.total;
-    const len = system.ticks.length;
+    const tickNum = system.ticks.length;
+    if (tickNum) {
+        const firstTick = JSON.parse(JSON.stringify(system.ticks[0]));
+        const lastTick = JSON.parse(JSON.stringify(system.ticks[tickNum - 1]));
+        // fix pre and post
+        firstTick.timestamp = time_start;
+        lastTick.timestamp = time_end;
 
+        system.ticks.unshift(firstTick);
+        system.ticks.push(lastTick);
+    }
+
+    const memTotal = system.mem.total;
     system.ticks.forEach((item, i) => {
         const {
             cpu, mem, timestamp
@@ -393,15 +403,7 @@ const systemHandler = (system) => {
         cpu.x = dFixed(x);
         cpu.y = dFixed(cpuY);
         cpu.color = cpuLine.color;
-        // fix pre
-        if (!cpuLine.ps.length) {
-            cpuLine.ps.push(point(0, cpuY));
-        }
         cpuLine.ps.push(point(x, cpuY));
-        // fix post
-        if (i === len - 1) {
-            cpuLine.ps.push(point(width, cpuY));
-        }
 
         const memY = memFree / memTotal * height;
         mem.x = dFixed(x);
@@ -409,13 +411,7 @@ const systemHandler = (system) => {
         mem.color = memLine.color;
         mem.used = Util.BF(system.mem.total - mem.free);
         mem.percent = ((system.mem.total - mem.free) / system.mem.total * 100).toFixed(2);
-        if (!memLine.ps.length) {
-            memLine.ps.push(point(0, memY));
-        }
         memLine.ps.push(point(x, memY));
-        if (i === len - 1) {
-            memLine.ps.push(point(width, memY));
-        }
     });
 
     if (cpuLine.ps.length) {
