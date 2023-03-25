@@ -17,6 +17,13 @@ module.exports = {
 
             // generate reportData for demo
             const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
+
+            // nothing
+            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/nothing/index.json');
+
+            // all failed
+            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/all-failed/index.json');
+
             if (!fs.existsSync(jsonPath)) {
                 Util.logRed(`ERROR: Not found test json: ${jsonPath}`);
                 return 1;
