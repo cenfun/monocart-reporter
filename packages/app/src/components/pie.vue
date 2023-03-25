@@ -10,11 +10,11 @@
       xmlns="http://www.w3.org/2000/svg"
     >
       <circle
-        v-if="data.nothingR"
+        v-if="data.bg"
         cx="50%"
         cy="50%"
-        :r="data.nothingR"
-        fill="#f5f5f5"
+        :r="data.bg.r"
+        :fill="data.bg.color"
       />
       <g
         v-for="(item, i) in data.list"
@@ -143,11 +143,13 @@ const renderChart = () => {
 
     });
 
-
     // draw nothing bg
     const total = pieList.map((item) => item.value).reduce((a, v) => a + v, 0);
     if (total === 0) {
-        data.nothingR = r;
+        data.bg = {
+            r,
+            color: '#f5f5f5'
+        };
     }
 
 };
@@ -156,6 +158,7 @@ const getSectorPath = function(x, y, r, from, till) {
     if (from === till) {
         return '';
     }
+
     const ds = [];
 
     const point = Util.point;
@@ -168,13 +171,31 @@ const getSectorPath = function(x, y, r, from, till) {
     const osy = Math.sin(from) * r + y;
     ds.push(`L${point(osx, osy)}`);
 
-    // arc to outer end point
-    const oex = Math.cos(till) * r + x;
-    const oey = Math.sin(till) * r + y;
-    // large flag for arc
-    const large = till - from < Math.PI ? 0 : 1;
-    ds.push(`A${point(r, r)} 0 ${large} 1 ${point(oex, oey)}`);
+    const getLarge = (v) => {
+        return v < Math.PI ? 0 : 1;
+    };
 
+    // 360 is a circle
+    const radius = till - from;
+    if (radius >= Math.PI * 2) {
+        // draw two arc
+        const tillM = from + radius * 0.5;
+        const omx = Math.cos(tillM) * r + x;
+        const omy = Math.sin(tillM) * r + y;
+        ds.push(`A${point(r, r)} 0 ${getLarge(tillM - from)} 1 ${point(omx, omy)}`);
+
+        // next arc
+        const oex = Math.cos(till) * r + x;
+        const oey = Math.sin(till) * r + y;
+        ds.push(`A${point(r, r)} 0 ${getLarge(till - tillM)} 1 ${point(oex, oey)}`);
+
+    } else {
+        // small than 360
+        // arc to outer end point
+        const oex = Math.cos(till) * r + x;
+        const oey = Math.sin(till) * r + y;
+        ds.push(`A${point(r, r)} 0 ${getLarge(radius)} 1 ${point(oex, oey)}`);
+    }
     // close
     ds.push('z');
 
