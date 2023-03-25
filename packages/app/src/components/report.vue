@@ -135,7 +135,7 @@
             wrap
           >
             <IconLabel
-              icon="parallel"
+              icon="worker"
               :button="false"
             >
               <b>Workers</b> (Max: {{ Util.NF(state.workers) }})
@@ -246,7 +246,7 @@
               width="100%"
               height="100%"
               xmlns="http://www.w3.org/2000/svg"
-              @mouseleave="hideUsageTooltip"
+              @mouseleave="hideUsagePopover"
             >
               <rect
                 x="0.5"
@@ -255,7 +255,7 @@
                 :height="state.usageChart.height-1"
                 fill="#fff"
                 :stroke="state.usageChart.color"
-                @mousemove="showUsageTooltip($event)"
+                @mousemove="showUsagePopover($event)"
               />
               <path
                 :d="state.usageChart.grid.d"
@@ -404,27 +404,44 @@
       width="260px"
     >
       <VuiFlex
-        v-if="wd.result"
+
         direction="column"
         gap="10px"
       >
-        <IconLabel icon="parallel">
+        <template v-if="wd.result">
+          <IconLabel
+            :icon="wd.result.type"
+            :button="false"
+          >
+            {{ wd.result.title }}
+          </IconLabel>
           <VuiFlex gap="10px">
-            <div>Parallel Index: <span class="mcr-num">{{ wd.result.parallelIndex }}</span></div>
-            <div>Worker Index: {{ wd.result.workerIndex }}</div>
+            <IconLabel
+              icon="calendar"
+              :button="false"
+            >
+              {{ new Date(wd.result.timestamp).toLocaleString() }}
+            </IconLabel>
+            <IconLabel
+              icon="time"
+              :button="false"
+            >
+              {{ Util.TF(wd.result.duration) }}
+            </IconLabel>
           </VuiFlex>
-        </IconLabel>
-        <IconLabel :icon="wd.result.type">
-          {{ wd.result.title }}
-        </IconLabel>
-        <VuiFlex gap="10px">
-          <IconLabel icon="calendar">
-            {{ new Date(wd.result.timestamp).toLocaleString() }}
+          <IconLabel
+            icon="worker"
+            :button="false"
+          >
+            Worker Index: {{ wd.result.workerIndex }}
           </IconLabel>
-          <IconLabel icon="time">
-            {{ Util.TF(wd.result.duration) }}
-          </IconLabel>
-        </VuiFlex>
+        </template>
+        <IconLabel
+          icon="parallel"
+          :button="false"
+        >
+          Parallel Index: <span class="mcr-num">{{ wd.parallelIndex }}</span>
+        </IconLabel>
       </VuiFlex>
     </VuiPopover>
 
@@ -442,6 +459,7 @@
       >
         <IconLabel
           icon="cpu"
+          :button="false"
           :style="'color:'+ud.tick.cpu.color"
         >
           <b>CPU</b> {{ ud.tick.cpu.percent }}%
@@ -449,11 +467,15 @@
 
         <IconLabel
           icon="memory"
+          :button="false"
           :style="'color:'+ud.tick.mem.color"
         >
           <b>Memory</b> {{ ud.tick.mem.used }} ({{ ud.tick.mem.percent }}%)
         </IconLabel>
-        <IconLabel icon="calendar">
+        <IconLabel
+          icon="calendar"
+          :button="false"
+        >
           {{ new Date(ud.tick.timestamp).toLocaleString() }}
         </IconLabel>
       </VuiFlex>
@@ -623,6 +645,7 @@ const wd = shallowReactive({
     offsetX: 0,
     barWidth: 0,
 
+    parallelIndex: 0,
     result: null,
     target: null,
     visible: false
@@ -635,12 +658,33 @@ const hideResultPopover = () => {
     wd.result = null;
 };
 
-const showResultPopover = (result) => {
-    if (!result) {
-        hideResultPopover();
-        return;
+const showResultPopover = () => {
+
+    const result = wd.result;
+
+    // console.log(result);
+
+    let left = wd.offsetX;
+    let width = 0;
+
+
+    if (result) {
+        left = (result.timestamp - wd.item.time_start) / wd.item.duration * wd.barWidth;
+        width = result.duration / wd.item.duration * wd.barWidth;
     }
+
+    const padding = 10;
+    const target = {
+        left: wd.barX + left - padding,
+        top: wd.barY - padding,
+        width: width + padding * 2,
+        height: wd.barHeight + padding * 2
+    };
+
+    wd.target = target;
+
     wd.visible = true;
+
 };
 
 const onBarMouseMove = (item, e) => {
@@ -662,37 +706,15 @@ watch([
     if (!wd.item) {
         return;
     }
+    wd.parallelIndex = wd.item.index;
     const t = Math.round(wd.offsetX / wd.barWidth * wd.item.duration) + wd.item.time_start;
     const result = wd.item.list.find((it) => {
         if (t >= it.timestamp && t <= it.timestamp + it.duration) {
             return true;
         }
     });
-
     wd.result = result;
-    if (!result) {
-        return;
-    }
-
-    // console.log(result);
-
-    const left = (result.timestamp - wd.item.time_start) / wd.item.duration * wd.barWidth;
-    const width = result.duration / wd.item.duration * wd.barWidth;
-
-    const padding = 10;
-    const target = {
-        left: wd.barX + left - padding,
-        top: wd.barY - padding,
-        width: width + padding * 2,
-        height: wd.barHeight + padding * 2
-    };
-
-    wd.target = target;
-
-});
-
-watch(() => wd.result, (result) => {
-    showResultPopover(result);
+    showResultPopover();
 });
 
 watch(() => wd.target, () => {
@@ -712,24 +734,37 @@ const ud = shallowReactive({
     points: null
 });
 
-const hideUsageTooltip = () => {
+const hideUsagePopover = () => {
     ud.visible = false;
     ud.tick = null;
     ud.points = null;
 };
 
-const showUsageTooltip = (e) => {
+const showUsagePopover = (e) => {
     const offsetX = e.offsetX;
     const br = e.target.getBoundingClientRect();
     const {
         x, y, width, height
     } = br;
+
+    ud.x = x;
+    ud.y = y;
+    ud.width = width;
+    ud.height = height;
+
     const ticks = state.system.ticks;
     const i = Math.floor(offsetX / width * ticks.length);
     const tick = ticks[i];
-
     ud.tick = tick;
+};
 
+watch(() => ud.target, () => {
+    if (ud.visible && udPopover.value) {
+        udPopover.value.update();
+    }
+});
+
+watch(() => ud.tick, (tick) => {
     if (!tick) {
         return;
     }
@@ -746,14 +781,14 @@ const showUsageTooltip = (e) => {
         color: mem.color
     }];
 
-    const ox = cpu.x / state.usageChart.width * width;
+    const ox = cpu.x / state.usageChart.width * ud.width;
 
     const padding = 10;
     const target = {
-        left: x + ox - padding,
-        top: y - padding,
+        left: ud.x + ox - padding,
+        top: ud.y - padding,
         width: padding * 2,
-        height: height + padding * 2
+        height: ud.height + padding * 2
     };
 
     // console.log(target);
@@ -761,14 +796,7 @@ const showUsageTooltip = (e) => {
     ud.target = target;
 
     ud.visible = true;
-};
-
-watch(() => ud.target, () => {
-    if (ud.visible && udPopover.value) {
-        udPopover.value.update();
-    }
 });
-
 
 </script>
 <style lang="scss">
