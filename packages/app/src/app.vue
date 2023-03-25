@@ -482,7 +482,7 @@ const initData = (reportData) => {
     // summary.failed.value = 0;
     // summary.flaky.value = 0;
 
-    summary.passed.classMap = summary.failed.value === 0 ? 'mcr-nav-passed' : '';
+    summary.passed.classMap = (summary.failed.value === 0 && summary.passed.value > 0) ? 'mcr-nav-passed' : '';
     summary.flaky.classMap = summary.flaky.value > 0 ? 'mcr-nav-flaky' : 'mcr-nav-skipped';
     summary.skipped.classMap = 'mcr-nav-skipped';
     summary.failed.classMap = summary.failed.value > 0 ? 'mcr-nav-failed' : 'mcr-nav-skipped';
