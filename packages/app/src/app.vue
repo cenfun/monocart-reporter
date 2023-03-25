@@ -86,6 +86,52 @@
 
     <Flyover />
 
+    <VuiPopover
+      v-model="state.levelPopoverVisible"
+      :target="state.levelPopoverTarget"
+      title="Expand Levels"
+      width="150px"
+    >
+      <VuiFlex
+        direction="column"
+        gap="10px"
+        margin="10px 0"
+      >
+        <template v-if="state.suiteVisible">
+          <IconLabel
+            icon="project"
+            @click="expandRowLevel('project')"
+          >
+            Project
+          </IconLabel>
+          <IconLabel
+            icon="file"
+            @click="expandRowLevel('file')"
+          >
+            File
+          </IconLabel>
+          <IconLabel
+            icon="suite"
+            @click="expandRowLevel('suite')"
+          >
+            Suite
+          </IconLabel>
+        </template>
+        <IconLabel
+          icon="case"
+          @click="expandRowLevel('case')"
+        >
+          Case
+        </IconLabel>
+        <IconLabel
+          icon="step"
+          @click="expandRowLevel('step')"
+        >
+          Step
+        </IconLabel>
+      </VuiFlex>
+    </VuiPopover>
+
     <VuiTooltip
       :class="tooltip.classMap"
       :visible="tooltip.visible"
@@ -104,7 +150,7 @@ import decompress from 'lz-utils/lib/decompress.js';
 
 import Util from './utils/util.js';
 import {
-    createGrid, renderGrid, updateGrid, initCustomsFormatters, showFlyover, displayFlyoverWithHash
+    createGrid, renderGrid, updateGrid, initCustomsFormatters, showFlyover, displayFlyoverWithHash, expandRowLevel
 } from './modules/grid.js';
 
 import Flyover from './components/flyover.vue';
@@ -117,6 +163,7 @@ const {
     VuiInput,
     VuiFlex,
     VuiSwitch,
+    VuiPopover,
     VuiTooltip
 } = components;
 

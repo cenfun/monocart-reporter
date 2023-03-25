@@ -1,4 +1,5 @@
 import { Grid } from 'turbogrid';
+
 import Util from '../utils/util.js';
 import { formatters, matchedFormatter } from './formatters.js';
 import state from '../modules/state.js';
@@ -137,6 +138,125 @@ export const displayFlyoverWithHash = () => {
 
 };
 
+const clickPopoverHandler = (d) => {
+
+    const {
+        e, rowItem, columnItem
+    } = d;
+
+    const caseItem = getClickCaseItem(rowItem);
+    if (!caseItem) {
+        return;
+    }
+
+    const cls = e.target.classList;
+    const position = columnItem.id;
+
+    const isInfo = position === 'title' && cls.contains('mcr-icon-open');
+
+    const isClickColumn = [
+        'ok',
+        'errors',
+        'logs',
+        'annotations',
+        'attachments'
+    ].includes(position) && !cls.contains('tg-cell');
+
+    if (isInfo || isClickColumn) {
+        showFlyover(caseItem, position);
+        return;
+    }
+
+    if (state.flyoverVisible) {
+        showFlyover(caseItem, position);
+    }
+};
+
+const clickTitleHandler = (d) => {
+    const { e, columnItem } = d;
+    if (columnItem.id !== 'title') {
+        return;
+    }
+
+    const cls = e.target.classList;
+    if (!cls.contains('mcr-icon-label-icon')) {
+        return;
+    }
+
+    // using native event
+    e.preventDefault();
+
+    state.levelPopoverVisible = true;
+    state.levelPopoverTarget = e.target;
+
+};
+
+export const expandRowLevel = (type) => {
+    state.levelPopoverVisible = false;
+    state.levelPopoverTarget = null;
+
+    const grid = state.grid;
+
+    if (type === 'project') {
+        grid.collapseAllRows();
+        return;
+    }
+    if (type === 'step') {
+        grid.expandAllRows();
+        return;
+    }
+
+    if (type === 'file') {
+        grid.forEachRow((rowItem) => {
+            if (rowItem.subs && rowItem.tg_subs_length) {
+                if (rowItem.suiteType === 'project') {
+                    rowItem.collapsed = false;
+                } else {
+                    rowItem.collapsed = true;
+                }
+            }
+        });
+        grid.update();
+        return;
+    }
+
+    if (type === 'suite') {
+        grid.forEachRow((rowItem) => {
+            if (rowItem.subs && rowItem.tg_subs_length) {
+                if (rowItem.type === 'suite') {
+
+                    const subSuite = rowItem.subs.find((it) => it.type === 'suite');
+                    if (!subSuite) {
+                        rowItem.collapsed = true;
+                        return;
+                    }
+
+                    rowItem.collapsed = false;
+                } else {
+                    rowItem.collapsed = true;
+                }
+            }
+        });
+        grid.update();
+        return;
+    }
+
+    if (type === 'case') {
+        grid.forEachRow((rowItem) => {
+            if (rowItem.subs && rowItem.tg_subs_length) {
+                if (rowItem.type === 'suite') {
+                    rowItem.collapsed = false;
+                } else {
+                    rowItem.collapsed = true;
+                }
+            }
+        });
+        grid.update();
+
+    }
+
+};
+
 const bindGridEvents = () => {
 
     const grid = state.grid;
@@ -158,40 +278,20 @@ const bindGridEvents = () => {
     });
 
     grid.bind('onClick', (e, d) => {
+
+        if (d.headerNode) {
+            clickTitleHandler(d);
+            return;
+        }
+
         if (!d.cellNode) {
             return;
         }
-        const rowItem = d.rowItem;
-        const columnItem = d.columnItem;
-        const position = columnItem.id;
 
-        grid.setRowSelected(rowItem);
+        grid.setRowSelected(d.rowItem);
 
-        const caseItem = getClickCaseItem(rowItem);
-        if (!caseItem) {
-            return;
-        }
+        clickPopoverHandler(d);
 
-        const cls = d.e.target.classList;
-
-        const isInfo = position === 'title' && cls.contains('mcr-icon-open');
-
-        const isClickColumn = [
-            'ok',
-            'errors',
-            'logs',
-            'annotations',
-            'attachments'
-        ].includes(position) && !cls.contains('tg-cell');
-
-        if (isInfo || isClickColumn) {
-            showFlyover(caseItem, position);
-            return;
-        }
-
-        if (state.flyoverVisible) {
-            showFlyover(caseItem, position);
-        }
     });
 
     grid.bind('onDblClick', (e, d) => {

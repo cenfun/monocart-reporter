@@ -1,9 +1,12 @@
-import { createApp } from 'vue';
+import { createApp, h } from 'vue';
 import { marked } from 'marked';
+import { components } from 'vine-ui';
 
 import IconLabel from '../components/icon-label.vue';
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
+
+const { VuiFlex } = components;
 
 const matchedFormatter = function(value, rowItem, columnItem) {
     const id = columnItem.id;
@@ -49,10 +52,32 @@ const annotationTypeFormatter = (list) => {
 
 const iconFormatter = (icon, size = '16px', button = false) => {
     const div = document.createElement('div');
-    createApp(IconLabel, {
+    const props = {
         icon,
         size,
         button
+    };
+    createApp(IconLabel, props).mount(div);
+    return div;
+};
+
+const titleFormatter = (value) => {
+    const div = document.createElement('div');
+    createApp({
+        render() {
+            return h(VuiFlex, {
+                gap: '5px'
+            }, {
+                default: () => {
+                    return [
+                        h('div', null, value),
+                        h(IconLabel, {
+                            icon: 'arrow-down'
+                        })
+                    ];
+                }
+            });
+        }
     }).mount(div);
     return div;
 };
@@ -110,6 +135,13 @@ const formatters = {
     null: function(value) {
         if (value === null || typeof value === 'undefined') {
             return '';
+        }
+        return value;
+    },
+
+    header: function(value, rowItem, columnItem, cellNode) {
+        if (columnItem.id === 'title') {
+            return titleFormatter(value);
         }
         return value;
     },
