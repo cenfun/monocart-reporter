@@ -192,6 +192,10 @@ const getColumn = (item, column) => {
     if (!column.name) {
         return;
     }
+    const cacheKey = `${column.id}_detail`;
+    if (Util.hasOwn(item, cacheKey)) {
+        return item[cacheKey];
+    }
 
     const defaultHandler = {
         errors: getErrors,
@@ -202,12 +206,15 @@ const getColumn = (item, column) => {
 
     const handler = defaultHandler[column.id] || getCustom;
 
-    const res = handler(item, column);
+    let res = handler(item, column);
     if (res) {
         res.data = column;
+        res = shallowReactive(res);
     }
 
-    return shallowReactive(res);
+    item[cacheKey] = res;
+
+    return res;
 };
 
 // ===========================================================================
