@@ -204,24 +204,28 @@
           gap="10px"
           class="mcr-timeline-result"
         >
-          <IconLabel
-            :icon="item.type"
-            :button="false"
-          >
-            {{ item.title }}
-          </IconLabel>
-          <VuiFlex gap="15px">
+          <VuiFlex gap="5px">
+            <IconLabel
+              :icon="item.type"
+              :button="false"
+              size="20px"
+            />
+            <div class="mcr-long-label">
+              {{ item.title }}
+            </div>
+          </VuiFlex>
+          <VuiFlex gap="10px">
             <IconLabel
               icon="parallel"
               :button="false"
             >
-              Parallel: <span class="mcr-num">{{ item.parallelIndex }}</span>
+              <span class="mcr-num">{{ item.parallelIndex }}</span>
             </IconLabel>
             <IconLabel
               icon="worker"
               :button="false"
             >
-              Worker: <span class="mcr-num">{{ item.workerIndex }}</span>
+              <span class="mcr-num">{{ item.workerIndex }}</span>
             </IconLabel>
 
             <IconLabel
@@ -234,7 +238,7 @@
         </VuiFlex>
 
         <template v-if="pd.tick">
-          <VuiFlex gap="15px">
+          <VuiFlex gap="10px">
             <IconLabel
               icon="cpu"
               :button="false"
@@ -739,6 +743,13 @@ watch(() => state.system, (v) => {
     svg {
         max-width: 1000px;
     }
+}
+
+.mcr-long-label {
+    flex-shrink: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .mcr-timeline-popover {
