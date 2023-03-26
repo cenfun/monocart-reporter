@@ -191,7 +191,7 @@
       :positions="['top-','bottom-']"
       :target="pd.target"
       class="mcr-timeline-popover"
-      width="350px"
+      width="320px"
     >
       <VuiFlex
         direction="column"
@@ -690,10 +690,6 @@ const timelineHandler = () => {
 const legendsHandler = () => {
     const system = state.system;
     chart.legendList = [{
-        icon: 'worker',
-        name: 'Workers',
-        value: `${Util.NF(state.workers)} (Max)`
-    }, {
         icon: 'cpu',
         name: 'CPU',
         value: `${system.cpu.model} (${system.cpu.count}T)`,
@@ -703,6 +699,10 @@ const legendsHandler = () => {
         name: 'Memory',
         value: Util.BF(system.mem.total),
         color: system.mem.color
+    }, {
+        icon: 'worker',
+        name: 'Workers',
+        value: `${Util.NF(state.workers)} (Max)`
     }];
 
     chart.systemList = [{
