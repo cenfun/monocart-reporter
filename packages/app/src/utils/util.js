@@ -56,9 +56,22 @@ const Util = {
         forList(rootList);
     },
 
-    zero: function(s, l = 2) {
+    findBetween: function(list, callback) {
+        const end = list.length - 1;
+        if (end < 1) {
+            return;
+        }
+        for (let i = 0; i < end; i++) {
+            const res = callback(list[i], list[i + 1]);
+            if (res) {
+                return res;
+            }
+        }
+    },
+
+    zero: function(s, len = 2) {
         s = `${s}`;
-        return s.padStart(l, '0');
+        return s.padStart(len, '0');
     },
 
     isTouchDevice: function() {
@@ -70,6 +83,14 @@ const Util = {
             return num;
         }
         return Util.toNum(num.toFixed(fixed));
+    },
+
+    pxFixed: (num) => {
+        const floor = Math.floor(num);
+        if (num < floor + 0.5) {
+            return floor + 0.5;
+        }
+        return floor + 1.5;
     },
 
     point: (px, py) => {
@@ -195,18 +216,28 @@ const Util = {
 
     // time
     TF: function(v) {
-        v = Util.toNum(v, true);
-        if (v < 1000) {
-            return `${v} ms`;
+        const ms = Util.toNum(v, true);
+        if (ms < 1000) {
+            return `${ms}ms`;
         }
+
         if (v < 60 * 1000) {
-            return `${v / 1000} s`;
+            return `${ms / 1000}s`;
         }
-        const s = v / 1000;
-        const hours = Math.floor(s / 60 / 60);
-        const minutes = Math.floor((s - (hours * 60 * 60)) / 60);
-        const seconds = Math.round(s - (hours * 60 * 60) - (minutes * 60));
-        return `${hours}:${Util.zero(minutes)}:${Util.zero(seconds)}`;
+
+        const s = Math.round(ms / 1000);
+        const m = Math.floor(ms / 1000 / 60);
+        if (ms < 60 * 60 * 1000) {
+            return `${m}m ${s}s`;
+        }
+
+        const h = Math.floor(ms / 1000 / 60 / 60);
+        if (ms < 24 * 60 * 60 * 1000) {
+            return `${h}h ${m}m ${s}s`;
+        }
+
+        const d = Math.floor(ms / 1000 / 60 / 60 / 24);
+        return `${d}d ${h}h ${m}m ${s}s`;
     }
 };
 

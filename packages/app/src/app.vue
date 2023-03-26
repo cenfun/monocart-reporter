@@ -258,229 +258,6 @@ const tagsHandler = (tags) => {
     state.tagMap = tags;
 };
 
-const workersHandler = (system, workers, list) => {
-    // max works, default is 4
-    state.workers = workers;
-
-    // sort by timestamp
-    list.sort((a, b) => {
-        if (a.timestamp === b.timestamp) {
-            return a.parallelIndex - b.parallelIndex;
-        }
-        return a.timestamp - b.timestamp;
-    });
-
-    // console.log(list);
-    const time_start = system.timestampStart;
-    const time_end = system.timestampEnd;
-    const duration = time_end - time_start;
-
-    const point = Util.point;
-    const dFixed = Util.dFixed;
-    const width = 1000;
-    const height = 20;
-
-    // group by parallelIndex
-    const map = new Map();
-    list.forEach((item) => {
-        const pi = item.parallelIndex;
-
-        let data = map.get(pi);
-        if (!data) {
-            data = {
-                index: pi,
-                time_start,
-                time_end,
-                duration,
-                width,
-                height,
-                viewBox: `0 0 ${width} ${height}`,
-                list: [],
-                // failed, passed ...
-                types: {}
-            };
-            map.set(pi, data);
-        }
-
-        // console.log(item);
-
-        const x = (item.timestamp - time_start) / duration * width;
-        const w = item.duration / duration * width;
-
-        data.list.push({
-            ... item,
-            x,
-            w
-        });
-
-        // bar type d list
-        let ds = data.types[item.type];
-        if (!ds) {
-            ds = [];
-            data.types[item.type] = ds;
-        }
-
-        // min width 1px
-        const sw = dFixed(Math.max(w, 1));
-        ds.push(`M${point(x, 0)} h${sw} v${height} h-${sw} v-${height}z`);
-
-    });
-
-    const workerList = [];
-    map.forEach((item, k) => {
-        item.bars = Object.keys(item.types).map((type) => {
-            return {
-                d: item.types[type].join(' '),
-                color: state.colors[type]
-            };
-        });
-
-        workerList.push(item);
-    });
-
-    workerList.sort((a, b) => {
-        return a.index - b.index;
-    });
-
-    // console.log('workerList', workerList);
-
-    state.workerList = workerList;
-
-};
-
-const systemHandler = (system) => {
-
-    state.system = system;
-
-    // console.log(system);
-    const time_start = system.timestampStart;
-    const time_end = system.timestampEnd;
-    const duration = time_end - time_start;
-    // console.log('duration', duration);
-
-    const point = Util.point;
-    const dFixed = Util.dFixed;
-    const width = 1000;
-    const height = 120;
-
-    const cpuLine = {
-        color: system.cpu.color,
-        ps: [],
-        dStroke: '',
-        dFill: ''
-    };
-
-    const memLine = {
-        color: system.mem.color,
-        ps: [],
-        dStroke: '',
-        dFill: ''
-    };
-
-    const tickNum = system.ticks.length;
-    if (tickNum) {
-        const firstTick = JSON.parse(JSON.stringify(system.ticks[0]));
-        const lastTick = JSON.parse(JSON.stringify(system.ticks[tickNum - 1]));
-        // fix pre and post
-        firstTick.timestamp = time_start;
-        lastTick.timestamp = time_end;
-
-        system.ticks.unshift(firstTick);
-        system.ticks.push(lastTick);
-    }
-
-    const memTotal = system.mem.total;
-    system.ticks.forEach((item, i) => {
-        const {
-            cpu, mem, timestamp
-        } = item;
-
-        const cpuPercent = cpu.percent;
-        const memFree = mem.free;
-
-        const x = (timestamp - time_start) / duration * width;
-        const cpuY = (1 - cpuPercent / 100) * height;
-        cpu.x = dFixed(x);
-        cpu.y = dFixed(cpuY);
-        cpu.color = cpuLine.color;
-        cpuLine.ps.push(point(x, cpuY));
-
-        const memY = memFree / memTotal * height;
-        mem.x = dFixed(x);
-        mem.y = dFixed(memY);
-        mem.color = memLine.color;
-        mem.used = Util.BF(system.mem.total - mem.free);
-        mem.percent = ((system.mem.total - mem.free) / system.mem.total * 100).toFixed(2);
-        memLine.ps.push(point(x, memY));
-    });
-
-    if (cpuLine.ps.length) {
-        cpuLine.dStroke = `M${cpuLine.ps.join('L')}`;
-        cpuLine.dFill = `M0,${height}L${cpuLine.ps.join('L')}V${height}`;
-    }
-
-    if (memLine.ps.length) {
-        memLine.dStroke = `M${memLine.ps.join('L')}`;
-        memLine.dFill = `M0,${height}L${memLine.ps.join('L')}V${height}`;
-    }
-
-    const gridList = [];
-    const gridColumns = 10;
-    const gridWidth = width / gridColumns;
-    for (let i = 0; i < gridColumns; i++) {
-        const x = i * gridWidth;
-        gridList.push(`M${point(x, 0)}L${point(x, height)}`);
-    }
-    const gridRows = 4;
-    const gridHeight = height / gridRows;
-    for (let i = 0; i < gridRows; i++) {
-        const y = i * gridHeight;
-        gridList.push(`M${point(0, y)}L${point(width, y)}`);
-    }
-
-    state.usageChart = {
-        width,
-        height,
-        color: '#ccc',
-        grid: {
-            d: gridList.join(''),
-            color: '#ececec'
-        },
-        viewBox: `0 0 ${width} ${height}`,
-        lines: [memLine, cpuLine]
-    };
-
-    state.usageLegends = [{
-        icon: 'cpu',
-        name: 'CPU',
-        value: `${system.cpu.model} (${system.cpu.count}T)`,
-        color: system.cpu.color
-    }, {
-        icon: 'memory',
-        name: 'Memory',
-        value: Util.BF(system.mem.total),
-        color: system.mem.color
-    }];
-
-    const systemList = [{
-        list: [{
-            icon: 'os',
-            name: 'OS',
-            value: `${system.version} (${system.arch})`
-        }, {
-            icon: 'host',
-            name: 'Host',
-            value: system.hostname
-        }, {
-            icon: 'cwd',
-            name: 'CWD',
-            value: system.cwd
-        }]
-    }];
-
-    state.systemList = systemList;
-
-};
 
 const initData = (reportData) => {
 
@@ -488,6 +265,7 @@ const initData = (reportData) => {
         columns, rows, summary, tags, workers, system
     } = reportData;
 
+    // init searchable info
     const searchableColumns = getSearchableColumns(columns);
     state.searchableKeys = Object.keys(searchableColumns);
     state.searchableTitle = `searchable: ${Object.values(searchableColumns).join(', ')}`;
@@ -497,6 +275,7 @@ const initData = (reportData) => {
         summary[k].id = k;
     });
 
+    // collect worker data list
     const workerList = [];
 
     Util.forEachTree(rows, function(item) {
@@ -529,9 +308,14 @@ const initData = (reportData) => {
     summary.skipped.classMap = 'mcr-nav-skipped';
     summary.failed.classMap = summary.failed.value > 0 ? 'mcr-nav-failed' : 'mcr-nav-skipped';
 
+    summary.projects.icon = 'project';
+    summary.files.icon = 'file';
+
+    // nav
     const navList = Object.values(summary).filter((it) => it.type);
     state.navList = navList;
 
+    // pie chart
     state.pieHeads = [summary.tests, summary.suites, summary.steps];
 
     const pieList = navList.filter((it) => it.type !== 'tests').map((item) => {
@@ -545,35 +329,35 @@ const initData = (reportData) => {
     });
     state.pieList = pieList;
 
-    summary.projects.icon = 'project';
-    summary.files.icon = 'file';
+    // pie chart related
+    state.amounts = [{
+        icon: 'suite',
+        button: false,
+        list: [
+            summary.projects,
+            summary.files,
+            summary.describes
+        ]
+    }, {
+        icon: 'sort',
+        button: true,
+        primary: true,
+        list: [
+            summary.errors,
+            summary.logs,
+            summary.attachments,
+            summary.retries
+        ]
+    }];
 
-    state.amounts = [
-        {
-            icon: 'suite',
-            button: false,
-            list: [
-                summary.projects,
-                summary.files,
-                summary.describes
-            ]
-        },
-        {
-            icon: 'sort',
-            button: true,
-            primary: true,
-            list: [
-                summary.errors,
-                summary.logs,
-                summary.attachments,
-                summary.retries
-            ]
-        }
-    ];
-
+    // tags
     tagsHandler(tags);
-    workersHandler(system, workers, workerList);
-    systemHandler(system);
+
+    // timeline
+    state.system = system;
+    // max works, default is 4
+    state.workers = workers;
+    state.workerList = workerList;
 
 };
 

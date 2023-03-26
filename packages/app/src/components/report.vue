@@ -135,10 +135,10 @@
             wrap
           >
             <IconLabel
-              icon="worker"
+              icon="timeline"
               :button="false"
             >
-              <b>Workers</b> (Max: {{ Util.NF(state.workers) }})
+              <b>Timelines</b> <span class="mcr-num">{{ state.duration }}</span>
             </IconLabel>
 
             <div class="vui-flex-auto" />
@@ -154,174 +154,7 @@
           </VuiFlex>
         </div>
         <div class="mcr-report-chart">
-          <VuiFlex
-            direction="column"
-            gap="15px"
-            padding="10px"
-          >
-            <div
-              v-for="(item, i) in state.workerList"
-              :key="i"
-              class="mcr-report-worker"
-            >
-              <svg
-                v-if="item.bars"
-                :viewBox="item.viewBox"
-                width="100%"
-                height="100%"
-                xmlns="http://www.w3.org/2000/svg"
-                @mouseleave="hideResultPopover"
-              >
-                <rect
-                  :width="item.width"
-                  :height="item.height"
-                  fill="#eee"
-                  @mousemove="onBarMouseMove(item, $event)"
-                />
-                <g pointer-events="none">
-                  <path
-                    v-for="(bar, j) in item.bars"
-                    :key="j"
-                    :d="bar.d"
-                    :fill="bar.color"
-                  />
-                </g>
-              </svg>
-            </div>
-          </VuiFlex>
-        </div>
-      </div>
-
-      <div class="mcr-report-item">
-        <div class="mcr-report-head">
-          <VuiFlex
-            gap="15px"
-            wrap
-          >
-            <IconLabel
-              icon="system"
-              :button="false"
-            >
-              <b>System</b>
-            </IconLabel>
-
-            <IconLabel
-              icon="time"
-              :button="false"
-            >
-              <b>Duration</b> <span class="mcr-num">{{ state.duration }}</span>
-            </IconLabel>
-          </VuiFlex>
-        </div>
-        <div class="mcr-report-chart">
-          <VuiFlex
-            gap="15px"
-            padding="10px 10px 0 10px"
-            wrap
-          >
-            <VuiFlex
-              v-for="(item, j) in state.usageLegends"
-              :key="j"
-              gap="5px"
-            >
-              <IconLabel
-                :icon="item.icon"
-                :button="false"
-                :style="'color:'+item.color"
-              >
-                <b>{{ item.name }}</b>
-              </IconLabel>
-              <div>{{ item.value }}</div>
-            </VuiFlex>
-          </VuiFlex>
-          <VuiFlex
-            v-if="state.usageChart"
-            direction="column"
-            gap="15px"
-            padding="10px"
-            class="mcr-report-usage"
-          >
-            <svg
-              :viewBox="state.usageChart.viewBox"
-              width="100%"
-              height="100%"
-              xmlns="http://www.w3.org/2000/svg"
-              @mouseleave="hideUsagePopover"
-            >
-              <rect
-                x="0.5"
-                y="0.5"
-                :width="state.usageChart.width-1"
-                :height="state.usageChart.height-1"
-                fill="#fff"
-                :stroke="state.usageChart.color"
-                @mousemove="showUsagePopover($event)"
-              />
-              <path
-                :d="state.usageChart.grid.d"
-                :stroke="state.usageChart.grid.color"
-                pointer-events="none"
-                fill="none"
-              />
-              <g
-                v-if="state.usageChart.lines"
-                pointer-events="none"
-              >
-                <g
-                  v-for="(line, j) in state.usageChart.lines"
-                  :key="j"
-                >
-                  <path
-                    :d="line.dFill"
-                    :fill="line.color"
-                    fill-opacity="0.1"
-                  />
-                  <path
-                    :d="line.dStroke"
-                    :stroke="line.color"
-                    fill="none"
-                  />
-                </g>
-              </g>
-              <g v-if="ud.points">
-                <circle
-                  v-for="(item, i) in ud.points"
-                  :key="i"
-                  :cx="item.x"
-                  :cy="item.y"
-                  :fill="item.color"
-                  r="3"
-                />
-              </g>
-            </svg>
-          </VuiFlex>
-          <VuiFlex
-            gap="15px"
-            direction="column"
-            padding="10px"
-          >
-            <VuiFlex
-              v-for="(group, i) in state.systemList"
-              :key="i"
-              gap="15px"
-              wrap
-            >
-              <VuiFlex
-                v-for="(item, j) in group.list"
-                :key="j"
-                gap="5px"
-              >
-                <IconLabel
-                  :icon="item.icon"
-                  :button="false"
-                  :style="'color:'+item.color"
-                >
-                  <b>{{ item.name }}</b>
-                </IconLabel>
-                <div>{{ item.value }}</div>
-              </VuiFlex>
-            </VuiFlex>
-          </VuiFlex>
+          <Timeline />
         </div>
       </div>
 
@@ -335,7 +168,7 @@
               icon="export"
               :button="false"
             >
-              <b>Export Data</b>
+              <b>Export</b>
             </IconLabel>
           </VuiFlex>
         </div>
@@ -394,99 +227,10 @@
         </a>
       </VuiFlex>
     </div>
-
-    <VuiPopover
-      ref="wdPopover"
-      v-model="wd.visible"
-      :positions="['top-','bottom-']"
-      :target="wd.target"
-      class="mcr-wd-popover"
-      width="260px"
-    >
-      <VuiFlex
-
-        direction="column"
-        gap="10px"
-      >
-        <template v-if="wd.result">
-          <IconLabel
-            :icon="wd.result.type"
-            :button="false"
-          >
-            {{ wd.result.title }}
-          </IconLabel>
-          <VuiFlex gap="10px">
-            <IconLabel
-              icon="calendar"
-              :button="false"
-            >
-              {{ new Date(wd.result.timestamp).toLocaleString() }}
-            </IconLabel>
-            <IconLabel
-              icon="time"
-              :button="false"
-            >
-              {{ Util.TF(wd.result.duration) }}
-            </IconLabel>
-          </VuiFlex>
-          <IconLabel
-            icon="worker"
-            :button="false"
-          >
-            Worker Index: {{ wd.result.workerIndex }}
-          </IconLabel>
-        </template>
-        <IconLabel
-          icon="parallel"
-          :button="false"
-        >
-          Parallel Index: <span class="mcr-num">{{ wd.parallelIndex }}</span>
-        </IconLabel>
-      </VuiFlex>
-    </VuiPopover>
-
-    <VuiPopover
-      ref="udPopover"
-      v-model="ud.visible"
-      :positions="['top-','bottom-']"
-      :target="ud.target"
-      class="mcr-ud-popover"
-    >
-      <VuiFlex
-        v-if="ud.tick"
-        direction="column"
-        gap="10px"
-      >
-        <IconLabel
-          icon="cpu"
-          :button="false"
-          :style="'color:'+ud.tick.cpu.color"
-        >
-          <b>CPU</b> {{ ud.tick.cpu.percent }}%
-        </IconLabel>
-
-        <IconLabel
-          icon="memory"
-          :button="false"
-          :style="'color:'+ud.tick.mem.color"
-        >
-          <b>Memory</b> {{ ud.tick.mem.used }} ({{ ud.tick.mem.percent }}%)
-        </IconLabel>
-        <IconLabel
-          icon="calendar"
-          :button="false"
-        >
-          {{ new Date(ud.tick.timestamp).toLocaleString() }}
-        </IconLabel>
-      </VuiFlex>
-    </VuiPopover>
   </VuiFlex>
 </template>
 
 <script setup>
-import {
-    shallowReactive, watch, ref
-} from 'vue';
 import { components } from 'vine-ui';
 import { saveAs } from 'file-saver';
 
@@ -498,8 +242,9 @@ import {
 
 import IconLabel from './icon-label.vue';
 import Pie from './pie.vue';
+import Timeline from './timeline.vue';
 
-const { VuiFlex, VuiPopover } = components;
+const { VuiFlex } = components;
 
 // ====================================================================================
 
@@ -635,169 +380,6 @@ const onExportClick = (item) => {
     saveAs(blob, `${filename}.json`);
 };
 
-
-// ====================================================================================
-
-const wdPopover = ref(null);
-
-const wd = shallowReactive({
-    item: null,
-    offsetX: 0,
-    barWidth: 0,
-
-    parallelIndex: 0,
-    result: null,
-    target: null,
-    visible: false
-});
-
-
-const hideResultPopover = () => {
-    wd.visible = false;
-    wd.item = null;
-    wd.result = null;
-};
-
-const showResultPopover = () => {
-
-    const result = wd.result;
-
-    // console.log(result);
-
-    let left = wd.offsetX;
-    let width = 0;
-
-
-    if (result) {
-        left = (result.timestamp - wd.item.time_start) / wd.item.duration * wd.barWidth;
-        width = result.duration / wd.item.duration * wd.barWidth;
-    }
-
-    const padding = 10;
-    const target = {
-        left: wd.barX + left - padding,
-        top: wd.barY - padding,
-        width: width + padding * 2,
-        height: wd.barHeight + padding * 2
-    };
-
-    wd.target = target;
-
-    wd.visible = true;
-
-};
-
-const onBarMouseMove = (item, e) => {
-    wd.item = item;
-    wd.offsetX = e.offsetX;
-
-    const br = e.target.getBoundingClientRect();
-    wd.barX = br.x;
-    wd.barY = br.y;
-    wd.barWidth = br.width;
-    wd.barHeight = br.height;
-};
-
-watch([
-    () => wd.item,
-    () => wd.offsetX,
-    () => wd.barWidth
-], () => {
-    if (!wd.item) {
-        return;
-    }
-    wd.parallelIndex = wd.item.index;
-    const t = Math.round(wd.offsetX / wd.barWidth * wd.item.duration) + wd.item.time_start;
-    const result = wd.item.list.find((it) => {
-        if (t >= it.timestamp && t <= it.timestamp + it.duration) {
-            return true;
-        }
-    });
-    wd.result = result;
-    showResultPopover();
-});
-
-watch(() => wd.target, () => {
-    if (wd.visible && wdPopover.value) {
-        wdPopover.value.update();
-    }
-});
-
-// ====================================================================================
-
-const udPopover = ref(null);
-
-const ud = shallowReactive({
-    visible: false,
-    target: null,
-    tick: null,
-    points: null
-});
-
-const hideUsagePopover = () => {
-    ud.visible = false;
-    ud.tick = null;
-    ud.points = null;
-};
-
-const showUsagePopover = (e) => {
-    const offsetX = e.offsetX;
-    const br = e.target.getBoundingClientRect();
-    const {
-        x, y, width, height
-    } = br;
-
-    ud.x = x;
-    ud.y = y;
-    ud.width = width;
-    ud.height = height;
-
-    const ticks = state.system.ticks;
-    const i = Math.floor(offsetX / width * ticks.length);
-    const tick = ticks[i];
-    ud.tick = tick;
-};
-
-watch(() => ud.target, () => {
-    if (ud.visible && udPopover.value) {
-        udPopover.value.update();
-    }
-});
-
-watch(() => ud.tick, (tick) => {
-    if (!tick) {
-        return;
-    }
-
-    const { cpu, mem } = tick;
-
-    ud.points = [{
-        x: cpu.x,
-        y: cpu.y,
-        color: cpu.color
-    }, {
-        x: mem.x,
-        y: mem.y,
-        color: mem.color
-    }];
-
-    const ox = cpu.x / state.usageChart.width * ud.width;
-
-    const padding = 10;
-    const target = {
-        left: ud.x + ox - padding,
-        top: ud.y - padding,
-        width: padding * 2,
-        height: ud.height + padding * 2
-    };
-
-    // console.log(target);
-
-    ud.target = target;
-
-    ud.visible = true;
-});
-
 </script>
 <style lang="scss">
 .mcr-report {
@@ -856,25 +438,11 @@ watch(() => ud.tick, (tick) => {
     }
 }
 
-.mcr-report-worker {
-    svg {
-        max-width: 1000px;
-    }
-
-    .mcr-num {
-        background: #888;
-        cursor: default;
-    }
-}
-
-.mcr-report-usage {
-    svg {
-        max-width: 1000px;
-    }
-}
-
-.mcr-wd-popover {
-    pointer-events: none;
+.mcr-long-label {
+    flex-shrink: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .mcr-report-footer {
