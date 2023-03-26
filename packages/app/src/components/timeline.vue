@@ -219,13 +219,13 @@
               icon="parallel"
               :button="false"
             >
-              <span class="mcr-num">{{ item.parallelIndex }}</span>
+              {{ item.parallelIndex }}
             </IconLabel>
             <IconLabel
               icon="worker"
               :button="false"
             >
-              <span class="mcr-num">{{ item.workerIndex }}</span>
+              {{ item.workerIndex }}
             </IconLabel>
 
             <IconLabel
