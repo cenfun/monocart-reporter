@@ -510,7 +510,7 @@ const workersHandler = () => {
         item.width = width;
         item.height = height;
         item.color = '#333';
-        item.name = `Worker ${i + 1}`;
+        item.name = `Parallel ${item.index}`;
         barY += height + chart.gap;
     });
 
