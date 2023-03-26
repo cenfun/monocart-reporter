@@ -280,11 +280,11 @@ import IconLabel from './icon-label.vue';
 const { VuiFlex, VuiPopover } = components;
 
 const chart = shallowReactive({
-    padding: 10,
+    padding: 5,
     left: 90,
     width: 1000,
     // width - left - padding
-    innerWidth: 1000 - 90 - 10,
+    innerWidth: 1000 - 90 - 5,
     // dynamic
     height: 0,
     gap: 20
@@ -647,31 +647,31 @@ const timelineHandler = () => {
     const time_end = system.timestampEnd;
 
     const point = Util.point;
-    // const pxFixed = Util.pxFixed;
+    const pxFixed = Util.pxFixed;
 
     const left = chart.left;
     const padding = chart.padding;
-    const width = chart.innerWidth;
+    const width = chart.width - padding * 2;
     const height = 26;
 
-    const x = left;
-    const y = chart.height + chart.gap;
+    const x = padding;
+    const y = chart.height;
 
     chart.timelineY = y;
 
-    const d = `M${point(0.5, 0.5)}h${width} M${point(0.5, 0.5)}v13 M${point(width - 0.5, 0)}v13`;
+    const labelX = left - padding;
+
+    const d = `M${point(0.5, 0.5)}h${width} M${point(pxFixed(labelX), 0.5)}v10 M${point(pxFixed(width), 0)}v10`;
 
     chart.timeline = {
         x,
         y,
-        width,
-        height,
         d,
-        color: '#666'
+        color: '#999'
     };
 
     chart.labels = [{
-        x: 5,
+        x: labelX + 5,
         y: height * 0.5,
         anchor: 'start',
         color: '#666',
