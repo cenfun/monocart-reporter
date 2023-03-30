@@ -40,6 +40,10 @@ module.exports = {
                 item.dependencies.files.unshift(jsPath);
             }
 
+            if (item.production) {
+                item.devtool = false;
+            }
+
             return 0;
         },
 
