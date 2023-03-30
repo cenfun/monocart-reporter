@@ -366,10 +366,10 @@ const onMouseMoveSync = (e) => {
 
     // target
     pd.target = {
-        left: rect.x + offsetX - padding,
-        top: rect.y - padding,
-        width: padding * 2,
-        height: rect.height
+        left: rect.x + offsetX,
+        top: rect.y,
+        width: 0,
+        height: rect.height - padding
     };
     pd.visible = true;
 

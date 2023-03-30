@@ -16,16 +16,10 @@ module.exports = {
         before: (item, Util) => {
 
             // generate reportData for demo
-            const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
-
-            // nothing
-            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/nothing/index.json');
-
-            // parallel-unknown
-            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/parallel-unknown/index.json');
+            // const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
 
             // ten-minutes
-            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/ten-minutes/index.json');
+            const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/ten-minutes/index.json');
 
             if (!fs.existsSync(jsonPath)) {
                 Util.logRed(`ERROR: Not found test json: ${jsonPath}`);
