@@ -272,7 +272,7 @@ import {
     shallowReactive, watch, computed, ref
 } from 'vue';
 import { components } from 'vine-ui';
-import { throttle } from 'async-tick';
+import { microtask } from 'async-tick';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
@@ -369,13 +369,13 @@ const onMouseMoveSync = (e) => {
         left: rect.x + offsetX - padding,
         top: rect.y - padding,
         width: padding * 2,
-        height: rect.height + padding * 2
+        height: rect.height
     };
     pd.visible = true;
 
 };
 
-const onMouseMove = throttle(onMouseMoveSync, 50);
+const onMouseMove = microtask(onMouseMoveSync);
 
 const findResults = (timestamp) => {
     const results = [];
