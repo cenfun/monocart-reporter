@@ -188,8 +188,9 @@
     <VuiPopover
       ref="popover"
       v-model="pd.visible"
-      :positions="['top-','bottom-']"
+      :positions="['top','bottom']"
       :target="pd.target"
+      nonreactive
       class="mcr-timeline-popover"
       width="320px"
     >
@@ -271,6 +272,7 @@ import {
     shallowReactive, watch, computed, ref
 } from 'vue';
 import { components } from 'vine-ui';
+import { throttle } from 'async-tick';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
@@ -306,13 +308,14 @@ const pd = shallowReactive({
 });
 
 const hidePopover = () => {
+    onMouseMove.cancel();
     pd.visible = false;
     pd.target = null;
     chart.focus = null;
     chart.points = null;
 };
 
-const onMouseMove = (e) => {
+const onMouseMoveSync = (e) => {
     const offsetX = e.offsetX;
     const br = e.target.getBoundingClientRect();
     const rect = {
@@ -371,6 +374,8 @@ const onMouseMove = (e) => {
     pd.visible = true;
 
 };
+
+const onMouseMove = throttle(onMouseMoveSync, 50);
 
 const findResults = (timestamp) => {
     const results = [];
