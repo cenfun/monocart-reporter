@@ -538,7 +538,7 @@ const getGridOption = () => {
         // 9999 max
         rowNumberWidth: 46,
         rowNumberFilter: getRowNumberFilter(),
-        rowFilter: searchHandler(),
+        rowFilter: searchHandler,
         rowNotFound: '<div class="mcr-no-results">No Results</div>',
         frozenColumn: 1,
 

@@ -11,8 +11,8 @@ const state = shallowReactive({
 
     // filter
     keywords: '',
+    searchableAllKeys: [],
     searchableKeys: [],
-    searchableTitle: '',
 
     caseType: Util.getHash('caseType') || 'tests',
     suiteVisible: true,

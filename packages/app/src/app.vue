@@ -61,17 +61,22 @@
 
       <div class="vui-flex-auto" />
 
-      <VuiFlex
-        gap="10px"
-        padding="5px"
-      >
-        <VuiInput
-          v-model="state.keywords"
-          width="150px"
-          :class="searchClass"
-          placeholder="keywords"
-          :title="state.searchableTitle"
-        />
+      <VuiFlex gap="10px">
+        <VuiFlex
+          gap="2px"
+          padding="5px"
+        >
+          <VuiInput
+            v-model="state.keywords"
+            width="180px"
+            :class="searchClass"
+            placeholder="keywords"
+          />
+          <IconLabel
+            icon="drop-down"
+            @click="onSearchDropdownClick($event)"
+          />
+        </VuiFlex>
 
         <VuiSwitch v-model="state.suiteVisible">
           Suite
@@ -85,6 +90,24 @@
     <div class="mcr-grid vui-flex-auto" />
 
     <Flyover />
+
+    <VuiPopover
+      v-model="state.searchDropdownVisible"
+      :target="state.searchDropdownTarget"
+      positions="bottom"
+      title="Searchable Fields"
+      width="150px"
+    >
+      <VuiFlex direction="column">
+        <VuiCheckbox
+          v-for="(item, i) in searchable.columns"
+          :key="i"
+          v-model="item.checked"
+        >
+          {{ item.name }}
+        </VuiCheckbox>
+      </VuiFlex>
+    </VuiPopover>
 
     <VuiPopover
       v-model="state.levelPopoverVisible"
@@ -164,8 +187,13 @@ const {
     VuiFlex,
     VuiSwitch,
     VuiPopover,
-    VuiTooltip
+    VuiTooltip,
+    VuiCheckbox
 } = components;
+
+const searchable = reactive({
+    columns: []
+});
 
 const tooltip = reactive({
     visible: false,
@@ -207,19 +235,25 @@ const searchClass = computed(() => {
     return ls;
 });
 
-const getSearchableColumns = (columns) => {
-    const map = {};
+const initSearchableColumns = (columns) => {
     Util.forEachTree(columns, (column) => {
-        if (column.searchable) {
-            map[column.id] = column.name;
-            if (column.classMap) {
-                column.classMap += ' mcr-searchable';
-            } else {
-                column.classMap = 'mcr-searchable';
-            }
+        if (!column.searchable) {
+            return;
+        }
+        searchable.columns.push({
+            id: column.id,
+            name: column.name,
+            checked: true
+        });
+        if (column.classMap) {
+            column.classMap += ' mcr-searchable';
+        } else {
+            column.classMap = 'mcr-searchable';
         }
     });
-    return map;
+
+    state.searchableAllKeys = searchable.columns.map((it) => it.id);
+
 };
 
 const caseHandler = (item) => {
@@ -266,9 +300,7 @@ const initData = (reportData) => {
     } = reportData;
 
     // init searchable info
-    const searchableColumns = getSearchableColumns(columns);
-    state.searchableKeys = Object.keys(searchableColumns);
-    state.searchableTitle = `searchable: ${Object.values(searchableColumns).join(', ')}`;
+    initSearchableColumns(columns);
 
     // add id for summary
     Object.keys(summary).forEach((k) => {
@@ -361,6 +393,11 @@ const initData = (reportData) => {
 
 };
 
+const onSearchDropdownClick = (e) => {
+    state.searchDropdownVisible = true;
+    state.searchDropdownTarget = e.target;
+};
+
 const onMenuClick = (e) => {
     showFlyover();
 };
@@ -447,6 +484,15 @@ watch(() => state.keywords, () => {
         updateGrid();
     }, 200);
 
+});
+
+watch(() => searchable.columns, (v) => {
+    state.searchableKeys = v.filter((item) => item.checked).map((item) => item.id);
+    if (state.keywords) {
+        updateGrid();
+    }
+}, {
+    deep: true
 });
 
 watch(() => state.caseType, (v) => {

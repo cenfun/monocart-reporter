@@ -50,33 +50,36 @@ const strSetToStr = (list) => {
     return Array.from(st).join(' ');
 };
 
-const getSearchableValues = (rowItem, searchableKeys) => {
+const getSearchableValues = (rowItem, searchableAllKeys, searchableKeys) => {
 
     if (rowItem.searchable_values) {
-        return rowItem.searchable_values;
+        return rowItem.searchable_values.filter((item) => searchableKeys.includes(item.id));
     }
 
-    const searchableValues = {};
+    const searchableValues = [];
 
-    searchableKeys.forEach((k) => {
-        let v = rowItem[k];
-        if (Util.isNull(v)) {
+    searchableAllKeys.forEach((id) => {
+        let value = rowItem[id];
+        if (Util.isNull(value)) {
             return;
         }
 
         // array
-        if (Array.isArray(v)) {
-            v = strSetToStr(arrayToStrSet(v));
-        } else if (v && typeof v === 'object') {
-            v = strSetToStr(objectToStrSet(v));
+        if (Array.isArray(value)) {
+            value = strSetToStr(arrayToStrSet(value));
+        } else if (value && typeof v === 'object') {
+            value = strSetToStr(objectToStrSet(value));
         }
 
         // boolean number ...
-        if (typeof v !== 'string') {
-            v = String(v);
+        if (typeof value !== 'string') {
+            value = String(value);
         }
 
-        searchableValues[k] = v;
+        searchableValues.push({
+            id,
+            value
+        });
 
     });
 
@@ -84,7 +87,7 @@ const getSearchableValues = (rowItem, searchableKeys) => {
 
     rowItem.searchable_values = searchableValues;
 
-    return searchableValues;
+    return searchableValues.filter((item) => searchableKeys.includes(item.id));
 };
 
 // =================================================================================
@@ -156,49 +159,54 @@ const getMatchedValue = (keywordList, value, options) => {
 
 // =================================================================================
 
-export default () => {
+export default (rowItem) => {
+
+    const searchableAllKeys = state.searchableAllKeys;
+    searchableAllKeys.forEach((k) => {
+        rowItem[`${k}_matched`] = null;
+    });
+
+    const keywords = state.keywords.trim().toLowerCase();
+    if (!keywords) {
+        return true;
+    }
 
     const searchableKeys = state.searchableKeys;
-    // console.log(searchableKeys);
+    if (!searchableKeys.length) {
+        return true;
+    }
 
-    return (rowItem) => {
+    const searchableValues = getSearchableValues(rowItem, searchableAllKeys, searchableKeys);
 
-        const keywords = state.keywords.trim().toLowerCase();
+    const keywordList = keywords.split(/\s+/g);
 
-        if (!keywords) {
-            searchableKeys.forEach((k) => {
-                rowItem[`${k}_matched`] = null;
-            });
-            return true;
-        }
-
-        const keywordList = keywords.split(/\s+/g);
-        const searchableValues = getSearchableValues(rowItem, searchableKeys);
-
-        let hasMatched = false;
-        Object.keys(searchableValues).forEach((id) => {
-            const value = searchableValues[id];
-            // clone for shift
-            const cloneList = [].concat(keywordList);
-            const matched = getMatchedValue(cloneList, value, {
-                pre: '<b>',
-                post: '</b>'
-            });
-            if (matched) {
-                hasMatched = true;
-            }
-            rowItem[`${id}_matched`] = matched;
+    let hasMatched = false;
+    searchableValues.forEach((item) => {
+        const { id, value } = item;
+        // clone for shift
+        const cloneList = [].concat(keywordList);
+        const matched = getMatchedValue(cloneList, value, {
+            pre: '<b>',
+            post: '</b>'
         });
 
-        if (hasMatched) {
-            let row = rowItem;
-            while (row.tg_parent) {
-                row = row.tg_parent;
-                row.collapsed = false;
-            }
+        if (!matched) {
+            return;
         }
 
-        return hasMatched;
-    };
+        rowItem[`${id}_matched`] = matched;
+        hasMatched = true;
+
+    });
+
+    if (hasMatched) {
+        let row = rowItem;
+        while (row.tg_parent) {
+            row = row.tg_parent;
+            row.collapsed = false;
+        }
+    }
+
+    return hasMatched;
 
 };
