@@ -15,6 +15,8 @@
 * Output Report Data and Summary (json)
 * Console Logs (log/error/warn/debug/info)
 * Export Data (json)
+* Parallel Workers Graph
+* Monitor CPU and Memory Usage
 * [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
