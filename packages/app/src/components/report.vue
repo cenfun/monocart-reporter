@@ -3,229 +3,230 @@
     direction="column"
     class="mcr-report"
   >
-    <div class="mcr-report-main vui-flex-auto">
-      <div class="mcr-report-item">
-        <div class="mcr-report-head">
-          <VuiFlex
-            v-if="state.pieHeads"
-            gap="15px"
-            wrap
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          v-if="state.pieHeads"
+          gap="15px"
+          wrap
+        >
+          <IconLabel
+            v-for="(item, i) in state.pieHeads"
+            :key="i"
+            :icon="item.icon"
+            :tooltip="item.description"
+            :button="false"
           >
-            <IconLabel
-              v-for="(item, i) in state.pieHeads"
-              :key="i"
-              :icon="item.icon"
-              :tooltip="item.description"
-              :button="false"
-            >
-              <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-            </IconLabel>
-          </VuiFlex>
-        </div>
-        <div class="mcr-report-chart">
-          <VuiFlex wrap>
-            <Pie />
-            <VuiFlex
-              gap="15px"
-              direction="column"
-              padding="10px"
-            >
-              <template v-if="state.amounts">
-                <VuiFlex
-                  v-for="(group, i) in state.amounts"
-                  :key="i"
-                  gap="15px"
-                  wrap
-                >
-                  <IconLabel
-                    v-for="(item, j) in group.list"
-                    :key="j"
-                    :icon="item.icon || group.icon"
-                    :button="group.button"
-                    :primary="group.primary"
-                    :tooltip="item.description"
-                    @click="onAmountClick(item)"
-                  >
-                    {{ item.name }} <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-                  </IconLabel>
-                </VuiFlex>
-              </template>
-
-              <VuiFlex
-                gap="15px"
-                wrap
-              >
-                <IconLabel
-                  icon="time"
-                  primary
-                  @click="onSortClick('tests','duration')"
-                >
-                  Top Slowest
-                </IconLabel>
-
-                <IconLabel
-                  icon="time"
-                  primary
-                  @click="onSortClick('failed','duration')"
-                >
-                  Top Failed Slowest
-                </IconLabel>
-              </VuiFlex>
-            </VuiFlex>
-          </VuiFlex>
-        </div>
+            <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
+          </IconLabel>
+        </VuiFlex>
       </div>
-
-      <div
-        v-if="state.tagList"
-        class="mcr-report-item"
-      >
-        <div class="mcr-report-head">
-          <VuiFlex
-            gap="15px"
-            wrap
-          >
-            <IconLabel
-              icon="tag"
-              :button="false"
-            >
-              <b>Tags</b> <span class="mcr-num">{{ Util.NF(state.tagList.length) }}</span>
-            </IconLabel>
-            <div class="vui-flex-auto" />
-            <a
-              href="https://playwright.dev/docs/test-annotations#tag-tests"
-              target="_blank"
-            >
-              <IconLabel icon="help">
-                Tag Tests
-              </IconLabel>
-            </a>
-          </VuiFlex>
-        </div>
-        <div class="mcr-report-chart">
-          <VuiFlex
-            gap="15px"
-            wrap
-            padding="10px"
-          >
-            <div
-              v-for="(item, i) in state.tagList"
-              :key="i"
-              class="mcr-report-tag"
-              @click="onTagClick(item)"
-            >
-              <span
-                :style="item.style"
-                :tooltip="item.description"
-                class="mcr-tag"
-              >{{ item.name }}</span>
-              <span
-                v-if="item.value>1"
-                class="mcr-num"
-              >{{ Util.NF(item.value) }}</span>
-            </div>
-          </VuiFlex>
-        </div>
-      </div>
-
-      <div class="mcr-report-item">
-        <div class="mcr-report-head">
-          <VuiFlex
-            gap="15px"
-            wrap
-          >
-            <IconLabel
-              icon="timeline"
-              :button="false"
-            >
-              <b>Timelines</b> <span class="mcr-num">{{ state.duration }}</span>
-            </IconLabel>
-
-            <div class="vui-flex-auto" />
-
-            <a
-              href="https://playwright.dev/docs/test-parallel"
-              target="_blank"
-            >
-              <IconLabel icon="help">
-                Test Parallel
-              </IconLabel>
-            </a>
-          </VuiFlex>
-        </div>
-        <div class="mcr-report-chart">
-          <Timeline />
-        </div>
-      </div>
-
-      <div class="mcr-report-item">
-        <div class="mcr-report-head">
-          <VuiFlex
-            gap="15px"
-            wrap
-          >
-            <IconLabel
-              icon="export"
-              :button="false"
-            >
-              <b>Export</b>
-            </IconLabel>
-          </VuiFlex>
-        </div>
-        <div class="mcr-report-chart">
+      <div class="mcr-report-chart">
+        <VuiFlex wrap>
+          <Pie />
           <VuiFlex
             gap="15px"
             direction="column"
             padding="10px"
-            class="mcr-report-export"
           >
+            <template v-if="state.amounts">
+              <VuiFlex
+                v-for="(group, i) in state.amounts"
+                :key="i"
+                gap="15px"
+                wrap
+              >
+                <IconLabel
+                  v-for="(item, j) in group.list"
+                  :key="j"
+                  :icon="item.icon || group.icon"
+                  :button="group.button"
+                  :primary="group.primary"
+                  :tooltip="item.description"
+                  @click="onAmountClick(item)"
+                >
+                  {{ item.name }} <span class="mcr-num">{{ Util.NF(item.value) }}</span>
+                </IconLabel>
+              </VuiFlex>
+            </template>
+
             <VuiFlex
-              v-for="(group, i) in exportList"
-              :key="i"
               gap="15px"
               wrap
             >
               <IconLabel
-                v-for="(item, j) in group.list"
-                :key="j"
-                :icon="item.icon"
+                icon="time"
                 primary
-                @click="onExportClick(item)"
+                @click="onSortClick('tests','duration')"
               >
-                {{ item.name }}
+                Top Slowest
+              </IconLabel>
+
+              <IconLabel
+                icon="time"
+                primary
+                @click="onSortClick('failed','duration')"
+              >
+                Top Failed Slowest
               </IconLabel>
             </VuiFlex>
           </VuiFlex>
-        </div>
+        </VuiFlex>
       </div>
     </div>
-    <div class="mcr-report-footer">
-      <VuiFlex
-        gap="15px"
-        padding="10px 15px"
-      >
-        <a
-          href="https://github.com/microsoft/playwright"
-          target="_blank"
-        ><IconLabel
-          icon="playwright"
-          size="20px"
-        >
-          {{ state.playwright }}
-        </IconLabel>
-        </a>
 
-        <a
-          href="https://github.com/cenfun/monocart-reporter"
-          target="_blank"
-        ><IconLabel
-          icon="github"
-          size="20px"
+    <div
+      v-if="state.tagList"
+      class="mcr-report-item"
+    >
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          wrap
         >
-          {{ state.monocart }}
-        </IconLabel>
-        </a>
-      </VuiFlex>
+          <IconLabel
+            icon="tag"
+            :button="false"
+          >
+            <b>Tags</b> <span class="mcr-num">{{ Util.NF(state.tagList.length) }}</span>
+          </IconLabel>
+          <div class="vui-flex-auto" />
+          <a
+            href="https://playwright.dev/docs/test-annotations#tag-tests"
+            target="_blank"
+          >
+            <IconLabel icon="help">
+              Tag Tests
+            </IconLabel>
+          </a>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <VuiFlex
+          gap="15px"
+          wrap
+          padding="10px"
+        >
+          <div
+            v-for="(item, i) in state.tagList"
+            :key="i"
+            class="mcr-report-tag"
+            @click="onTagClick(item)"
+          >
+            <span
+              :style="item.style"
+              :tooltip="item.description"
+              class="mcr-tag"
+            >{{ item.name }}</span>
+            <span
+              v-if="item.value>1"
+              class="mcr-num"
+            >{{ Util.NF(item.value) }}</span>
+          </div>
+        </VuiFlex>
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          wrap
+        >
+          <IconLabel
+            icon="timeline"
+            :button="false"
+          >
+            <b>Timelines</b> <span class="mcr-num">{{ state.duration }}</span>
+          </IconLabel>
+
+          <div class="vui-flex-auto" />
+
+          <a
+            href="https://playwright.dev/docs/test-parallel"
+            target="_blank"
+          >
+            <IconLabel icon="help">
+              Test Parallel
+            </IconLabel>
+          </a>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <Timeline />
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          wrap
+        >
+          <IconLabel
+            icon="export"
+            :button="false"
+          >
+            <b>Export</b>
+          </IconLabel>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <VuiFlex
+          gap="15px"
+          direction="column"
+          padding="10px"
+          class="mcr-report-export"
+        >
+          <VuiFlex
+            v-for="(group, i) in exportList"
+            :key="i"
+            gap="15px"
+            wrap
+          >
+            <IconLabel
+              v-for="(item, j) in group.list"
+              :key="j"
+              :icon="item.icon"
+              primary
+              @click="onExportClick(item)"
+            >
+              {{ item.name }}
+            </IconLabel>
+          </VuiFlex>
+        </VuiFlex>
+      </div>
+    </div>
+
+    <div class="mcr-report-item mcr-report-footer">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          wrap
+        >
+          <a
+            href="https://github.com/microsoft/playwright"
+            target="_blank"
+          ><IconLabel
+            icon="playwright"
+            size="20px"
+          >
+            {{ state.playwright }}
+          </IconLabel>
+          </a>
+
+          <a
+            href="https://github.com/cenfun/monocart-reporter"
+            target="_blank"
+          ><IconLabel
+            icon="github"
+            size="20px"
+          >
+            {{ state.monocart }}
+          </IconLabel>
+          </a>
+        </VuiFlex>
+      </div>
     </div>
   </VuiFlex>
 </template>
@@ -383,10 +384,6 @@ const onExportClick = (item) => {
 </script>
 <style lang="scss">
 .mcr-report {
-    height: 100%;
-}
-
-.mcr-report-main {
     overflow-y: auto;
 }
 
@@ -405,6 +402,12 @@ const onExportClick = (item) => {
 
     a {
         color: #333;
+    }
+}
+
+.mcr-report-footer {
+    .mcr-report-head {
+        border: none;
     }
 }
 
@@ -438,12 +441,4 @@ const onExportClick = (item) => {
     }
 }
 
-.mcr-report-footer {
-    background-color: #eee;
-
-    a:visited,
-    a:link {
-        color: #333;
-    }
-}
 </style>
