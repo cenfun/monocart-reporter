@@ -11,7 +11,7 @@ module.exports = {
 
     metadata: {
         // test global-setup error
-        // baseURL: 'https://example.coma/'
+        // baseURL: 'https://example.coma/',
 
         // test home page object model
         url: 'https://www.npmjs.org/package/monocart-reporter',
