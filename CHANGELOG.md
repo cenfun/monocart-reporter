@@ -1,3 +1,8 @@
+
+* 1.6.1
+  - fixed duration
+  - fixed suites counting
+
 * 1.6.0
   - replaced use with metadata (deprecated use)
   - added project custom data from project metadata
