@@ -73,7 +73,7 @@
             placeholder="keywords"
           />
           <IconLabel
-            icon="drop-down"
+            icon="triangle-down"
             @click="onSearchDropdownClick($event)"
           />
         </VuiFlex>
@@ -292,11 +292,31 @@ const tagsHandler = (tags) => {
     state.tagMap = tags;
 };
 
+const metadataHandler = (metadata) => {
+
+    const metadataList = Object.keys(metadata).map((k) => {
+        return {
+            icon: 'item-arrow',
+            name: k,
+            value: metadata[k]
+        };
+    }).filter((it) => {
+        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
+            return true;
+        }
+    });
+
+    if (metadataList.length) {
+        state.metadataList = metadataList;
+    }
+
+};
+
 
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, tags, workers, system
+        columns, rows, summary, tags, workers, system, metadata
     } = reportData;
 
     // init searchable info
@@ -390,6 +410,8 @@ const initData = (reportData) => {
     // max works, default is 4
     state.workers = workers;
     state.workerList = workerList;
+
+    metadataHandler(metadata);
 
 };
 

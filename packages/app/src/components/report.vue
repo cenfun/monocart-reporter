@@ -164,6 +164,40 @@
           wrap
         >
           <IconLabel
+            icon="metadata"
+            :button="false"
+          >
+            <b>Metadata</b>
+          </IconLabel>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <VuiFlex
+          v-if="state.metadataList"
+          gap="10px"
+          padding="10px"
+          class="mcr-report-metadata"
+          wrap
+        >
+          <IconLabel
+            v-for="(item, i) in state.metadataList"
+            :key="i"
+            :icon="item.icon"
+            :button="false"
+          >
+            <b>{{ item.name }}</b> {{ item.value }}
+          </IconLabel>
+        </VuiFlex>
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          wrap
+        >
+          <IconLabel
             icon="export"
             :button="false"
           >
