@@ -245,6 +245,38 @@ module.exports = {
 };
 ```
 
+## Metadata
+* add metadata to config
+```js
+// playwright.config.js
+module.exports = {
+    globalSetup: require.resolve('./common/global-setup.js'),
+    metadata: {
+        // test home page object model
+        url: 'https://www.npmjs.org/package/monocart-reporter',
+        // test addInitScript
+        clientPath: 'tests/common/client.js'
+    },
+     reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html'
+        }]
+    ]
+```
+* collect metadata in global setup
+```js
+// ./common/global-setup.js
+import { chromium } from '@playwright/test';
+export default async (config) => {
+    const metadata = config.metadata;
+    // collect data and save to metadata
+    const browser = await chromium.launch();
+    const chromiumVersion = await browser.version();
+    metadata.chromiumVersion = chromiumVersion;
+};
+```
+
 ## onEnd callback
 ```js
 // playwright.config.js

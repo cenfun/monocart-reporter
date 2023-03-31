@@ -1,6 +1,5 @@
 import { chromium } from '@playwright/test';
-
-async function globalSetup(config) {
+export default async (config) => {
     const metadata = config.metadata;
 
     // if (metadata.baseURL) {
@@ -15,6 +14,4 @@ async function globalSetup(config) {
     console.log(chromiumVersion);
     metadata.chromiumVersion = chromiumVersion;
 
-}
-
-export default globalSetup;
+};
