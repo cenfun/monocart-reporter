@@ -217,13 +217,13 @@
           </VuiFlex>
           <VuiFlex gap="10px">
             <IconLabel
-              icon="parallel"
+              icon="worker"
               :button="false"
             >
-              {{ item.parallelIndex }}
+              {{ item.parallelIndex + 1 }}
             </IconLabel>
             <IconLabel
-              icon="worker"
+              icon="number"
               :button="false"
             >
               {{ item.workerIndex }}
