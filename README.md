@@ -172,15 +172,6 @@ module.exports = {
 
 ## Adding Comments to Your Tests
 > Compared to importing external libraries and calling its interface, Comments is a better way, no dependence, cleaner, easy to read, and never break the existing code.
-* Suite
-```js
-/**
- * add extra information for suite
- * @owner Mark
- * @jira MCR-16900
- */
-test.describe('suite title', () => { ... });
-```
 * Case
 ```js
 /**
@@ -189,6 +180,15 @@ test.describe('suite title', () => { ... });
  * @jira MCR-16888
  */
 test('case title', () => { ... });
+```
+* Describe
+```js
+/**
+ * add extra information for describe
+ * @owner Mark
+ * @jira MCR-16900
+ */
+test.describe('suite title', () => { ... });
 ```
 * Step
 ```js
@@ -216,6 +216,29 @@ test.beforeAll(() => { ... });
  * @title do something before each
  */
 test.beforeEach(() => { ... });
+```
+* File
+```js
+/**
+ * add extra information for file from first line 
+ * @owner FO
+ */
+const { test, expect } = require('@playwright/test');
+```
+* Project (Can't use comments)
+```js
+// playwright.config.js
+module.exports = {
+    projects: [
+        {
+            name: 'Desktop Chromium',
+            // add extra information for project with metadata
+            metadata: {
+                owner: 'PO'
+            }
+        }
+    ]
+};  
 ```
 
 ## Style Tags
