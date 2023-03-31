@@ -4,7 +4,8 @@
  */
 
 const { test, expect } = require('@playwright/test');
-const Util = require('../common/util.js');
+const { delay } = require('../common/util.js');
+const { TF } = require('../../lib/utils/util.js');
 
 /**
  * add extra information for case
@@ -12,8 +13,28 @@ const Util = require('../common/util.js');
  * @jira MCR-16888
  * @testrail 2125
  */
-test('case before suite', () => {
+test('test util time format', () => {
+    expect(TF(0)).toBe('0ms');
+    expect(TF(100)).toBe('100ms');
+    expect(TF(1000)).toBe('1s');
+    expect(TF(1100)).toBe('1.1s');
 
+    expect(TF(21100)).toBe('21.1s');
+
+    expect(TF(61100)).toBe('1m 1s');
+
+    expect(TF(125100)).toBe('2m 5s');
+
+    expect(TF(3600100)).toBe('1h 0m 0s');
+    expect(TF(3601000)).toBe('1h 0m 1s');
+    expect(TF(3700100)).toBe('1h 1m 40s');
+
+    expect(TF(12 * 3601000)).toBe('12h 0m 12s');
+
+    expect(TF(24 * 3601000)).toBe('1d 0h 0m 24s');
+    expect(TF(60 * 24 * 3601000)).toBe('60d 0h 24m 0s');
+
+    expect(new Date(60 * 24 * 3601000).toISOString()).toBe('1970-03-02T00:24:00.000Z');
 });
 
 /**
@@ -87,7 +108,7 @@ test.describe('suite group 1 @beta', () => {
 
         test.beforeEach(async () => {
             console.log('beforeEach delay 10');
-            await Util.delay(10);
+            await delay(10);
         });
 
         test('@smoke case first', async () => {
@@ -203,7 +224,7 @@ test.describe('suite group 2', () => {
 
     test('timeout 3000', async () => {
         test.setTimeout(3000);
-        await Util.delay(10 * 1000);
+        await delay(10 * 1000);
     });
 
     test('@smoke @fast one', () => {
