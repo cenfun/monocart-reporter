@@ -316,27 +316,36 @@ const getAttachments = (item, column) => {
         // console.log(attachment);
 
         // contentType 'application/json' 'image/png' 'video/webm'
-        const contentType = attachment.contentType;
+        const {
+            contentType, name, path
+        } = attachment;
         if (contentType) {
 
             if (contentType.startsWith('image')) {
                 return `<div class="mcr-detail-attachment mcr-detail-image">
-                            <a href="${attachment.path}" target="_blank"><img src="${attachment.path}" alt="${attachment.name}" /></a>
+                            <a href="${path}" target="_blank"><img src="${path}" alt="${name}" /></a>
                         </div>`;
             }
 
             if (contentType.startsWith('video')) {
                 return `<div class="mcr-detail-attachment mcr-detail-video">
                             <video controls height="350">
-                                <source src="${attachment.path}" type="${contentType}">
-                                <p>Here is a <a href="${attachment.path}" target="_blank">link to the ${attachment.name}</a> instead if your browser doesn't support HTML5 video.</p>
+                                <source src="${path}" type="${contentType}">
+                                <p>Here is a <a href="${path}" target="_blank">link to the ${name}</a> instead if your browser doesn't support HTML5 video.</p>
                             </video>
+                        </div>`;
+            }
+
+            if (contentType === 'application/zip' && name === 'trace') {
+                return `<div class="mcr-detail-attachment mcr-detail-trace">
+                            <a href="${path}" target="_blank">${name}</a>
+                            <span>(download trace.zip and viewing the trace using online <a href="https://trace.playwright.dev/" target="_blank">Trace Viewer</a>)</span>
                         </div>`;
             }
         }
 
         return `<div class="mcr-detail-attachment mcr-detail-link">
-                  <a href="${attachment.path}" target="_blank">${attachment.name}</a>
+                  <a href="${path}" target="_blank">${name}</a>
                 </div>`;
     });
 
@@ -671,16 +680,27 @@ watch([
     .mcr-detail-attachment {
         padding: 5px;
     }
-}
 
-.mcr-detail-image {
-    a {
-        display: block;
+    .mcr-detail-image {
+        a {
+            display: block;
+        }
+
+        img {
+            display: block;
+            max-height: 350px;
+        }
     }
 
-    img {
-        display: block;
-        max-height: 350px;
+    .mcr-detail-trace {
+        span {
+            margin-left: 10px;
+            font-size: 12px;
+
+            a {
+                color: #333;
+            }
+        }
     }
 }
 

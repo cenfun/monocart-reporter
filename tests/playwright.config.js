@@ -4,9 +4,9 @@ module.exports = {
 
     use: {
         // test attachments
+        trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         video: 'on-first-retry'
-        // trace: 'on-first-retry',
     },
 
     metadata: {
