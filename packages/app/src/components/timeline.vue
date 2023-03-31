@@ -156,7 +156,7 @@
 
     <VuiFlex
       v-if="chart.systemList"
-      gap="15px"
+      gap="10px"
       direction="column"
       padding="10px"
     >
@@ -694,6 +694,7 @@ const timelineHandler = () => {
 
 const legendsHandler = () => {
     const system = state.system;
+    const reportData = state.reportData;
     chart.legendList = [{
         icon: 'cpu',
         name: 'CPU',
@@ -712,6 +713,10 @@ const legendsHandler = () => {
 
     chart.systemList = [{
         list: [{
+            icon: 'cwd',
+            name: 'CWD',
+            value: system.cwd
+        }, {
             icon: 'os',
             name: 'OS',
             value: `${system.version} (${system.arch})`
@@ -719,10 +724,20 @@ const legendsHandler = () => {
             icon: 'host',
             name: 'Host',
             value: system.hostname
+        }]
+    }, {
+        list: [{
+            icon: 'config',
+            name: 'Config File',
+            value: reportData.configFile
         }, {
-            icon: 'cwd',
-            name: 'CWD',
-            value: system.cwd
+            icon: 'folder',
+            name: 'Test Dir',
+            value: reportData.testDir
+        }, {
+            icon: 'output',
+            name: 'Output Dir',
+            value: reportData.outputDir
         }]
     }];
 };

@@ -1,7 +1,7 @@
 import { chromium } from '@playwright/test';
 
 async function globalSetup(config) {
-    const { baseURL } = config.projects[0].use;
+    const { baseURL } = config.metadata;
     if (baseURL) {
         const browser = await chromium.launch();
         const page = await browser.newPage();

@@ -25,7 +25,7 @@ module.exports = async (reportData, capacity) => {
                 <ul>
                     <li>Env: STG</li>
                     <li>Type: Smoke</li>
-                    <li>Url: ${reportData.use.url}</li>
+                    <li>Url: ${reportData.metadata.url}</li>
                     <li>Workers: ${capacity.config.workers}</li>
                     <li>Date: ${reportData.dateH}</li>
                     <li>Duration: ${reportData.durationH}</li>
@@ -39,6 +39,8 @@ module.exports = async (reportData, capacity) => {
             `
         }
     };
+
+    console.log('email html', emailOptions.message.html);
 
     if (!emailOptions.transport.auth.user) {
         return;

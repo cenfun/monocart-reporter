@@ -1,3 +1,10 @@
+* 1.6.0
+  - replaced use with metadata (deprecated use)
+  - added project custom data from project metadata
+  - added file custom data from file fist line comments
+
+---
+
 * 1.5.5
   - fixed UI issues
 

@@ -3,12 +3,13 @@ module.exports = {
     globalSetup: require.resolve('./common/global-setup.js'),
 
     use: {
-
         // test attachments
         screenshot: 'only-on-failure',
-        video: 'on-first-retry',
-        // trace: 'retain-on-failure'
+        video: 'on-first-retry'
+        // trace: 'on-first-retry',
+    },
 
+    metadata: {
         // test global-setup error
         // baseURL: 'https://example.coma/'
 
@@ -17,6 +18,8 @@ module.exports = {
         // test addInitScript
         clientPath: 'tests/common/client.js'
     },
+
+    // testDir: '../tests/example/',
 
     // test flaky case
     retries: 1,
@@ -40,6 +43,10 @@ module.exports = {
                     width: 1280,
                     height: 720
                 }
+            },
+            metadata: {
+                myMetaData: 'config-project-metadata',
+                owner: 'PO'
             }
         }
     ],

@@ -3,29 +3,29 @@ const Util = require('../common/util.js');
 
 class HomePage {
 
-    constructor(page, context, use) {
+    constructor(page, context, metadata) {
         this.page = page;
         this.context = context;
-        this.use = use;
-        console.log('use', use);
+        this.metadata = metadata;
+        console.log('metadata', metadata);
     }
 
     async init() {
         // for client script
-        console.log(`addInitScript: ${this.use.clientPath}`);
+        console.log(`addInitScript: ${this.metadata.clientPath}`);
 
         /**
          * override title
          * @title Add Init Script
          */
         await this.context.addInitScript({
-            path: this.use.clientPath
+            path: this.metadata.clientPath
         });
         await Util.delay(500);
     }
 
     async goto() {
-        const url = this.use.url;
+        const url = this.metadata.url;
         console.log(`goto: ${url}`);
 
         /**
