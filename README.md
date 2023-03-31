@@ -10,13 +10,15 @@
 * Shows [Suites](https://playwright.dev/docs/api/class-suite)/[Cases](https://playwright.dev/docs/api/class-testcase)/[Steps](https://playwright.dev/docs/api/class-teststep) with Tree Style
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Custom Columns and Formatters (extra information for suite/case/step)
+* Custom Searchable Fields
 * Custom Data Collection Visitor 
 * Collect Data from Comments (similar to JsDoc)
 * Output Report Data and Summary (json)
-* Console Logs (log/error/warn/debug/info)
+* Console Logs in Order (log/error/warn/debug/info)
 * Export Data (json)
-* Parallel Workers Graph
+* Timeline Workers Graph
 * Monitor CPU and Memory Usage
+* [Metadata](#metadata) Report
 * [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
@@ -340,10 +342,6 @@ module.exports = {
  - Lightweight UI components [vine-ui](https://github.com/cenfun/vine-ui)
  - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
  - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
-
-
- ## Articles
- - [Test automation|Test Reporting| |Playwright|Monocart](https://medium.com/@kbalaji.kks/test-automation-test-reporting-playwright-monocart-d4bb35ef12ad)
 
 ## Dependencies
 ```sh
