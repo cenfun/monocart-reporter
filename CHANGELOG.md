@@ -2,6 +2,9 @@
   - replaced use with metadata (deprecated use)
   - added project custom data from project metadata
   - added file custom data from file fist line comments
+  - added metadata report
+  - added trace viewer link for trace attachment
+  - fixed searchable fields
 
 ---
 
