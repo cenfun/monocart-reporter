@@ -22,7 +22,7 @@
 * [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
-* [Slack Integration with Webhook](#slack-integration-with-webhook)
+* [Slack Integration](#slack-integration-with-webhook) with [@slack/webhook](https://github.com/slackapi/node-slack-sdk)
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
