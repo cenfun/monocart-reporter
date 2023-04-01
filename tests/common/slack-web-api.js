@@ -8,6 +8,7 @@ module.exports = async (reportData, capacity) => {
     // Sending messages using Incoming Webhooks: https://api.slack.com/messaging/webhooks
 
     // do not store your slack token in the source code, but pass your slack token from environment variables
+    // https://github.com/motdotla/dotenv
     dotenv.config();
     const token = process.env.SLACK_TOKEN;
     const web = new WebClient(token);
@@ -64,6 +65,17 @@ module.exports = async (reportData, capacity) => {
             }
         });
         if (owners.length) {
+
+            // replace owner name to slack member id
+            const users = await web.users.list();
+            users.members.forEach((member) => {
+                owners.forEach((owner, i) => {
+                    if (owner === member.real_name) {
+                        owners[i] = `<@${member.id}>`;
+                    }
+                });
+            });
+
             message.blocks.push({
                 type: 'section',
                 text: {
@@ -82,8 +94,8 @@ module.exports = async (reportData, capacity) => {
         EC.logRed(`[slack] failed to post message to channel ${channelId}`);
     });
 
-    EC.logCyan('[slack] uploading report file ... ');
     // or upload report file
+    EC.logCyan('[slack] uploading report file ... ');
     await web.files.uploadV2({
         initial_comment: 'Here is the test report (download and open in browser)',
         channel_id: channelId,
