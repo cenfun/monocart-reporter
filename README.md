@@ -22,7 +22,7 @@
 * [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
-* [Slack Integration](#slack-integration-with-webhook) with [@slack/webhook](https://github.com/slackapi/node-slack-sdk)
+* [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -361,8 +361,8 @@ module.exports = {
 ### Preview Testrail Run/Results
 ![](/docs/testrail.png)
 
-## Slack Integration with Webhook
-### Check example: [slack-webhook.js](/tests/common/slack-webhook.js)
+## Slack Integration
+### Slack webhook example: [slack-webhook.js](/tests/common/slack-webhook.js)
 ```js
 // playwright.config.js
 module.exports = {
