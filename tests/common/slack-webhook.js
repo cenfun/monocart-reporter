@@ -29,11 +29,18 @@ module.exports = async (reportData, capacity) => {
             type: 'section',
             // no more than 10 fields
             fields: ['tests', 'passed', 'flaky', 'skipped', 'failed'].map((k) => {
+                const icons = {
+                    tests: '🧪',
+                    passed: '✅',
+                    failed: '❌',
+                    skipped: '⏭️',
+                    flaky: '⚠️'
+                };
                 const item = summary[k];
                 const percent = item.percent ? ` (${item.percent})` : '';
                 return {
                     type: 'mrkdwn',
-                    text: `*${item.name}:* ${item.value} ${percent}`
+                    text: `${icons[k]} *${item.name}:* ${item.value} ${percent}`
                 };
             })
         }]
