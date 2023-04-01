@@ -10,7 +10,7 @@
 * Shows [Suites](https://playwright.dev/docs/api/class-suite)/[Cases](https://playwright.dev/docs/api/class-testcase)/[Steps](https://playwright.dev/docs/api/class-teststep) with Tree Style
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Custom Columns and Formatters (extra information for suite/case/step)
-* Custom Searchable Fields
+* Custom [Searchable Fields](#searchable-fields)
 * Custom Data Collection Visitor 
 * Collect Data from Comments (similar to JsDoc)
 * Output Report Data and Summary (json)
