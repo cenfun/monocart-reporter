@@ -9,16 +9,16 @@
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
 * Shows [Suites](https://playwright.dev/docs/api/class-suite)/[Cases](https://playwright.dev/docs/api/class-testcase)/[Steps](https://playwright.dev/docs/api/class-teststep) with Tree Style
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
-* Custom Columns and Formatters (extra information for suite/case/step)
-* Custom [Searchable Fields](#searchable-fields)
-* Custom Data Collection Visitor 
-* Collect Data from Comments (similar to JsDoc)
+* Custom [Columns and Formatters](#columns-and-formatter) (extra information for suite/case/step)
+* Custom [Data Collection Visitor](#data-collection-visitor)
+* [Collect Data from Comments](#adding-comments-to-your-tests) (similar to JsDoc)
 * Output Report Data and Summary (json)
 * Console Logs in Order (log/error/warn/debug/info)
 * Export Data (json)
 * Timeline Workers Graph
 * Monitor CPU and Memory Usage
 * [Metadata](#metadata) Report
+* [Searchable Fields](#searchable-fields)
 * [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
@@ -120,7 +120,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 ```
 See [lib/options.js](lib/options.js)
 
-## Custom Columns and Data Collection Visitor
+## Columns and Formatter
 ```js
 // playwright.config.js
 module.exports = {
@@ -156,7 +156,20 @@ module.exports = {
                     }
                 });
 
-            },
+            }
+        }]
+    ]
+};
+```
+
+## Data Collection Visitor
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
 
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
