@@ -16,7 +16,7 @@ const state = shallowReactive({
 
     caseType: Util.getHash('caseType') || 'tests',
     suiteVisible: true,
-    stepVisible: true,
+    stepVisible: false,
 
     windowWidth: window.innerWidth,
 
