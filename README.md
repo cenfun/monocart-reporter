@@ -378,6 +378,8 @@ module.exports = {
     ]
 };
 ```
+### Preview in Slack
+![](/docs/slack-webhook.png)
 
 ## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
