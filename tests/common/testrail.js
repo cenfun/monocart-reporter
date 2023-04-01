@@ -1,36 +1,17 @@
 const Testrail = require('testrail-api');
 const EC = require('eight-colors');
-
-const createClient = function(options) {
-    const testrailApi = new Testrail(options);
-    return {
-        request: async function() {
-            const args = Array.from(arguments);
-            const name = args.shift();
-            const fun = testrailApi[name];
-            let err;
-            const res = await fun.apply(testrailApi, args).catch(function(e) {
-                err = e;
-            });
-            if (err) {
-                EC.logRed(EC.red(`ERROR: Catch a error on: ${name}`));
-                EC.logRed(err.message && err.message.error);
-                return;
-            }
-            return res.body;
-        }
-    };
-};
-
 module.exports = async (reportData, capacity) => {
 
     const options = {
+        // change to your testrail host
         host: 'https://cenfun.testrail.io',
-        user: '',
-        password: ''
+        // pass secrets from environment variables, do not store secrets in the source code
+        user: process.env.USERNAME,
+        password: process.env.PASSWORD
     };
 
-    if (!options.user) {
+    if (!options.password) {
+        console.log('[testrail] require a password');
         return;
     }
 
@@ -98,4 +79,25 @@ module.exports = async (reportData, capacity) => {
     }
     EC.logGreen('[testrail] completed');
 
+};
+
+const createClient = function(options) {
+    const testrailApi = new Testrail(options);
+    return {
+        request: async function() {
+            const args = Array.from(arguments);
+            const name = args.shift();
+            const fun = testrailApi[name];
+            let err;
+            const res = await fun.apply(testrailApi, args).catch(function(e) {
+                err = e;
+            });
+            if (err) {
+                EC.logRed(EC.red(`ERROR: Catch a error on: ${name}`));
+                EC.logRed(err.message && err.message.error);
+                return;
+            }
+            return res.body;
+        }
+    };
 };

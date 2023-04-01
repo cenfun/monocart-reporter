@@ -1,14 +1,15 @@
 module.exports = async (reportData, capacity) => {
     const emailOptions = {
-        // https://nodemailer.com/smtp/
         transport: {
+            // change to your email service, or use SMTP host and port: https://nodemailer.com/smtp/
             service: 'Hotmail',
             auth: {
-                user: '',
-                pass: ''
+                // pass secrets from environment variables, do not store secrets in the source code
+                user: process.env.USERNAME,
+                pass: process.env.PASSWORD
             }
         },
-        // https://nodemailer.com/message/
+        // Message configuration: https://nodemailer.com/message/
         message: {
             from: '',
             to: '',
@@ -42,7 +43,8 @@ module.exports = async (reportData, capacity) => {
 
     console.log('email html', emailOptions.message.html);
 
-    if (!emailOptions.transport.auth.user) {
+    if (!emailOptions.transport.auth.pass) {
+        console.log('[send email] require a password');
         return;
     }
 
