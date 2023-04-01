@@ -11,7 +11,7 @@ module.exports = async (reportData, capacity) => {
     };
 
     if (!options.password) {
-        console.log('[testrail] require a password');
+        EC.logRed('[testrail] require a password');
         return;
     }
 

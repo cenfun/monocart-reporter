@@ -19,7 +19,7 @@ module.exports = {
         clientPath: 'tests/common/client.js'
     },
 
-    // testDir: '../tests/example/',
+    testDir: '../tests/example/',
 
     // test flaky case
     retries: 1,
@@ -171,6 +171,10 @@ module.exports = {
                 // testrail integration
                 const testrail = require('./common/testrail.js');
                 await testrail(reportData, capacity);
+
+                // slack integration with webhook
+                const slackWebhook = require('./common/slack-webhook.js');
+                await slackWebhook(reportData, capacity);
 
             }
         }]

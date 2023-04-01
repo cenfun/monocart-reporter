@@ -1,3 +1,4 @@
+const EC = require('eight-colors');
 module.exports = async (reportData, capacity) => {
     const emailOptions = {
         transport: {
@@ -41,10 +42,10 @@ module.exports = async (reportData, capacity) => {
         }
     };
 
-    console.log('email html', emailOptions.message.html);
+    // console.log('email html', emailOptions.message.html);
 
     if (!emailOptions.transport.auth.pass) {
-        console.log('[send email] require a password');
+        EC.logRed('[email] require a password');
         return;
     }
 
