@@ -173,8 +173,12 @@ module.exports = {
                 await testrail(reportData, capacity);
 
                 // slack integration with webhook
-                const slackWebhook = require('./common/slack-webhook.js');
-                await slackWebhook(reportData, capacity);
+                // const slackWebhook = require('./common/slack-webhook.js');
+                // await slackWebhook(reportData, capacity);
+
+                // slack integration with web api
+                const slackWebApi = require('./common/slack-web-api.js');
+                await slackWebApi(reportData, capacity);
 
             }
         }]

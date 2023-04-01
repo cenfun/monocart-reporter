@@ -1,20 +1,29 @@
-const { IncomingWebhook } = require('@slack/webhook');
+const path = require('path');
+const { WebClient } = require('@slack/web-api');
 const EC = require('eight-colors');
 module.exports = async (reportData, capacity) => {
 
     // send notifications to a single channel which the user picks on installation
     // Sending messages using Incoming Webhooks: https://api.slack.com/messaging/webhooks
 
-    // do not store your slack webhook url in the source code
-    // but pass your slack webhook url from environment variables, like: const url = process.env.SLACK_WEBHOOK_URL;
-    const url = 'https://hooks.slack.com/services/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';
+    // do not store your slack token in the source code
+    // but pass your slack token from environment variables, like: const token = process.env.SLACK_TOKEN;
+    const token = 'xoxb-5041721169075-5069707574096-4nlELn8HTAbpCfUHmoZzHU3U';
+    const web = new WebClient(token);
 
     const {
-        name, dateH, durationH, summary
+        name, dateH, durationH, summary, htmlPath
     } = reportData;
 
+
+    // https://slack.dev/node-slack-sdk/web-api
+
+    // Given some known conversation ID (representing a public channel, private channel, DM or group DM)
+    const channelId = 'C050T9D1CH5';
     // Creating interactive messages: https://api.slack.com/messaging/interactivity
     const message = {
+        channel: channelId,
+        text: name,
         blocks: [{
             type: 'section',
             text: {
@@ -66,12 +75,25 @@ module.exports = async (reportData, capacity) => {
 
     // console.log(JSON.stringify(message));
 
-    // https://slack.dev/node-slack-sdk/webhook
-    const webhook = new IncomingWebhook(url);
-    await webhook.send(message).catch((err) => {
+    await web.chat.postMessage(message).catch((err) => {
         // console.log(err);
         EC.logRed(err.message);
-        EC.logRed('[slack] failed to send notifications to slack channel');
+        EC.logRed(`[slack] failed to post message to channel ${channelId}`);
+    });
+
+    EC.logCyan('[slack] uploading report file ... ');
+    // or upload report file
+    await web.files.uploadV2({
+        initial_comment: 'Here is the test report (download and open in browser)',
+        channel_id: channelId,
+        file_uploads: [{
+            file: path.resolve(htmlPath),
+            filename: `${name}-${dateH}.html`
+        }]
+    }).catch((err) => {
+        console.log(err);
+        EC.logRed(err.message);
+        EC.logRed(`[slack] failed to upload file to channel ${channelId}`);
     });
 
 };
