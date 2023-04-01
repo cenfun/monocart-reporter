@@ -22,6 +22,7 @@
 * [Style Tags](#style-tags)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
+* [Slack Integration with Webhook](#slack-integration-with-webhook)
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -359,6 +360,24 @@ module.exports = {
 
 ### Preview Testrail Run/Results
 ![](/docs/testrail.png)
+
+## Slack Integration with Webhook
+### Check example: [slack-webhook.js](/tests/common/slack-webhook.js)
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            onEnd: async (reportData, capacity) => {
+                const slackWebhook = require('./common/slack-webhook.js');
+                await slackWebhook(reportData, capacity);
+            }
+        }]
+    ]
+};
+```
 
 ## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
