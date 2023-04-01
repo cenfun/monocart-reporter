@@ -19,7 +19,7 @@ module.exports = {
         clientPath: 'tests/common/client.js'
     },
 
-    testDir: '../tests/example/',
+    // testDir: '../tests/example/',
 
     // test flaky case
     retries: 1,
@@ -177,8 +177,8 @@ module.exports = {
                 // await slackWebhook(reportData, capacity);
 
                 // slack integration with web api
-                const slackWebApi = require('./common/slack-web-api.js');
-                await slackWebApi(reportData, capacity);
+                // const slackWebApi = require('./common/slack-web-api.js');
+                // await slackWebApi(reportData, capacity);
 
             }
         }]
