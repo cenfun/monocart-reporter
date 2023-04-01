@@ -303,6 +303,22 @@ export default async (config) => {
 };
 ```
 
+## Searchable Fields
+```js
+// playwright.config.js
+module.exports = {
+     reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            columns: (defaultColumns) => {
+                const locationColumn = defaultColumns.find((column) => column.id === 'location');
+                locationColumn.searchable = true;
+            }
+        }]
+    ]
+```
+
 ## onEnd callback
 ```js
 // playwright.config.js
