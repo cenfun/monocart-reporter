@@ -36,6 +36,7 @@
         "@slack/webhook": "^6.1.0",
         "ansi-to-html": "^0.7.2",
         "async-tick": "^1.0.0",
+        "dotenv": "^16.0.3",
         "eslint": "^8.37.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",

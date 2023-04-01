@@ -1,13 +1,14 @@
 const { IncomingWebhook } = require('@slack/webhook');
 const EC = require('eight-colors');
+const dotenv = require('dotenv');
 module.exports = async (reportData, capacity) => {
 
     // send notifications to a single channel which the user picks on installation
     // Sending messages using Incoming Webhooks: https://api.slack.com/messaging/webhooks
 
-    // do not store your slack webhook url in the source code
-    // but pass your slack webhook url from environment variables, like: const url = process.env.SLACK_WEBHOOK_URL;
-    const url = 'https://hooks.slack.com/services/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';
+    // do not store your slack webhook url in the source code, but pass your slack webhook url from environment variables
+    dotenv.config();
+    const url = process.env.SLACK_WEBHOOK_URL;
 
     const {
         name, dateH, durationH, summary

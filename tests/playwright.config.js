@@ -140,8 +140,8 @@ module.exports = {
                 });
 
                 // hide a default column
-                // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
-                // retryColumn.invisible = true;
+                const retryColumn = defaultColumns.find((column) => column.id === 'retry');
+                retryColumn.invisible = true;
 
                 // update a default column width
                 // const locationColumn = defaultColumns.find((column) => column.id === 'location');
@@ -173,12 +173,12 @@ module.exports = {
                 await testrail(reportData, capacity);
 
                 // slack integration with webhook
-                // const slackWebhook = require('./common/slack-webhook.js');
-                // await slackWebhook(reportData, capacity);
+                const slackWebhook = require('./common/slack-webhook.js');
+                await slackWebhook(reportData, capacity);
 
                 // slack integration with web api
-                const slackWebApi = require('./common/slack-web-api.js');
-                await slackWebApi(reportData, capacity);
+                // const slackWebApi = require('./common/slack-web-api.js');
+                // await slackWebApi(reportData, capacity);
 
             }
         }]
