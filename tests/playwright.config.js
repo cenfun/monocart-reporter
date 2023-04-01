@@ -19,10 +19,10 @@ module.exports = {
         clientPath: 'tests/common/client.js'
     },
 
-    // testDir: '../tests/example/',
-
     // test flaky case
     retries: 1,
+
+    // testDir: '../tests/example/',
 
     projects: [
         // {
@@ -169,8 +169,8 @@ module.exports = {
                 await sendEmail(reportData, capacity);
 
                 // testrail integration
-                const testrail = require('./common/testrail.js');
-                await testrail(reportData, capacity);
+                // const testrail = require('./common/testrail.js');
+                // await testrail(reportData, capacity);
 
                 // slack integration with webhook
                 // const slackWebhook = require('./common/slack-webhook.js');
@@ -179,6 +179,10 @@ module.exports = {
                 // slack integration with web api
                 // const slackWebApi = require('./common/slack-web-api.js');
                 // await slackWebApi(reportData, capacity);
+
+                // html to pdf
+                // const toPdf = require('./common/to-pdf.js');
+                // await toPdf(reportData, capacity);
 
             }
         }]

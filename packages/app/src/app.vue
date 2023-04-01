@@ -552,6 +552,13 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+window.addEventListener('message', (e) => {
+    const data = e.data;
+    if (data && typeof data === 'object') {
+        Object.assign(state, data);
+    }
+});
+
 state.colors = {
     passed: 'green',
     failed: '#d00',
@@ -561,7 +568,10 @@ state.colors = {
 
 </script>
 <style lang="scss">
-html,
+html {
+    height: 100%;
+}
+
 body {
     --font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
     --bg-failed: #fff0ef;
