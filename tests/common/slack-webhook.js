@@ -7,7 +7,7 @@ module.exports = async (reportData, capacity) => {
 
     // do not store your slack webhook url in the source code
     // but pass your slack webhook url from environment variables, like: const url = process.env.SLACK_WEBHOOK_URL;
-    const url = 'https://hooks.slack.com/services/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';
+    const url = 'https://hooks.slack.com/services/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';
 
     const {
         name, dateH, durationH, summary
@@ -69,7 +69,7 @@ module.exports = async (reportData, capacity) => {
     // https://slack.dev/node-slack-sdk/webhook
     const webhook = new IncomingWebhook(url);
     await webhook.send(message).catch((err) => {
-        console.log(err);
+        EC.logRed(err.message);
         EC.logRed('[slack] failed to send notifications to slack channel');
     });
 
