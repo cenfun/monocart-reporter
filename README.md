@@ -193,7 +193,20 @@ module.exports = {
  * @owner Kevin
  * @jira MCR-16888
  */
-test('case title', () => { ... });
+test('case title', () => { 
+
+});
+
+/**
+ * @description multiple lines text description
+multiple lines text description
+multiple lines text description
+ * @jira MCR-16888
+*/
+test('case description', () => {
+
+});
+
 ```
 * Describe
 ```js
@@ -202,7 +215,9 @@ test('case title', () => { ... });
  * @owner Mark
  * @jira MCR-16900
  */
-test.describe('suite title', () => { ... });
+test.describe('suite title', () => {
+
+});
 ```
 * Step
 ```js
@@ -215,6 +230,11 @@ test('case title', ({ browserName }, testInfo) => {
      */
     expect(testInfo).toBe(test.info());
 
+    // @owner Steve
+    await test.step('step title', () => {
+       
+    });
+
 });
 ```
 * Hooks
@@ -223,13 +243,17 @@ test('case title', ({ browserName }, testInfo) => {
  * override "beforeAll hook" title to
  * @title do something before all
  */
-test.beforeAll(() => { ... });
+test.beforeAll(() => { 
+
+});
 
 /**
  * override "beforeEach hook" title to
  * @title do something before each
  */
-test.beforeEach(() => { ... });
+test.beforeEach(() => { 
+    
+});
 ```
 * File
 ```js
