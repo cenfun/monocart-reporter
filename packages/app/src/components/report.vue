@@ -76,7 +76,7 @@
     </div>
 
     <div
-      v-if="state.tagList"
+      v-if="report.tagList"
       class="mcr-report-item"
     >
       <div class="mcr-report-head">
@@ -88,7 +88,7 @@
             icon="tag"
             :button="false"
           >
-            <b>Tags</b> <span class="mcr-num">{{ Util.NF(state.tagList.length) }}</span>
+            <b>Tags</b> <span class="mcr-num">{{ Util.NF(report.tagList.length) }}</span>
           </IconLabel>
           <div class="vui-flex-auto" />
           <a
@@ -108,7 +108,7 @@
           padding="10px"
         >
           <div
-            v-for="(item, i) in state.tagList"
+            v-for="(item, i) in report.tagList"
             :key="i"
             class="mcr-report-tag"
             @click="onTagClick(item)"
@@ -154,6 +154,61 @@
       </div>
       <div class="mcr-report-chart">
         <Timeline />
+
+        <VuiFlex
+          v-if="report.usageList"
+          gap="15px"
+          padding="5px 10px 0 10px"
+          wrap
+        >
+          <VuiFlex
+            v-for="(item, j) in report.usageList"
+            :key="j"
+            gap="5px"
+          >
+            <IconLabel
+              :icon="item.icon"
+              :button="false"
+              :style="'color:'+item.color"
+            >
+              <b>{{ item.name }}</b>
+            </IconLabel>
+            <div class="mcr-long-label">
+              {{ item.value }}
+            </div>
+          </VuiFlex>
+        </VuiFlex>
+
+        <VuiFlex
+          v-if="report.systemList"
+          gap="10px"
+          direction="column"
+          padding="10px"
+        >
+          <VuiFlex
+            v-for="(group, i) in report.systemList"
+            :key="i"
+            gap="15px"
+            wrap
+          >
+            <VuiFlex
+              v-for="(item, j) in group.list"
+              :key="j"
+              gap="5px"
+            >
+              <IconLabel
+                :icon="item.icon"
+                :button="false"
+                :style="'color:'+item.color"
+              >
+                <b>{{ item.name }}</b>
+              </IconLabel>
+              <div class="mcr-long-label">
+                {{ item.value }}
+              </div>
+            </VuiFlex>
+          </VuiFlex>
+        </VuiFlex>
       </div>
     </div>
 
@@ -173,14 +228,14 @@
       </div>
       <div class="mcr-report-chart">
         <VuiFlex
-          v-if="state.metadataList"
+          v-if="report.metadataList"
           gap="10px"
           padding="10px"
           class="mcr-report-metadata"
           wrap
         >
           <IconLabel
-            v-for="(item, i) in state.metadataList"
+            v-for="(item, i) in report.metadataList"
             :key="i"
             :icon="item.icon"
             :button="false"
@@ -266,6 +321,8 @@
 </template>
 
 <script setup>
+import { shallowReactive, watch } from 'vue';
+
 import { components } from 'vine-ui';
 import { saveAs } from 'file-saver';
 
@@ -280,6 +337,9 @@ import Pie from './pie.vue';
 import Timeline from './timeline.vue';
 
 const { VuiFlex } = components;
+
+const report = shallowReactive({
+});
 
 // ====================================================================================
 
@@ -360,13 +420,13 @@ const exportList = [{
         name: 'Tags',
         icon: 'item',
         getData: () => {
-            return state.tagList;
+            return report.tagList;
         }
     }, {
-        name: 'Workers',
+        name: 'Timelines',
         icon: 'item',
         getData: () => {
-            return state.workerList;
+            return state.timelineList;
         }
     }]
 }, {
@@ -414,6 +474,106 @@ const onExportClick = (item) => {
     const filename = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
     saveAs(blob, `${filename}.json`);
 };
+
+const timelineListHandler = () => {
+    const system = state.system;
+    const reportData = state.reportData;
+    report.usageList = [{
+        icon: 'cpu',
+        name: 'CPU',
+        value: `${system.cpu.model} (${system.cpu.count}T)`,
+        color: system.cpu.color
+    }, {
+        icon: 'memory',
+        name: 'Memory',
+        value: Util.BF(system.mem.total),
+        color: system.mem.color
+    }, {
+        icon: 'worker',
+        name: 'Workers',
+        value: `${Util.NF(state.workers)} (Max)`
+    }];
+
+    report.systemList = [{
+        list: [{
+            icon: 'cwd',
+            name: 'CWD',
+            value: system.cwd
+        }, {
+            icon: 'os',
+            name: 'OS',
+            value: `${system.version} (${system.arch})`
+        }, {
+            icon: 'host',
+            name: 'Host',
+            value: system.hostname
+        }]
+    }, {
+        list: [{
+            icon: 'config',
+            name: 'Config File',
+            value: reportData.configFile
+        }, {
+            icon: 'folder',
+            name: 'Test Dir',
+            value: reportData.testDir
+        }, {
+            icon: 'output',
+            name: 'Output Dir',
+            value: reportData.outputDir
+        }]
+    }];
+};
+
+const metadataHandler = () => {
+
+    const metadata = state.reportData.metadata;
+
+    const metadataList = Object.keys(metadata).map((k) => {
+        return {
+            icon: 'item-arrow',
+            name: k,
+            value: metadata[k]
+        };
+    }).filter((it) => {
+        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
+            return true;
+        }
+    });
+
+    if (metadataList.length) {
+        report.metadataList = metadataList;
+    }
+
+};
+
+const tagsHandler = () => {
+    const tags = state.reportData.tags;
+    // tags and style
+    const tagList = [];
+    Object.keys(tags).forEach((tag) => {
+        tagList.push({
+            name: tag,
+            ... tags[tag]
+        });
+    });
+
+    tagList.sort((a, b) => {
+        return b.value - a.value;
+    });
+
+    state.tagList = tagList;
+    state.tagMap = tags;
+};
+
+watch(() => state.reportData, (v) => {
+    if (v) {
+        tagsHandler();
+        timelineListHandler();
+        metadataHandler();
+
+    }
+});
 
 </script>
 <style lang="scss">

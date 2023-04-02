@@ -274,69 +274,20 @@ const stepHandler = (item) => {
     }
 };
 
-const tagsHandler = (tags) => {
-    // tags and style
-    const tagList = [];
-    Object.keys(tags).forEach((tag) => {
-        tagList.push({
-            name: tag,
-            ... tags[tag]
-        });
-    });
-
-    tagList.sort((a, b) => {
-        return b.value - a.value;
-    });
-
-    state.tagList = tagList;
-    state.tagMap = tags;
-};
-
-const metadataHandler = (metadata) => {
-
-    const metadataList = Object.keys(metadata).map((k) => {
-        return {
-            icon: 'item-arrow',
-            name: k,
-            value: metadata[k]
-        };
-    }).filter((it) => {
-        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
-            return true;
-        }
-    });
-
-    if (metadataList.length) {
-        state.metadataList = metadataList;
-    }
-
-};
-
-
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, tags, workers, system, metadata, pieChart
+        columns, rows, summary, workers, system, pieChart
     } = reportData;
 
     // init searchable info
     initSearchableColumns(columns);
-
-    // collect worker data list
-    const workerList = [];
 
     Util.forEachTree(rows, function(item) {
         item.selectable = true;
         if (item.type === 'case') {
             summary.tests.icon = 'case';
             caseHandler(item);
-            item.workers.forEach((w) => {
-                workerList.push({
-                    ... w,
-                    title: item.title,
-                    type: item.caseType
-                });
-            });
             return;
         }
         if (item.type === 'step') {
@@ -389,16 +340,9 @@ const initData = (reportData) => {
         ]
     }];
 
-    // tags
-    tagsHandler(tags);
-
-    // timeline
     state.system = system;
     // max works, default is 4
     state.workers = workers;
-    state.workerList = workerList;
-
-    metadataHandler(metadata);
 
 };
 

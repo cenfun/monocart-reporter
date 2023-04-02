@@ -1,189 +1,138 @@
 <template>
-  <div class="mcr-timeline-chart">
-    <svg
-      :viewBox="viewBox"
-      width="100%"
-      height="100%"
-      xmlns="http://www.w3.org/2000/svg"
-      @mouseleave="hidePopover"
-    >
-      <rect
-        :width="chart.width"
-        :height="chart.height"
-        fill="#fff"
-        fill-opacity="0"
-        @mousemove="onMouseMove($event)"
-      />
-      <g
-        pointer-events="none"
-        font-family="Verdana,Helvetica,sans-serif"
+  <div
+    class="mcr-timeline-chart"
+  >
+    <div>
+      <svg
+        :viewBox="viewBox"
+        width="100%"
+        height="100%"
+        xmlns="http://www.w3.org/2000/svg"
+        @mouseleave="hidePopover"
       >
-
+        <rect
+          :width="chart.width"
+          :height="chart.height"
+          fill="#fff"
+          fill-opacity="0"
+          @mousemove="onMouseMove($event)"
+        />
         <g
-          v-if="chart.workers"
-          class="mcr-timeline-workers"
+          pointer-events="none"
+          font-family="Verdana,Helvetica,sans-serif"
         >
-          <g
-            v-for="(item, i) in chart.workers"
-            :key="i"
-          >
-            <text
-              :x="chart.padding"
-              :y="item.y+item.height*0.5"
-              :fill="item.color"
-              alignment-baseline="middle"
-            >{{ item.name }}</text>
 
-            <g :transform="translate(item.x,item.y)">
-              <rect
-                :width="item.width"
-                :height="item.height"
-                fill="#ececec"
-              />
-              <path
-                v-for="(bar, j) in item.bars"
-                :key="j"
-                :d="bar.d"
-                :fill="bar.color"
-              />
+          <g
+            v-if="chart.workers"
+            class="mcr-timeline-workers"
+          >
+            <g
+              v-for="(item, i) in chart.workers"
+              :key="i"
+            >
+              <text
+                :x="chart.padding"
+                :y="item.y+item.height*0.5"
+                :fill="item.color"
+                alignment-baseline="middle"
+              >{{ item.name }}</text>
+
+              <g :transform="translate(item.x,item.y)">
+                <rect
+                  :width="item.width"
+                  :height="item.height"
+                  fill="#ececec"
+                />
+                <path
+                  v-for="(bar, j) in item.bars"
+                  :key="j"
+                  :d="bar.d"
+                  :fill="bar.color"
+                />
+              </g>
+
+            </g>
+          </g>
+
+          <g
+            v-if="chart.usage"
+            class="mcr-timeline-usage"
+          >
+            <g>
+              <text
+                v-for="(line, i) in chart.lines"
+                :key="i"
+                :x="chart.padding"
+                :y="line.y"
+                :fill="line.color"
+                alignment-baseline="middle"
+              >{{ line.name }}</text>
             </g>
 
-          </g>
-        </g>
-
-        <g
-          v-if="chart.usage"
-          class="mcr-timeline-usage"
-        >
-          <g>
-            <text
-              v-for="(line, i) in chart.lines"
-              :key="i"
-              :x="chart.padding"
-              :y="line.y"
-              :fill="line.color"
-              alignment-baseline="middle"
-            >{{ line.name }}</text>
-          </g>
-
-          <g :transform="translate(chart.usage.x,chart.usage.y)">
-            <path
-              :d="chart.grid.d"
-              :stroke="chart.grid.color"
-              fill="none"
-            />
-            <g
-              v-for="(line, j) in chart.lines"
-              :key="j"
-            >
+            <g :transform="translate(chart.usage.x,chart.usage.y)">
               <path
-                :d="line.dFill"
-                :fill="line.color"
-                fill-opacity="0.1"
-              />
-              <path
-                :d="line.dStroke"
-                :stroke="line.color"
+                :d="chart.grid.d"
+                :stroke="chart.grid.color"
                 fill="none"
               />
+              <g
+                v-for="(line, j) in chart.lines"
+                :key="j"
+              >
+                <path
+                  :d="line.dFill"
+                  :fill="line.color"
+                  fill-opacity="0.1"
+                />
+                <path
+                  :d="line.dStroke"
+                  :stroke="line.color"
+                  fill="none"
+                />
+              </g>
+              <g>
+                <circle
+                  v-for="(item, i) in chart.points"
+                  :key="i"
+                  :cx="item.x"
+                  :cy="item.y"
+                  :fill="item.color"
+                  r="3"
+                />
+              </g>
+
             </g>
-            <g>
-              <circle
-                v-for="(item, i) in chart.points"
-                :key="i"
-                :cx="item.x"
-                :cy="item.y"
-                :fill="item.color"
-                r="3"
+
+          </g>
+
+          <g v-if="chart.timeline">
+            <g :transform="translate(chart.timeline.x,chart.timeline.y)">
+              <path
+                :d="chart.timeline.d"
+                :stroke="chart.timeline.color"
               />
+              <text
+                v-for="(item, i) in chart.labels"
+                :key="i"
+                :x="item.x"
+                :y="item.y"
+                :text-anchor="item.anchor"
+                :fill="item.color"
+                alignment-baseline="middle"
+              >{{ item.name }}</text>
             </g>
-
           </g>
 
-        </g>
-
-        <g v-if="chart.timeline">
-          <g :transform="translate(chart.timeline.x,chart.timeline.y)">
+          <g v-if="chart.focus">
             <path
-              :d="chart.timeline.d"
-              :stroke="chart.timeline.color"
+              :d="chart.focus.d"
+              :stroke="chart.focus.color"
             />
-            <text
-              v-for="(item, i) in chart.labels"
-              :key="i"
-              :x="item.x"
-              :y="item.y"
-              :text-anchor="item.anchor"
-              :fill="item.color"
-              alignment-baseline="middle"
-            >{{ item.name }}</text>
           </g>
+
         </g>
-
-        <g v-if="chart.focus">
-          <path
-            :d="chart.focus.d"
-            :stroke="chart.focus.color"
-          />
-        </g>
-
-      </g>
-    </svg>
-
-    <VuiFlex
-      v-if="chart.legendList"
-      gap="15px"
-      padding="5px 10px 0 10px"
-      wrap
-    >
-      <VuiFlex
-        v-for="(item, j) in chart.legendList"
-        :key="j"
-        gap="5px"
-      >
-        <IconLabel
-          :icon="item.icon"
-          :button="false"
-          :style="'color:'+item.color"
-        >
-          <b>{{ item.name }}</b>
-        </IconLabel>
-        <div class="mcr-long-label">
-          {{ item.value }}
-        </div>
-      </VuiFlex>
-    </VuiFlex>
-
-    <VuiFlex
-      v-if="chart.systemList"
-      gap="10px"
-      direction="column"
-      padding="10px"
-    >
-      <VuiFlex
-        v-for="(group, i) in chart.systemList"
-        :key="i"
-        gap="15px"
-        wrap
-      >
-        <VuiFlex
-          v-for="(item, j) in group.list"
-          :key="j"
-          gap="5px"
-        >
-          <IconLabel
-            :icon="item.icon"
-            :button="false"
-            :style="'color:'+item.color"
-          >
-            <b>{{ item.name }}</b>
-          </IconLabel>
-          <div class="mcr-long-label">
-            {{ item.value }}
-          </div>
-        </VuiFlex>
-      </VuiFlex>
-    </VuiFlex>
+      </svg>
+    </div>
 
     <VuiPopover
       ref="popover"
@@ -425,11 +374,28 @@ watch(() => pd.target, () => {
 
 // =========================================================================================
 
-const workersHandler = () => {
+const workerListHandler = () => {
 
     const system = state.system;
     const summary = state.summary;
-    const workerList = state.workerList;
+    const rows = state.reportData.rows;
+
+    // collect worker data list
+    const workerList = [];
+    Util.forEachTree(rows, function(item) {
+        item.selectable = true;
+        if (item.type === 'case') {
+            item.workers.forEach((w) => {
+                workerList.push({
+                    ... w,
+                    title: item.title,
+                    type: item.caseType
+                });
+            });
+        }
+    });
+
+    console.log(workerList);
 
     // sort by timestamp
     workerList.sort((a, b) => {
@@ -519,6 +485,8 @@ const workersHandler = () => {
         item.name = `Worker ${(item.index + 1)}`;
         barY += height + chart.gap;
     });
+
+    console.log(workers);
 
     chart.workers = workers;
 
@@ -693,65 +661,28 @@ const timelineHandler = () => {
     chart.height = y + height + padding;
 };
 
-const legendsHandler = () => {
-    const system = state.system;
-    const reportData = state.reportData;
-    chart.legendList = [{
-        icon: 'cpu',
-        name: 'CPU',
-        value: `${system.cpu.model} (${system.cpu.count}T)`,
-        color: system.cpu.color
-    }, {
-        icon: 'memory',
-        name: 'Memory',
-        value: Util.BF(system.mem.total),
-        color: system.mem.color
-    }, {
-        icon: 'worker',
-        name: 'Workers',
-        value: `${Util.NF(state.workers)} (Max)`
-    }];
+const generateTimelineChart = (timelineList) => {
+    // console.log(timelineList);
 
-    chart.systemList = [{
-        list: [{
-            icon: 'cwd',
-            name: 'CWD',
-            value: system.cwd
-        }, {
-            icon: 'os',
-            name: 'OS',
-            value: `${system.version} (${system.arch})`
-        }, {
-            icon: 'host',
-            name: 'Host',
-            value: system.hostname
-        }]
-    }, {
-        list: [{
-            icon: 'config',
-            name: 'Config File',
-            value: reportData.configFile
-        }, {
-            icon: 'folder',
-            name: 'Test Dir',
-            value: reportData.testDir
-        }, {
-            icon: 'output',
-            name: 'Output Dir',
-            value: reportData.outputDir
-        }]
-    }];
+
+};
+
+const getTimelineList = () => {
+
+
+    workerListHandler();
+
+    usageHandler();
+
+    timelineHandler();
+
 };
 
 watch(() => state.system, (v) => {
-    if (!v) {
-        return;
+    if (v) {
+        const timelineList = getTimelineList();
+        state.timelineChart = generateTimelineChart(timelineList);
     }
-
-    workersHandler();
-    usageHandler();
-    timelineHandler();
-    legendsHandler();
 
 });
 
