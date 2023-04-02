@@ -277,7 +277,7 @@ const stepHandler = (item) => {
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, system, pieChart
+        columns, rows, summary, system, pieChart, tags
     } = reportData;
 
     // init searchable info
@@ -302,6 +302,7 @@ const initData = (reportData) => {
     });
 
     state.caseMap = caseMap;
+    state.tagMap = tags;
 
     // summary.failed.value = 0;
     // summary.flaky.value = 0;

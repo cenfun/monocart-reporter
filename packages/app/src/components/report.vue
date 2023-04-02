@@ -417,16 +417,16 @@ const exportList = [{
             return state.reportData.summary;
         }
     }, {
+        name: 'Pie Chart',
+        icon: 'item',
+        getData: () => {
+            return state.pieChart;
+        }
+    }, {
         name: 'Tags',
         icon: 'item',
         getData: () => {
             return report.tagList;
-        }
-    }, {
-        name: 'Timelines',
-        icon: 'item',
-        getData: () => {
-            return state.timelineList;
         }
     }]
 }, {
@@ -475,7 +475,7 @@ const onExportClick = (item) => {
     saveAs(blob, `${filename}.json`);
 };
 
-const timelineListHandler = () => {
+const timelineHandler = () => {
     const system = state.system;
     const reportData = state.reportData;
     report.usageList = [{
@@ -548,13 +548,13 @@ const metadataHandler = () => {
 };
 
 const tagsHandler = () => {
-    const tags = state.reportData.tags;
+    const tagMap = state.tagMap;
     // tags and style
     const tagList = [];
-    Object.keys(tags).forEach((tag) => {
+    Object.keys(tagMap).forEach((tag) => {
         tagList.push({
             name: tag,
-            ... tags[tag]
+            ... tagMap[tag]
         });
     });
 
@@ -562,14 +562,14 @@ const tagsHandler = () => {
         return b.value - a.value;
     });
 
-    state.tagList = tagList;
-    state.tagMap = tags;
+    report.tagList = tagList;
+
 };
 
 watch(() => state.reportData, (v) => {
     if (v) {
         tagsHandler();
-        timelineListHandler();
+        timelineHandler();
         metadataHandler();
 
     }
