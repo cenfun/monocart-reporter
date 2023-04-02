@@ -258,7 +258,7 @@ test.beforeEach(() => {
 * File
 ```js
 /**
- * add extra information for file from first line 
+ * add extra information for file in the first line 
  * @owner FO
  */
 const { test, expect } = require('@playwright/test');
@@ -415,7 +415,7 @@ module.exports = {
 ![](/docs/testrail.png)
 
 ## Slack Integration
-1. Simply send message with @slack/webhook [slack-webhook.js](/tests/common/slack-webhook.js)
+1. Simply send message with @slack/webhook, example: [slack-webhook.js](/tests/common/slack-webhook.js)
 ```js
 // playwright.config.js
 module.exports = {
@@ -431,7 +431,7 @@ module.exports = {
     ]
 };
 ```
-2. Post chat message or upload report file with @slack/web-api [slack-web-api.js](/tests/common/slack-web-api.js)
+2. Post chat message or upload report file with @slack/web-api, example: [slack-web-api.js](/tests/common/slack-web-api.js)
 ### Preview in Slack
 ![](/docs/slack-webhook.png)
 
