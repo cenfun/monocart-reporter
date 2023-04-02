@@ -105,11 +105,11 @@
 
           </g>
 
-          <g v-if="chart.timeline">
-            <g :transform="translate(chart.timeline.x,chart.timeline.y)">
+          <g v-if="chart.axis">
+            <g :transform="translate(chart.axis.x,chart.axis.y)">
               <path
-                :d="chart.timeline.d"
-                :stroke="chart.timeline.color"
+                :d="chart.axis.d"
+                :stroke="chart.axis.color"
               />
               <text
                 v-for="(item, i) in chart.labels"
@@ -306,7 +306,7 @@ const onMouseMoveSync = (e) => {
     const pxFixed = Util.pxFixed;
 
     const padding = chart.padding;
-    const height = chart.timelineY - padding;
+    const height = chart.axisY - padding;
 
     chart.focus = {
         d: `M${point(pxFixed(vx), padding)}v${height}`,
@@ -378,13 +378,11 @@ const workerListHandler = () => {
 
     const system = state.system;
     const summary = state.summary;
-
-    // collect worker data list
-    const allWorkers = state.reportData.workers;
-    // console.log(allWorkers);
+    const jobs = state.reportData.jobs;
+    // console.log(jobs);
 
     // init worker title and type
-    allWorkers.forEach((item) => {
+    jobs.forEach((item) => {
         const caseItem = state.caseMap[item.caseId];
         if (caseItem) {
             item.caseType = caseItem.caseType;
@@ -393,7 +391,7 @@ const workerListHandler = () => {
     });
 
     // sort by timestamp
-    allWorkers.sort((a, b) => {
+    jobs.sort((a, b) => {
         if (a.timestamp === b.timestamp) {
             return a.parallelIndex - b.parallelIndex;
         }
@@ -415,9 +413,8 @@ const workerListHandler = () => {
 
     // group by parallelIndex
     const workerGroups = new Map();
-    allWorkers.forEach((item) => {
+    jobs.forEach((item) => {
         const index = item.parallelIndex;
-
         let group = workerGroups.get(index);
         if (!group) {
             group = {
@@ -607,7 +604,7 @@ const usageHandler = () => {
 
 };
 
-const timelineHandler = () => {
+const axisHandler = () => {
 
     const system = state.system;
     const time_start = system.timestampStart;
@@ -624,13 +621,13 @@ const timelineHandler = () => {
     const x = padding;
     const y = chart.height;
 
-    chart.timelineY = y;
+    chart.axisY = y;
 
     const labelX = left - padding;
 
     const d = `M${point(0.5, 0.5)}h${width} M${point(pxFixed(labelX), 0.5)}v10 M${point(pxFixed(width), 0)}v10`;
 
-    chart.timeline = {
+    chart.axis = {
         x,
         y,
         d,
@@ -654,29 +651,16 @@ const timelineHandler = () => {
     chart.height = y + height + padding;
 };
 
-const generateTimelineChart = (timelineList) => {
-    // console.log(timelineList);
-
-
-};
-
-const getTimelineList = () => {
-
-
+const initTimelineData = () => {
     workerListHandler();
-
     usageHandler();
-
-    timelineHandler();
-
+    axisHandler();
 };
 
 watch(() => state.system, (v) => {
     if (v) {
-        const timelineList = getTimelineList();
-        state.timelineChart = generateTimelineChart(timelineList);
+        initTimelineData();
     }
-
 });
 
 </script>
