@@ -23,11 +23,11 @@
         >
 
           <g
-            v-if="chart.workers"
+            v-if="chart.workerList"
             class="mcr-timeline-workers"
           >
             <g
-              v-for="(item, i) in chart.workers"
+              v-for="(item, i) in chart.workerList"
               :key="i"
             >
               <text
@@ -156,7 +156,7 @@
         >
           <VuiFlex gap="5px">
             <IconLabel
-              :icon="item.type"
+              :icon="item.caseType"
               :button="false"
               size="20px"
             />
@@ -328,7 +328,7 @@ const onMouseMove = microtask(onMouseMoveSync);
 
 const findResults = (timestamp) => {
     const results = [];
-    chart.workers.forEach((item) => {
+    chart.workerList.forEach((item) => {
         const result = item.list.find((it) => {
             if (timestamp >= it.timestamp && timestamp <= it.timestamp + it.duration) {
                 return true;
@@ -378,27 +378,22 @@ const workerListHandler = () => {
 
     const system = state.system;
     const summary = state.summary;
-    const rows = state.reportData.rows;
 
     // collect worker data list
-    const workerList = [];
-    Util.forEachTree(rows, function(item) {
-        item.selectable = true;
-        if (item.type === 'case') {
-            item.workers.forEach((w) => {
-                workerList.push({
-                    ... w,
-                    title: item.title,
-                    type: item.caseType
-                });
-            });
+    const allWorkers = state.reportData.workers;
+    // console.log(allWorkers);
+
+    // init worker title and type
+    allWorkers.forEach((item) => {
+        const caseItem = state.caseMap[item.caseId];
+        if (caseItem) {
+            item.caseType = caseItem.caseType;
+            item.title = caseItem.title;
         }
     });
 
-    console.log(workerList);
-
     // sort by timestamp
-    workerList.sort((a, b) => {
+    allWorkers.sort((a, b) => {
         if (a.timestamp === b.timestamp) {
             return a.parallelIndex - b.parallelIndex;
         }
@@ -419,21 +414,21 @@ const workerListHandler = () => {
     const height = 20;
 
     // group by parallelIndex
-    const map = new Map();
-    workerList.forEach((item) => {
-        const pi = item.parallelIndex;
+    const workerGroups = new Map();
+    allWorkers.forEach((item) => {
+        const index = item.parallelIndex;
 
-        let data = map.get(pi);
-        if (!data) {
-            data = {
-                index: pi,
+        let group = workerGroups.get(index);
+        if (!group) {
+            group = {
+                index,
                 width,
                 height,
                 list: [],
                 // failed, passed ...
                 types: {}
             };
-            map.set(pi, data);
+            workerGroups.set(index, group);
         }
 
         // console.log(item);
@@ -441,17 +436,17 @@ const workerListHandler = () => {
         const x = (item.timestamp - time_start) / duration * width;
         const w = item.duration / duration * width;
 
-        data.list.push({
+        group.list.push({
             ... item,
             x,
             w
         });
 
         // bar type d list
-        let ds = data.types[item.type];
+        let ds = group.types[item.caseType];
         if (!ds) {
             ds = [];
-            data.types[item.type] = ds;
+            group.types[item.caseType] = ds;
         }
 
         // min width 1px
@@ -460,17 +455,17 @@ const workerListHandler = () => {
 
     });
 
-    const workers = [];
-    map.forEach((item, k) => {
-        workers.push(item);
+    const workerList = [];
+    workerGroups.forEach((group) => {
+        workerList.push(group);
     });
 
-    workers.sort((a, b) => {
+    workerList.sort((a, b) => {
         return a.index - b.index;
     });
 
     let barY = padding;
-    workers.forEach((item, i) => {
+    workerList.forEach((item, i) => {
         item.bars = Object.keys(item.types).map((type) => {
             return {
                 d: item.types[type].join(' '),
@@ -486,9 +481,7 @@ const workerListHandler = () => {
         barY += height + chart.gap;
     });
 
-    console.log(workers);
-
-    chart.workers = workers;
+    chart.workerList = workerList;
 
     chart.height = barY;
 };

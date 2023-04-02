@@ -277,17 +277,20 @@ const stepHandler = (item) => {
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, workers, system, pieChart
+        columns, rows, summary, system, pieChart
     } = reportData;
 
     // init searchable info
     initSearchableColumns(columns);
+
+    const caseMap = {};
 
     Util.forEachTree(rows, function(item) {
         item.selectable = true;
         if (item.type === 'case') {
             summary.tests.icon = 'case';
             caseHandler(item);
+            caseMap[item.caseId] = item;
             return;
         }
         if (item.type === 'step') {
@@ -297,6 +300,8 @@ const initData = (reportData) => {
         }
         summary.suites.icon = 'suite';
     });
+
+    state.caseMap = caseMap;
 
     // summary.failed.value = 0;
     // summary.flaky.value = 0;
@@ -341,8 +346,6 @@ const initData = (reportData) => {
     }];
 
     state.system = system;
-    // max works, default is 4
-    state.workers = workers;
 
 };
 

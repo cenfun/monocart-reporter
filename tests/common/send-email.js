@@ -28,7 +28,6 @@ module.exports = async (reportData, capacity) => {
                     <li>Env: STG</li>
                     <li>Type: Smoke</li>
                     <li>Url: ${reportData.metadata.url}</li>
-                    <li>Workers: ${capacity.config.workers}</li>
                     <li>Date: ${reportData.dateH}</li>
                     <li>Duration: ${reportData.durationH}</li>
                 </ul>

@@ -491,7 +491,7 @@ const timelineListHandler = () => {
     }, {
         icon: 'worker',
         name: 'Workers',
-        value: `${Util.NF(state.workers)} (Max)`
+        value: `${Util.NF(system.workers)} (Max)`
     }];
 
     report.systemList = [{
