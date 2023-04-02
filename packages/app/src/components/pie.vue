@@ -5,17 +5,24 @@
     gap="20px"
   >
     <div
+      :style="pieStyle(state.pieChart)"
       @click="onPieClick($event)"
       v-html="state.pieChart.svg"
     />
   </VuiFlex>
 </template>
 <script setup>
-
 import { components } from 'vine-ui';
 import state from '../modules/state.js';
 
 const { VuiFlex } = components;
+
+const pieStyle = (pieChart) => {
+    return {
+        width: `${pieChart.width}px`,
+        height: `${pieChart.height}px`
+    };
+};
 
 const onPieClick = (e) => {
 
