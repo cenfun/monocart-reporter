@@ -8,6 +8,7 @@ const state = shallowReactive({
     playwright: '',
     monocart: `Monocart Reporter v${window.VERSION}`,
     summary: {},
+    charts: {},
 
     // filter
     keywords: '',

@@ -22,7 +22,7 @@ module.exports = {
     // test flaky case
     retries: 1,
 
-    // testDir: '../tests/example/',
+    testDir: '../tests/example/',
 
     // testDir: '../tests/home-page/',
 

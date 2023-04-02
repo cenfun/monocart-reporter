@@ -5,23 +5,16 @@
   >
     <div
       @click="onPieClick($event)"
-      v-html="data.pie"
+      v-html="state.charts.pie"
     />
   </VuiFlex>
 </template>
 <script setup>
-import {
-    onMounted, watch, reactive
-} from 'vue';
+
 import { components } from 'vine-ui';
 import state from '../modules/state.js';
 
-import { generatePie } from '../utils/chart.js';
-
 const { VuiFlex } = components;
-
-const data = reactive({});
-
 
 const onPieClick = (e) => {
 
@@ -31,7 +24,7 @@ const onPieClick = (e) => {
     }
 
     const cls = g.getAttribute('class');
-    if (!cls || !cls.startsWith('mcr-pie-')) {
+    if (!cls || !cls.startsWith('mcr-pie-path-')) {
         return;
     }
 
@@ -54,28 +47,6 @@ const onPieClick = (e) => {
     at.beginElement();
 
 };
-
-
-const renderChart = () => {
-
-    if (!Array.isArray(state.pieList)) {
-        return;
-    }
-
-    data.pie = generatePie({
-        list: state.pieList
-    });
-
-};
-
-
-onMounted(() => {
-    renderChart();
-});
-
-watch(() => state.pieList, (v) => {
-    renderChart();
-});
 
 </script>
 <style lang="scss">

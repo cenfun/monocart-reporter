@@ -316,7 +316,7 @@ const metadataHandler = (metadata) => {
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, tags, workers, system, metadata
+        columns, rows, summary, tags, workers, system, metadata, charts
     } = reportData;
 
     // init searchable info
@@ -366,13 +366,7 @@ const initData = (reportData) => {
 
     // pie chart
     state.pieHeads = [summary.tests, summary.suites, summary.steps];
-
-    const pieList = navList.filter((it) => it.id !== 'tests').map((item) => {
-        return {
-            ... item
-        };
-    });
-    state.pieList = pieList;
+    state.charts = charts;
 
     // pie chart related
     state.amounts = [{
