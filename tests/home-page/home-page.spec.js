@@ -1,4 +1,6 @@
-const { test, expect } = require('@playwright/test');
+const {
+    test, expect, request
+} = require('@playwright/test');
 const EC = require('eight-colors');
 
 // POM Page Object Model
@@ -73,6 +75,23 @@ test('test without custom steps', async ({ page }, testInfo) => {
     const locator = page.locator('input[type="search"]');
     await locator.fill('Text content');
     await expect(locator).toHaveValue('Text content');
+
+
+});
+
+test('secrets and sensitive data', async ({ page }, testInfo) => {
+    await page.goto('https://www.npmjs.com/login');
+    await page.locator('input[type=password]').type(process.env.LOGIN_PASSWORD);
+
+    const screenshot = await page.screenshot();
+    await testInfo.attach('screenshot', {
+        body: screenshot,
+        contentType: 'image/png'
+    });
+
+    const context = await request.newContext();
+    await context.get(`https://api.npmjs.org/?token=${process.env.API_TOKEN}`);
+
 });
 
 // https://playwright.dev/docs/api/class-test#test-step

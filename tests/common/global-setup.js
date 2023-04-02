@@ -1,5 +1,10 @@
 import { chromium } from '@playwright/test';
+const dotenv = require('dotenv');
 export default async (config) => {
+
+    // https://github.com/motdotla/dotenv
+    dotenv.config();
+
     const metadata = config.metadata;
 
     // if (metadata.baseURL) {

@@ -24,6 +24,8 @@ module.exports = {
 
     // testDir: '../tests/example/',
 
+    // testDir: '../tests/home-page/',
+
     projects: [
         // {
         //     name: 'Desktop Firefox',
@@ -156,6 +158,26 @@ module.exports = {
                 if (comments) {
                     Object.assign(data, comments);
                 }
+
+                // remove secrets and sensitive data from report
+                if (data.type === 'step') {
+
+                    // step title before:
+                    // locator.type(input[type=password], mysecretpassword)
+                    // apiRequestContext.get(https://api.npmjs.org/?token=myapitoken)
+
+                    const mySecrets = [process.env.LOGIN_PASSWORD, process.env.API_TOKEN];
+                    mySecrets.forEach((secret) => {
+                        data.title = data.title.replace(secret, '***');
+                    });
+
+                    // step title after:
+                    // locator.type(input[type=password], ***)
+                    // apiRequestContext.get(https://api.npmjs.org/?token=***)
+
+                }
+
+
             },
 
             // async hook after report data generated

@@ -11,7 +11,8 @@
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Custom [Columns and Formatters](#columns-and-formatter) (extra information for suite/case/step)
 * Custom [Data Collection Visitor](#data-collection-visitor)
-* [Collect Data from Comments](#adding-comments-to-your-tests) (similar to JsDoc)
+    - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
+    - [Remove Secrets and Sensitive Data from Report](#remove-secrets-and-sensitive-data-from-report)
 * Output Report Data and Summary (json)
 * Console Logs in Order (log/error/warn/debug/info)
 * Export Data (json)
@@ -163,6 +164,7 @@ module.exports = {
 ```
 
 ## Data Collection Visitor
+[Collect Data from Comments](#adding-comments-to-your-tests) (similar to JsDoc)
 ```js
 // playwright.config.js
 module.exports = {
@@ -170,7 +172,6 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
                 // auto collect data from comments
@@ -183,8 +184,7 @@ module.exports = {
     ]
 };
 ```
-
-## Adding Comments to Your Tests
+### Adding Comments to Your Tests
 > Compared to importing external libraries and calling its interface, Comments is a better way, no dependence, cleaner, easy to read, and never break the existing code.
 * Case
 ```js
@@ -277,6 +277,36 @@ module.exports = {
         }
     ]
 };  
+```
+### Remove Secrets and Sensitive Data from Report
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            visitor: (data, metadata, collect) => {
+                // remove secrets and sensitive data from reporter
+                if (data.type === 'step') {
+
+                    // step title before:
+                    // locator.type(input[type=password], mysecretpassword)
+                    // apiRequestContext.get(https://api.npmjs.org/?token=myapitoken)
+
+                    const mySecrets = [process.env.LOGIN_PASSWORD, process.env.API_TOKEN];
+                    mySecrets.forEach((secret) => {
+                        data.title = data.title.replace(secret, '***');
+                    });
+
+                    // step title after:
+                    // locator.type(input[type=password], ***)
+                    // apiRequestContext.get(https://api.npmjs.org/?token=***)
+                }
+            }
+        }]
+    ]
+};
 ```
 
 ## Style Tags

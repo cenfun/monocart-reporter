@@ -1,15 +1,13 @@
 const path = require('path');
 const { WebClient } = require('@slack/web-api');
 const EC = require('eight-colors');
-const dotenv = require('dotenv');
+
 module.exports = async (reportData, capacity) => {
 
     // send notifications to a single channel which the user picks on installation
     // Sending messages using Incoming Webhooks: https://api.slack.com/messaging/webhooks
 
     // do not store your slack token in the source code, but pass your slack token from environment variables
-    // https://github.com/motdotla/dotenv
-    dotenv.config();
     const token = process.env.SLACK_TOKEN;
     const web = new WebClient(token);
 
