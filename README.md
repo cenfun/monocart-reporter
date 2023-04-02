@@ -12,7 +12,7 @@
 * Custom [Columns and Formatters](#columns-and-formatter) (extra information for suite/case/step)
 * Custom [Data Collection Visitor](#data-collection-visitor)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
-    - [Remove Secrets and Sensitive Data from Report](#remove-secrets-and-sensitive-data-from-report)
+    - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
 * Output Report Data and Summary (json)
 * Console Logs in Order (log/error/warn/debug/info)
 * Export Data (json)
@@ -278,7 +278,7 @@ module.exports = {
     ]
 };  
 ```
-### Remove Secrets and Sensitive Data from Report
+### Removing Secrets and Sensitive Data from Report
 ```js
 // playwright.config.js
 module.exports = {
