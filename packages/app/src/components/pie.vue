@@ -1,11 +1,12 @@
 <template>
   <VuiFlex
+    v-if="state.pieChart"
     class="mcr-pie-chart"
     gap="20px"
   >
     <div
       @click="onPieClick($event)"
-      v-html="state.pieChart"
+      v-html="state.pieChart.svg"
     />
   </VuiFlex>
 </template>
