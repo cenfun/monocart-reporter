@@ -5,7 +5,7 @@
 
 const { test, expect } = require('@playwright/test');
 const { delay } = require('../common/util.js');
-const { TF } = require('../../lib/utils/util.js');
+const { TF, parseComments } = require('../../lib/utils/util.js');
 
 /**
  * add extra information for case
@@ -14,11 +14,14 @@ const { TF } = require('../../lib/utils/util.js');
  * @testrail 2125
  */
 test('test util time format', () => {
+
+    // @title expect(TF(0)).toBe('0ms');
     expect(TF(0)).toBe('0ms');
     expect(TF(100)).toBe('100ms');
     expect(TF(1000)).toBe('1s');
     expect(TF(1100)).toBe('1.1s');
 
+    // @title expect(TF(21100)).toBe('21.1s');
     expect(TF(21100)).toBe('21.1s');
 
     expect(TF(61100)).toBe('1m 1s');
@@ -29,12 +32,41 @@ test('test util time format', () => {
     expect(TF(3601000)).toBe('1h 0m 1s');
     expect(TF(3700100)).toBe('1h 1m 40s');
 
+    // @title expect(TF(12 * 3601000)).toBe('12h 0m 12s');
     expect(TF(12 * 3601000)).toBe('12h 0m 12s');
 
     expect(TF(24 * 3601000)).toBe('1d 0h 0m 24s');
     expect(TF(60 * 24 * 3601000)).toBe('60d 0h 24m 0s');
 
     expect(new Date(60 * 24 * 3601000).toISOString()).toBe('1970-03-02T00:24:00.000Z');
+});
+
+test('test util parseComments', () => {
+    const str = `/**
+
+    * add extra information * for case 
+    // @single single line value
+    * @comments multiple lines comments
+    multiple lines comments @user_name Mark
+    * @owner Kevin * Tom 
+    * @jira MCR-16888 MCR-16889 
+    ** @testrail 2125
+    **/`;
+
+    const parsed = parseComments(str);
+
+    // @title parsed comments length 6
+    expect(Object.keys(parsed).length).toBe(6);
+
+    expect(parsed.single).toBe('single line value');
+
+    // @title multiple lines comments
+    expect(parsed.comments).toBe('multiple lines comments\n    multiple lines comments');
+    expect(parsed.user_name).toBe('Mark');
+    expect(parsed.owner).toBe('Kevin * Tom');
+    expect(parsed.jira).toBe('MCR-16888 MCR-16889');
+    expect(parsed.testrail).toBe('2125');
+
 });
 
 /**
@@ -222,9 +254,9 @@ test.describe('suite group 2', () => {
 
     });
 
-    test('timeout 3000', async () => {
-        test.setTimeout(3000);
-        await delay(10 * 1000);
+    test('test timeout 1000', async () => {
+        test.setTimeout(1000);
+        await delay(2000);
     });
 
     test('@smoke @fast one', () => {
