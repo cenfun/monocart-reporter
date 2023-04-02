@@ -449,7 +449,7 @@ const initTooltip = () => {
     });
 };
 
-const updateSize = () => {
+const initFlyoverSize = () => {
     state.windowWidth = window.innerWidth;
 
     let flyoverWidth = '60%';
@@ -490,7 +490,7 @@ onMounted(() => {
 
     initStore();
 
-    updateSize();
+    initFlyoverSize();
 
     createGrid();
 
@@ -543,7 +543,10 @@ window.addEventListener('popstate', (e) => {
 });
 
 window.addEventListener('resize', () => {
-    updateSize();
+    state.windowWidth = window.innerWidth;
+    if (state.windowWidth < 600) {
+        state.flyoverWidth = '100%';
+    }
 });
 
 window.addEventListener('keydown', (e) => {
