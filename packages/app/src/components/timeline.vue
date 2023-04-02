@@ -428,6 +428,7 @@ watch(() => pd.target, () => {
 const workersHandler = () => {
 
     const system = state.system;
+    const summary = state.summary;
     const workerList = state.workerList;
 
     // sort by timestamp
@@ -507,7 +508,7 @@ const workersHandler = () => {
         item.bars = Object.keys(item.types).map((type) => {
             return {
                 d: item.types[type].join(' '),
-                color: state.colors[type]
+                color: summary[type].color
             };
         });
         item.x = left;

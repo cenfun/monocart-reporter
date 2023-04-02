@@ -3,68 +3,10 @@
     class="mcr-pie-chart"
     gap="20px"
   >
-    <svg
-      :viewBox="data.viewBox"
-      width="100%"
-      height="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle
-        v-if="data.bg"
-        cx="50%"
-        cy="50%"
-        :r="data.bg.r"
-        :fill="data.bg.color"
-      />
-      <g
-        v-for="(item, i) in data.list"
-        :key="i"
-        :class="'mcr-pie-'+item.id"
-      >
-        <path
-          :d="item.d"
-          :fill="item.color"
-          @click="onPieAnimate(item)"
-        />
-        <animateTransform
-          :class="'mcr-transform-'+item.id"
-          attributeName="transform"
-          type="translate"
-          :from="item.from"
-          :to="item.to"
-          dur="0.2s"
-          fill="freeze"
-          repeatCount="1"
-          restart="always"
-        />
-      </g>
-    </svg>
-    <VuiFlex
-      direction="column"
-      gap="10px"
-      class="mcr-pie-legend"
-    >
-      <VuiFlex
-        v-for="(item, i) in data.list"
-        :key="i"
-        :class="'mcr-legend-'+item.id"
-        gap="10px"
-        @click="onPieAnimate(item)"
-      >
-        <div
-          class="mcr-legend-icon"
-          :style="'background:'+item.color"
-        />
-        <div class="mcr-legend-name">
-          {{ item.name }}
-        </div>
-        <div class="vui-flex-auto" />
-        <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-        <div class="mcr-legend-percent">
-          {{ item.percent }}
-        </div>
-      </VuiFlex>
-    </VuiFlex>
+    <div
+      @click="onPieClick($event)"
+      v-html="data.pie"
+    />
   </VuiFlex>
 </template>
 <script setup>
@@ -73,141 +15,59 @@ import {
 } from 'vue';
 import { components } from 'vine-ui';
 import state from '../modules/state.js';
-import Util from '../utils/util.js';
-import { nextTick } from 'process';
+
+import { generatePie } from '../utils/chart.js';
 
 const { VuiFlex } = components;
 
-const data = reactive({
-    size: 100,
-    margin: 10,
-    viewBox: '0 0 100 100',
-    list: []
-});
+const data = reactive({});
 
-const onPieAnimate = (item) => {
 
-    if (item.to === '0,0') {
-        item.from = '0,0';
-        item.to = item.pos;
-    } else {
-        item.from = item.pos;
-        item.to = '0,0';
-    }
+const onPieClick = (e) => {
 
-    nextTick(() => {
-        const $transform = document.querySelector(`.mcr-transform-${item.id}`);
-        if ($transform) {
-            $transform.beginElement();
-        }
-    });
-
-};
-
-const renderChart = () => {
-    const pieList = state.pieList;
-    if (!pieList) {
+    const g = e.target.parentNode;
+    if (!g) {
         return;
     }
 
-    data.list = [];
+    const cls = g.getAttribute('class');
+    if (!cls || !cls.startsWith('mcr-pie-')) {
+        return;
+    }
 
-    const x = data.size / 2;
-    const y = data.size / 2;
-    const r = data.size / 2 - data.margin;
+    const at = g.querySelector('animateTransform');
+    if (!at) {
+        return;
+    }
 
-    // start from 12 clock
-    let start = 0.75;
-    pieList.forEach((item, i) => {
+    const to = at.getAttribute('to');
+    const pos = at.getAttribute('pos');
 
-        const from = 2 * Math.PI * start;
-        const percent = parseFloat(item.percent) / 100 + start;
-        const till = 2 * Math.PI * percent;
-        start = percent;
+    if (to === '0,0') {
+        at.setAttribute('from', '0,0');
+        at.setAttribute('to', pos);
+    } else {
+        at.setAttribute('from', pos);
+        at.setAttribute('to', '0,0');
+    }
 
-        const d = getSectorPath(x, y, r, from, till);
-        const pos = getMovePos(data.margin, from, till);
-        // console.log(pos);
+    at.beginElement();
 
-        data.list.push({
-            id: item.id,
-            name: item.name,
-            value: item.value,
-            color: item.color,
-            percent: item.percent,
-            from: '0,0',
-            to: '0,0',
-            pos,
-            d
-        });
+};
 
+
+const renderChart = () => {
+
+    if (!Array.isArray(state.pieList)) {
+        return;
+    }
+
+    data.pie = generatePie({
+        list: state.pieList
     });
 
-    // draw nothing bg
-    const total = pieList.map((item) => item.value).reduce((a, v) => a + v, 0);
-    if (total === 0) {
-        data.bg = {
-            r,
-            color: '#f5f5f5'
-        };
-    }
-
 };
 
-const getSectorPath = function(x, y, r, from, till) {
-    if (from === till) {
-        return '';
-    }
-
-    const ds = [];
-
-    const point = Util.point;
-
-    // move to start point
-    ds.push(`M${point(x, y)}`);
-
-    // line to outer start point
-    const osx = Math.cos(from) * r + x;
-    const osy = Math.sin(from) * r + y;
-    ds.push(`L${point(osx, osy)}`);
-
-    const getLarge = (v) => {
-        return v < Math.PI ? 0 : 1;
-    };
-
-    // 360 is a circle
-    const radius = till - from;
-    if (radius >= Math.PI * 2) {
-        // draw two arc
-        const tillM = from + radius * 0.5;
-        const omx = Math.cos(tillM) * r + x;
-        const omy = Math.sin(tillM) * r + y;
-        ds.push(`A${point(r, r)} 0 ${getLarge(tillM - from)} 1 ${point(omx, omy)}`);
-
-        // next arc
-        const oex = Math.cos(till) * r + x;
-        const oey = Math.sin(till) * r + y;
-        ds.push(`A${point(r, r)} 0 ${getLarge(till - tillM)} 1 ${point(oex, oey)}`);
-
-    } else {
-        // small than 360
-        // arc to outer end point
-        const oex = Math.cos(till) * r + x;
-        const oey = Math.sin(till) * r + y;
-        ds.push(`A${point(r, r)} 0 ${getLarge(radius)} 1 ${point(oex, oey)}`);
-    }
-    // close
-    ds.push('z');
-
-    return ds.join(' ');
-};
-
-const getMovePos = (margin, from, till) => {
-    const center = from + (till - from) * 0.5;
-    const px = Math.cos(center) * margin;
-    const py = Math.sin(center) * margin;
-    return Util.point(px, py);
-};
 
 onMounted(() => {
     renderChart();
@@ -225,37 +85,9 @@ watch(() => state.pieList, (v) => {
     overflow: hidden;
 
     svg {
-        width: 150px;
-        height: 150px;
-
         path:hover {
             opacity: 0.8;
         }
-    }
-}
-
-.mcr-pie-legend {
-    font-weight: bold;
-    font-size: 18px;
-
-    > div {
-        cursor: pointer;
-
-        &:hover {
-            opacity: 0.8;
-        }
-    }
-
-    .mcr-legend-percent {
-        width: 50px;
-        font-weight: normal;
-        text-align: right;
-    }
-
-    .mcr-legend-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
     }
 }
 

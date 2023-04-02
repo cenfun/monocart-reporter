@@ -222,8 +222,8 @@ const navItemClass = (item) => {
 };
 
 const navItemClick = (item) => {
-    if (item.type !== state.caseType) {
-        state.caseType = item.type;
+    if (item.id !== state.caseType) {
+        state.caseType = item.id;
     }
 };
 
@@ -322,11 +322,6 @@ const initData = (reportData) => {
     // init searchable info
     initSearchableColumns(columns);
 
-    // add id for summary
-    Object.keys(summary).forEach((k) => {
-        summary[k].id = k;
-    });
-
     // collect worker data list
     const workerList = [];
 
@@ -363,20 +358,18 @@ const initData = (reportData) => {
     summary.projects.icon = 'project';
     summary.files.icon = 'file';
 
+    state.summary = summary;
+
     // nav
-    const navList = Object.values(summary).filter((it) => it.type);
+    const navList = Object.values(summary).filter((it) => it.nav);
     state.navList = navList;
 
     // pie chart
     state.pieHeads = [summary.tests, summary.suites, summary.steps];
 
-    const pieList = navList.filter((it) => it.type !== 'tests').map((item) => {
+    const pieList = navList.filter((it) => it.id !== 'tests').map((item) => {
         return {
-            id: item.type,
-            name: item.name,
-            value: item.value,
-            percent: item.percent,
-            color: state.colors[item.type]
+            ... item
         };
     });
     state.pieList = pieList;
@@ -561,13 +554,6 @@ window.addEventListener('message', (e) => {
         Object.assign(state, data);
     }
 });
-
-state.colors = {
-    passed: 'green',
-    failed: '#d00',
-    flaky: 'orange',
-    skipped: 'gray'
-};
 
 </script>
 <style lang="scss">
