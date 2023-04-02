@@ -316,7 +316,7 @@ const metadataHandler = (metadata) => {
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, tags, workers, system, metadata, charts
+        columns, rows, summary, tags, workers, system, metadata, pieChart
     } = reportData;
 
     // init searchable info
@@ -366,7 +366,7 @@ const initData = (reportData) => {
 
     // pie chart
     state.pieHeads = [summary.tests, summary.suites, summary.steps];
-    state.charts = charts;
+    state.pieChart = pieChart;
 
     // pie chart related
     state.amounts = [{

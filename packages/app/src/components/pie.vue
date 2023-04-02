@@ -5,7 +5,7 @@
   >
     <div
       @click="onPieClick($event)"
-      v-html="state.charts.pie"
+      v-html="state.pieChart"
     />
   </VuiFlex>
 </template>

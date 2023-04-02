@@ -137,7 +137,7 @@
             icon="timeline"
             :button="false"
           >
-            <b>Timelines</b> <span class="mcr-num">{{ state.duration }}</span>
+            <b>Timeline</b> <span class="mcr-num">{{ state.duration }}</span>
           </IconLabel>
 
           <div class="vui-flex-auto" />
