@@ -414,6 +414,7 @@ await MonocartReporter.merge(reportDataList, {
     }
 });
 ```
+example: [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
 ## onEnd callback
 ```js
@@ -506,7 +507,7 @@ nmls -p
 ┌────────────────────────────┬─────────┬──────────┬──────┬───────────┬────────┐
 │  Name                      │ Version │     Size │ Deps │ Deps Size │ Nested │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
-│ └ monocart-reporter        │ 1.6.1   │ 582.5 KB │   18 │   2.50 MB │      1 │
+│ └ monocart-reporter        │ 1.6.2   │ 597.0 KB │   18 │   2.50 MB │      1 │
 │   ├ dependencies           │         │          │      │           │        │
 │   │ ├ @babel/code-frame    │ 7.18.6  │  6.82 KB │   10 │  153.0 KB │      0 │
 │   │ ├ @babel/parser        │ 7.21.3  │  1.79 MB │    0 │       0 B │      0 │
@@ -517,7 +518,7 @@ nmls -p
 │   │ └ stack-utils          │ 2.0.6   │  14.3 KB │    1 │   3.18 KB │      1 │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
 │   └ packages in workspaces │         │          │      │           │        │
-│     └ monocart-reporter    │ 1.6.1   │ 532.2 KB │    0 │       0 B │      0 │
+│     └ monocart-reporter    │ 1.6.2   │ 535.5 KB │    0 │       0 B │      0 │
 └────────────────────────────┴─────────┴──────────┴──────┴───────────┴────────┘
 ```
 
