@@ -21,6 +21,7 @@
 * [Metadata](#metadata) Report
 * [Searchable Fields](#searchable-fields)
 * [Style Tags](#style-tags)
+* [Merge Shard Reports](#merge-shard-reports)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
 * [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
@@ -309,35 +310,6 @@ module.exports = {
 };
 ```
 
-## Style Tags
-* Add tag to test title (starts with @)
-```js
-test('test title @smoke @critical', () => { ... });
-```
-* Custom tag style
-```js
-// playwright.config.js
-module.exports = {
-    reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            tags: {
-                smoke: {
-                    style: {
-                        background: '#6F9913'
-                    },
-                    description: 'This is Smoke Test'
-                },
-                critical: {
-                    background: '#c00'
-                }
-            }
-        }]
-    ]
-};
-```
-
 ## Metadata
 * add metadata to config
 ```js
@@ -384,6 +356,63 @@ module.exports = {
             }
         }]
     ]
+```
+
+## Style Tags
+* Add tag to test title (starts with @)
+```js
+test('test title @smoke @critical', () => { ... });
+```
+* Custom tag style
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            tags: {
+                smoke: {
+                    style: {
+                        background: '#6F9913'
+                    },
+                    description: 'This is Smoke Test'
+                },
+                critical: {
+                    background: '#c00'
+                }
+            }
+        }]
+    ]
+};
+```
+
+## Merge Shard Reports
+There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
+```sh
+npx playwright test --shard=1/3
+npx playwright test --shard=2/3
+npx playwright test --shard=3/3
+```
+There are 3 reports will be generated. Using `MonocartReporter.merge()` API to merge all reports into one.
+```js
+import MonocartReporter from 'monocart-reporter';
+
+const reportDataList = [
+    // json file path
+    'path-to/shard1/index.json',
+    'path-to/shard2/index.json',
+    // or JSON data
+    JSON.parse(fs.readFileSync(path.resolve('path-to/shard3/index.json')))
+];
+
+await MonocartReporter.merge(reportDataList, {
+    name: 'My Merged Report',
+    outputFile: 'merged-report/index.html',
+    onEnd: async (reportData, capacity) => {
+        
+    }
+});
 ```
 
 ## onEnd callback

@@ -229,7 +229,7 @@ const initStore = () => {
 };
 
 const navItemClass = (item) => {
-    return ['mcr-nav-item', item.classMap, item.type === state.caseType ? 'mcr-nav-selected' : ''];
+    return ['mcr-nav-item', item.classMap, item.id === state.caseType ? 'mcr-nav-selected' : ''];
 };
 
 const navItemClick = (item) => {

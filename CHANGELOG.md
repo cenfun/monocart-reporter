@@ -1,3 +1,6 @@
+* 1.6.2
+  - optimized report data
+  - added new API to merge shard report
 
 * 1.6.1
   - fixed duration
