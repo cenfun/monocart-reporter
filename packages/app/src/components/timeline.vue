@@ -378,7 +378,7 @@ const workerListHandler = () => {
 
     const system = state.system;
     const summary = state.summary;
-    const jobs = state.reportData.jobs;
+    const jobs = system.jobs;
     // console.log(jobs);
 
     // init worker title and type

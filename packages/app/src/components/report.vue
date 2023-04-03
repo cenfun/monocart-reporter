@@ -180,13 +180,13 @@
         </VuiFlex>
 
         <VuiFlex
-          v-if="report.systemList"
+          v-if="report.infoList"
           gap="10px"
           direction="column"
           padding="10px"
         >
           <VuiFlex
-            v-for="(group, i) in report.systemList"
+            v-for="(group, i) in report.infoList"
             :key="i"
             gap="15px"
             wrap
@@ -494,7 +494,7 @@ const timelineHandler = () => {
         value: `${Util.NF(system.workers)} (Max)`
     }];
 
-    report.systemList = [{
+    report.infoList = [{
         list: [{
             icon: 'cwd',
             name: 'CWD',

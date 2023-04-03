@@ -321,8 +321,12 @@ const initData = (reportData) => {
     const navList = Object.values(summary).filter((it) => it.nav);
     state.navList = navList;
 
-    state.system = system;
-
+    if (Array.isArray(system)) {
+        state.systemList = system;
+        state.system = system[0];
+    } else {
+        state.system = system;
+    }
 };
 
 const onSearchDropdownClick = (e) => {
