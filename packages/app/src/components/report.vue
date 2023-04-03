@@ -498,7 +498,7 @@ const timelineHandler = () => {
         list: [{
             icon: 'cwd',
             name: 'CWD',
-            value: system.cwd
+            value: reportData.cwd
         }, {
             icon: 'os',
             name: 'OS',
