@@ -339,7 +339,7 @@ const initData = (reportData) => {
     } else {
         state.system = system;
         // debug
-        state.systemList = [system, system];
+        // state.systemList = [system, system];
     }
 
 };
