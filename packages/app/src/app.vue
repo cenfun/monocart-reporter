@@ -328,6 +328,8 @@ const initData = (reportData) => {
         state.system = system;
     }
 
+    state.playwright = `Playwright v${state.system.playwright}`;
+
 };
 
 const onSearchDropdownClick = (e) => {
@@ -400,8 +402,6 @@ onMounted(() => {
     state.title = reportData.name;
     state.date = reportData.dateH;
     state.duration = reportData.durationH;
-
-    state.playwright = ['Playwright', reportData.version].filter((it) => it).join(' v');
 
     initStore();
 

@@ -490,7 +490,6 @@ const onExportClick = (item) => {
 
 const timelineHandler = () => {
     const system = state.system;
-    const reportData = state.reportData;
     report.usageList = [{
         icon: 'cpu',
         name: 'CPU',
@@ -509,31 +508,31 @@ const timelineHandler = () => {
 
     report.infoList = [{
         list: [{
-            icon: 'cwd',
-            name: 'CWD',
-            value: reportData.cwd
+            icon: 'host',
+            name: 'Host',
+            value: system.hostname
         }, {
             icon: 'os',
             name: 'OS',
             value: `${system.version} (${system.arch})`
         }, {
-            icon: 'host',
-            name: 'Host',
-            value: system.hostname
+            icon: 'cwd',
+            name: 'CWD',
+            value: system.cwd
         }]
     }, {
         list: [{
             icon: 'config',
             name: 'Config File',
-            value: reportData.configFile
+            value: system.configFile
         }, {
             icon: 'folder',
             name: 'Test Dir',
-            value: reportData.testDir
+            value: system.testDir
         }, {
             icon: 'output',
             name: 'Output Dir',
-            value: reportData.outputDir
+            value: system.outputDir
         }]
     }];
 };
