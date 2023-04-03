@@ -277,7 +277,7 @@ const stepHandler = (item) => {
 const initData = (reportData) => {
 
     const {
-        columns, rows, summary, system, pieChart, tags
+        columns, rows, summary, system, tags
     } = reportData;
 
     // init searchable info
@@ -320,31 +320,6 @@ const initData = (reportData) => {
     // nav
     const navList = Object.values(summary).filter((it) => it.nav);
     state.navList = navList;
-
-    // pie chart
-    state.pieHeads = [summary.tests, summary.suites, summary.steps];
-    state.pieChart = pieChart;
-
-    // pie chart related
-    state.amounts = [{
-        icon: 'suite',
-        button: false,
-        list: [
-            summary.projects,
-            summary.files,
-            summary.describes
-        ]
-    }, {
-        icon: 'sort',
-        button: true,
-        primary: true,
-        list: [
-            summary.errors,
-            summary.logs,
-            summary.attachments,
-            summary.retries
-        ]
-    }];
 
     state.system = system;
 

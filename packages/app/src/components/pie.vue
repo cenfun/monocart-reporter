@@ -1,21 +1,27 @@
 <template>
   <VuiFlex
-    v-if="state.pieChart"
+    v-if="props.pieChart"
     class="mcr-pie-chart"
     gap="20px"
   >
     <div
-      :style="pieStyle(state.pieChart)"
+      :style="pieStyle(props.pieChart)"
       @click="onPieClick($event)"
-      v-html="state.pieChart.svg"
+      v-html="props.pieChart.svg"
     />
   </VuiFlex>
 </template>
 <script setup>
 import { components } from 'vine-ui';
-import state from '../modules/state.js';
 
 const { VuiFlex } = components;
+
+const props = defineProps({
+    pieChart: {
+        type: Object,
+        default: null
+    }
+});
 
 const pieStyle = (pieChart) => {
     return {

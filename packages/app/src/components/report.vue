@@ -6,12 +6,12 @@
     <div class="mcr-report-item">
       <div class="mcr-report-head">
         <VuiFlex
-          v-if="state.pieHeads"
+          v-if="report.amountHeads"
           gap="15px"
           wrap
         >
           <IconLabel
-            v-for="(item, i) in state.pieHeads"
+            v-for="(item, i) in report.amountHeads"
             :key="i"
             :icon="item.icon"
             :tooltip="item.description"
@@ -23,15 +23,15 @@
       </div>
       <div class="mcr-report-chart">
         <VuiFlex wrap>
-          <Pie />
+          <Pie :pie-chart="report.pieChart" />
           <VuiFlex
             gap="15px"
             direction="column"
             padding="10px"
           >
-            <template v-if="state.amounts">
+            <template v-if="report.amountList">
               <VuiFlex
-                v-for="(group, i) in state.amounts"
+                v-for="(group, i) in report.amountList"
                 :key="i"
                 gap="15px"
                 wrap
@@ -420,7 +420,7 @@ const exportList = [{
         name: 'Pie Chart',
         icon: 'item',
         getData: () => {
-            return state.pieChart;
+            return report.pieChart;
         }
     }, {
         name: 'Tags',
@@ -566,8 +566,41 @@ const tagsHandler = () => {
 
 };
 
+const pieHandler = () => {
+
+    const reportData = state.reportData;
+
+    report.pieChart = reportData.pieChart;
+
+    const summary = state.summary;
+
+    report.amountHeads = [summary.tests, summary.suites, summary.steps];
+    report.amountList = [{
+        icon: 'suite',
+        button: false,
+        list: [
+            summary.projects,
+            summary.files,
+            summary.describes,
+            summary.shards
+        ]
+    }, {
+        icon: 'sort',
+        button: true,
+        primary: true,
+        list: [
+            summary.errors,
+            summary.logs,
+            summary.attachments,
+            summary.retries
+        ]
+    }];
+
+};
+
 watch(() => state.reportData, (v) => {
     if (v) {
+        pieHandler();
         tagsHandler();
         timelineHandler();
         metadataHandler();
