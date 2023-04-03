@@ -113,6 +113,7 @@ const Util = {
             suite: 'suite',
             project: 'project',
             file: 'file',
+            shard: 'shard',
             case: 'case',
             step: 'step'
         };

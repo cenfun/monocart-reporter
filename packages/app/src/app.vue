@@ -122,17 +122,27 @@
       >
         <template v-if="state.suiteVisible">
           <IconLabel
+            v-if="state.systemList"
+            icon="shard"
+            @click="expandRowLevel('shard')"
+          >
+            Shard
+          </IconLabel>
+
+          <IconLabel
             icon="project"
             @click="expandRowLevel('project')"
           >
             Project
           </IconLabel>
+
           <IconLabel
             icon="file"
             @click="expandRowLevel('file')"
           >
             File
           </IconLabel>
+
           <IconLabel
             icon="suite"
             @click="expandRowLevel('suite')"
@@ -147,6 +157,7 @@
           Case
         </IconLabel>
         <IconLabel
+          v-if="state.stepVisible"
           icon="step"
           @click="expandRowLevel('step')"
         >
@@ -314,6 +325,7 @@ const initData = (reportData) => {
 
     summary.projects.icon = 'project';
     summary.files.icon = 'file';
+    summary.shards.icon = 'shard';
 
     state.summary = summary;
 
@@ -326,9 +338,9 @@ const initData = (reportData) => {
         state.systemList = system;
     } else {
         state.system = system;
+        // debug
+        state.systemList = [system, system];
     }
-
-    state.playwright = `Playwright v${state.system.playwright}`;
 
 };
 

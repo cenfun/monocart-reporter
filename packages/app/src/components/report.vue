@@ -311,7 +311,7 @@
             icon="playwright"
             size="20px"
           >
-            {{ state.playwright }}
+            {{ report.playwright }}
           </IconLabel>
           </a>
 
@@ -322,7 +322,7 @@
             icon="github"
             size="20px"
           >
-            {{ state.monocart }}
+            {{ report.monocart }}
           </IconLabel>
           </a>
         </VuiFlex>
@@ -351,7 +351,8 @@ const { VuiFlex, VuiSelect } = components;
 
 const report = shallowReactive({
     tagList: [],
-    systemIndex: 0
+    systemIndex: 0,
+    monocart: `Monocart Reporter v${window.VERSION}`
 });
 
 // ====================================================================================
@@ -490,6 +491,7 @@ const onExportClick = (item) => {
 
 const timelineHandler = () => {
     const system = state.system;
+    report.playwright = `Playwright v${system.playwright}`;
     report.usageList = [{
         icon: 'cpu',
         name: 'CPU',

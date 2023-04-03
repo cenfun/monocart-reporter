@@ -1,0 +1,11 @@
+<svg viewBox="0 0 32 32" width="100%" height="100%" pointer-events="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <g fill="currentColor">
+        <circle cx="9" cy="6" r="1"/>
+        <path d="M26 10H6a2.002 2.002 0 0 1-2-2V4a2.002 2.002 0 0 1 2-2h20a2.002 2.002 0 0 1 2 2v4a2.002 2.002 0 0 1-2 2ZM6 4v4h20V4Z"/>
+        <circle cx="9" cy="16" r="1"/>
+        <path d="M26 20H6a2.002 2.002 0 0 1-2-2v-4a2.002 2.002 0 0 1 2-2h20a2.002 2.002 0 0 1 2 2v4a2.002 2.002 0 0 1-2 2ZM6 14v4h20v-4Z"/>
+        <circle cx="9" cy="26" r="1"/>
+        <path d="M26 30H6a2.002 2.002 0 0 1-2-2v-4a2.002 2.002 0 0 1 2-2h20a2.002 2.002 0 0 1 2 2v4a2.002 2.002 0 0 1-2 2ZM6 24v4h20v-4Z"/>
+    </g>
+</svg>

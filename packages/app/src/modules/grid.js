@@ -191,18 +191,44 @@ const clickTitleHandler = (d) => {
 
 };
 
+const expandParent = (row) => {
+    while (row.tg_parent) {
+        row = row.tg_parent;
+        row.collapsed = false;
+    }
+};
+
 export const expandRowLevel = (type) => {
     state.levelPopoverVisible = false;
     state.levelPopoverTarget = null;
 
     const grid = state.grid;
 
-    if (type === 'project') {
+    if (type === 'step') {
+        grid.expandAllRows();
+        return;
+    }
+
+    if (type === 'shard') {
         grid.collapseAllRows();
         return;
     }
-    if (type === 'step') {
-        grid.expandAllRows();
+
+    if (type === 'project') {
+        if (!state.systemList) {
+            grid.collapseAllRows();
+            return;
+        }
+        grid.forEachRow((rowItem) => {
+            if (rowItem.subs && rowItem.tg_subs_length) {
+                if (rowItem.suiteType === 'shard') {
+                    rowItem.collapsed = false;
+                } else {
+                    rowItem.collapsed = true;
+                }
+            }
+        });
+        grid.update();
         return;
     }
 
@@ -211,6 +237,7 @@ export const expandRowLevel = (type) => {
             if (rowItem.subs && rowItem.tg_subs_length) {
                 if (rowItem.suiteType === 'project') {
                     rowItem.collapsed = false;
+                    expandParent(rowItem);
                 } else {
                     rowItem.collapsed = true;
                 }
@@ -232,6 +259,8 @@ export const expandRowLevel = (type) => {
                     }
 
                     rowItem.collapsed = false;
+                    expandParent(rowItem);
+
                 } else {
                     rowItem.collapsed = true;
                 }
@@ -246,6 +275,7 @@ export const expandRowLevel = (type) => {
             if (rowItem.subs && rowItem.tg_subs_length) {
                 if (rowItem.type === 'suite') {
                     rowItem.collapsed = false;
+                    expandParent(rowItem);
                 } else {
                     rowItem.collapsed = true;
                 }
