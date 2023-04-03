@@ -119,7 +119,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     // onEnd: async (reportData, capacity) => {}
 }
 ```
-See [lib/options.js](lib/options.js)
+See [options.js](lib/default/options.js)
 
 ## Columns and Formatter
 ```js
