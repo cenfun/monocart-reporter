@@ -8,6 +8,7 @@
         <VuiFlex
           v-if="report.amountHeads"
           gap="15px"
+          padding="10px"
           wrap
         >
           <IconLabel
@@ -75,13 +76,11 @@
       </div>
     </div>
 
-    <div
-      v-if="report.tagList"
-      class="mcr-report-item"
-    >
+    <div class="mcr-report-item">
       <div class="mcr-report-head">
         <VuiFlex
           gap="15px"
+          padding="10px"
           wrap
         >
           <IconLabel
@@ -131,6 +130,7 @@
       <div class="mcr-report-head">
         <VuiFlex
           gap="15px"
+          padding="10px"
           wrap
         >
           <IconLabel
@@ -139,6 +139,14 @@
           >
             <b>Timeline</b> <span class="mcr-num">{{ state.duration }}</span>
           </IconLabel>
+
+          <VuiSelect
+            v-if="report.systemOptions"
+            v-model="report.systemIndex"
+            tooltips="Sharding machines"
+            :options="report.systemOptions"
+            width="160px"
+          />
 
           <div class="vui-flex-auto" />
 
@@ -216,6 +224,7 @@
       <div class="mcr-report-head">
         <VuiFlex
           gap="15px"
+          padding="10px"
           wrap
         >
           <IconLabel
@@ -250,6 +259,7 @@
       <div class="mcr-report-head">
         <VuiFlex
           gap="15px"
+          padding="10px"
           wrap
         >
           <IconLabel
@@ -291,6 +301,7 @@
       <div class="mcr-report-head">
         <VuiFlex
           gap="15px"
+          padding="10px"
           wrap
         >
           <a
@@ -336,9 +347,11 @@ import IconLabel from './icon-label.vue';
 import Pie from './pie.vue';
 import Timeline from './timeline.vue';
 
-const { VuiFlex } = components;
+const { VuiFlex, VuiSelect } = components;
 
 const report = shallowReactive({
+    tagList: [],
+    systemIndex: 0
 });
 
 // ====================================================================================
@@ -598,13 +611,31 @@ const pieHandler = () => {
 
 };
 
+const systemHandler = () => {
+    // for system options select
+    if (!state.systemList) {
+        return;
+    }
+    report.systemOptions = state.systemList.map((item, i) => {
+        return {
+            label: item.hostname,
+            value: i
+        };
+    });
+};
+
+watch(() => report.systemIndex, (v) => {
+    state.system = state.systemList[v];
+    timelineHandler();
+});
+
 watch(() => state.reportData, (v) => {
     if (v) {
         pieHandler();
         tagsHandler();
+        systemHandler();
         timelineHandler();
         metadataHandler();
-
     }
 });
 
@@ -619,7 +650,6 @@ watch(() => state.reportData, (v) => {
 }
 
 .mcr-report-head {
-    padding: 10px;
     border-bottom: 1px solid #dae9fa;
     background-color: #eef6ff;
 
