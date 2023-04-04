@@ -30,6 +30,24 @@ module.exports = {
                 Util.logRed(`ERROR: Invalid json: ${jsonPath}`);
                 return 1;
             }
+
+            // attachment path handler
+            const { forEach } = require('../lib/utils/util.js');
+            forEach(reportData.rows, (row) => {
+                if (row.type === 'case' && row.attachments) {
+                    row.attachments.forEach((attachment) => {
+                        if (attachment.path) {
+                            const prevPath = path.resolve(reportData.cwd, reportData.outputDir, attachment.path);
+                            const newDir = item.devPath;
+                            // console.log(prevPath, newDir);
+                            const newPath = path.relative(newDir, prevPath);
+                            // console.log(newPath);
+                            attachment.path = newPath;
+                        }
+                    });
+                }
+            });
+
             const compress = require('lz-utils/lib/compress.js');
             const reportDataStr = compress(JSON.stringify(reportData));
             const jsContent = `window.reportData = '${reportDataStr}';`;

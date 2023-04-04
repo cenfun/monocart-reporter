@@ -37,8 +37,6 @@ test('test home page', async ({ page, context }, testInfo) => {
     const metadata = testInfo.config.metadata;
     const homePage = new HomePage(page, context, metadata);
     await homePage.init();
-    await homePage.goto();
-    await homePage.checkClientScript();
     await homePage.checkName();
 
     console.log('snapshotDir', testInfo.snapshotDir);
@@ -65,22 +63,19 @@ test('test screenshot and video', async ({ page, context }, testInfo) => {
     const metadata = testInfo.config.metadata;
     const homePage = new HomePage(page, context, metadata);
     await homePage.init();
-    await homePage.goto();
     await homePage.checkWithError();
 });
 
-test('test without custom steps', async ({ page }, testInfo) => {
+test('test locator fill', async ({ page }, testInfo) => {
     const metadata = testInfo.config.metadata;
-    await page.goto(metadata.url);
+    await HomePage.mockPageGoto(page, metadata.url);
     const locator = page.locator('input[type="search"]');
     await locator.fill('Text content');
     await expect(locator).toHaveValue('Text content');
-
-
 });
 
 test('secrets and sensitive data', async ({ page }, testInfo) => {
-    await page.goto('https://www.npmjs.com/login');
+    await HomePage.mockPageGoto(page, 'https://www.npmjs.com/login');
     await page.locator('input[type=password]').type(process.env.LOGIN_PASSWORD);
 
     const screenshot = await page.screenshot();
@@ -98,7 +93,7 @@ test('secrets and sensitive data', async ({ page }, testInfo) => {
 test('test with custom steps', async ({ page }, testInfo) => {
     const metadata = testInfo.config.metadata;
     await test.step('accessing the login page', async () => {
-        await page.goto(metadata.url);
+        await HomePage.mockPageGoto(page, metadata.url);
     });
     await test.step('completing phone number', async () => {
         const locator = page.locator('input[type="search"]');
