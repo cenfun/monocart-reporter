@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mcr-trend-chart">
     <svg
       :viewBox="viewBox"
       width="100%"
@@ -51,6 +51,7 @@ const props = defineProps({
 });
 
 const chart = shallowReactive({
+    padding: 5,
     width: 1000,
     height: 150,
     lines: []
@@ -82,12 +83,11 @@ const render = (trendList) => {
     if (!maxTests) {
         return;
     }
-
-    const cw = chart.width;
-    const ch = chart.height;
+    const padding = chart.padding;
+    const cw = chart.width - padding * 2;
+    const ch = chart.height - padding * 2;
 
     const xw = cw / (trendList.length - 1);
-
 
     const caseTypes = state.reportData.caseTypes;
     caseTypes.reverse();
@@ -95,7 +95,7 @@ const render = (trendList) => {
     const point = Util.point;
 
     let perviousPoints = trendList.map((t, i) => {
-        return [i * xw, ch];
+        return [padding + i * xw, padding + ch];
     });
 
     chart.lines = caseTypes.map((caseType) => {
@@ -135,3 +135,12 @@ watchEffect(() => {
 });
 
 </script>
+<style lang="scss">
+.mcr-trend-chart {
+    position: relative;
+
+    svg {
+        max-width: 1000px;
+    }
+}
+</style>
