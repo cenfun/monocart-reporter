@@ -2,7 +2,7 @@ const path = require('path');
 const { WebClient } = require('@slack/web-api');
 const EC = require('eight-colors');
 
-module.exports = async (reportData, capacity) => {
+module.exports = async (reportData, capability) => {
 
     // do not store your slack token in the source code, but pass your slack token from environment variables
     const token = process.env.SLACK_TOKEN;
@@ -54,7 +54,7 @@ module.exports = async (reportData, capacity) => {
     } else if (summary.failed.value > 0) {
         // @owners of all failed cases
         const owners = [];
-        capacity.forEach((item) => {
+        capability.forEach((item) => {
             if (item.type === 'case' && item.caseType === 'failed' && item.owner) {
                 owners.push(`@${item.owner}`);
             }

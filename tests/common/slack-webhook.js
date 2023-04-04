@@ -1,6 +1,6 @@
 const { IncomingWebhook } = require('@slack/webhook');
 const EC = require('eight-colors');
-module.exports = async (reportData, capacity) => {
+module.exports = async (reportData, capability) => {
 
     // send notifications to a single channel which the user picks on installation
     // Sending messages using Incoming Webhooks: https://api.slack.com/messaging/webhooks
@@ -54,7 +54,7 @@ module.exports = async (reportData, capacity) => {
     } else if (summary.failed.value > 0) {
         // @owners of all failed cases
         const owners = [];
-        capacity.forEach((item) => {
+        capability.forEach((item) => {
             if (item.type === 'case' && item.caseType === 'failed' && item.owner) {
                 owners.push(`@${item.owner}`);
             }

@@ -117,7 +117,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 
     // async hook after report data generated
     onEnd: null
-    // onEnd: async (reportData, capacity) => {}
+    // onEnd: async (reportData, capability) => {}
 }
 ```
 See [options.js](lib/default/options.js)
@@ -412,7 +412,7 @@ await MonocartReporter.merge(reportDataList, {
     attachmentPath: (currentPath, extras) => {
        // return `https://cenfun.github.io/monocart-reporter/${currentPath}`;
     },
-    onEnd: async (reportData, capacity) => {
+    onEnd: async (reportData, capability) => {
         
     }
 });
@@ -428,7 +428,7 @@ module.exports = {
             name: "My Test Report",
             outputFile: './test-results/report.html',
             // async hook after report data generated
-            onEnd: async (reportData, capacity) => {
+            onEnd: async (reportData, capability) => {
                 //await myAsyncFunction();
             }
         }]
@@ -444,9 +444,9 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-            onEnd: async (reportData, capacity) => {
+            onEnd: async (reportData, capability) => {
                 const sendEmail = require('./common/send-email.js');
-                await sendEmail(reportData, capacity);
+                await sendEmail(reportData, capability);
             }
         }]
     ]
@@ -465,9 +465,9 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-            onEnd: async (reportData, capacity) => {
+            onEnd: async (reportData, capability) => {
                 const testrail = require('./common/testrail.js');
-                await testrail(reportData, capacity);
+                await testrail(reportData, capability);
             }
         }]
     ]
@@ -486,9 +486,9 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-            onEnd: async (reportData, capacity) => {
+            onEnd: async (reportData, capability) => {
                 const slackWebhook = require('./common/slack-webhook.js');
-                await slackWebhook(reportData, capacity);
+                await slackWebhook(reportData, capability);
             }
         }]
     ]

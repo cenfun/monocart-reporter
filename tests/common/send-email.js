@@ -1,5 +1,5 @@
 const EC = require('eight-colors');
-module.exports = async (reportData, capacity) => {
+module.exports = async (reportData, capability) => {
     const emailOptions = {
         transport: {
             // change to your email service, or use SMTP host and port: https://nodemailer.com/smtp/
@@ -48,7 +48,7 @@ module.exports = async (reportData, capacity) => {
         return;
     }
 
-    const info = await capacity.sendEmail(emailOptions).catch((e) => {
+    const info = await capability.sendEmail(emailOptions).catch((e) => {
         console.error(e);
     });
     if (info) {

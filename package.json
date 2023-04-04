@@ -4,9 +4,9 @@
     "description": "A playwright test reporter. Shows suites/cases/steps with tree style, markdown annotations, custom columns/formatters/data collection visitors, console logs, style tags, send email, testrail integration.",
     "main": "lib/index.js",
     "scripts": {
-        "test": "node ./scripts/link.js && npx playwright test --config=tests",
+        "test": "node ./scripts/link.js && npx playwright test -c tests",
         "build": "sf lint && sf b -p",
-        "dev": "sf d",
+        "dev": "sf d -w .temp/monocart/index.json",
         "patch": "npm run build && sf publish patch -r",
         "pack": "sf pack -o docs -q v={version} && nmls -p"
     },

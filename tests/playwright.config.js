@@ -181,30 +181,30 @@ module.exports = {
             },
 
             // async hook after report data generated
-            onEnd: async (reportData, capacity) => {
+            onEnd: async (reportData, capability) => {
                 console.log('onEnd hook start');
 
                 // console.log(reportData.summary);
 
                 // send email
                 const sendEmail = require('./common/send-email.js');
-                await sendEmail(reportData, capacity);
+                await sendEmail(reportData, capability);
 
                 // testrail integration
                 // const testrail = require('./common/testrail.js');
-                // await testrail(reportData, capacity);
+                // await testrail(reportData, capability);
 
                 // slack integration with webhook
                 // const slackWebhook = require('./common/slack-webhook.js');
-                // await slackWebhook(reportData, capacity);
+                // await slackWebhook(reportData, capability);
 
                 // slack integration with web api
                 // const slackWebApi = require('./common/slack-web-api.js');
-                // await slackWebApi(reportData, capacity);
+                // await slackWebApi(reportData, capability);
 
                 // html to pdf
                 // const toPdf = require('./common/to-pdf.js');
-                // await toPdf(reportData, capacity);
+                // await toPdf(reportData, capability);
 
             }
         }]

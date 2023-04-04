@@ -1,6 +1,6 @@
 const Testrail = require('testrail-api');
 const EC = require('eight-colors');
-module.exports = async (reportData, capacity) => {
+module.exports = async (reportData, capability) => {
 
     const options = {
         // change to your testrail host
@@ -26,7 +26,7 @@ module.exports = async (reportData, capacity) => {
      */
     // test('Test case', async () => { });
 
-    capacity.forEach((item) => {
+    capability.forEach((item) => {
         if (item.type === 'case' && item.testrail) {
             // 1 Passed
             // 5 Failed
