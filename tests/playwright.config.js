@@ -77,6 +77,8 @@ module.exports = {
                 // return `https://cenfun.github.io/monocart-reporter/${relativePath}`;
             },
 
+            trend: () => '.temp/monocart/index.json',
+
             tags: {
                 smoke: {
                     style: {
