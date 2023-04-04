@@ -64,11 +64,12 @@
       <VuiFlex gap="10px">
         <VuiFlex
           gap="2px"
-          padding="5px"
+          padding="5px 0 5px 5px"
+          center
         >
           <VuiInput
             v-model="state.keywords"
-            width="180px"
+            width="160px"
             :class="searchClass"
             placeholder="keywords"
           />
@@ -77,7 +78,6 @@
             @click="onSearchDropdownClick($event)"
           />
         </VuiFlex>
-
         <VuiSwitch v-model="state.suiteVisible">
           Suite
         </VuiSwitch>

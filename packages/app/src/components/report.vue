@@ -76,7 +76,10 @@
       </div>
     </div>
 
-    <div class="mcr-report-item">
+    <div
+      v-if="report.trendList"
+      class="mcr-report-item"
+    >
       <div class="mcr-report-head">
         <VuiFlex
           gap="15px"
@@ -84,45 +87,15 @@
           wrap
         >
           <IconLabel
-            icon="tag"
+            icon="trend"
             :button="false"
           >
-            <b>Tags</b> <span class="mcr-num">{{ Util.NF(report.tagList.length) }}</span>
+            <b>Trends</b>
           </IconLabel>
-          <div class="vui-flex-auto" />
-          <a
-            href="https://playwright.dev/docs/test-annotations#tag-tests"
-            target="_blank"
-          >
-            <IconLabel icon="help">
-              Tag Tests
-            </IconLabel>
-          </a>
         </VuiFlex>
       </div>
       <div class="mcr-report-chart">
-        <VuiFlex
-          gap="15px"
-          wrap
-          padding="10px"
-        >
-          <div
-            v-for="(item, i) in report.tagList"
-            :key="i"
-            class="mcr-report-tag"
-            @click="onTagClick(item)"
-          >
-            <span
-              :style="item.style"
-              :tooltip="item.description"
-              class="mcr-tag"
-            >{{ item.name }}</span>
-            <span
-              v-if="item.value>1"
-              class="mcr-num"
-            >{{ Util.NF(item.value) }}</span>
-          </div>
-        </VuiFlex>
+        <Trend :trend-list="report.trendList" />
       </div>
     </div>
 
@@ -228,6 +201,56 @@
           wrap
         >
           <IconLabel
+            icon="tag"
+            :button="false"
+          >
+            <b>Tags</b> <span class="mcr-num">{{ Util.NF(report.tagList.length) }}</span>
+          </IconLabel>
+          <div class="vui-flex-auto" />
+          <a
+            href="https://playwright.dev/docs/test-annotations#tag-tests"
+            target="_blank"
+          >
+            <IconLabel icon="help">
+              Tag Tests
+            </IconLabel>
+          </a>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <VuiFlex
+          gap="15px"
+          wrap
+          padding="10px"
+        >
+          <div
+            v-for="(item, i) in report.tagList"
+            :key="i"
+            class="mcr-report-tag"
+            @click="onTagClick(item)"
+          >
+            <span
+              :style="item.style"
+              :tooltip="item.description"
+              class="mcr-tag"
+            >{{ item.name }}</span>
+            <span
+              v-if="item.value>1"
+              class="mcr-num"
+            >{{ Util.NF(item.value) }}</span>
+          </div>
+        </VuiFlex>
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <IconLabel
             icon="metadata"
             :button="false"
           >
@@ -297,7 +320,7 @@
       </div>
     </div>
 
-    <div class="mcr-report-item mcr-report-footer">
+    <div class="mcr-report-item">
       <div class="mcr-report-head">
         <VuiFlex
           gap="15px"
@@ -327,6 +350,7 @@
           </a>
         </VuiFlex>
       </div>
+      <div class="mcr-report-chart" />
     </div>
   </VuiFlex>
 </template>
@@ -346,6 +370,7 @@ import {
 import IconLabel from './icon-label.vue';
 import Pie from './pie.vue';
 import Timeline from './timeline.vue';
+import Trend from './trend.vue';
 
 const { VuiFlex, VuiSelect } = components;
 
@@ -580,6 +605,41 @@ const tagsHandler = () => {
 
 };
 
+const getCurrentTrendInfo = (data) => {
+
+    const {
+        date, duration, summary
+    } = data;
+
+    const info = {
+        date,
+        duration
+    };
+
+    Object.keys(summary).forEach((k) => {
+        const item = summary[k];
+        info[k] = item.value;
+    });
+
+    return info;
+};
+
+const trendsHandler = () => {
+    const trendList = state.reportData.trends;
+    if (!Util.isList(trendList)) {
+        return;
+    }
+
+    trendList.push(getCurrentTrendInfo(state.reportData));
+
+    trendList.sort((a, b) => {
+        return a.date - b.date;
+    });
+
+    report.trendList = trendList;
+
+};
+
 const pieHandler = () => {
 
     const reportData = state.reportData;
@@ -633,6 +693,7 @@ watch(() => report.systemIndex, (v) => {
 watch(() => state.reportData, (v) => {
     if (v) {
         pieHandler();
+        trendsHandler();
         tagsHandler();
         systemHandler();
         timelineHandler();
@@ -660,12 +721,6 @@ watch(() => state.reportData, (v) => {
 
     a {
         color: #333;
-    }
-}
-
-.mcr-report-footer {
-    .mcr-report-head {
-        border: none;
     }
 }
 
