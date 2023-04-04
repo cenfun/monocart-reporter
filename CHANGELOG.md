@@ -1,3 +1,6 @@
+* 1.6.3
+  - fixed attachment path
+
 * 1.6.2
   - optimized report data
   - added new API to merge shard report
