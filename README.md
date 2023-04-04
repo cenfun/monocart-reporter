@@ -94,7 +94,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 
     // custom attachment path. default is relative to output file
     attachmentPath: null,
-    // attachmentPath: (relativePath) => `https://cenfun.github.io/monocart-reporter/${relativePath}`,
+    // attachmentPath: (currentPath, extras) => `https://cenfun.github.io/monocart-reporter/${currentPath}`,
 
     // custom tags style
     tags: null,
@@ -409,6 +409,9 @@ const reportDataList = [
 await MonocartReporter.merge(reportDataList, {
     name: 'My Merged Report',
     outputFile: 'merged-report/index.html',
+    attachmentPath: (currentPath, extras) => {
+       // return `https://cenfun.github.io/monocart-reporter/${currentPath}`;
+    },
     onEnd: async (reportData, capacity) => {
         
     }
