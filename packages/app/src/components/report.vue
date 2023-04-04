@@ -493,6 +493,10 @@ const timelineHandler = () => {
     const system = state.system;
     report.playwright = `Playwright v${system.playwright}`;
     report.usageList = [{
+        icon: 'worker',
+        name: 'Workers',
+        value: `${Util.NF(system.workers)} (Max)`
+    }, {
         icon: 'cpu',
         name: 'CPU',
         value: `${system.cpu.model} (${system.cpu.count}T)`,
@@ -502,10 +506,6 @@ const timelineHandler = () => {
         name: 'Memory',
         value: Util.BF(system.mem.total),
         color: system.mem.color
-    }, {
-        icon: 'worker',
-        name: 'Workers',
-        value: `${Util.NF(system.workers)} (Max)`
     }];
 
     report.infoList = [{
