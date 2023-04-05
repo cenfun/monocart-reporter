@@ -83,7 +83,7 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 [MCR] json report: .temp/monocart/index.json
 ```
 
-## Output Assets
+## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
 Note that test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
@@ -108,7 +108,7 @@ module.exports = {
 Separated metadata file (Already included in the above HTML and compressed, it can be deleted). Can be used for debugging or custom data collection.
 
 
-## Default Options
+## Options
 ```js
 {
     // the report name
