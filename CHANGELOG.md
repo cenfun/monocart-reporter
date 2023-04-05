@@ -1,5 +1,6 @@
 * 1.6.5
   - fixed tags counting only from case
+  - fixed test duration format
 
 * 1.6.4
   - added trend API
