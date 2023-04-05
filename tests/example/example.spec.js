@@ -18,8 +18,13 @@ test('test util time format', () => {
     // @title expect(TF(0)).toBe('0ms');
     expect(TF(0)).toBe('0ms');
     expect(TF(100)).toBe('100ms');
+
     expect(TF(1000)).toBe('1s');
+    expect(TF(1001)).toBe('1s');
+    expect(TF(1011)).toBe('1s');
+    expect(TF(1051)).toBe('1.1s');
     expect(TF(1100)).toBe('1.1s');
+    expect(TF(5121)).toBe('5.1s');
 
     // @title expect(TF(21100)).toBe('21.1s');
     expect(TF(21100)).toBe('21.1s');
