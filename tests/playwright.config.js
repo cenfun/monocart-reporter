@@ -77,7 +77,24 @@ module.exports = {
                 // return `https://cenfun.github.io/monocart-reporter/${relativePath}`;
             },
 
-            trend: () => '.temp/monocart/index.json',
+            trend: () => {
+                return new Promise((resolve) => {
+                    const fs = require('fs');
+                    fs.readFile('.temp/monocart/index.json', (err, data) => {
+                        if (err) {
+                            console.log(err);
+                            resolve();
+                            return;
+                        }
+                        const json = JSON.parse(data);
+
+                        // mock data
+
+
+                        resolve(json);
+                    });
+                });
+            },
 
             tags: {
                 smoke: {
