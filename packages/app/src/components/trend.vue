@@ -79,17 +79,23 @@
         direction="column"
         gap="10px"
       >
-        <IconLabel
+        <VuiFlex
           v-for="(item, i) in pd.results"
           :key="i"
-          :icon="item.icon"
-          :button="false"
+          gap="10px"
         >
-          {{ item.name }} <span
+          <IconLabel
+            :icon="item.icon"
+            :button="false"
+          >
+            {{ item.name }}
+          </IconLabel>
+          <span
             v-if=" item.value"
             class="mcr-num"
           >{{ item.value }}</span>
-        </IconLabel>
+          <span v-if="item.percent">{{ item.percent }}</span>
+        </VuiFlex>
       </VuiFlex>
     </VuiPopover>
   </div>
@@ -218,15 +224,20 @@ const getResults = (item) => {
     });
 
     const ns = item.ns;
+    const tests = item[`${ns}tests`];
+    // console.log(tests);
+
     const summary = state.summary;
     // asc caseTypes
     const caseTypes = state.reportData.caseTypes;
     caseTypes.forEach((k) => {
         const info = summary[k];
+        const v = item[ns + k];
         results.push({
             icon: k,
             name: info.name,
-            value: String(item[ns + k])
+            value: String(v),
+            percent: Util.PF(v, tests)
         });
     });
 
@@ -280,11 +291,14 @@ const getListByDensity = () => {
             count: ls.length,
             date
         };
+        let tests = 0;
         caseTypes.forEach((k) => {
             const total = ls.reduce((p, it) => p + it[k], 0);
+            tests += total;
             avg[`total_${k}`] = total;
             avg[k] = total / ls.length;
         });
+        avg.total_tests = tests;
         // console.log(avg);
         return avg;
     });
