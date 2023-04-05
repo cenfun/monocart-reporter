@@ -182,7 +182,7 @@ const formatters = {
             return '';
         }
         // using same unit ms
-        return `${Util.NF(value)} ms`;
+        return Util.TF(value);
     },
 
     // array or string

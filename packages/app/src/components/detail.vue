@@ -64,7 +64,7 @@
           v-if="Util.isNum(item.data.duration)"
           class="mcr-detail-duration"
         >
-          {{ Util.NF(item.data.duration) }} ms
+          {{ Util.TF(item.data.duration) }}
         </div>
       </VuiFlex>
       <div
