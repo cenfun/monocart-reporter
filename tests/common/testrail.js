@@ -20,11 +20,12 @@ module.exports = async (reportData, capability) => {
     EC.logCyan('[testrail] collect test results ...');
     const results = [];
 
-    // add testrail case id to comments
+    // 1. add testrail case id to comments
     /**
      * @testrail 2126
      */
     // test('Test case', async () => { });
+    // 2. make sure the comments to be collected with visitor
 
     capability.forEach((item) => {
         if (item.type === 'case' && item.testrail) {
