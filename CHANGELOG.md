@@ -1,3 +1,6 @@
+* 1.6.4
+  - added trend API
+
 * 1.6.3
   - fixed attachment path
 

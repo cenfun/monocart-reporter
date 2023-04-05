@@ -96,6 +96,10 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     attachmentPath: null,
     // attachmentPath: (currentPath, extras) => `https://cenfun.github.io/monocart-reporter/${currentPath}`,
 
+    // trend data collection
+    trend: null,
+    // trend: () => './test-results/report.json',
+
     // custom tags style
     tags: null,
     // tags: {
