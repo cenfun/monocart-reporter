@@ -48,6 +48,7 @@
                   :key="j"
                   :d="bar.d"
                   :fill="bar.color"
+                  opacity="0.8"
                 />
               </g>
 

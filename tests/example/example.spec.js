@@ -73,14 +73,14 @@ test('test util parseComments', () => {
  * @testrail 2126
  */
 test('Test login page @fast', () => {
-
+    expect(Math.random()).toBeLessThan(0.5);
 });
 
 /**
  * @testrail 2127
  */
 test('@smoke Test full report', () => {
-
+    expect(Math.random()).toBeLessThan(0.5);
 });
 
 /**
@@ -226,8 +226,8 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
             console.log('fixme');
         });
 
-        test('case last', async () => {
-            // ...
+        test('case last', () => {
+            expect(Math.random()).toBeLessThan(0.5);
         });
     });
 
@@ -240,8 +240,8 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
         expect('skipped').toBe('skipped');
     });
 
-    test('case two', async () => {
-        // ...
+    test('case two', () => {
+        expect(Math.random()).toBeLessThan(0.5);
     });
 });
 
@@ -259,15 +259,29 @@ test.describe('suite group 2', () => {
         await delay(2000);
     });
 
+    test('random @passed or @failed or @flaky', () => {
+        expect(Math.random()).toBeLessThan(0.5);
+    });
+
+    test('random @passed or @flaky', () => {
+        expect(test.info().retry).toBe(Math.random() > 0.5 ? 1 : 0);
+    });
+
+    test('random @passed or @skipped', () => {
+        if (Math.random() > 0.5) {
+            test.skip();
+        }
+    });
+
     test('@smoke @fast one', () => {
-        // ...
+        expect(Math.random()).toBeLessThan(0.5);
     });
 
     test('@sanity @critical two', () => {
-        // ...
+        expect(Math.random()).toBeLessThan(0.5);
     });
 });
 
 test('@smoke case after suite', () => {
-
+    expect(Math.random()).toBeLessThan(0.5);
 });

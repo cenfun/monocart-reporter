@@ -71,7 +71,7 @@ const onPieClick = (e) => {
 
     svg {
         path:hover {
-            opacity: 0.8;
+            opacity: 1;
         }
     }
 }

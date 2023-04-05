@@ -76,28 +76,7 @@
       </div>
     </div>
 
-    <div
-      v-if="report.trendList"
-      class="mcr-report-item"
-    >
-      <div class="mcr-report-head">
-        <VuiFlex
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <IconLabel
-            icon="trend"
-            :button="false"
-          >
-            <b>Trends</b>
-          </IconLabel>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart">
-        <Trend :trend-list="report.trendList" />
-      </div>
-    </div>
+    <Trend />
 
     <div class="mcr-report-item">
       <div class="mcr-report-head">
@@ -605,41 +584,6 @@ const tagsHandler = () => {
 
 };
 
-const getCurrentTrendInfo = (data) => {
-
-    const {
-        date, duration, summary
-    } = data;
-
-    const info = {
-        date,
-        duration
-    };
-
-    Object.keys(summary).forEach((k) => {
-        const item = summary[k];
-        info[k] = item.value;
-    });
-
-    return info;
-};
-
-const trendsHandler = () => {
-    const trendList = state.reportData.trends;
-    if (!Util.isList(trendList)) {
-        return;
-    }
-
-    trendList.push(getCurrentTrendInfo(state.reportData));
-
-    trendList.sort((a, b) => {
-        return a.date - b.date;
-    });
-
-    report.trendList = trendList;
-
-};
-
 const pieHandler = () => {
 
     const reportData = state.reportData;
@@ -693,7 +637,6 @@ watch(() => report.systemIndex, (v) => {
 watch(() => state.reportData, (v) => {
     if (v) {
         pieHandler();
-        trendsHandler();
         tagsHandler();
         systemHandler();
         timelineHandler();
