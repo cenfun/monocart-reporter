@@ -183,9 +183,14 @@
             icon="tag"
             :button="false"
           >
-            <b>Tags</b> <span class="mcr-num">{{ Util.NF(report.tagList.length) }}</span>
+            <b>Tags</b> <span
+              v-if="report.tagList"
+              class="mcr-num"
+            >{{ Util.NF(report.tagList.length) }}</span>
           </IconLabel>
+
           <div class="vui-flex-auto" />
+
           <a
             href="https://playwright.dev/docs/test-annotations#tag-tests"
             target="_blank"
@@ -198,6 +203,7 @@
       </div>
       <div class="mcr-report-chart">
         <VuiFlex
+          v-if="report.tagList"
           gap="15px"
           wrap
           padding="10px"
@@ -354,7 +360,6 @@ import Trend from './trend.vue';
 const { VuiFlex, VuiSelect } = components;
 
 const report = shallowReactive({
-    tagList: [],
     systemIndex: 0,
     monocart: `Monocart Reporter v${window.VERSION}`
 });
@@ -439,12 +444,6 @@ const exportList = [{
         icon: 'item',
         getData: () => {
             return report.pieChart;
-        }
-    }, {
-        name: 'Tags',
-        icon: 'item',
-        getData: () => {
-            return report.tagList;
         }
     }]
 }, {
@@ -575,6 +574,10 @@ const tagsHandler = () => {
             ... tagMap[tag]
         });
     });
+
+    if (!tagList.length) {
+        return;
+    }
 
     tagList.sort((a, b) => {
         return b.value - a.value;
