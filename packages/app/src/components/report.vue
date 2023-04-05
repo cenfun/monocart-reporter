@@ -117,7 +117,7 @@
 
         <VuiFlex
           v-if="report.usageList"
-          gap="15px"
+          gap="10px"
           padding="5px 10px 0 10px"
           wrap
         >
@@ -148,7 +148,7 @@
           <VuiFlex
             v-for="(group, i) in report.infoList"
             :key="i"
-            gap="15px"
+            gap="10px"
             wrap
           >
             <VuiFlex
