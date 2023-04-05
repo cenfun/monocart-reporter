@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter",
-    "version": "1.6.4",
+    "version": "1.6.5",
     "description": "monocart-reporter",
     "main": "dist/monocart-reporter.js",
     "files": [

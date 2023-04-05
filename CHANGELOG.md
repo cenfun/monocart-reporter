@@ -1,3 +1,6 @@
+* 1.6.5
+  - fixed tags counting only from case
+
 * 1.6.4
   - added trend API
 
