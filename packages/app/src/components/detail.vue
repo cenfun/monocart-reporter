@@ -29,7 +29,7 @@
           />
           <div
             class="mcr-detail-title"
-            v-html="tagFormatter(item.data.title)"
+            v-html="tagFormatter(item.data)"
           />
         </VuiFlex>
 

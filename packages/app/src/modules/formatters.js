@@ -107,9 +107,13 @@ const markdownFormatter = (str, inline) => {
 
 // ===========================================================================
 
-const tagPattern = /@([^@\s]+)/g;
-const tagFormatter = (str) => {
-    return str.replace(tagPattern, function(match, key) {
+const tagFormatter = (item) => {
+    const str = item.title;
+    if (item.type !== 'case') {
+        return str;
+    }
+
+    return str.replace(Util.tagPattern, function(match, key) {
         let styleStr = '';
         let titleStr = '';
         const tag = state.tagMap[key];
@@ -164,7 +168,7 @@ const formatters = {
     tree: function(value, rowItem, columnItem, cellNode) {
         let formattedValue = matchedFormatter(value, rowItem, columnItem);
         if (formattedValue === value) {
-            formattedValue = tagFormatter(value);
+            formattedValue = tagFormatter(rowItem);
         }
         const defaultFormatter = this.getDefaultFormatter('tree');
         if (rowItem.type === 'suite') {
