@@ -232,13 +232,13 @@ module.exports = {
 
             // async hook after report data generated
             onEnd: async (reportData, capability) => {
-                console.log('onEnd hook start');
+                // console.log('onEnd hook start');
 
                 // console.log(reportData.summary);
 
                 // send email
-                const sendEmail = require('./common/send-email.js');
-                await sendEmail(reportData, capability);
+                // const sendEmail = require('./common/send-email.js');
+                // await sendEmail(reportData, capability);
 
                 // testrail integration
                 // const testrail = require('./common/testrail.js');

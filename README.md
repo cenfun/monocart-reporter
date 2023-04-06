@@ -523,93 +523,51 @@ module.exports = {
             outputFile: './test-results/report.html',
             // async hook after report data generated
             onEnd: async (reportData, capability) => {
-                //await myAsyncFunction();
+                // console.log(reportData.summary);
+
+                // send email
+                // const sendEmail = require('./common/send-email.js');
+                // await sendEmail(reportData, capability);
+
+                // testrail integration
+                // const testrail = require('./common/testrail.js');
+                // await testrail(reportData, capability);
+
+                // slack integration with webhook
+                // const slackWebhook = require('./common/slack-webhook.js');
+                // await slackWebhook(reportData, capability);
+
+                // slack integration with web api
+                // const slackWebApi = require('./common/slack-web-api.js');
+                // await slackWebApi(reportData, capability);
+
+                // discord integration with webhook
+                // const discordWebhook = require('./common/discord-webhook.js');
+                // await discordWebhook(reportData, capability);
             }
         }]
     ]
 };
 ```
 ## Send Email
-### Check example: [send-email.js](/tests/common/send-email.js)
-```js
-// playwright.config.js
-module.exports = {
-    reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            onEnd: async (reportData, capability) => {
-                const sendEmail = require('./common/send-email.js');
-                await sendEmail(reportData, capability);
-            }
-        }]
-    ]
-};
-```
+example: [send-email.js](/tests/common/send-email.js)
 ### Preview in Gmail
 ![](/docs/email.png)
 
 
 ## Testrail Integration
-### Check example: [testrail.js](/tests/common/testrail.js)
-```js
-// playwright.config.js
-module.exports = {
-    reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            onEnd: async (reportData, capability) => {
-                const testrail = require('./common/testrail.js');
-                await testrail(reportData, capability);
-            }
-        }]
-    ]
-};
-```
-
+example: [testrail.js](/tests/common/testrail.js)
 ### Preview Testrail Run/Results
 ![](/docs/testrail.png)
 
 ## Slack Integration
 1. Simply send message with @slack/webhook, example: [slack-webhook.js](/tests/common/slack-webhook.js)
-```js
-// playwright.config.js
-module.exports = {
-    reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            onEnd: async (reportData, capability) => {
-                const slackWebhook = require('./common/slack-webhook.js');
-                await slackWebhook(reportData, capability);
-            }
-        }]
-    ]
-};
-```
 2. Post chat message or upload report file with @slack/web-api, example: [slack-web-api.js](/tests/common/slack-web-api.js)
 ### Preview in Slack
 ![](/docs/slack-webhook.png)
 
 ## Discord Integration
 Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. Discord supports directly displaying attached images, so you can upload screenshots of test reports to the Discord channel. example: [discord-webhook.js](/tests/common/discord-webhook.js)
-```js
-// playwright.config.js
-module.exports = {
-    reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            onEnd: async (reportData, capability) => {
-                // discord integration with webhook
-                const discordWebhook = require('./common/discord-webhook.js');
-                await discordWebhook(reportData, capability);
-            }
-        }]
-    ]
-};
-```
 ### Preview in Discord
 ![](/docs/discord-webhook.png)
 
