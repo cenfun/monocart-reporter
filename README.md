@@ -31,6 +31,8 @@
 
 ![](/docs/report.gif)
 
+![](/docs/cli.png)
+
 [More Test Reports](https://github.com/cenfun/monocart-reporter-test)
 
 ## Install
@@ -57,31 +59,6 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 - [tests/playwright.config.js](/tests/playwright.config.js)
 - [tests/example/example.spec.js](/tests/example/example.spec.js)
 - [tests/home-page/home-page.spec.js](/tests/home-page/home-page.spec.js)
-```sh
-[MCR] test results: My Test Report
-┌───────────────┬───────────────────┐
-│ ├ Tests       │ 30                │
-│ │ ├ Passed    │ 16 (53.3%)        │
-│ │ ├ Flaky     │ 4  (13.3%)        │
-│ │ ├ Skipped   │ 4  (13.3%)        │
-│ │ └ Failed    │ 6  (20.0%)        │
-│ ├ Steps       │ 228               │
-│ ├ Suites      │ 5                 │
-│ │ ├ Projects  │ 1                 │
-│ │ ├ Files     │ 2                 │
-│ │ ├ Describes │ 3                 │
-│ │ └ Shards    │ 0                 │
-│ ├ Retries     │ 10                │
-│ ├ Errors      │ 15                │
-│ ├ Logs        │ 65                │
-│ ├ Attachments │ 13                │
-│ ├ Playwright  │ v1.32.1           │
-│ ├ Date        │ 2023/4/5 22:17:30 │
-│ └ Duration    │ 13.3s             │
-└───────────────┴───────────────────┘
-[MCR] html report: .temp/monocart/index.html
-[MCR] json report: .temp/monocart/index.json
-```
 
 ## Output
 - path-to/your-filename.html  
@@ -582,7 +559,7 @@ nmls -p
 ┌────────────────────────────┬─────────┬──────────┬──────┬───────────┬────────┐
 │  Name                      │ Version │     Size │ Deps │ Deps Size │ Nested │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
-│ └ monocart-reporter        │ 1.6.5   │ 607.5 KB │   18 │   2.50 MB │      1 │
+│ └ monocart-reporter        │ 1.6.6   │ 611.0 KB │   18 │   2.50 MB │      1 │
 │   ├ dependencies           │         │          │      │           │        │
 │   │ ├ @babel/code-frame    │ 7.18.6  │  6.82 KB │   10 │  153.0 KB │      0 │
 │   │ ├ @babel/parser        │ 7.21.3  │  1.79 MB │    0 │       0 B │      0 │
@@ -593,7 +570,7 @@ nmls -p
 │   │ └ stack-utils          │ 2.0.6   │  14.3 KB │    1 │   3.18 KB │      1 │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
 │   └ packages in workspaces │         │          │      │           │        │
-│     └ monocart-reporter    │ 1.6.5   │ 553.5 KB │    0 │       0 B │      0 │
+│     └ monocart-reporter    │ 1.6.6   │ 551.4 KB │    0 │       0 B │      0 │
 └────────────────────────────┴─────────┴──────────┴──────┴───────────┴────────┘
 ```
 
