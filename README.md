@@ -24,10 +24,11 @@
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
 * [Merge Shard Reports](#merge-shard-reports)
-* [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
-* [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
-* [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
-* [Discord Integration](#discord-integration) (Post Screenshot of Report to Discord)
+* [onEnd callback](#onend-callback)
+    - [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
+    - [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
+    - [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
+    - [Discord Integration](#discord-integration) (Post Screenshot of Report to Discord)
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
