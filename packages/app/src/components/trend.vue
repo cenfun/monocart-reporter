@@ -230,11 +230,6 @@ const getResults = (item) => {
 
     }
 
-    results.push({
-        icon: 'calendar',
-        name: dateH
-    });
-
     const ns = item.ns;
     const tests = item[`${ns}tests`];
     // console.log(tests);
@@ -251,6 +246,11 @@ const getResults = (item) => {
             value: String(v),
             percent: Util.PF(v, tests)
         });
+    });
+
+    results.push({
+        icon: 'calendar',
+        name: dateH
     });
 
     return results;
