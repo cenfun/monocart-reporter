@@ -177,6 +177,28 @@ module.exports = {
                 // const locationColumn = defaultColumns.find((column) => column.id === 'location');
                 // locationColumn.width = 150;
 
+                // custom formatter for duration
+                // const durationColumn = defaultColumns.find((column) => column.id === 'duration');
+                // durationColumn.formatter = function(value, rowItem, columnItem) {
+                //     if (typeof value === 'number' && value) {
+                //         return `<i>${value.toLocaleString()} ms</i>`;
+                //     }
+                //     return value;
+                // };
+
+                // custom formatter for title
+                // The title shows the tree style, it is a complicated HTML structure
+                // please be careful to change the formatter, and it is recommended to format title base on previous.
+                // const titleColumn = defaultColumns.find((column) => column.id === 'title');
+                // titleColumn.formatter = function(value, rowItem, columnItem, cellNode) {
+                //     const perviousFormatter = this.getFormatter('tree');
+                //     const valueFormatted = perviousFormatter(value, rowItem, columnItem, cellNode);
+                //     if (rowItem.type === 'step') {
+                //         return `${valueFormatted}<div style="position:absolute;top:0;right:5px;">✅</div>`;
+                //     }
+                //     return valueFormatted;
+                // };
+
             },
 
             // additional custom visitor for columns

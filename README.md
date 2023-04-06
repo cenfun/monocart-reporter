@@ -10,6 +10,7 @@
 * Shows [Suites](https://playwright.dev/docs/api/class-suite)/[Cases](https://playwright.dev/docs/api/class-testcase)/[Steps](https://playwright.dev/docs/api/class-teststep) with Tree Style
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Custom [Columns and Formatters](#columns-and-formatter) (extra information for suite/case/step)
+* [Searchable Fields](#searchable-fields)
 * Custom [Data Collection Visitor](#data-collection-visitor)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
@@ -19,7 +20,6 @@
 * Timeline Workers Graph
 * Monitor CPU and Memory Usage
 * [Metadata](#metadata) Report
-* [Searchable Fields](#searchable-fields)
 * [Style Tags](#style-tags)
 * [Merge Shard Reports](#merge-shard-reports)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
@@ -192,6 +192,61 @@ module.exports = {
     ]
 };
 ```
+### Custom Formatter
+> Note that the formatter function will be serialized into string via JSON, so closures, contexts, etc. will not work!
+```js
+// playwright.config.js
+module.exports = {
+     reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            columns: (defaultColumns) => {
+
+                // custom formatter for duration
+                const durationColumn = defaultColumns.find((column) => column.id === 'duration');
+                durationColumn.formatter = function(value, rowItem, columnItem) {
+                    if (typeof value === 'number' && value) {
+                        return `<i>${value.toLocaleString()} ms</i>`;
+                    }
+                    return value;
+                };
+
+                // custom formatter for title
+                // The title shows the tree style, it is a complicated HTML structure
+                // please be careful to change the formatter, and it is recommended to format title base on previous.
+                const titleColumn = defaultColumns.find((column) => column.id === 'title');
+                titleColumn.formatter = function(value, rowItem, columnItem, cellNode) {
+                    const perviousFormatter = this.getFormatter('tree');
+                    const valueFormatted = perviousFormatter(value, rowItem, columnItem, cellNode);
+                    if (rowItem.type === 'step') {
+                        return `${valueFormatted}<div style="position:absolute;top:0;right:5px;">✅</div>`;
+                    }
+                    return valueFormatted;
+                };
+
+            }
+        }]
+    ]
+};
+```
+
+### Searchable Fields
+```js
+// playwright.config.js
+module.exports = {
+     reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            columns: (defaultColumns) => {
+                const locationColumn = defaultColumns.find((column) => column.id === 'location');
+                locationColumn.searchable = true;
+            }
+        }]
+    ]
+};
+```
 
 ## Data Collection Visitor
 [Collect Data from Comments](#adding-comments-to-your-tests) (similar to JsDoc)
@@ -205,8 +260,8 @@ module.exports = {
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
                 // auto collect data from comments
-                // https://babeljs.io/docs/babel-parser
                 const parserOptions = {
+                    // https://babeljs.io/docs/babel-parser
                     // sourceType: "module"
                 }
                 const comments = collect.comments(parserOptions);
@@ -373,22 +428,6 @@ export default async (config) => {
     const chromiumVersion = await browser.version();
     metadata.chromiumVersion = chromiumVersion;
 };
-```
-
-## Searchable Fields
-```js
-// playwright.config.js
-module.exports = {
-     reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            columns: (defaultColumns) => {
-                const locationColumn = defaultColumns.find((column) => column.id === 'location');
-                locationColumn.searchable = true;
-            }
-        }]
-    ]
 ```
 
 ## Style Tags
