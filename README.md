@@ -10,7 +10,8 @@
 * Shows [Suites](https://playwright.dev/docs/api/class-suite)/[Cases](https://playwright.dev/docs/api/class-testcase)/[Steps](https://playwright.dev/docs/api/class-teststep) with Tree Style
 * Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Custom [Columns and Formatters](#columns-and-formatter) (extra information for suite/case/step)
-* [Searchable Fields](#searchable-fields)
+    - [Custom Formatter](#custom-formatter)
+    - [Searchable Fields](#searchable-fields)
 * Custom [Data Collection Visitor](#data-collection-visitor)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
