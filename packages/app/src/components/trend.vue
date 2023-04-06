@@ -211,16 +211,28 @@ const findClosest = (per) => {
 
 const getResults = (item) => {
     const results = [];
-    if (item.density) {
+
+    const d = new Date(item.date);
+    let dateH = d.toLocaleString();
+
+    const density = item.density;
+
+    if (density) {
         results.push({
             icon: 'time',
-            name: `by ${item.density}`,
+            name: `by ${density}`,
             value: item.count
         });
+
+        if (density === 'day') {
+            dateH = d.toLocaleDateString();
+        }
+
     }
+
     results.push({
         icon: 'calendar',
-        name: new Date(item.date).toLocaleString()
+        name: dateH
     });
 
     const ns = item.ns;
@@ -259,18 +271,25 @@ const getListByDensity = () => {
     }
 
     const caseTypes = chart.caseTypes;
-    // const minDate = chart.minDate;
-    // const duration = chart.duration;
+
+    // 2023-04-04T11:29:53.613Z
+    // 2023-04-04T11
+    // 2023-04-04
+    let dateInfo = {
+        len: 10,
+        zero: 'T00:00:00.000Z'
+    };
+    if (density === 'hour') {
+        dateInfo = {
+            len: 13,
+            zero: ':00:00.000Z'
+        };
+    }
 
     const map = {};
     trendList.forEach((item) => {
         const iso = new Date(item.date).toISOString();
-        // hour or day
-        const len = density === 'hour' ? 13 : 10;
-        // 2023-04-04T11:29:53.613Z
-        // 2023-04-04T11
-        // 2023-04-04
-        const dh = iso.slice(0, len);
+        const dh = iso.slice(0, dateInfo.len);
         // console.log(hk);
         if (!map[dh]) {
             map[dh] = [];
@@ -280,8 +299,7 @@ const getListByDensity = () => {
     // console.log(map);
     return Object.keys(map).map((dh, i) => {
         const ls = map[dh];
-        const zero = density === 'hour' ? ':00:00.000Z' : 'T00:00:00.000Z';
-        const date = new Date(dh + zero);
+        const date = new Date(dh + dateInfo.zero);
         // console.log(date);
         // calculate avg
         const avg = {
@@ -387,10 +405,8 @@ const initTrendList = (trendList) => {
     chart.maxTests = maxTests;
 
     const [minDate, maxDate] = trendList.map((it) => [it.date, it.date]).reduce((a, b) => [Math.min(a[0], b[0]), Math.max(a[1], b[1])]);
-    // chart.minDate = minDate;
     const duration = maxDate - minDate;
     initDensity(duration);
-    // chart.duration = duration;
 
     chart.caseTypes = [].concat(state.reportData.caseTypes).reverse();
 
