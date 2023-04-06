@@ -20,8 +20,9 @@
 * Export Data (json)
 * Timeline Workers Graph
 * Monitor CPU and Memory Usage
-* [Metadata](#metadata) Report
 * [Style Tags](#style-tags)
+* [Metadata](#metadata)
+* [Trend Chart](#trend-chart)
 * [Merge Shard Reports](#merge-shard-reports)
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
@@ -376,6 +377,35 @@ module.exports = {
 };
 ```
 
+## Style Tags
+* Add tag to test title (starts with @)
+```js
+test('test title @smoke @critical', () => { ... });
+```
+* Custom tag style
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            tags: {
+                smoke: {
+                    style: {
+                        background: '#6F9913'
+                    },
+                    description: 'This is Smoke Test'
+                },
+                critical: {
+                    background: '#c00'
+                }
+            }
+        }]
+    ]
+};
+```
+
 ## Metadata
 * add metadata to config
 ```js
@@ -408,12 +438,9 @@ export default async (config) => {
 };
 ```
 
-## Style Tags
-* Add tag to test title (starts with @)
-```js
-test('test title @smoke @critical', () => { ... });
-```
-* Custom tag style
+## Trend Chart
+> The trend chart requires historical data generally stored in the server database. But there is a serverless solution which is connecting the previous report data for trend chart.
+- If a report is generated in the same place every time, you can simply connect the data with the report JSON path
 ```js
 // playwright.config.js
 module.exports = {
@@ -421,21 +448,36 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-            tags: {
-                smoke: {
-                    style: {
-                        background: '#6F9913'
-                    },
-                    description: 'This is Smoke Test'
-                },
-                critical: {
-                    background: '#c00'
-                }
+            // connect previous report data for trend chart
+            trend: './test-results/report.json'
+        }]
+    ]
+};
+```
+- Otherwise, if you need to solve the data by yourself
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            // connect previous report data for trend chart
+            trend: async () => {
+                const previousReportData = await readDataFromSomeWhere("path-to/report.json");
+                // do some data filtering to previous trends
+                previousReportData.trends = previousReportData.trends.filter((item) => {
+                    // remove data a week ago
+                    return item.date > (Date.now() - 7 * 24 * 60 * 60 * 1000)
+                });
+                return previousReportData;
             }
         }]
     ]
 };
 ```
+
+
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
