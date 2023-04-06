@@ -44,6 +44,7 @@ npm i monocart-reporter
 ```
 
 ## Playwright Config
+> Note: we use CommonJS by default, please [move to ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c#how-can-i-move-my-commonjs-project-to-esm) according to your needs.
 ```js
 // playwright.config.js
 module.exports = {
@@ -592,7 +593,7 @@ module.exports = {
 ![](/docs/slack-webhook.png)
 
 ## Discord Integration
-Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. Discord supports directly displaying attached images, so you can upload screenshots of test reports to the discord channel. example: [discord-webhook.js](/tests/common/discord-webhook.js)
+Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. Discord supports directly displaying attached images, so you can upload screenshots of test reports to the Discord channel. example: [discord-webhook.js](/tests/common/discord-webhook.js)
 ```js
 // playwright.config.js
 module.exports = {
