@@ -491,7 +491,7 @@ npx playwright test --shard=2/3
 npx playwright test --shard=3/3
 ```
 There are 3 reports will be generated. Using `MonocartReporter.merge()` API to merge all reports into one.
-> Note: one more suite level "shard" will be added, its title will be the machine hostname, and the summary will be restated.
+> Note: one more suite level "shard" will be added, its title will be the machine hostname, and the summary will be restated. You may need to transfer the attachments by yourself and update the path of the attachments with `attachmentPath` API.
 ```js
 import MonocartReporter from 'monocart-reporter';
 
