@@ -27,6 +27,7 @@
 * [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
 * [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
 * [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
+* [Discord Integration](#discord-integration) (Post Screenshot of Report to Discord)
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -589,6 +590,28 @@ module.exports = {
 2. Post chat message or upload report file with @slack/web-api, example: [slack-web-api.js](/tests/common/slack-web-api.js)
 ### Preview in Slack
 ![](/docs/slack-webhook.png)
+
+## Discord Integration
+Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. Discord supports directly displaying attached images, so you can upload screenshots of test reports to the discord channel. example: [discord-webhook.js](/tests/common/discord-webhook.js)
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            onEnd: async (reportData, capability) => {
+                // discord integration with webhook
+                const discordWebhook = require('./common/discord-webhook.js');
+                await discordWebhook(reportData, capability);
+            }
+        }]
+    ]
+};
+```
+### Preview in Discord
+![](/docs/discord-webhook.png)
+
 
 ## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)

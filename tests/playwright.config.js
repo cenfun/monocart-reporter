@@ -252,6 +252,10 @@ module.exports = {
                 // const slackWebApi = require('./common/slack-web-api.js');
                 // await slackWebApi(reportData, capability);
 
+                // discord integration with webhook
+                // const discordWebhook = require('./common/discord-webhook.js');
+                // await discordWebhook(reportData, capability);
+
                 // html to pdf
                 // const toPdf = require('./common/to-pdf.js');
                 // await toPdf(reportData, capability);
