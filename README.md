@@ -68,7 +68,7 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 ## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
-Note that test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
+> Note: test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
 ```js
 // playwright.config.js
 // attachments outputDir and report outputFile used same folder
@@ -175,7 +175,7 @@ module.exports = {
 };
 ```
 ### Custom Formatter
-> Note that the formatter function will be serialized into string via JSON, so closures, contexts, etc. will not work!
+> Note: the formatter function will be serialized into string via JSON, so closures, contexts, etc. will not work!
 ```js
 // playwright.config.js
 module.exports = {
@@ -195,7 +195,7 @@ module.exports = {
                 };
 
                 // custom formatter for title
-                // The title shows the tree style, it is a complicated HTML structure
+                // Note: The title shows the tree style, it is a complicated HTML structure
                 // please be careful to change the formatter, and it is recommended to format title base on previous.
                 const titleColumn = defaultColumns.find((column) => column.id === 'title');
                 titleColumn.formatter = function(value, rowItem, columnItem, cellNode) {
@@ -427,6 +427,7 @@ module.exports = {
             outputFile: './test-results/report.html'
         }]
     ]
+};
 ```
 * collect metadata in global setup
 ```js
@@ -442,7 +443,7 @@ export default async (config) => {
 ```
 
 ## Trend Chart
-> The trend chart requires historical data generally stored in the server database. But there is a serverless solution which is connecting the previous report data for trend chart.
+> Note: the trend chart requires historical data generally stored in the server database. But there is a serverless solution which is connecting the previous report data for trend chart.
 - If a report is generated in the same place every time, you can simply connect the data with the report JSON path
 ```js
 // playwright.config.js
