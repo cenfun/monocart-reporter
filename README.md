@@ -205,7 +205,11 @@ module.exports = {
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
                 // auto collect data from comments
-                const comments = collect.comments();
+                // https://babeljs.io/docs/babel-parser
+                const parserOptions = {
+                    // sourceType: "module"
+                }
+                const comments = collect.comments(parserOptions);
                 if (comments) {
                     Object.assign(data, comments);
                 }

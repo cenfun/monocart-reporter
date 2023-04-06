@@ -1,3 +1,6 @@
+* 1.6.6
+  - added comments parser options, support typescript
+
 * 1.6.5
   - fixed tags counting only from case
   - fixed test duration format
