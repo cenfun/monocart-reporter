@@ -443,7 +443,7 @@ export default async (config) => {
 ```
 
 ## Trend Chart
-> Note: the trend chart requires historical data generally stored in the server database. But there is a serverless solution which is connecting the previous report data for trend chart.
+> Note: the trend chart requires historical data generally stored in the server database. But there is a serverless solution which is connecting and collecting the previous report data before test every time for trend chart.
 - If a report is generated in the same place every time, you can simply connect the data with the report JSON path
 ```js
 // playwright.config.js
@@ -491,6 +491,7 @@ npx playwright test --shard=2/3
 npx playwright test --shard=3/3
 ```
 There are 3 reports will be generated. Using `MonocartReporter.merge()` API to merge all reports into one.
+> Note: one more suite level "shard" will be added, its title will be the machine hostname, and the summary will be restated.
 ```js
 import MonocartReporter from 'monocart-reporter';
 
