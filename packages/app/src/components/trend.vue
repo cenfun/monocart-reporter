@@ -6,7 +6,7 @@
     <div class="mcr-report-head">
       <VuiFlex
         gap="15px"
-        padding="5px 10px"
+        padding="10px"
         wrap
       >
         <IconLabel
@@ -15,11 +15,17 @@
         >
           <b>Trends</b>
         </IconLabel>
-        <div class="vui-flex-auto" />
+
         <VuiSelect
           v-model="chart.density"
           :options="chart.densityOptions"
-          width="65px"
+          label="x"
+        />
+
+        <VuiSelect
+          v-model="chart.type"
+          :options="chart.typeOptions"
+          label="y"
         />
       </VuiFlex>
     </div>
@@ -50,8 +56,10 @@
             >
               <path
                 :d="item.d"
-                :fill="item.color"
-                opacity="0.8"
+                :fill="item.fill"
+                :stroke="item.stroke"
+                :opacity="item.opacity"
+                :fill-opacity="item.fillOpacity"
               />
             </g>
 
@@ -122,18 +130,19 @@ const chart = shallowReactive({
     height: 200,
     lines: [],
     list: null,
-    density: 'series',
-    densityOptions: []
+
+    density: 'Series',
+    // depends on duration
+    densityOptions: [],
+
+    type: 'Status',
+    typeOptions: []
 });
 
 const viewBox = computed(() => `0 0 ${chart.width} ${chart.height}`);
 
-
 const popover = ref(null);
-
-const pd = shallowReactive({
-
-});
+const pd = shallowReactive({});
 
 const hidePopover = () => {
     onMouseMove.cancel();
@@ -220,15 +229,32 @@ const getResults = (item) => {
     if (density) {
         results.push({
             icon: 'time',
-            name: `by ${density}`,
+            name: `By ${density}`,
             value: item.count
         });
 
-        if (density === 'day') {
+        if (density === 'Day') {
             dateH = d.toLocaleDateString();
         }
 
     }
+
+    const items = chart.typeItems[chart.type];
+    if (items) {
+        appendItemResults(item, results, items);
+    } else {
+        appendStatusResults(item, results);
+    }
+
+    results.push({
+        icon: 'calendar',
+        name: dateH
+    });
+
+    return results;
+};
+
+const appendStatusResults = (item, results) => {
 
     const summary = state.summary;
 
@@ -243,8 +269,8 @@ const getResults = (item) => {
     });
 
     // asc caseTypes
-    const caseTypes = state.reportData.caseTypes;
-    caseTypes.forEach((k) => {
+    const ascCaseTypes = state.reportData.caseTypes;
+    ascCaseTypes.forEach((k) => {
         const info = summary[k];
         const v = item[ns + k];
         results.push({
@@ -254,30 +280,45 @@ const getResults = (item) => {
             percent: Util.PF(v, tests)
         });
     });
-
-    results.push({
-        icon: 'calendar',
-        name: dateH
-    });
-
-    return results;
 };
 
-const getListByDensity = () => {
-    const trendList = chart.trendList;
-    const density = chart.density;
+const appendItemResults = (item, results, items) => {
+    const ns = item.ns;
+    items.forEach((it) => {
+        let v = item[ns + it.type];
+        if (it.type === 'duration') {
+            v = Util.TF(v);
+        }
+        results.push({
+            icon: it.icon,
+            name: it.name,
+            value: v
+        });
+    });
+};
 
-    if (!density || density === 'series') {
-        return trendList.map((item, i) => {
+// ================================================================================================
+
+const listCache = {};
+const getListByDensity = () => {
+    const density = chart.density;
+    const cache = listCache[density];
+    if (cache) {
+        return cache;
+    }
+
+    const trendList = chart.trendList;
+    if (density === 'Series') {
+        const list = trendList.map((item, i) => {
             return {
                 index: i,
                 ns: '',
                 ... item
             };
         });
+        listCache[density] = list;
+        return list;
     }
-
-    const caseTypes = chart.caseTypes;
 
     // 2023-04-04T11:29:53.613Z
     // 2023-04-04T11
@@ -286,7 +327,7 @@ const getListByDensity = () => {
         len: 10,
         zero: 'T00:00:00.000Z'
     };
-    if (density === 'hour') {
+    if (density === 'Hour') {
         dateInfo = {
             len: 13,
             zero: ':00:00.000Z'
@@ -304,7 +345,9 @@ const getListByDensity = () => {
         map[dh].push(item);
     });
     // console.log(map);
-    return Object.keys(map).map((dh, i) => {
+
+    const trendTypes = chart.trendTypes;
+    const list = Object.keys(map).map((dh, i) => {
         const ls = map[dh];
         const date = new Date(dh + dateInfo.zero);
         // console.log(date);
@@ -316,54 +359,41 @@ const getListByDensity = () => {
             count: ls.length,
             date
         };
-        let tests = 0;
-        caseTypes.forEach((k) => {
+        trendTypes.forEach((k) => {
             const total = ls.reduce((p, it) => p + it[k], 0);
-            tests += total;
             avg[`total_${k}`] = total;
             avg[k] = total / ls.length;
         });
-        avg.total_tests = tests;
         // console.log(avg);
         return avg;
     });
 
+    listCache[density] = list;
+    return list;
+
 };
 
-
-const render = () => {
-    const trendList = chart.trendList;
-    if (!trendList) {
-        return;
-    }
-
-    const list = getListByDensity();
-    chart.list = list;
-
-    const maxTests = chart.maxTests;
-
+const getStatusLines = (list) => {
     const padding = chart.padding;
     const cw = chart.width - padding * 2;
     const ch = chart.height - padding * 2;
-
     const xw = cw / (list.length - 1);
-
     const point = Util.point;
 
     let perviousPoints = list.map((t, i) => {
         return [padding + i * xw, padding + ch];
     });
 
-    const caseTypes = chart.caseTypes;
+    const summary = state.summary;
+    const maxTests = chart.trendMax.tests;
 
-    chart.lines = caseTypes.map((caseType) => {
-        const summary = state.summary;
+    // desc caseTypes
+    const descCaseTypes = [].concat(state.reportData.caseTypes).reverse();
+    chart.lines = descCaseTypes.map((caseType) => {
         const meta = summary[caseType];
-
         const currentPoints = list.map((t, i) => {
             const [px, py] = perviousPoints[i];
-            const v = t[caseType];
-            const y = py - v / maxTests * ch;
+            const y = py - t[caseType] / maxTests * ch;
             return [px, y];
         });
 
@@ -377,46 +407,144 @@ const render = () => {
         }).join('L')}z`;
 
         return {
-            name: meta.name,
-            color: meta.color,
-            bg: meta.bg,
-            percent: meta.percent,
-            points: currentPoints,
+            fill: meta.color,
+            stroke: 'none',
+            opacity: '0.8',
             d
         };
     });
+};
 
+const getItemLines = (list, items) => {
+    const padding = chart.padding;
+    const cw = chart.width - padding * 2;
+    const ch = chart.height - padding * 2;
+    const xw = cw / (list.length - 1);
+    const point = Util.point;
+    const trendMax = chart.trendMax;
+
+    const lines = [];
+    items.forEach((item) => {
+
+        const k = item.type;
+        const points = list.map((t, i) => {
+            const x = padding + i * xw;
+            const y = padding + ch - t[k] / trendMax[k] * ch;
+            return [x, y];
+        });
+
+        const ps = points.map((it) => {
+            const [x, y] = it;
+            return point(x, y);
+        });
+
+        const dStroke = `M${ps.join('L')}`;
+        const color = item.color;
+
+        lines.push({
+            fill: 'none',
+            stroke: color,
+            d: dStroke
+        });
+
+        const dFill = `M0,${ch}L${ps.join('L')}V${ch}`;
+
+        lines.push({
+            fill: color,
+            stroke: 'none',
+            fillOpacity: '0.1',
+            d: dFill
+        });
+
+    });
+
+    chart.lines = lines;
+};
+
+const render = () => {
+    const trendList = chart.trendList;
+    if (!trendList) {
+        return;
+    }
+
+    const list = getListByDensity();
+    chart.list = list;
+
+    const type = chart.type;
+    const typeItems = {
+        Duration: [{
+            icon: 'time',
+            type: 'duration',
+            name: 'Duration',
+            color: '#005BA4'
+        }],
+        Steps: [{
+            icon: 'step',
+            type: 'steps',
+            name: 'Steps',
+            color: '#005BA4'
+        }],
+        Errors: [{
+            icon: 'error',
+            type: 'errors',
+            name: 'Errors',
+            color: '#005BA4'
+        }],
+        Retries: [{
+            icon: 'reload',
+            type: 'retries',
+            name: 'Retries',
+            color: '#005BA4'
+        }]
+    };
+    chart.typeItems = typeItems;
+    chart.typeOptions = ['Status'].concat(Object.keys(typeItems));
+
+    const items = typeItems[type];
+    if (items) {
+        return getItemLines(list, items);
+    }
+
+    return getStatusLines(list);
 };
 
 const initDensity = (duration) => {
-    const densityOptions = ['series'];
+    const densityOptions = ['Series'];
     const h = 60 * 60 * 1000;
     if (duration > h) {
-        densityOptions.push('hour');
+        densityOptions.push('Hour');
     }
     if (duration > 24 * h) {
-        densityOptions.push('day');
+        densityOptions.push('Day');
     }
     chart.densityOptions = densityOptions;
 };
 
 const initTrendList = (trendList) => {
-
     // console.log('trendList', trendList);
-    const maxTests = trendList.map((it) => it.tests).reduce((a, b) => Math.max(a, b));
-    if (!maxTests) {
-        return;
-    }
+    const summaryTypes = Object.keys(state.summary);
+    const trendTypes = summaryTypes.concat('duration');
+    chart.trendTypes = trendTypes;
+    const trendMax = {};
+    trendTypes.forEach((k) => {
+        // max not 0
+        trendMax[k] = 1;
+    });
 
+    trendList.forEach((item) => {
+        trendTypes.forEach((k) => {
+            trendMax[k] = Math.max(trendMax[k], item[k]);
+        });
+    });
+
+    chart.trendMax = trendMax;
     chart.trendList = trendList;
-    chart.maxTests = maxTests;
 
+    // date
     const first = trendList[0];
     const last = trendList[trendList.length - 1];
     const duration = last.date - first.date;
     initDensity(duration);
-
-    chart.caseTypes = [].concat(state.reportData.caseTypes).reverse();
 
     render();
 };
@@ -437,7 +565,10 @@ const trendsHandler = () => {
 
 };
 
-watch(() => chart.density, (v) => {
+watch([
+    () => chart.type,
+    () => chart.density
+], (v) => {
     render();
 });
 
