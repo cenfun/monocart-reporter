@@ -4,27 +4,32 @@
       class="mcr-header"
       padding="10px"
       gap="10px"
-      wrap
+      shrink
     >
-      <div class="mcr-title">
-        <a href="./">{{ state.title }}</a>
-      </div>
-
-      <IconLabel
-        icon="calendar"
-        size="16px"
-        :button="false"
+      <VuiFlex
+        gap="10px"
+        wrap
       >
-        {{ state.date }}
-      </IconLabel>
+        <div class="mcr-title">
+          <a href="./">{{ state.title }}</a>
+        </div>
 
-      <IconLabel
-        icon="time"
-        size="16px"
-        :button="false"
-      >
-        {{ state.duration }}
-      </IconLabel>
+        <IconLabel
+          icon="calendar"
+          size="16px"
+          :button="false"
+        >
+          {{ state.date }}
+        </IconLabel>
+
+        <IconLabel
+          icon="time"
+          size="16px"
+          :button="false"
+        >
+          {{ state.duration }}
+        </IconLabel>
+      </VuiFlex>
 
       <div class="vui-flex-auto" />
 
@@ -40,6 +45,7 @@
       gap="10px"
       padding="10px"
       wrap
+      shrink
     >
       <div class="mcr-nav">
         <div
@@ -61,15 +67,18 @@
 
       <div class="vui-flex-auto" />
 
-      <VuiFlex gap="10px">
+      <VuiFlex
+        shrink
+        gap="10px"
+      >
         <VuiFlex
           gap="2px"
           padding="5px 0 5px 5px"
-          center
+          shrink
         >
           <VuiInput
             v-model="state.keywords"
-            width="160px"
+            width="100%"
             :class="searchClass"
             placeholder="keywords"
           />

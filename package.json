@@ -22,8 +22,8 @@
         "url": "git+https://github.com/cenfun/monocart-reporter.git"
     },
     "dependencies": {
-        "@babel/code-frame": "^7.18.6",
-        "@babel/parser": "^7.21.3",
+        "@babel/code-frame": "^7.21.4",
+        "@babel/parser": "^7.21.4",
         "console-grid": "^2.0.1",
         "eight-colors": "^1.0.3",
         "lz-utils": "^1.0.6",
@@ -31,7 +31,7 @@
         "stack-utils": "^2.0.6"
     },
     "devDependencies": {
-        "@playwright/test": "^1.32.1",
+        "@playwright/test": "^1.32.2",
         "@slack/web-api": "^6.8.1",
         "@slack/webhook": "^6.1.0",
         "ansi-to-html": "^0.7.2",
@@ -47,11 +47,11 @@
         "fps-detector": "^1.0.3",
         "github-markdown-css": "^5.2.0",
         "marked": "^4.3.0",
-        "playwright": "^1.32.1",
-        "stylelint": "^15.3.0",
+        "playwright": "^1.32.2",
+        "stylelint": "^15.4.0",
         "stylelint-config-plus": "^1.0.2",
         "testrail-api": "^1.3.6",
         "turbogrid": "^3.0.7",
-        "vine-ui": "^3.1.5"
+        "vine-ui": "^3.1.6"
     }
 }

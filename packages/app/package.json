@@ -2,6 +2,7 @@
     "name": "monocart-reporter",
     "version": "1.6.6",
     "description": "monocart-reporter",
+    "private": true,
     "main": "dist/monocart-reporter.js",
     "files": [
         "dist"
@@ -9,6 +10,5 @@
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {},
-    "private": true,
     "link": false
 }
