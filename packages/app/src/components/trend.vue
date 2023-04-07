@@ -230,11 +230,18 @@ const getResults = (item) => {
 
     }
 
+    const summary = state.summary;
+
     const ns = item.ns;
     const tests = item[`${ns}tests`];
     // console.log(tests);
 
-    const summary = state.summary;
+    results.push({
+        icon: 'case',
+        name: summary.tests.name,
+        value: tests
+    });
+
     // asc caseTypes
     const caseTypes = state.reportData.caseTypes;
     caseTypes.forEach((k) => {
@@ -404,8 +411,9 @@ const initTrendList = (trendList) => {
     chart.trendList = trendList;
     chart.maxTests = maxTests;
 
-    const [minDate, maxDate] = trendList.map((it) => [it.date, it.date]).reduce((a, b) => [Math.min(a[0], b[0]), Math.max(a[1], b[1])]);
-    const duration = maxDate - minDate;
+    const first = trendList[0];
+    const last = trendList[trendList.length - 1];
+    const duration = last.date - first.date;
     initDensity(duration);
 
     chart.caseTypes = [].concat(state.reportData.caseTypes).reverse();
