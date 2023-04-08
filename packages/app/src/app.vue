@@ -277,6 +277,7 @@ const initSearchableColumns = (columns) => {
 };
 
 const caseHandler = (item) => {
+    // collapsed case in grid by default
     if (item.subs) {
         item.collapsed = true;
     }
@@ -284,6 +285,7 @@ const caseHandler = (item) => {
 };
 
 const stepHandler = (item) => {
+    // collapsed step group in grid by default
     if (item.subs) {
         item.collapsed = true;
     }
@@ -303,14 +305,11 @@ const initData = (reportData) => {
     // init searchable info
     initSearchableColumns(columns);
 
-    const caseMap = {};
-
-    Util.forEachTree(rows, function(item) {
+    Util.forEach(rows, function(item) {
         item.selectable = true;
         if (item.type === 'case') {
             summary.tests.icon = 'case';
             caseHandler(item);
-            caseMap[item.caseId] = item;
             return;
         }
         if (item.type === 'step') {
@@ -321,7 +320,6 @@ const initData = (reportData) => {
         summary.suites.icon = 'suite';
     });
 
-    state.caseMap = caseMap;
     state.tagMap = tags;
 
     // summary.failed.value = 0;
@@ -351,6 +349,28 @@ const initData = (reportData) => {
         // state.systemList = [system, system];
     }
 
+};
+
+// case map with tree info for detail page
+const initCaseMap = (rows) => {
+    rows = JSON.parse(JSON.stringify(rows));
+    const detailMap = {};
+    Util.forEach(rows, function(item, parent) {
+        item.tg_parent = parent;
+        if (parent) {
+            item.tg_level = parent.tg_level + 1;
+        } else {
+            item.tg_level = 0;
+        }
+        // remove all collapsed
+        if (item.collapsed) {
+            item.collapsed = false;
+        }
+        if (item.type === 'case') {
+            detailMap[item.caseId] = item;
+        }
+    });
+    state.detailMap = detailMap;
 };
 
 const onSearchDropdownClick = (e) => {
@@ -405,13 +425,15 @@ onMounted(() => {
 
     initData(reportData);
 
-    // for export all data
+    // for export all data JSON able
     state.reportData = reportData;
 
     state.gridDataAll = {
         columns: reportData.columns,
         rows: reportData.rows
     };
+
+    initCaseMap(reportData.rows);
 
     // for custom column  formatters
     state.formatters = reportData.formatters;

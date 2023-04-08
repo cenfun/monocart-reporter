@@ -159,7 +159,6 @@
             <IconLabel
               :icon="item.caseType"
               :button="false"
-              size="20px"
             />
             <div class="mcr-long-label">
               {{ item.title }}
@@ -384,7 +383,7 @@ const workerListHandler = () => {
 
     // init worker title and type
     jobs.forEach((item) => {
-        const caseItem = state.caseMap[item.caseId];
+        const caseItem = state.detailMap[item.caseId];
         if (caseItem) {
             item.caseType = caseItem.caseType;
             item.title = caseItem.title;

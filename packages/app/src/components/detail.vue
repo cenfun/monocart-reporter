@@ -4,8 +4,8 @@
     class="mcr-detail"
   >
     <div
-      v-for="item in data.list"
-      :key="item.key"
+      v-for="item, ik in data.list"
+      :key="ik"
       class="mcr-detail-item"
       :style="item.style"
     >
@@ -17,39 +17,39 @@
       >
         <VuiFlex gap="5px">
           <IconLabel
-            v-if="item.data.caseType"
-            :icon="item.data.caseType"
-            size="20px"
-            :button="false"
-          />
+            v-if="item.stepGroup"
+            :icon="item.data.collapsed?'collapsed':'expanded'"
+            @click="onRowHeadClick(item.data)"
+          >
+            {{ item.data.title }}
+          </IconLabel>
           <IconLabel
             v-else
             :icon="item.icon"
             :button="false"
-          />
-          <div
-            class="mcr-detail-title"
-            v-html="tagFormatter(item.data)"
-          />
+          >
+            <div
+              class="mcr-detail-title"
+              v-html="tagFormatter(item.data)"
+            />
+          </IconLabel>
         </VuiFlex>
 
-        <template v-if="item.simpleColumns">
-          <VuiFlex
-            v-for="column in item.simpleColumns"
-            :key="column.key"
-            gap="5px"
-            wrap
-            class="mcr-column-simple"
-          >
-            <div class="mcr-simple-head">
-              {{ column.data.name }}
-            </div>
-            <div
-              class="mcr-simple-content"
-              v-html="column.content"
-            />
-          </VuiFlex>
-        </template>
+        <VuiFlex
+          v-for="column, sk in item.simpleColumns"
+          :key="sk"
+          gap="5px"
+          wrap
+          class="mcr-column-simple"
+        >
+          <div class="mcr-simple-head">
+            {{ column.data.name }}
+          </div>
+          <div
+            class="mcr-simple-content"
+            v-html="column.content"
+          />
+        </VuiFlex>
 
         <div class="vui-flex-auto" />
 
@@ -67,28 +67,21 @@
           {{ Util.TF(item.data.duration) }}
         </div>
       </VuiFlex>
-      <div
-        v-if="item.detailColumns"
-        class="mcr-detail-body"
-      >
+      <div class="mcr-detail-body">
         <div
-          v-for="column in item.detailColumns"
-          :key="column.key"
+          v-for="column, dk in item.detailColumns"
+          :key="dk"
           :class="itemColumnClass(column.data)"
         >
           <div class="mcr-column-anchor">
             <a :name="column.data.id" />
           </div>
           <IconLabel
-            size="9px"
             :icon="column.collapsed?'collapsed':'expanded'"
             class="mcr-column-head"
             @click="onColumnHeadClick(column)"
           >
-            <IconLabel
-              :icon="column.icon"
-              size="20px"
-            >
+            <IconLabel :icon="column.icon">
               {{ column.data.name }}
             </IconLabel>
           </IconLabel>
@@ -393,23 +386,19 @@ const getCustom = (item, column) => {
     };
 };
 
+const onRowHeadClick = (row) => {
+    row.collapsed = !row.collapsed;
+    initDataList();
+};
+
 const onColumnHeadClick = (column) => {
     column.collapsed = !column.collapsed;
 };
 
 // ===========================================================================
 
-const getSteps = (list, steps) => {
-    if (!Util.isList(steps)) {
-        return;
-    }
-    steps.forEach((item) => {
-        list.push(item);
-        getSteps(list, item.subs);
-    });
-};
-
-const positionHandler = (position) => {
+const positionHandler = () => {
+    const position = state.position;
     // console.log('position', position);
 
     clearTimeout(state.timeout_position);
@@ -446,55 +435,56 @@ const updatePosition = (position) => {
 
 };
 
-const initDataList = (caseItem) => {
+const initDataList = () => {
+
+    const caseItem = state.detailMap[data.caseId];
 
     const list = [];
 
     // suites
-    let suite = caseItem.parent;
+    let suite = caseItem.tg_parent;
     while (suite) {
-        list.push(suite);
-        suite = suite.parent;
+        list.unshift(suite);
+        suite = suite.tg_parent;
     }
-    list.reverse();
 
     // case
     list.push(caseItem);
 
     // steps
-    getSteps(list, caseItem.steps);
+    Util.forEach(caseItem.subs, (step, parent) => {
+        if (parent && parent.collapsed) {
+            return;
+        }
+        list.push(step);
+    });
 
     data.list = list.map((item) => {
 
-        let simpleColumns;
-        let detailColumns;
+        const simpleColumns = [];
+        const detailColumns = [];
         const allColumns = [];
         getColumns(allColumns, item, state.columns);
 
         if (allColumns.length) {
             allColumns.forEach((c) => {
-                c.key = Math.random().toString().slice(2);
                 if (c.simple) {
-                    if (!simpleColumns) {
-                        simpleColumns = [];
-                    }
                     simpleColumns.push(c);
                 } else {
-                    if (!detailColumns) {
-                        detailColumns = [];
-                    }
                     detailColumns.push(c);
                 }
             });
         }
 
-        const left = item.level * 13;
+        const left = item.tg_level * 13;
 
-        const icon = Util.getTypeIcon(item.suiteType, item.type);
+        const icon = item.caseType || Util.getTypeIcon(item.suiteType, item.type);
+
+        const stepGroup = item.type === 'step' && item.subs;
 
         return {
             data: item,
-            key: Math.random().toString().slice(2),
+            stepGroup,
             style: `margin-left:${left}px;`,
             icon,
             simpleColumns,
@@ -504,18 +494,17 @@ const initDataList = (caseItem) => {
 
 };
 
-const update = (caseItem, position) => {
-
-    // console.log('update', caseItem, position);
+const update = () => {
+    const caseItem = state.caseItem;
     if (!caseItem) {
         return;
     }
 
-    state.caseItem = caseItem;
+    data.caseId = caseItem.caseId;
 
-    initDataList(caseItem);
+    initDataList();
 
-    positionHandler(position);
+    positionHandler();
 
 };
 
@@ -523,7 +512,7 @@ watch([
     () => state.caseItem,
     () => state.position
 ], () => {
-    update(state.caseItem, state.position);
+    update();
 });
 
 </script>
@@ -624,7 +613,6 @@ watch([
 
 .mcr-detail-body {
     .mcr-column-head {
-        padding-left: 5px;
         font-weight: bold;
         user-select: none;
     }

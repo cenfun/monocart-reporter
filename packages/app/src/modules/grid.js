@@ -354,12 +354,12 @@ const getClickCaseItem = (rowItem) => {
         return rowItem;
     }
     if (rowItem.type === 'step') {
-        let parent = rowItem.parent;
+        let parent = rowItem.tg_parent;
         while (parent) {
             if (parent.type === 'case') {
                 return parent;
             }
-            parent = parent.parent;
+            parent = parent.tg_parent;
         }
     }
 };
@@ -373,8 +373,6 @@ const getGridData = () => {
     const allData = JSON.parse(JSON.stringify(state.gridDataAll));
 
     initCustomsFormatters(allData.columns, state.formatters);
-
-    initRowsToTreeList(allData.rows, null, -1);
 
     const data = getGridDataByType(allData, state.caseType, state.suiteVisible, state.stepVisible);
 
@@ -415,26 +413,6 @@ export const initCustomsFormatters = (list, customFormatters) => {
 
         // into subs
         initCustomsFormatters(item.subs, customFormatters);
-    });
-};
-
-const initRowsToTreeList = (list, parent, level) => {
-    if (!Util.isList(list)) {
-        return;
-    }
-
-    level += 1;
-
-    list.forEach((item) => {
-
-        item.parent = parent;
-        item.level = level;
-        if (item.type === 'case') {
-            item.steps = item.subs;
-        }
-
-        // into subs
-        initRowsToTreeList(item.subs, item, level);
     });
 };
 
