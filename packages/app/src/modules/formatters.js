@@ -210,7 +210,7 @@ const formatters = {
     },
 
     errors: function(value, rowItem) {
-        if (rowItem.numErrors) {
+        if (rowItem.errorNum) {
             return iconFormatter('error', '20px', true);
         }
         return '';

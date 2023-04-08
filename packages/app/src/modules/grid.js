@@ -165,10 +165,7 @@ const showFlyoverHandler = (d) => {
         'attachments'
     ].includes(columnId) && !cls.contains('tg-cell');
 
-    const position = {
-        columnId,
-        rowId: rowItem.id
-    };
+    const position = getClickPosition(rowItem, columnId);
 
     if (isInfo || isClickColumn) {
         showFlyover(caseItem);
@@ -372,6 +369,18 @@ const getClickCaseItem = (rowItem) => {
     }
 };
 
+const getClickPosition = (rowItem, columnId) => {
+    let rowId = rowItem.id;
+    if (columnId === 'errors' && rowItem.errorId) {
+        // use sub row errorId
+        rowId = rowItem.errorId;
+    }
+    return {
+        columnId,
+        rowId
+    };
+};
+
 const getGridData = () => {
     const key = [state.caseType, state.suiteVisible, state.stepVisible].join('_');
     if (state.gridDataMap[key]) {
@@ -508,7 +517,7 @@ const getGridSortComparers = () => {
         errors: function(a, b, o) {
             const valueComparer = this.getDefaultComparer('value');
             const numberValueComparer = this.getDefaultComparer('numberValue');
-            o.sortField = 'numErrors';
+            o.sortField = 'errorNum';
             return valueComparer(a, b, o, (av, bv) => {
                 return numberValueComparer(av, bv);
             });

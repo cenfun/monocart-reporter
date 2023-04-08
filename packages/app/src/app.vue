@@ -289,7 +289,7 @@ const stepHandler = (item) => {
     if (item.subs) {
         item.collapsed = true;
     }
-    if (item.numErrors) {
+    if (item.errorNum) {
         item.classMap = 'mcr-step-error';
     } else if (item.status === 'retry') {
         item.classMap = 'mcr-step-retry';

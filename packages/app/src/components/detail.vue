@@ -417,16 +417,19 @@ const showBlink = debounce((elem) => {
 // wait for image loaded
 const updatePosition = debounce((position) => {
 
-    console.log('position', position);
+    // console.log('position', position);
 
     if (!$el) {
         return;
     }
 
     // check positionId first
+    let exactPosition = true;
     const positionId = [position.rowId, position.columnId].join('-');
     let elem = $el.querySelector(`[position-id="${positionId}"]`);
     if (!elem) {
+        // console.log('not find position', positionId);
+        exactPosition = false;
         elem = $el.querySelector(`[position-type="${position.columnId}"]`);
     }
 
@@ -434,12 +437,11 @@ const updatePosition = debounce((position) => {
         return;
     }
 
-    elem.scrollIntoView({
-        behavior: 'smooth'
-    });
-    showBlink(elem);
+    elem.scrollIntoView();
 
-    state.position = null;
+    if (exactPosition) {
+        showBlink(elem);
+    }
 
 }, 100);
 
@@ -533,6 +535,7 @@ watch(() => state.caseItem, (v) => {
 watch(() => state.position, (v) => {
     if (v) {
         updatePosition(v);
+        state.position = null;
     }
 });
 
