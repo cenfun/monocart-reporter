@@ -424,12 +424,12 @@ const updatePosition = debounce((position) => {
     }
 
     // check positionId first
-    let exactPosition = true;
+    let found = true;
     const positionId = [position.rowId, position.columnId].join('-');
     let elem = $el.querySelector(`[position-id="${positionId}"]`);
     if (!elem) {
-        // console.log('not find position', positionId);
-        exactPosition = false;
+        found = false;
+        // not found but try to find related type position
         elem = $el.querySelector(`[position-type="${position.columnId}"]`);
     }
 
@@ -439,7 +439,7 @@ const updatePosition = debounce((position) => {
 
     elem.scrollIntoView();
 
-    if (exactPosition) {
+    if (found) {
         showBlink(elem);
     }
 
