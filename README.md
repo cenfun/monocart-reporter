@@ -555,24 +555,20 @@ module.exports = {
 ```
 ## Send Email
 example: [send-email.js](/tests/common/send-email.js)
-### Preview in Gmail
 ![](/docs/email.png)
 
 
 ## Testrail Integration
 example: [testrail.js](/tests/common/testrail.js)
-### Preview Testrail Run/Results
 ![](/docs/testrail.png)
 
 ## Slack Integration
 1. Simply send message with @slack/webhook, example: [slack-webhook.js](/tests/common/slack-webhook.js)
 2. Recommended: Post chat message and upload image with @slack/web-api, example: [slack-web-api.js](/tests/common/slack-web-api.js)
-### Preview in Slack
 ![](/docs/slack.png)
 
 ## Discord Integration
-Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. Discord supports directly displaying attached images, so you can upload screenshots of test reports to the Discord channel. example: [discord-webhook.js](/tests/common/discord-webhook.js)
-### Preview in Discord
+Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. example: [discord-webhook.js](/tests/common/discord-webhook.js)
 ![](/docs/discord.png)
 
 
