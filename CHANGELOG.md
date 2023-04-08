@@ -1,3 +1,6 @@
+* 1.6.7
+  - fixed issue #14
+
 * 1.6.6
   - added comments parser options, support typescript
 
