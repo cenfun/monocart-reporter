@@ -285,6 +285,15 @@ test.describe('suite group 2', () => {
     test('@sanity @critical two', () => {
         expect(Math.random()).toBeLessThan(0.5);
     });
+
+    test('same title', () => {
+        expect(Math.random()).toBeLessThan(0.5);
+    });
+
+});
+
+test('same title', () => {
+    expect(Math.random()).toBeLessThan(0.5);
 });
 
 test('@smoke case after suite', () => {

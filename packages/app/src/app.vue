@@ -367,7 +367,7 @@ const initCaseMap = (rows) => {
             item.collapsed = false;
         }
         if (item.type === 'case') {
-            detailMap[item.caseId] = item;
+            detailMap[item.id] = item;
         }
     });
     state.detailMap = detailMap;
@@ -522,6 +522,30 @@ window.addEventListener('message', (e) => {
 
 </script>
 <style lang="scss">
+@keyframes mcr-blink-fade-in {
+    from {
+        background: gray;
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.mcr-blink::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    animation-name: mcr-blink-fade-in;
+    animation-duration: 0.2s;
+    animation-timing-function: linear;
+}
+
 html {
     height: 100%;
 }

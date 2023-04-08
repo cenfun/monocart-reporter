@@ -13,6 +13,7 @@
         :class="itemHeadClass(item.data)"
         gap="10px"
         padding="5px"
+        :position-id="item.positionId"
         wrap
       >
         <IconLabel
@@ -75,10 +76,9 @@
           v-for="column, dk in item.detailColumns"
           :key="dk"
           :class="itemColumnClass(column.data)"
+          :position-id="column.positionId"
+          :position-type="column.positionType"
         >
-          <div class="mcr-column-anchor">
-            <a :name="column.data.id" />
-          </div>
           <IconLabel
             :icon="column.collapsed?'collapsed':'expanded'"
             class="mcr-column-head"
@@ -102,10 +102,10 @@
 </template>
 <script setup>
 import {
-    ref, watch, shallowReactive
+    ref, watch, shallowReactive, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
-
+import { debounce } from 'async-tick';
 import 'github-markdown-css/github-markdown-light.css';
 
 import Convert from 'ansi-to-html';
@@ -125,6 +125,7 @@ const data = shallowReactive({
 });
 
 const el = ref(null);
+let $el;
 
 const itemHeadClass = (item) => {
     return ['mcr-detail-head', `mcr-detail-${item.type}`, item.classMap];
@@ -208,6 +209,8 @@ const getColumn = (item, column) => {
     let res = handler(item, column);
     if (res) {
         res.data = column;
+        res.positionId = [item.id, column.id].join('-');
+        res.positionType = column.id;
         res = shallowReactive(res);
     }
 
@@ -403,43 +406,44 @@ const onColumnHeadClick = (column) => {
 
 // ===========================================================================
 
-const positionHandler = () => {
-    const position = state.position;
-    // console.log('position', position);
+const showBlink = debounce((elem) => {
+    const classList = elem.classList;
+    elem.addEventListener('animationend', function() {
+        classList.remove('mcr-blink');
+    });
+    classList.add('mcr-blink');
+});
 
-    clearTimeout(state.timeout_position);
+// wait for image loaded
+const updatePosition = debounce((position) => {
 
-    // wait for rendered like image
-    state.timeout_position = setTimeout(() => {
-        updatePosition(position);
-    }, 100);
+    console.log('position', position);
 
-};
-
-const updatePosition = (position) => {
-
-    const $el = el.value;
     if (!$el) {
         return;
     }
 
-    if (position) {
-        const elem = $el.querySelector(`[name="${position}"]`);
-        if (elem) {
-            elem.scrollIntoView({
-                behavior: 'smooth'
-            });
-            return;
-        }
+    // check positionId first
+    const positionId = [position.rowId, position.columnId].join('-');
+    let elem = $el.querySelector(`[position-id="${positionId}"]`);
+    if (!elem) {
+        elem = $el.querySelector(`[position-type="${position.columnId}"]`);
     }
 
-    // reset to top
-    $el.scrollTo({
-        top: 0,
+    if (!elem) {
+        return;
+    }
+
+    elem.scrollIntoView({
         behavior: 'smooth'
     });
+    showBlink(elem);
 
-};
+    state.position = null;
+
+}, 100);
+
+// ===========================================================================
 
 const initDataList = () => {
 
@@ -482,6 +486,8 @@ const initDataList = () => {
             });
         }
 
+        const positionId = [item.id, 'title'].join('-');
+
         const left = item.tg_level * 13;
 
         let icon = Util.getTypeIcon(item.suiteType, item.type);
@@ -495,6 +501,7 @@ const initDataList = () => {
 
         return {
             data: item,
+            positionId,
             stepGroup,
             style: `margin-left:${left}px;`,
             icon,
@@ -506,25 +513,31 @@ const initDataList = () => {
 
 };
 
-const update = () => {
-    const caseItem = state.caseItem;
+const updateCase = (caseItem) => {
     if (!caseItem) {
         return;
     }
 
-    data.caseId = caseItem.caseId;
+    data.caseId = caseItem.id;
 
     initDataList();
 
-    positionHandler();
-
 };
 
-watch([
-    () => state.caseItem,
-    () => state.position
-], () => {
-    update();
+// ===========================================================================
+
+watch(() => state.caseItem, (v) => {
+    updateCase(v);
+});
+
+watch(() => state.position, (v) => {
+    if (v) {
+        updatePosition(v);
+    }
+});
+
+onMounted(() => {
+    $el = el.value;
 });
 
 </script>
@@ -604,11 +617,6 @@ watch([
     border: 1px solid #ddd;
     border-radius: 5px;
     background: #f6f8fa;
-}
-
-.mcr-column-anchor {
-    position: absolute;
-    top: 0;
 }
 
 .mcr-column-content {

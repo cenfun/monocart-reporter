@@ -57,7 +57,7 @@ export const hideFlyover = (immediately) => {
     }
 };
 
-export const showFlyover = (caseItem, position) => {
+export const showFlyover = (caseItem) => {
     if (caseItem) {
 
         if (state.caseItem === caseItem) {
@@ -65,7 +65,6 @@ export const showFlyover = (caseItem, position) => {
         }
 
         state.caseItem = caseItem;
-        state.position = position;
         state.flyoverTitle = caseItem.title;
 
         const { tg_index, title } = caseItem;
@@ -81,6 +80,10 @@ export const showFlyover = (caseItem, position) => {
     }
 
     state.flyoverVisible = true;
+};
+
+const showPosition = (position) => {
+    state.position = position;
 };
 
 const displayFlyoverByIndex = (grid, index, title) => {
@@ -138,7 +141,7 @@ export const displayFlyoverWithHash = () => {
 
 };
 
-const clickPopoverHandler = (d) => {
+const showFlyoverHandler = (d) => {
 
     const {
         e, rowItem, columnItem
@@ -150,9 +153,9 @@ const clickPopoverHandler = (d) => {
     }
 
     const cls = e.target.classList;
-    const position = columnItem.id;
+    const columnId = columnItem.id;
 
-    const isInfo = position === 'title' && cls.contains('mcr-icon-open');
+    const isInfo = columnId === 'title' && cls.contains('mcr-icon-open');
 
     const isClickColumn = [
         'ok',
@@ -160,15 +163,22 @@ const clickPopoverHandler = (d) => {
         'logs',
         'annotations',
         'attachments'
-    ].includes(position) && !cls.contains('tg-cell');
+    ].includes(columnId) && !cls.contains('tg-cell');
+
+    const position = {
+        columnId,
+        rowId: rowItem.id
+    };
 
     if (isInfo || isClickColumn) {
-        showFlyover(caseItem, position);
+        showFlyover(caseItem);
+        showPosition(position);
         return;
     }
 
     if (state.flyoverVisible) {
-        showFlyover(caseItem, position);
+        showFlyover(caseItem);
+        showPosition(position);
     }
 };
 
@@ -320,7 +330,7 @@ const bindGridEvents = () => {
 
         grid.setRowSelected(d.rowItem);
 
-        clickPopoverHandler(d);
+        showFlyoverHandler(d);
 
     });
 
