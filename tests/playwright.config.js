@@ -126,8 +126,8 @@ module.exports = {
             columns: (defaultColumns) => {
 
                 // insert custom column(s) before a default column
-                const durationColumnIndex = defaultColumns.findIndex((column) => column.id === 'duration');
-                defaultColumns.splice(durationColumnIndex, 0, {
+                const index = defaultColumns.findIndex((column) => column.id === 'duration');
+                defaultColumns.splice(index, 0, {
                     // define the column in reporter
                     id: 'owner',
                     name: 'Owner',
@@ -143,9 +143,9 @@ module.exports = {
                     width: 100,
                     searchable: true,
                     styleMap: 'font-weight:normal;',
-                    formatter: (valueFormatted, rowItem, columnItem) => {
+                    formatter: (v, rowItem, columnItem) => {
                         const key = rowItem[columnItem.id];
-                        return `<a href="https://your-jira-key-link.com/${key}" target="_blank">${valueFormatted}</a>`;
+                        return `<a href="https://your-jira-url/${key}" target="_blank">${v}</a>`;
                     }
                 });
 
@@ -188,15 +188,15 @@ module.exports = {
 
                 // custom formatter for title
                 // The title shows the tree style, it is a complicated HTML structure
-                // please be careful to change the formatter, and it is recommended to format title base on previous.
+                // it is recommended to format title base on previous.
                 // const titleColumn = defaultColumns.find((column) => column.id === 'title');
                 // titleColumn.formatter = function(value, rowItem, columnItem, cellNode) {
                 //     const perviousFormatter = this.getFormatter('tree');
-                //     const valueFormatted = perviousFormatter(value, rowItem, columnItem, cellNode);
+                //     const v = perviousFormatter(value, rowItem, columnItem, cellNode);
                 //     if (rowItem.type === 'step') {
-                //         return `${valueFormatted}<div style="position:absolute;top:0;right:5px;">✅</div>`;
+                //         return `${v}<div style="position:absolute;top:0;right:5px;">✅</div>`;
                 //     }
-                //     return valueFormatted;
+                //     return v;
                 // };
 
             },
