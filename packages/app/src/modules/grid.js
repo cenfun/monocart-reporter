@@ -338,10 +338,8 @@ const bindGridEvents = () => {
         if (!d || !d.rowNode) {
             return;
         }
-        const rowItem = d.rowItem;
-        if (rowItem.type === 'case' && !state.flyoverVisible) {
-            showFlyover(rowItem);
-        } else {
+
+        if (state.flyoverVisible) {
             hideFlyover();
         }
     });

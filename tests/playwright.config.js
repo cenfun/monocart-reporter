@@ -170,8 +170,8 @@ module.exports = {
                 });
 
                 // hide a default column
-                const retryColumn = defaultColumns.find((column) => column.id === 'retry');
-                retryColumn.invisible = true;
+                // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
+                // retryColumn.invisible = true;
 
                 // update a default column width
                 // const locationColumn = defaultColumns.find((column) => column.id === 'location');
