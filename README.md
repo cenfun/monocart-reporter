@@ -244,6 +244,7 @@ module.exports = {
                 // auto collect data from comments
                 const parserOptions = {
                     // https://babeljs.io/docs/babel-parser
+                    // Indicate the mode the code should be parsed in. Can be one of "script", "module", or "unambiguous". Defaults to "script".
                     // sourceType: "module"
                 }
                 const comments = collect.comments(parserOptions);
@@ -443,7 +444,7 @@ export default async (config) => {
 ```
 
 ## Trend Chart
-> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting the previous report data before test every time for trend chart, but the data is not safe if there is any runtime error.
+> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting the previous report data and collecting historical trend data before test every time, but the data is not safe if there is any runtime error.
 - If a report is generated in the same place every time, you can simply connect the data with the report JSON path
 ```js
 // playwright.config.js
