@@ -15,24 +15,27 @@
         padding="5px"
         wrap
       >
-        <VuiFlex gap="5px">
+        <IconLabel
+          v-if="item.stepGroup"
+          :icon="item.data.collapsed?'collapsed':'expanded'"
+          @click="onRowHeadClick(item.data)"
+        >
+          {{ item.data.title }}
+        </IconLabel>
+
+        <VuiFlex
+          v-else
+          gap="5px"
+        >
           <IconLabel
-            v-if="item.stepGroup"
-            :icon="item.data.collapsed?'collapsed':'expanded'"
-            @click="onRowHeadClick(item.data)"
-          >
-            {{ item.data.title }}
-          </IconLabel>
-          <IconLabel
-            v-else
             :icon="item.icon"
+            :size="item.size"
             :button="false"
-          >
-            <div
-              class="mcr-detail-title"
-              v-html="tagFormatter(item.data)"
-            />
-          </IconLabel>
+          />
+          <div
+            class="mcr-detail-title"
+            v-html="tagFormatter(item.data)"
+          />
         </VuiFlex>
 
         <VuiFlex
@@ -481,7 +484,12 @@ const initDataList = () => {
 
         const left = item.tg_level * 13;
 
-        const icon = item.caseType || Util.getTypeIcon(item.suiteType, item.type);
+        let icon = Util.getTypeIcon(item.suiteType, item.type);
+        let size = '16px';
+        if (item.caseType) {
+            icon = item.caseType;
+            size = '20px';
+        }
 
         const stepGroup = item.type === 'step' && item.subs;
 
@@ -490,6 +498,7 @@ const initDataList = () => {
             stepGroup,
             style: `margin-left:${left}px;`,
             icon,
+            size,
             simpleColumns,
             detailColumns
         };

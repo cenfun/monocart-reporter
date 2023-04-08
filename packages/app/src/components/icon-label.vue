@@ -31,7 +31,11 @@ const props = defineProps({
     },
     size: {
         type: String,
-        default: '16px'
+        default: ''
+    },
+    gap: {
+        type: String,
+        default: ''
     },
     button: {
         type: Boolean,
@@ -57,9 +61,14 @@ const classMap = computed(() => {
 });
 
 const styleMap = computed(() => {
-    return {
-        '--mcr-icon-size': props.size
-    };
+    const st = {};
+    if (props.size) {
+        st['--mcr-icon-size'] = props.size;
+    }
+    if (props.gap) {
+        st['--mcr-icon-gap'] = props.gap;
+    }
+    return st;
 });
 
 const getSlot = function() {
@@ -102,12 +111,10 @@ watch(() => props.icon, () => {
 <style lang="scss">
 .mcr-icon-label {
     --mcr-icon-size: 16px;
+    --mcr-icon-gap: 3px;
 
     position: relative;
-
-    label {
-        margin-left: 3px;
-    }
+    gap: var(--mcr-icon-gap);
 }
 
 .mcr-icon-label-icon {
