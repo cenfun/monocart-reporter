@@ -444,7 +444,7 @@ export default async (config) => {
 ```
 
 ## Trend Chart
-> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting the previous report data and collecting historical trend data before test every time, but the data is not safe if there is any runtime error.
+> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting historical trend data from previous report data before test every time, but the data is not safe if there is any runtime error.
 - If a report is generated in the same place every time, you can simply connect the data with the report JSON path
 ```js
 // playwright.config.js
@@ -566,14 +566,14 @@ example: [testrail.js](/tests/common/testrail.js)
 
 ## Slack Integration
 1. Simply send message with @slack/webhook, example: [slack-webhook.js](/tests/common/slack-webhook.js)
-2. Post chat message or upload report file with @slack/web-api, example: [slack-web-api.js](/tests/common/slack-web-api.js)
+2. Recommended: Post chat message and upload image with @slack/web-api, example: [slack-web-api.js](/tests/common/slack-web-api.js)
 ### Preview in Slack
-![](/docs/slack-webhook.png)
+![](/docs/slack.png)
 
 ## Discord Integration
 Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. Discord supports directly displaying attached images, so you can upload screenshots of test reports to the Discord channel. example: [discord-webhook.js](/tests/common/discord-webhook.js)
 ### Preview in Discord
-![](/docs/discord-webhook.png)
+![](/docs/discord.png)
 
 
 ## Report UI [packages/app](packages/app)
