@@ -482,19 +482,19 @@ const render = () => {
             icon: 'step',
             type: 'steps',
             name: 'Steps',
-            color: '#005BA4'
+            color: '#8B12AE'
         }],
         Errors: [{
             icon: 'error',
             type: 'errors',
             name: 'Errors',
-            color: '#005BA4'
+            color: '#d00'
         }],
         Retries: [{
             icon: 'reload',
             type: 'retries',
             name: 'Retries',
-            color: '#005BA4'
+            color: 'orange'
         }]
     };
     chart.typeItems = typeItems;

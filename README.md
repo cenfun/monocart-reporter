@@ -443,7 +443,7 @@ export default async (config) => {
 ```
 
 ## Trend Chart
-> Note: the trend chart requires historical data generally stored in the server database. But there is a serverless solution which is connecting and collecting the previous report data before test every time for trend chart.
+> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting the previous report data before test every time for trend chart, but the data is not safe if there is any runtime error.
 - If a report is generated in the same place every time, you can simply connect the data with the report JSON path
 ```js
 // playwright.config.js
