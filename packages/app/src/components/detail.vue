@@ -81,7 +81,10 @@
             class="mcr-column-head"
             @click="onColumnHeadClick(column)"
           >
-            <IconLabel :icon="column.icon">
+            <IconLabel
+              :icon="column.icon"
+              size="20px"
+            >
               {{ column.data.name }}
             </IconLabel>
           </IconLabel>

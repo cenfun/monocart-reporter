@@ -1,4 +1,4 @@
-<svg pointer-events="none" viewBox="0 0 36 36"
+<svg pointer-events="none" viewBox="0 0 32 32"
     xmlns="http://www.w3.org/2000/svg">
-    <path fill="currentColor" d="M10,8 l20,10 l-20,10 z"></path>
+    <path fill="currentColor" d="M8,6 l20,10 l-20,10 z"></path>
 </svg>
