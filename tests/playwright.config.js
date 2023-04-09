@@ -259,6 +259,10 @@ module.exports = {
                 // const discordWebhook = require('./common/discord-webhook.js');
                 // await discordWebhook(reportData, capability);
 
+                // teams integration with webhook
+                // const teamsWebhook = require('./common/teams-webhook.js');
+                // await teamsWebhook(reportData, capability);
+
                 // html to pdf
                 // const toPdf = require('./common/to-pdf.js');
                 // await toPdf(reportData, capability);

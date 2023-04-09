@@ -28,7 +28,8 @@
     - [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
     - [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
     - [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
-    - [Discord Integration](#discord-integration) (Post Screenshot of Report to Discord)
+    - [Discord Integration](#discord-integration) 
+    - [Teams Integration](#teams-integration) 
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -549,6 +550,14 @@ module.exports = {
                 // discord integration with webhook
                 // const discordWebhook = require('./common/discord-webhook.js');
                 // await discordWebhook(reportData, capability);
+
+                // teams integration with webhook
+                // const teamsWebhook = require('./common/teams-webhook.js');
+                // await teamsWebhook(reportData, capability);
+
+                // html to pdf
+                // const toPdf = require('./common/to-pdf.js');
+                // await toPdf(reportData, capability);
             }
         }]
     ]
@@ -575,6 +584,11 @@ example: [testrail.js](/tests/common/testrail.js)
 Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. example: [discord-webhook.js](/tests/common/discord-webhook.js)
 
 ![](/docs/discord.png)
+
+## Teams Integration
+Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. example: [teams-webhook.js](/tests/common/teams-webhook.js)
+
+![](/docs/teams.png)
 
 ## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
