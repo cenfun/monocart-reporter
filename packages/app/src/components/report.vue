@@ -286,7 +286,7 @@
           class="mcr-report-export"
         >
           <VuiFlex
-            v-for="(group, i) in exportList"
+            v-for="(group, i) in report.exportList"
             :key="i"
             gap="15px"
             wrap
@@ -366,50 +366,18 @@ const report = shallowReactive({
 
 // ====================================================================================
 
-const onAmountClick = (item) => {
-
-    const sortFields = {
-        errors: 'errors',
-        logs: 'logs',
-        attachments: 'attachments',
-        retries: 'retry'
-    };
-
-    const sortField = sortFields[item.id];
-    if (sortField) {
-        onSortClick('tests', sortField);
-    }
-
-};
-
-const onSortClick = (caseType, sortField) => {
-    hideFlyover(true);
-    state.sortField = sortField;
-    state.sortAsc = false;
-    state.keywords = '';
-
-    if (state.suiteVisible === false && state.caseType === caseType) {
-        // manual render when same value
-        renderGrid();
+const onExportClick = (item) => {
+    const d = item.getData();
+    if (!d) {
         return;
     }
-
-    // auto renderGrid by watch state change
-    state.suiteVisible = false;
-    state.caseType = caseType;
-
+    const string = JSON.stringify(d, null, 4);
+    const blob = new Blob([string], {
+        type: 'text/plain;charset=utf-8'
+    });
+    const filename = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
+    saveAs(blob, `${filename}.json`);
 };
-
-// ====================================================================================
-
-const onTagClick = (tag) => {
-    state.flyoverVisible = false;
-    state.caseType = 'tests';
-    state.keywords = `@${tag.name}`;
-    updateGrid();
-};
-
-// ====================================================================================
 
 const getExportCases = (caseType) => {
     const list = [];
@@ -426,71 +394,74 @@ const getExportCases = (caseType) => {
     return list;
 };
 
-const exportList = [{
-    list: [{
-        name: 'Report Data',
-        icon: 'item',
-        getData: () => {
-            return state.reportData;
-        }
-    }, {
-        name: 'Summary',
-        icon: 'item',
-        getData: () => {
-            return state.reportData.summary;
-        }
-    }, {
-        name: 'Pie Chart',
-        icon: 'item',
-        getData: () => {
-            return report.pieChart;
-        }
-    }]
-}, {
-    list: [{
-        name: 'Errors',
-        icon: 'item',
-        getData: () => {
-            const list = [];
-            Util.forEach(state.reportData.rows, (item) => {
-                if (item.errors) {
-                    const it = {
-                        ... item
-                    };
-                    delete it.subs;
-                    delete it.steps;
-                    list.push(it);
-                }
-            });
-            return list;
-        }
-    }, {
-        name: 'Failed Cases',
-        icon: 'item',
-        getData: () => {
-            return getExportCases('failed');
-        }
-    }, {
-        name: 'Skipped Cases',
-        icon: 'item',
-        getData: () => {
-            return getExportCases('skipped');
-        }
-    }]
-}];
+const exportHandler = () => {
+    report.exportList = [{
+        list: [{
+            name: 'Report Data',
+            icon: 'item',
+            getData: () => {
+                return state.reportData;
+            }
+        }, {
+            name: 'Summary',
+            icon: 'item',
+            getData: () => {
+                return state.reportData.summary;
+            }
+        }, {
+            name: 'Pie Chart',
+            icon: 'item',
+            getData: () => {
+                return report.pieChart;
+            }
+        }, {
+            name: 'Errors',
+            icon: 'item',
+            getData: () => {
+                const list = [];
+                Util.forEach(state.reportData.rows, (item) => {
+                    if (item.errors) {
+                        const it = {
+                            ... item
+                        };
+                        delete it.subs;
+                        delete it.steps;
+                        list.push(it);
+                    }
+                });
+                return list;
+            }
+        }, {
+            name: 'Failed Cases',
+            icon: 'item',
+            getData: () => {
+                return getExportCases('failed');
+            }
+        }, {
+            name: 'Skipped Cases',
+            icon: 'item',
+            getData: () => {
+                return getExportCases('skipped');
+            }
+        }]
+    }];
+};
 
-const onExportClick = (item) => {
-    const d = item.getData();
-    if (!d) {
+// ====================================================================================
+
+const systemHandler = () => {
+    // for system options select
+    if (!state.systemList) {
         return;
     }
-    const string = JSON.stringify(d, null, 4);
-    const blob = new Blob([string], {
-        type: 'text/plain;charset=utf-8'
+    report.systemOptions = state.systemList.map((item, i) => {
+        return {
+            label: item.hostname,
+            value: i
+        };
     });
-    const filename = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
-    saveAs(blob, `${filename}.json`);
 };
+
 
 const timelineHandler = () => {
     const system = state.system;
@@ -542,6 +513,8 @@ const timelineHandler = () => {
     }];
 };
 
+// ====================================================================================
+
 const metadataHandler = () => {
 
     const metadata = state.reportData.metadata;
@@ -564,6 +537,15 @@ const metadataHandler = () => {
 
 };
 
+// ====================================================================================
+
+const onTagClick = (tag) => {
+    state.flyoverVisible = false;
+    state.caseType = 'tests';
+    state.keywords = `@${tag.name}`;
+    updateGrid();
+};
+
 const tagsHandler = () => {
     const tagMap = state.tagMap;
     // tags and style
@@ -584,6 +566,42 @@ const tagsHandler = () => {
     });
 
     report.tagList = tagList;
+
+};
+
+// ====================================================================================
+
+const onAmountClick = (item) => {
+
+    const sortFields = {
+        errors: 'errors',
+        logs: 'logs',
+        attachments: 'attachments',
+        retries: 'retry'
+    };
+
+    const sortField = sortFields[item.id];
+    if (sortField) {
+        onSortClick('tests', sortField);
+    }
+
+};
+
+const onSortClick = (caseType, sortField) => {
+    hideFlyover(true);
+    state.sortField = sortField;
+    state.sortAsc = false;
+    state.keywords = '';
+
+    // manual render when same value
+    if (state.suiteVisible === false && state.caseType === caseType) {
+        renderGrid();
+        return;
+    }
+
+    // auto renderGrid by watch state change
+    state.suiteVisible = false;
+    state.caseType = caseType;
 
 };
 
@@ -619,18 +637,7 @@ const pieHandler = () => {
 
 };
 
-const systemHandler = () => {
-    // for system options select
-    if (!state.systemList) {
-        return;
-    }
-    report.systemOptions = state.systemList.map((item, i) => {
-        return {
-            label: item.hostname,
-            value: i
-        };
-    });
-};
+// ====================================================================================
 
 watch(() => report.systemIndex, (v) => {
     state.system = state.systemList[v];
@@ -640,10 +647,11 @@ watch(() => report.systemIndex, (v) => {
 watch(() => state.reportData, (v) => {
     if (v) {
         pieHandler();
-        tagsHandler();
         systemHandler();
         timelineHandler();
+        tagsHandler();
         metadataHandler();
+        exportHandler();
     }
 });
 
