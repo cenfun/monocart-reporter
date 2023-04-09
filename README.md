@@ -28,8 +28,8 @@
     - [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
     - [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
     - [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
-    - [Discord Integration](#discord-integration) 
-    - [Teams Integration](#teams-integration) 
+    - [Discord Integration](#discord-integration) with webhook
+    - [Teams Integration](#teams-integration) with webhook
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
