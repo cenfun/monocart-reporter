@@ -89,7 +89,23 @@
             icon="timeline"
             :button="false"
           >
-            <b>Timeline</b> <span class="mcr-num">{{ state.duration }}</span>
+            <b>Timeline</b>
+          </IconLabel>
+
+          <IconLabel
+            icon="calendar"
+            size="16px"
+            :button="false"
+          >
+            {{ state.date }}
+          </IconLabel>
+
+          <IconLabel
+            icon="time"
+            size="16px"
+            :button="false"
+          >
+            {{ state.duration }}
           </IconLabel>
 
           <VuiSelect

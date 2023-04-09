@@ -521,6 +521,7 @@ const onExportClick = () => {
     const name = [state.title, state.date, 'selected-rows'].join('-').replace(/[\s:/]+/g, '-');
     Util.exportJson(list, name);
 
+    grid.selectAll(false);
     state.exportSelected = false;
 
 };
