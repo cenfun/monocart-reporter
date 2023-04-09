@@ -47,12 +47,20 @@
       wrap
       shrink
     >
+      <VuiButton
+        v-if="state.exportSelected"
+        primary
+        @click="onExportClick"
+      >
+        Export
+      </VuiButton>
+
       <div class="mcr-nav">
         <div
           v-for="(item, i) in state.navList"
           :key="i"
           :class="navItemClass(item)"
-          @click="navItemClick(item)"
+          @click="onNavItemClick(item)"
         >
           <VuiFlex
             gap="5px"
@@ -182,6 +190,35 @@
       :text="tooltip.text"
       :html="tooltip.html"
     />
+
+    <VuiDialog v-model="dialog.visible">
+      <VuiFlex
+        direction="column"
+        gap="0"
+      >
+        <h3>{{ dialog.message }}</h3>
+        <div>
+          <VuiFlex
+            gap="10px"
+            padding="5px"
+          >
+            <VuiButton
+              primary
+              width="80px"
+              @click="dialog.onOkClick"
+            >
+              {{ dialog.ok }}
+            </VuiButton>
+            <VuiButton
+              width="80px"
+              @click="dialog.onCancelClick"
+            >
+              Cancel
+            </VuiButton>
+          </VuiFlex>
+        </div>
+      </VuiFlex>
+    </VuiDialog>
   </div>
 </template>
 <script setup>
@@ -189,6 +226,7 @@ import {
     watch, onMounted, reactive, computed
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
+import { debounce } from 'async-tick';
 import decompress from 'lz-utils/lib/decompress.js';
 
 import Util from './utils/util.js';
@@ -208,8 +246,12 @@ const {
     VuiSwitch,
     VuiPopover,
     VuiTooltip,
-    VuiCheckbox
+    VuiCheckbox,
+    VuiButton,
+    VuiDialog
 } = components;
+
+// =================================================================================
 
 const searchable = reactive({
     columns: []
@@ -224,6 +266,28 @@ const tooltip = reactive({
 
 state.tooltip = tooltip;
 
+const dialog = reactive({
+    visible: false,
+    message: '',
+    ok: 'OK'
+});
+
+// =================================================================================
+
+const navItemClass = (item) => {
+    return ['mcr-nav-item', item.classMap, item.id === state.caseType ? 'mcr-nav-selected' : ''];
+};
+
+const searchClass = computed(() => {
+    const ls = ['mcr-search'];
+    if (state.keywords) {
+        ls.push('mcr-search-keywords');
+    }
+    return ls;
+});
+
+// =================================================================================
+
 const initStore = () => {
     const booleans = {
         'true': true,
@@ -236,24 +300,6 @@ const initStore = () => {
         }
     });
 };
-
-const navItemClass = (item) => {
-    return ['mcr-nav-item', item.classMap, item.id === state.caseType ? 'mcr-nav-selected' : ''];
-};
-
-const navItemClick = (item) => {
-    if (item.id !== state.caseType) {
-        state.caseType = item.id;
-    }
-};
-
-const searchClass = computed(() => {
-    const ls = ['mcr-search'];
-    if (state.keywords) {
-        ls.push('mcr-search-keywords');
-    }
-    return ls;
-});
 
 const initSearchableColumns = (columns) => {
     Util.forEachTree(columns, (column) => {
@@ -275,6 +321,8 @@ const initSearchableColumns = (columns) => {
     state.searchableAllKeys = searchable.columns.map((it) => it.id);
 
 };
+
+// =================================================================================
 
 const caseHandler = (item) => {
     // collapsed case in grid by default
@@ -373,14 +421,7 @@ const initCaseMap = (rows) => {
     state.detailMap = detailMap;
 };
 
-const onSearchDropdownClick = (e) => {
-    state.searchDropdownVisible = true;
-    state.searchDropdownTarget = e.target;
-};
-
-const onMenuClick = (e) => {
-    showFlyover();
-};
+// =================================================================================
 
 // let timeout_tooltip;
 const initTooltip = () => {
@@ -419,6 +460,37 @@ const initFlyoverSize = () => {
     state.flyoverWidth = flyoverWidth;
 };
 
+// =================================================================================
+
+const onNavItemClick = (item) => {
+    if (item.id !== state.caseType) {
+        state.caseType = item.id;
+    }
+};
+
+const onSearchDropdownClick = (e) => {
+    state.searchDropdownVisible = true;
+    state.searchDropdownTarget = e.target;
+};
+
+const onMenuClick = (e) => {
+    showFlyover();
+};
+
+const onExportClick = () => {
+    dialog.message = 'No rows selected, continue?';
+    dialog.onOkClick = () => {
+        dialog.visible = false;
+    };
+    dialog.onCancelClick = () => {
+        state.exportSelected = false;
+        dialog.visible = false;
+    };
+    dialog.visible = true;
+};
+
+// =================================================================================
+
 onMounted(() => {
     const reportData = JSON.parse(decompress(window.reportData));
     console.log(reportData);
@@ -456,14 +528,9 @@ onMounted(() => {
 
 });
 
-let timeout_search;
+const updateGridAsync = debounce(updateGrid, 200);
 watch(() => state.keywords, () => {
-
-    clearTimeout(timeout_search);
-    timeout_search = setTimeout(() => {
-        updateGrid();
-    }, 200);
-
+    updateGridAsync();
 });
 
 watch(() => searchable.columns, (v) => {
@@ -482,15 +549,21 @@ watch(() => state.caseType, (v) => {
         Util.setHash('caseType', v);
         Util.delHash('page');
     }
+    renderGrid();
 });
 
 watch([
-    () => state.caseType,
     () => state.suiteVisible,
     () => state.stepVisible
 ], () => {
     store.set('suiteVisible', state.suiteVisible);
     store.set('stepVisible', state.stepVisible);
+    renderGrid();
+});
+
+watch([
+    () => state.exportSelected
+], () => {
     renderGrid();
 });
 

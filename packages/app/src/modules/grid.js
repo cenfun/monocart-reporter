@@ -355,8 +355,6 @@ const bindGridEvents = () => {
             return;
         }
 
-        grid.setRowSelected(d.rowItem);
-
         showFlyoverHandler(d);
         showPositionHandler(d);
 
@@ -557,7 +555,7 @@ const getGridSortComparers = () => {
 
 const getGridOption = () => {
     const options = {
-        selectMultiple: false,
+
         bindWindowResize: true,
         scrollbarRound: true,
         textSelectable: true,
@@ -583,6 +581,13 @@ const getGridOption = () => {
             title: 'tree'
         }
     };
+
+    if (state.exportSelected) {
+        options.selectVisible = true;
+        options.selectColumn = {
+            width: 50
+        };
+    }
 
     // no frozen in mini size
     if (state.windowWidth < 800) {

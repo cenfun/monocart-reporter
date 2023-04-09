@@ -1,4 +1,5 @@
 import { Util as GridUtil } from 'turbogrid';
+import { saveAs } from 'file-saver';
 
 import Share from '../../../../lib/utils/share.js';
 
@@ -45,6 +46,18 @@ const Util = {
             step: 'step'
         };
         return icons[subType] || icons[type];
+    },
+
+    exportJson(json, name) {
+        if (!json) {
+            console.log('Not found json to export');
+            return;
+        }
+        const string = JSON.stringify(json, null, 4);
+        const blob = new Blob([string], {
+            type: 'text/plain;charset=utf-8'
+        });
+        saveAs(blob, `${name}.json`);
     },
 
     // =============================================================================

@@ -344,7 +344,6 @@
 import { shallowReactive, watch } from 'vue';
 
 import { components } from 'vine-ui';
-import { saveAs } from 'file-saver';
 
 import state from '../modules/state.js';
 import Util from '../utils/util.js';
@@ -367,16 +366,19 @@ const report = shallowReactive({
 // ====================================================================================
 
 const onExportClick = (item) => {
-    const d = item.getData();
-    if (!d) {
+    if (typeof item.asyncExport === 'function') {
+        item.asyncExport();
         return;
     }
-    const string = JSON.stringify(d, null, 4);
-    const blob = new Blob([string], {
-        type: 'text/plain;charset=utf-8'
-    });
-    const filename = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
-    saveAs(blob, `${filename}.json`);
+
+    const d = item.getData();
+    if (!d) {
+        console.log('Not found data to export');
+        return;
+    }
+    // without ext
+    const name = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
+    Util.exportJson(d, name);
 };
 
 const getExportCases = (caseType) => {
@@ -442,6 +444,13 @@ const exportHandler = () => {
             icon: 'item',
             getData: () => {
                 return getExportCases('skipped');
+            }
+        }, {
+            name: 'Selected Rows',
+            icon: 'item',
+            asyncExport: () => {
+                state.exportSelected = true;
+                hideFlyover(true);
             }
         }]
     }];
