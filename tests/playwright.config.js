@@ -12,6 +12,9 @@ module.exports = {
     metadata: {
         // test global-setup error
         // baseURL: 'https://example.coma/',
+        product: 'Monocart',
+        env: 'STG',
+        type: 'Regression',
 
         // test home page object model
         url: 'https://www.npmjs.org/package/monocart-reporter',

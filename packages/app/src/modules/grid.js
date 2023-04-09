@@ -152,7 +152,7 @@ const getClickCaseItem = (rowItem) => {
     }
 };
 
-const showFlyoverHandler = (d) => {
+const showFlyoverHandler = (d, force) => {
 
     const {
         e, rowItem, columnItem
@@ -163,7 +163,7 @@ const showFlyoverHandler = (d) => {
         return;
     }
 
-    if (state.flyoverVisible) {
+    if (state.flyoverVisible || force) {
         showFlyover(caseItem);
         return;
     }
@@ -186,7 +186,6 @@ const showFlyoverHandler = (d) => {
     }
 
 };
-
 
 const getClickPosition = (columnItem, rowItem) => {
     const columnId = columnItem.id;
@@ -363,14 +362,14 @@ const bindGridEvents = () => {
 
     });
 
-    grid.bind('onDblClick', (e, d) => {
-        if (!d || !d.rowNode) {
+    grid.bind('onDblClick', (ee, d) => {
+        if (!d.cellNode) {
             return;
         }
 
-        if (state.flyoverVisible) {
-            hideFlyover();
-        }
+        showFlyoverHandler(d, true);
+        showPositionHandler(d);
+
     });
 
     grid.bind('onSort', (e, d) => {
