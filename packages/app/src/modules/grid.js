@@ -378,6 +378,21 @@ const bindGridEvents = () => {
         }
     });
 
+    grid.bind('onSelectChanged', (e, ls) => {
+        if (ls.length === 1) {
+            const item = ls[0];
+            if (item.subs) {
+                const selected = !item.selected;
+                const subs = [];
+                Util.forEach(item.subs, (s) => {
+                    s.selected = selected;
+                    subs.push(s);
+                });
+                grid.setRowSelected(subs);
+            }
+        }
+    });
+
     grid.bind('onFirstUpdated', (e) => {
         displayFlyoverWithHash();
     });

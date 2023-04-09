@@ -496,6 +496,10 @@ const onExportClick = () => {
         return;
     }
 
+    selectedRows.sort((a, b) => {
+        return a.tg_index - b.tg_index;
+    });
+
     const excludes = ['subs', 'selected'];
 
     const list = selectedRows.map((item) => {
