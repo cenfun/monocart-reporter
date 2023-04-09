@@ -82,10 +82,6 @@ export const showFlyover = (caseItem) => {
     state.flyoverVisible = true;
 };
 
-const showPosition = (position) => {
-    state.position = position;
-};
-
 const displayFlyoverByIndex = (grid, index, title) => {
     if (index) {
         const rowItem = grid.getRowItem(parseInt(index));
@@ -141,6 +137,21 @@ export const displayFlyoverWithHash = () => {
 
 };
 
+const getClickCaseItem = (rowItem) => {
+    if (rowItem.type === 'case') {
+        return rowItem;
+    }
+    if (rowItem.type === 'step') {
+        let parent = rowItem.tg_parent;
+        while (parent) {
+            if (parent.type === 'case') {
+                return parent;
+            }
+            parent = parent.tg_parent;
+        }
+    }
+};
+
 const showFlyoverHandler = (d) => {
 
     const {
@@ -149,6 +160,11 @@ const showFlyoverHandler = (d) => {
 
     const caseItem = getClickCaseItem(rowItem);
     if (!caseItem) {
+        return;
+    }
+
+    if (state.flyoverVisible) {
+        showFlyover(caseItem);
         return;
     }
 
@@ -165,18 +181,33 @@ const showFlyoverHandler = (d) => {
         'attachments'
     ].includes(columnId) && !cls.contains('tg-cell');
 
-    const position = getClickPosition(rowItem, columnId);
-
     if (isInfo || isClickColumn) {
         showFlyover(caseItem);
-        showPosition(position);
-        return;
     }
 
-    if (state.flyoverVisible) {
-        showFlyover(caseItem);
-        showPosition(position);
+};
+
+
+const getClickPosition = (columnItem, rowItem) => {
+    const columnId = columnItem.id;
+    let rowId = rowItem.id;
+    if (columnId === 'errors' && rowItem.errorId) {
+        // use sub row errorId
+        rowId = rowItem.errorId;
     }
+    return {
+        columnId,
+        rowId
+    };
+};
+
+const showPositionHandler = (d) => {
+    if (!state.flyoverVisible) {
+        return;
+    }
+    const { rowItem, columnItem } = d;
+    const position = getClickPosition(columnItem, rowItem);
+    state.position = position;
 };
 
 const clickTitleHandler = (d) => {
@@ -328,6 +359,7 @@ const bindGridEvents = () => {
         grid.setRowSelected(d.rowItem);
 
         showFlyoverHandler(d);
+        showPositionHandler(d);
 
     });
 
@@ -352,33 +384,6 @@ const bindGridEvents = () => {
     grid.bind('onFirstUpdated', (e) => {
         displayFlyoverWithHash();
     });
-};
-
-const getClickCaseItem = (rowItem) => {
-    if (rowItem.type === 'case') {
-        return rowItem;
-    }
-    if (rowItem.type === 'step') {
-        let parent = rowItem.tg_parent;
-        while (parent) {
-            if (parent.type === 'case') {
-                return parent;
-            }
-            parent = parent.tg_parent;
-        }
-    }
-};
-
-const getClickPosition = (rowItem, columnId) => {
-    let rowId = rowItem.id;
-    if (columnId === 'errors' && rowItem.errorId) {
-        // use sub row errorId
-        rowId = rowItem.errorId;
-    }
-    return {
-        columnId,
-        rowId
-    };
 };
 
 const getGridData = () => {

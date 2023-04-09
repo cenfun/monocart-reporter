@@ -523,13 +523,16 @@ window.addEventListener('message', (e) => {
 </script>
 <style lang="scss">
 @keyframes mcr-blink-fade-in {
-    from {
-        background: gray;
+    0% {
         opacity: 0;
     }
 
-    to {
-        opacity: 1;
+    50% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
@@ -541,8 +544,9 @@ window.addEventListener('message', (e) => {
     z-index: 10;
     width: 100%;
     height: 100%;
+    background: gray;
     animation-name: mcr-blink-fade-in;
-    animation-duration: 0.2s;
+    animation-duration: 0.3s;
     animation-timing-function: linear;
 }
 
