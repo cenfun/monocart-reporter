@@ -478,15 +478,47 @@ const onMenuClick = (e) => {
 };
 
 const onExportClick = () => {
-    dialog.message = 'No rows selected, continue?';
-    dialog.onOkClick = () => {
-        dialog.visible = false;
-    };
-    dialog.onCancelClick = () => {
-        state.exportSelected = false;
-        dialog.visible = false;
-    };
-    dialog.visible = true;
+
+    const grid = state.grid;
+
+    const selectedRows = grid.getSelectedRows();
+    if (!selectedRows.length) {
+        dialog.message = 'No rows selected, nothing to export.';
+        dialog.ok = 'Continue';
+        dialog.onOkClick = () => {
+            dialog.visible = false;
+        };
+        dialog.onCancelClick = () => {
+            state.exportSelected = false;
+            dialog.visible = false;
+        };
+        dialog.visible = true;
+        return;
+    }
+
+    const excludes = ['subs', 'selected'];
+
+    const list = selectedRows.map((item) => {
+        const row = {};
+        Object.keys(item).forEach((k) => {
+            if (excludes.includes(k)) {
+                return;
+            }
+            if (k.startsWith('tg_') || k.endsWith('_matched')) {
+                return;
+            }
+            row[k] = item[k];
+        });
+        return row;
+    });
+
+    // console.log(list);
+
+    const name = [state.title, state.date, 'selected-rows'].join('-').replace(/[\s:/]+/g, '-');
+    Util.exportJson(list, name);
+
+    state.exportSelected = false;
+
 };
 
 // =================================================================================
