@@ -275,6 +275,14 @@ module.exports = {
                 // const dingtalkWebhook = require('./common/dingtalk-webhook.js');
                 // await dingtalkWebhook(reportData, capability);
 
+                // feishu integration with webhook
+                // const feishuWebhook = require('./common/feishu-webhook.js');
+                // await feishuWebhook(reportData, capability);
+
+                // weixin integration with webhook
+                // const weixinWebhook = require('./common/weixin-webhook.js');
+                // await weixinWebhook(reportData, capability);
+
                 // html to pdf
                 // const toPdf = require('./common/to-pdf.js');
                 // await toPdf(reportData, capability);
