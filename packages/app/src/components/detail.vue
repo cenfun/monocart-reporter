@@ -96,6 +96,29 @@
             v-html="column.content"
           />
         </div>
+        <VuiFlex
+          v-if="item.data.type==='case'&&item.data.stepNum"
+          class="mcr-detail-column"
+          gap="10px"
+        >
+          <IconLabel
+            :icon="item.data.collapsed?'collapsed':'expanded'"
+            class="mcr-column-head"
+            @click="onRowHeadClick(item.data)"
+          >
+            Steps
+          </IconLabel>
+          <div class="mcr-num">
+            {{ item.data.stepNum }}
+          </div>
+          <VuiSwitch
+            v-if="item.data.stepFailed"
+            v-model="item.data.stepFailedOnly"
+            @click="onFailedStepClick(item.data)"
+          >
+            Failed
+          </VuiSwitch>
+        </VuiFlex>
       </div>
     </div>
   </div>
@@ -118,7 +141,7 @@ import {
 
 import IconLabel from './icon-label.vue';
 
-const { VuiFlex } = components;
+const { VuiFlex, VuiSwitch } = components;
 
 const data = shallowReactive({
     list: []
@@ -400,6 +423,13 @@ const onRowHeadClick = (row) => {
     initDataList();
 };
 
+const onFailedStepClick = (item) => {
+    if (item.stepFailedOnly && item.collapsed) {
+        item.collapsed = false;
+    }
+    initDataList();
+};
+
 const onColumnHeadClick = (column) => {
     column.collapsed = !column.collapsed;
 };
@@ -455,6 +485,11 @@ const initSteps = (list, steps, parent) => {
         return;
     }
     steps.forEach((step) => {
+
+        if (data.stepFailedOnly && !step.errorNum) {
+            return;
+        }
+
         list.push(step);
         initSteps(list, step.subs, step);
     });
@@ -475,17 +510,20 @@ const initDataList = () => {
 
     // case
     list.push(caseItem);
+    data.stepFailedOnly = caseItem.stepFailedOnly;
 
     // collect steps with collapsed
-    initSteps(list, caseItem.subs);
+    if (!caseItem.collapsed) {
+        initSteps(list, caseItem.subs);
+    }
 
     data.list = list.map((item) => {
 
-        const simpleColumns = [];
-        const detailColumns = [];
         const allColumns = [];
         getColumns(allColumns, item, state.columns);
 
+        const simpleColumns = [];
+        const detailColumns = [];
         if (allColumns.length) {
             allColumns.forEach((c) => {
                 if (c.simple) {
@@ -496,10 +534,7 @@ const initDataList = () => {
             });
         }
 
-        const positionId = [item.id, 'title'].join('-');
-
         const left = item.tg_level * 13;
-
         let icon = Util.getTypeIcon(item.suiteType, item.type);
         let size = '16px';
         if (item.caseType) {
@@ -507,6 +542,7 @@ const initDataList = () => {
             size = '20px';
         }
 
+        const positionId = [item.id, 'title'].join('-');
         const stepGroup = item.type === 'step' && item.subs;
 
         return {
