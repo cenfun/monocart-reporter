@@ -118,7 +118,16 @@ test.describe('suite group 1 @beta', () => {
      */
     test('@sanity case steps @slow', async () => {
 
-        const result1 = await test.step('step 1', () => {
+        const result1 = await test.step('step 1', async () => {
+
+            await test.step('sub step', async () => {
+
+                await test.step('sub step', () => {
+
+                });
+
+            });
+
             return 'result';
         });
 

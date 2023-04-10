@@ -447,6 +447,19 @@ const updatePosition = debounce((position) => {
 
 // ===========================================================================
 
+const initSteps = (list, steps, parent) => {
+    if (parent && parent.collapsed) {
+        return;
+    }
+    if (!Util.isList(steps)) {
+        return;
+    }
+    steps.forEach((step) => {
+        list.push(step);
+        initSteps(list, step.subs, step);
+    });
+};
+
 const initDataList = () => {
 
     const caseItem = state.detailMap[data.caseId];
@@ -463,13 +476,8 @@ const initDataList = () => {
     // case
     list.push(caseItem);
 
-    // steps
-    Util.forEach(caseItem.subs, (step, parent) => {
-        if (parent && parent.collapsed) {
-            return;
-        }
-        list.push(step);
-    });
+    // collect steps with collapsed
+    initSteps(list, caseItem.subs);
 
     data.list = list.map((item) => {
 
