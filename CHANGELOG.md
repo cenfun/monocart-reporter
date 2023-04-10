@@ -1,3 +1,6 @@
+* 1.6.9
+  - fixed collapsed step
+  
 * 1.6.8
   - added tag for describe suite
 
