@@ -109,7 +109,8 @@ const markdownFormatter = (str, inline) => {
 
 const tagFormatter = (item) => {
     const str = item.title;
-    if (item.type !== 'case') {
+
+    if (!Util.isTagItem(item)) {
         return str;
     }
 
