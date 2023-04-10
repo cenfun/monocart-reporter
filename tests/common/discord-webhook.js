@@ -10,7 +10,7 @@ module.exports = async (reportData, capability) => {
     // send message to a discord channel which webhook
     // https://discord.com/developers/docs/resources/webhook
 
-    // do not store your discord webhook url in the source code, but pass your discord webhook url from environment variables
+    // do not store your webhook url in the source code, but pass your webhook url from environment variables
     const url = process.env.DISCORD_WEBHOOK;
 
     const {

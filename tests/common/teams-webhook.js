@@ -8,7 +8,7 @@ module.exports = async (reportData, capability) => {
 
     // https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=dotnet
 
-    // do not store your discord webhook url in the source code, but pass your discord webhook url from environment variables
+    // do not store your webhook url in the source code, but pass your webhook url from environment variables
     const url = process.env.TEAMS_WEBHOOK;
 
     const {

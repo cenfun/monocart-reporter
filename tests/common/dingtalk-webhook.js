@@ -5,7 +5,7 @@ module.exports = async (reportData, capability) => {
 
     // https://open.dingtalk.com/document/robots/custom-robot-access
 
-    // do not store your discord webhook url in the source code, but pass your discord webhook url from environment variables
+    // do not store your webhook url in the source code, but pass your webhook url from environment variables
     const url = process.env.DINGTALK_WEBHOOK;
 
     const {
@@ -48,7 +48,7 @@ module.exports = async (reportData, capability) => {
     const res = await axios.post(url, data).catch((err) => {
         // console.log(err);
         EC.logRed(err.message);
-        EC.logRed('[dingtalk] failed to post message to Teams channel');
+        EC.logRed('[dingtalk] failed to post message');
     });
 
     if (res) {
