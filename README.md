@@ -244,15 +244,12 @@ module.exports = {
             visitor: (data, metadata, collect) => {
                 // auto collect data from comments
                 const parserOptions = {
-                    // https://babeljs.io/docs/babel-parser
-
                     // Indicate the mode the code should be parsed in.
                     // Can be one of "script", "module", or "unambiguous". Defaults to "script".
                     // sourceType: 'module',
 
-                    // enable typescript syntax as needed
+                    // enable typescript syntax. more https://babeljs.io/docs/babel-parser
                     // plugins: ['typescript']
-
                 };
                 const comments = collect.comments(parserOptions);
                 if (comments) {
