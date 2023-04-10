@@ -1,3 +1,6 @@
+* 1.6.8
+  - added tag for describe suite
+
 * 1.6.7
   - fixed issue #14
 
