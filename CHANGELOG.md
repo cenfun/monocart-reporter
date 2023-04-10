@@ -1,3 +1,6 @@
+* 1.6.10
+  - added feature showing failed step only
+
 * 1.6.9
   - fixed collapsed step
   

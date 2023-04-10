@@ -116,7 +116,7 @@
             v-model="item.data.stepFailedOnly"
             @click="onFailedStepClick(item.data)"
           >
-            Failed
+            Only Failed
           </VuiSwitch>
         </VuiFlex>
       </div>
