@@ -30,6 +30,7 @@
     - [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
     - [Discord Integration](#discord-integration) with webhook
     - [Teams Integration](#teams-integration) with webhook
+    - [Dingtalk/Weixin/Feishu Integration](#dingtalkweixinfeishu-integration)
 
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
@@ -592,6 +593,11 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
 
 ![](/docs/teams.png)
 
+## Dingtalk/Weixin/Feishu Integration
+- [dingtalk-webhook.js](/tests/common/dingtalk-webhook.js)
+- [weixin-webhook.js](/tests/common/weixin-webhook.js)
+- [feishu-webhook.js](/tests/common/feishu-webhook.js)
+
 ## Report UI [packages/app](packages/app)
  - Base on [Vue 3](https://github.com/vuejs/core)
  - Lightweight UI components [vine-ui](https://github.com/cenfun/vine-ui)
@@ -604,7 +610,7 @@ nmls -p
 ┌────────────────────────────┬─────────┬──────────┬──────┬───────────┬────────┐
 │  Name                      │ Version │     Size │ Deps │ Deps Size │ Nested │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
-│ └ monocart-reporter        │ 1.6.8   │ 619.7 KB │   18 │   2.51 MB │      1 │
+│ └ monocart-reporter        │ 1.6.9   │ 619.8 KB │   18 │   2.51 MB │      1 │
 │   ├ dependencies           │         │          │      │           │        │
 │   │ ├ @babel/code-frame    │ 7.21.4  │  19.6 KB │   10 │  153.0 KB │      0 │
 │   │ ├ @babel/parser        │ 7.21.4  │  1.79 MB │    0 │       0 B │      0 │
@@ -615,7 +621,7 @@ nmls -p
 │   │ └ stack-utils          │ 2.0.6   │  14.3 KB │    1 │   3.18 KB │      1 │
 ├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
 │   └ packages in workspaces │         │          │      │           │        │
-│     └ monocart-reporter    │ 1.6.8   │ 557.5 KB │    0 │       0 B │      0 │
+│     └ monocart-reporter    │ 1.6.9   │ 562.5 KB │    0 │       0 B │      0 │
 └────────────────────────────┴─────────┴──────────┴──────┴───────────┴────────┘
 ```
 
