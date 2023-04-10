@@ -108,7 +108,7 @@ module.exports = async (reportData, capability) => {
     await axios.post(url, data).catch((err) => {
         // console.log(err);
         EC.logRed(err.message);
-        EC.logRed('[discord] failed to post message to Teams channel');
+        EC.logRed('[teams] failed to post message to Teams channel');
     });
 
 };

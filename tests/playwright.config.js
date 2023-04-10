@@ -271,6 +271,10 @@ module.exports = {
                 // const teamsWebhook = require('./common/teams-webhook.js');
                 // await teamsWebhook(reportData, capability);
 
+                // dingtalk integration with webhook
+                // const dingtalkWebhook = require('./common/dingtalk-webhook.js');
+                // await dingtalkWebhook(reportData, capability);
+
                 // html to pdf
                 // const toPdf = require('./common/to-pdf.js');
                 // await toPdf(reportData, capability);
