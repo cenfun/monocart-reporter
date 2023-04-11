@@ -31,7 +31,7 @@
         "stack-utils": "^2.0.6"
     },
     "devDependencies": {
-        "@playwright/test": "^1.32.2",
+        "@playwright/test": "^1.32.3",
         "@slack/web-api": "^6.8.1",
         "@slack/webhook": "^6.1.0",
         "ansi-to-html": "^0.7.2",
@@ -47,7 +47,7 @@
         "fps-detector": "^1.0.3",
         "github-markdown-css": "^5.2.0",
         "marked": "^4.3.0",
-        "playwright": "^1.32.2",
+        "playwright": "^1.32.3",
         "stylelint": "^15.4.0",
         "stylelint-config-plus": "^1.0.2",
         "testrail-api": "^1.3.6",
