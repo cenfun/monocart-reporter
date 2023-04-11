@@ -236,7 +236,7 @@ module.exports = {
 The `visitor` function will be executed for each suite, case and step, the arguments are:
 - `data` data for reporter, you can override some of its properties or add more
 - `metadata` data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
-- `collect` there is only one self collection for now: `collect.comments()`
+- `collect` there is only one self collection for now: `collect.comments(parserOptions)`
 ```js
 // playwright.config.js
 module.exports = {
@@ -475,7 +475,7 @@ module.exports = {
     - `date` the previous test date
     - `duration` the previous test duration
     - `summary` the previous test summary (Object)
-    - `trends` historical data list (Array), but except the previous one
+    - `trends` historical data list (Array), but except the previous self
 ```js
 // playwright.config.js
 module.exports = {
