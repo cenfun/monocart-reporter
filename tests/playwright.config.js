@@ -168,6 +168,7 @@ module.exports = {
                 defaultColumns.push({
                     id: 'description',
                     name: 'Description',
+                    width: 300,
                     markdown: true,
                     searchable: true
                 });
