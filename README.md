@@ -233,6 +233,10 @@ module.exports = {
 ```
 
 ## Data Collection Visitor
+The `visitor` function will be executed for each suite, case and step, the arguments are:
+- `data` data for reporter, you can override some of its properties or add more
+- `metadata` data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
+- `collect` there is only one self collection for now: `collect.comments()`
 ```js
 // playwright.config.js
 module.exports = {
@@ -261,7 +265,7 @@ module.exports = {
 };
 ```
 ### Adding Comments to Your Tests
-> Compared with importing external library, code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc.
+> Compared with importing external library, code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. Each comment info starts with `@` which is similar to JSDoc.
 * Case
 ```js
 /**
@@ -339,14 +343,13 @@ test.beforeEach(() => {
  */
 const { test, expect } = require('@playwright/test');
 ```
-* Project (Can't use comments)
+* Project (Can't use comments but use project `metadata`)
 ```js
 // playwright.config.js
 module.exports = {
     projects: [
         {
             name: 'Desktop Chromium',
-            // add extra information for project with metadata
             metadata: {
                 owner: 'PO'
             }
@@ -355,6 +358,7 @@ module.exports = {
 };  
 ```
 ### Removing Secrets and Sensitive Data from Report
+> The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the step title with the string replacement in `visitor` function.
 ```js
 // playwright.config.js
 module.exports = {
@@ -422,6 +426,9 @@ module.exports = {
 module.exports = {
     globalSetup: require.resolve('./common/global-setup.js'),
     metadata: {
+        product: 'Monocart',
+        env: 'STG',
+        type: 'Regression',
         // test home page object model
         url: 'https://www.npmjs.org/package/monocart-reporter',
         // test addInitScript
@@ -525,6 +532,11 @@ await MonocartReporter.merge(reportDataList, {
 example: [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
 ## onEnd callback
+The `onEnd` function will be executed after report generated. the arguments are:
+- `reportData` all report data additionally includes `htmlPath`, `jsonPath`, `summaryTable`
+- `capability` includes APIs 
+    - `capability.forEach(callback)` Iterate over all rows of data (suites/cases/steps), return `false` will `break` loop.
+    - `capability.sendEmail(emailOptions)` 
 ```js
 // playwright.config.js
 module.exports = {
