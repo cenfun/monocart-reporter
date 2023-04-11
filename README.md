@@ -7,14 +7,14 @@
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
-* Shows [Suites](https://playwright.dev/docs/api/class-suite)/[Cases](https://playwright.dev/docs/api/class-testcase)/[Steps](https://playwright.dev/docs/api/class-teststep) with Tree Style
-* Custom [annotations](https://playwright.dev/docs/test-annotations) with Markdown
+* Shows Report in A Tree Grid
 * Custom [Columns and Formatters](#columns-and-formatter) (extra information for suite/case/step)
     - [Custom Formatter](#custom-formatter)
     - [Searchable Fields](#searchable-fields)
 * Custom [Data Collection Visitor](#data-collection-visitor)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
+* [Annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Output Report Data and Summary (json)
 * Console Logs in Order (log/error/warn/debug/info)
 * Export Data (json)
@@ -25,11 +25,11 @@
 * [Trend Chart](#trend-chart)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd callback](#onend-callback)
-    - [Send Email](#send-email) with [nodemailer](https://nodemailer.com) (attachments/html)
-    - [Testrail Integration](#testrail-integration) with [testrail-api](https://github.com/rundef/node-testrail-api)
-    - [Slack Integration](#slack-integration) with [slack-sdk](https://github.com/slackapi/node-slack-sdk)
-    - [Discord Integration](#discord-integration) with webhook
-    - [Teams Integration](#teams-integration) with webhook
+    - [Send Email](#send-email)
+    - [Testrail Integration](#testrail-integration)
+    - [Slack Integration](#slack-integration)
+    - [Discord Integration](#discord-integration)
+    - [Teams Integration](#teams-integration)
     - [Dingtalk/Weixin/Feishu Integration](#dingtalkweixinfeishu-integration)
 
 ## Preview
@@ -584,19 +584,20 @@ module.exports = {
 };
 ```
 ## Send Email
-example: [send-email.js](/tests/common/send-email.js)
+Simply send email with [nodemailer](https://nodemailer.com), check example: [send-email.js](/tests/common/send-email.js)
 
 ![](/docs/email.png)
 
 
 ## Testrail Integration
-example: [testrail.js](/tests/common/testrail.js)
+Send results to your Testrail with [testrail-api](https://github.com/rundef/node-testrail-api), check example: [testrail.js](/tests/common/testrail.js)
 
 ![](/docs/testrail.png)
 
+
 ## Slack Integration
-1. Simply send message with @slack/webhook, example: [slack-webhook.js](/tests/common/slack-webhook.js)
-2. Recommended: Post chat message and upload image with @slack/web-api, example: [slack-web-api.js](/tests/common/slack-web-api.js)
+1. Simply send message with [@slack/webhook](https://github.com/slackapi/node-slack-sdk), example: [slack-webhook.js](/tests/common/slack-webhook.js)
+2. Recommended: Post chat message and upload image with [@slack/web-api](https://github.com/slackapi/node-slack-sdk), example: [slack-web-api.js](/tests/common/slack-web-api.js)
 
 ![](/docs/slack.png)
 
