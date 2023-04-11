@@ -233,7 +233,6 @@ module.exports = {
 ```
 
 ## Data Collection Visitor
-[Collect Data from Comments](#adding-comments-to-your-tests) (similar to JsDoc)
 ```js
 // playwright.config.js
 module.exports = {
