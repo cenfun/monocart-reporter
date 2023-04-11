@@ -92,7 +92,7 @@ module.exports = {
 Separated metadata file (Already included in the above HTML and compressed, it can be deleted). Can be used for debugging or custom data collection.
 
 
-## Options
+## Reporter Options
 ```js
 {
     // the report name
@@ -133,9 +133,9 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     // onEnd: async (reportData, capability) => {}
 }
 ```
-See [options.js](lib/default/options.js)
 
 ## Columns and Formatter
+The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties refer to [columnProps](https://cenfun.github.io/turbogrid/api.html#options)
 ```js
 // playwright.config.js
 module.exports = {
