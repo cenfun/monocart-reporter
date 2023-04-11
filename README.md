@@ -234,9 +234,12 @@ module.exports = {
 
 ## Data Collection Visitor
 The `visitor` function will be executed for each suite, case and step, the arguments are:
-- `data` data for reporter, you can override some of its properties or add more
-- `metadata` data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
-- `collect` there is only one self collection for now: `collect.comments(parserOptions)`
+- `data` data item (suite/case/step) for reporter, you can override some of its properties or add more
+- `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
+- `collect` only one self collection for now: `collect.comments(parserOptions)` and parser options following:
+    - empty for normal CommonJs syntax by default
+    - `{ sourceType: 'module', plugins: ['typescript'] }` for typescript syntax
+    - more [https://babeljs.io/docs/babel-parser](https://babeljs.io/docs/babel-parser)
 ```js
 // playwright.config.js
 module.exports = {
