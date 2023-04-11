@@ -47,7 +47,7 @@ npm i monocart-reporter
 ```
 
 ## Playwright Config
-> Note: we use CommonJS by default, please [move to ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c#how-can-i-move-my-commonjs-project-to-esm) according to your needs.
+> Note: we use `CommonJS` by default, please [move to ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c#how-can-i-move-my-commonjs-project-to-esm) according to your needs.
 ```js
 // playwright.config.js
 module.exports = {
@@ -177,7 +177,7 @@ module.exports = {
 };
 ```
 ### Custom Formatter
-> Note: the formatter function will be serialized into string via JSON, so closures, contexts, etc. will not work!
+> Note: the `formatter` function will be serialized into string via JSON, so closures, contexts, etc. will not work!
 ```js
 // playwright.config.js
 module.exports = {
@@ -386,9 +386,10 @@ module.exports = {
 ```
 
 ## Style Tags
-* Add tag to test title (starts with @)
+* Add tag to test/describe title ( starts with `@` )
 ```js
-test('test title @smoke @critical', () => { ... });
+test('test title @smoke @critical', () => { });
+test.describe('describe title @smoke @critical', () => { });
 ```
 * Custom tag style
 ```js
@@ -415,7 +416,7 @@ module.exports = {
 ```
 
 ## Metadata
-* add metadata to config
+* add `metadata` to config
 ```js
 // playwright.config.js
 module.exports = {
@@ -448,8 +449,8 @@ export default async (config) => {
 ```
 
 ## Trend Chart
-> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting historical trend data from previous report data before test every time, but the data is not safe if there is any runtime error.
-- If a report is generated in the same place every time, you can simply connect the data with the report JSON path
+> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting historical trend data from previous report data before test every time.
+- If a report is generated in the same place every time, you can simply connect the data with the report JSON path (the data is not 100% safe if there is any runtime error, the previous output dir will be empty by Playwright but the reporter processing not finish)
 ```js
 // playwright.config.js
 module.exports = {
@@ -463,7 +464,11 @@ module.exports = {
     ]
 };
 ```
-- Otherwise, if you need to solve the data by yourself
+- Recommended: resolve the data by yourself (could be requested from the server), required data fields: 
+    - `date` the previous test date
+    - `duration` the previous test duration
+    - `summary` the previous test summary (Object)
+    - `trends` historical data list (Array), but except the previous one
 ```js
 // playwright.config.js
 module.exports = {
@@ -485,8 +490,6 @@ module.exports = {
     ]
 };
 ```
-
-
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
