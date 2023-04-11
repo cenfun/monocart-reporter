@@ -1,3 +1,6 @@
+* 1.6.11
+  - added feature collapse all steps
+
 * 1.6.10
   - added feature showing failed step only
 

@@ -111,10 +111,19 @@
           <div class="mcr-num">
             {{ item.data.stepNum }}
           </div>
+
+          <VuiSwitch
+            v-if="item.data.stepSubs"
+            v-model="item.data.stepCollapsed"
+            @click="onStepCollapsedClick(item.data)"
+          >
+            Collapse All
+          </VuiSwitch>
+
           <VuiSwitch
             v-if="item.data.stepFailed"
             v-model="item.data.stepFailedOnly"
-            @click="onFailedStepClick(item.data)"
+            @click="onStepFailedClick(item.data)"
           >
             Only Failed
           </VuiSwitch>
@@ -418,12 +427,21 @@ const getCustom = (item, column) => {
     };
 };
 
-const onRowHeadClick = (row) => {
-    row.collapsed = !row.collapsed;
+const onRowHeadClick = (item) => {
+    item.collapsed = !item.collapsed;
     initDataList();
 };
 
-const onFailedStepClick = (item) => {
+const onStepCollapsedClick = (item) => {
+    Util.forEach(item.subs, (step) => {
+        if (step.subs) {
+            step.collapsed = item.stepCollapsed;
+        }
+    });
+    initDataList();
+};
+
+const onStepFailedClick = (item) => {
     if (item.stepFailedOnly && item.collapsed) {
         item.collapsed = false;
     }
