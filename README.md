@@ -187,7 +187,7 @@ module.exports = {
             outputFile: './test-results/report.html',
             columns: (defaultColumns) => {
 
-                // custom formatter for duration
+                // duration formatter
                 const durationColumn = defaultColumns.find((column) => column.id === 'duration');
                 durationColumn.formatter = function(value, rowItem, columnItem) {
                     if (typeof value === 'number' && value) {
@@ -196,7 +196,7 @@ module.exports = {
                     return value;
                 };
 
-                // custom formatter for title
+                // title formatter
                 // Note: The title shows the tree style, it is a complicated HTML structure
                 // it is recommended to format title base on previous.
                 const titleColumn = defaultColumns.find((column) => column.id === 'title');
@@ -262,7 +262,7 @@ module.exports = {
 };
 ```
 ### Adding Comments to Your Tests
-> Compared to importing external libraries and calling its interface, Comments is a better way, no dependence, cleaner, easy to read, and never break the existing code.
+> Compared with importing external library, code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc.
 * Case
 ```js
 /**
@@ -516,7 +516,7 @@ await MonocartReporter.merge(reportDataList, {
        // return `https://cenfun.github.io/monocart-reporter/${currentPath}`;
     },
     onEnd: async (reportData, capability) => {
-        
+        // send email or third party integration
     }
 });
 ```
