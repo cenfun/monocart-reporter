@@ -15,6 +15,7 @@ module.exports = {
         product: 'Monocart',
         env: 'STG',
         type: 'Regression',
+        executor: 'Mono',
 
         // test home page object model
         url: 'https://www.npmjs.org/package/monocart-reporter',

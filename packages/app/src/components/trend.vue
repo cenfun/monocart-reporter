@@ -37,6 +37,7 @@
           height="100%"
           xmlns="http://www.w3.org/2000/svg"
           @mouseleave="hidePopover"
+          @click="chart.bezier=!chart.bezier"
         >
           <rect
             :width="chart.width"
@@ -134,6 +135,8 @@ const chart = shallowReactive({
     density: 'Series',
     // depends on duration
     densityOptions: [],
+
+    bezier: false,
 
     type: 'Status',
     typeOptions: []
@@ -373,12 +376,54 @@ const getListByDensity = () => {
 
 };
 
+const toBezier = (points, S = 'M', Z = '') => {
+    points = [].concat(points);
+    const ps = [];
+    const [fx, fy] = points.shift();
+    const [sx, sy] = points.shift();
+    const fmx = (sx - fx) * 0.5 + fx;
+
+    const point = Util.point;
+    ps.push(`${S}${point(fx, fy)}C${point(fmx, fy)} ${point(fmx, sy)} ${point(sx, sy)}`);
+    points.reduce((pp, p) => {
+        const [px] = pp;
+        const [x, y] = p;
+        const mx = (x - px) * 0.5 + px;
+        ps.push(`S ${point(mx, y)} ${point(x, y)}`);
+        return p;
+    }, [sx, sy]);
+
+    // console.log(ps);
+    const d = ps.join(' ');
+
+    return d + Z;
+};
+
+const toStraight = (points, S = 'M', Z = '') => {
+    const point = Util.point;
+    const ps = points.map((it) => {
+        const [x, y] = it;
+        return point(x, y);
+    });
+
+    const d = `${S}${ps.join('L')}`;
+    return d + Z;
+};
+
+const getLineD = (currentPoints, backPoints) => {
+    if (chart.bezier) {
+        return toBezier(currentPoints) + toBezier(backPoints, 'L', 'z');
+    }
+
+    const points = currentPoints.concat(backPoints);
+    return toStraight(points, 'M', 'z');
+};
+
 const getStatusLines = (list) => {
     const padding = chart.padding;
     const cw = chart.width - padding * 2;
     const ch = chart.height - padding * 2;
     const xw = cw / (list.length - 1);
-    const point = Util.point;
 
     let perviousPoints = list.map((t, i) => {
         return [padding + i * xw, padding + ch];
@@ -396,15 +441,10 @@ const getStatusLines = (list) => {
             const y = py - t[caseType] / maxTests * ch;
             return [px, y];
         });
-
-        const points = currentPoints.concat(perviousPoints.reverse());
-
+        const backPoints = perviousPoints.reverse();
         perviousPoints = currentPoints;
 
-        const d = `M${points.map((it) => {
-            const [x, y] = it;
-            return point(x, y);
-        }).join('L')}z`;
+        const d = getLineD(currentPoints, backPoints);
 
         return {
             fill: meta.color,
@@ -420,7 +460,6 @@ const getItemLines = (list, items) => {
     const cw = chart.width - padding * 2;
     const ch = chart.height - padding * 2;
     const xw = cw / (list.length - 1);
-    const point = Util.point;
     const trendMax = chart.trendMax;
 
     const lines = [];
@@ -433,12 +472,7 @@ const getItemLines = (list, items) => {
             return [x, y];
         });
 
-        const ps = points.map((it) => {
-            const [x, y] = it;
-            return point(x, y);
-        });
-
-        const dStroke = `M${ps.join('L')}`;
+        const dStroke = chart.bezier ? toBezier(points) : toStraight(points);
         const color = item.color;
 
         lines.push({
@@ -447,7 +481,8 @@ const getItemLines = (list, items) => {
             d: dStroke
         });
 
-        const dFill = `M0,${ch}L${ps.join('L')}V${ch}`;
+        const lineFill = chart.bezier ? toBezier(points, 'L') : toStraight(points, 'L');
+        const dFill = `M0,${ch}${lineFill}V${ch}z`;
 
         lines.push({
             fill: color,
@@ -567,7 +602,8 @@ const trendsHandler = () => {
 
 watch([
     () => chart.type,
-    () => chart.density
+    () => chart.density,
+    () => chart.bezier
 ], (v) => {
     render();
 });
