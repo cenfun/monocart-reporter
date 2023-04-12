@@ -115,6 +115,7 @@
           <VuiSwitch
             v-if="item.data.stepSubs"
             v-model="item.data.stepCollapsed"
+            :disabled="data.stepCollapsedDisabled"
             @click="onStepCollapsedClick(item.data)"
           >
             Collapse All
@@ -153,7 +154,10 @@ import IconLabel from './icon-label.vue';
 const { VuiFlex, VuiSwitch } = components;
 
 const data = shallowReactive({
-    list: []
+    list: [],
+    stepCollapsedDisabled: false,
+    stepFailedOnly: false,
+    stepSubs: false
 });
 
 const el = ref(null);
@@ -509,6 +513,11 @@ const initSteps = (list, steps, parent) => {
         }
 
         list.push(step);
+
+        if (step.subs) {
+            data.stepSubs = true;
+        }
+
         initSteps(list, step.subs, step);
     });
 };
@@ -528,11 +537,19 @@ const initDataList = () => {
 
     // case
     list.push(caseItem);
-    data.stepFailedOnly = caseItem.stepFailedOnly;
 
+    // before init steps
+    data.stepFailedOnly = caseItem.stepFailedOnly;
+    data.stepSubs = false;
     // collect steps with collapsed
     if (!caseItem.collapsed) {
         initSteps(list, caseItem.subs);
+    }
+
+    if (data.stepFailedOnly) {
+        data.stepCollapsedDisabled = !data.stepSubs;
+    } else {
+        data.stepCollapsedDisabled = false;
     }
 
     data.list = list.map((item) => {
