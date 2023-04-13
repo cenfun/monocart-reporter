@@ -7,11 +7,11 @@
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
-* Shows Report in A Tree Grid
-* Custom [Columns and Formatters](#columns-and-formatter) (extra information for suite/case/step)
+* Shows Test Report in A [Tree Grid](https://github.com/cenfun/turbogrid)
+* Custom [Columns and Formatters](#columns-and-formatter) (extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
     - [Searchable Fields](#searchable-fields)
-* Custom [Data Collection Visitor](#data-collection-visitor)
+* Custom [Data Collection Visitor](#data-collection-visitor) (extra data collection for suite/case/step)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
 * [Annotations](https://playwright.dev/docs/test-annotations) with Markdown
@@ -124,7 +124,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     columns: null,
     // columns: (defaultColumns) => {},
 
-    // rows data handler
+    // rows data handler (suite, case and step)
     visitor: null,
     // visitor: (data, metadata, collect) => {},
 
