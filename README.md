@@ -538,7 +538,7 @@ example: [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
 ## onEnd callback
 The `onEnd` function will be executed after report generated. the arguments are:
-- `reportData` all report data
+- `reportData` all report data, includes properties:
     - `name` (String) report name 
     - `date` (Number) start date in milliseconds 
     - `dateH` (String) human-readable date with `Date.toLocaleString()` 
