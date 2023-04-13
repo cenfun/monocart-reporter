@@ -544,8 +544,8 @@ The `onEnd` function will be executed after report generated. the arguments are:
     - `dateH` (String) human-readable date with `Date.toLocaleString()` 
     - `duration` (Number) test duration in milliseconds 
     - `durationH` (String) human-readable duration
-    - `summary` (Object) test summary like tests, suites, steps, etc.
-    - `rows` and `columns` (Array) tree structure list, see [detail](https://cenfun.github.io/turbogrid/api.html#data)
+    - `summary` (Object) test summary, includes tests, suites, steps, etc.
+    - `rows` and `columns` (Array) all rows and columns data, both are tree structure, see [detail](https://cenfun.github.io/turbogrid/api.html#data)
     - `tags` (Object) tag collection
     - `metadata` (Object) metadata collection
     - `system` (Object) system information
