@@ -538,23 +538,23 @@ example: [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
 ## onEnd callback
 The `onEnd` function will be executed after report generated. the arguments are:
-- `reportData` all report data, includes properties:
+- `reportData` all report data, properties:
     - `name` (String) report name 
     - `date` (Number) start date in milliseconds 
     - `dateH` (String) human-readable date with `Date.toLocaleString()` 
     - `duration` (Number) test duration in milliseconds 
     - `durationH` (String) human-readable duration
-    - `summary` (Object) 
-    - `rows` and `columns` (Array)
-    - `tags` (Object)
-    - `metadata` (Object)
-    - `system` (Object)
-    - `trends` (Array)
+    - `summary` (Object) test summary like tests, suites, steps, etc.
+    - `rows` and `columns` (Array) tree structure list, see [detail](https://cenfun.github.io/turbogrid/api.html#data)
+    - `tags` (Object) tag collection
+    - `metadata` (Object) metadata collection
+    - `system` (Object) system information
+    - `trends` (Array) historical trend data
     - `caseTypes` and `suiteTypes` (Array)
     - `cwd`, `outputDir` and `outputFile` (String)
     - `htmlPath`, `jsonPath` and `summaryTable` (String)
     - ...
-- `capability` includes APIs 
+- `capability` APIs:
     - `capability.forEach(callback)` Iterate over all rows of data (suites/cases/steps), return `false` will `break` loop.
     - `capability.sendEmail(emailOptions)` 
 ```js
