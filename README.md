@@ -14,12 +14,12 @@
 * Custom [Data Collection Visitor](#data-collection-visitor) (extra data collection for suite/case/step)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
-* [Annotations](https://playwright.dev/docs/test-annotations) with Markdown
 * Output Report Data and Summary (json)
 * Console Logs in Order (log/error/warn/debug/info)
 * Export Data (json)
 * Timeline Workers Graph
 * Monitor CPU and Memory Usage
+* [Custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) with Markdown Support
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
