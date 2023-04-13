@@ -24,7 +24,7 @@
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
 * [Merge Shard Reports](#merge-shard-reports)
-* [onEnd callback](#onend-callback)
+* [onEnd hook](#onend-hook)
     - [Send Email](#send-email)
     - [Testrail Integration](#testrail-integration)
     - [Slack Integration](#slack-integration)
@@ -101,11 +101,11 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     // the output file path (relative process.cwd)
     outputFile: './test-results/report.html',
 
-    // custom attachment path. default is relative to output file
+    // attachment path handler
     attachmentPath: null,
-    // attachmentPath: (currentPath, extras) => `https://your-public-url/${currentPath}`,
+    // attachmentPath: (currentPath, extras) => `https://cenfun.github.io/monocart-reporter/${currentPath}`,
 
-    // trend data collection
+    // trend data handler
     trend: null,
     // trend: () => './test-results/report.json',
 
@@ -120,15 +120,15 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     //     }
     // },
 
-    // custom columns
+    // columns data handler
     columns: null,
     // columns: (defaultColumns) => {},
 
-    // additional custom visitor for columns
+    // rows data handler
     visitor: null,
     // visitor: (data, metadata, collect) => {},
 
-    // async hook after report data generated
+    // onEnd hook
     onEnd: null
     // onEnd: async (reportData, capability) => {}
 }
@@ -536,7 +536,7 @@ await MonocartReporter.merge(reportDataList, {
 ```
 example: [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
-## onEnd callback
+## onEnd hook
 The `onEnd` function will be executed after report generated. the arguments are:
 - `reportData` all report data, properties:
     - `name` (String) report name 
