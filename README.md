@@ -19,7 +19,7 @@
 * Export Data (json)
 * Timeline Workers Graph
 * Monitor CPU and Memory Usage
-* [Custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) with Markdown Support
+* [Custom Annotations](https://playwright.dev/docs/test-annotations#custom-annotations) with Markdown Support
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)

@@ -5,7 +5,7 @@
 
 const { test, expect } = require('@playwright/test');
 const { delay } = require('../common/util.js');
-const { TF, parseComments } = require('../../lib/utils/util.js');
+const Util = require('../../lib/utils/util.js');
 
 /**
  * add extra information for case
@@ -14,6 +14,8 @@ const { TF, parseComments } = require('../../lib/utils/util.js');
  * @testrail 2125
  */
 test('test util time format', () => {
+
+    const TF = Util.TF;
 
     // @title expect(TF(0)).toBe('0ms');
     expect(TF(0)).toBe('0ms');
@@ -58,7 +60,7 @@ test('test util parseComments', () => {
     ** @testrail 2125
     **/`;
 
-    const parsed = parseComments(str);
+    const parsed = Util.parseComments(str);
 
     // @title parsed comments length 6
     expect(Object.keys(parsed).length).toBe(6);
@@ -71,6 +73,63 @@ test('test util parseComments', () => {
     expect(parsed.owner).toBe('Kevin * Tom');
     expect(parsed.jira).toBe('MCR-16888 MCR-16889');
     expect(parsed.testrail).toBe('2125');
+
+});
+
+test('test util forEach', () => {
+    const list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, {
+        toString: () => 10,
+        subs: [11, 12, 13]
+    }];
+
+    const forEach = Util.forEach;
+
+    let count = 0;
+    let res = [];
+    forEach(list, (item) => {
+        count += 1;
+        res.push(item);
+    });
+    expect(count).toBe(14);
+    expect(res.join('')).toBe('012345678910111213');
+
+    count = 0;
+    res = [];
+    forEach(list, (item) => {
+        count += 1;
+        if (item === 3) {
+            return 'break';
+        }
+        res.push(item);
+    });
+    // @title break with return "break"
+    expect(count).toBe(4);
+    expect(res.join('')).toBe('012');
+
+    count = 0;
+    res = [];
+    forEach(list, (item) => {
+        count += 1;
+        if (item === 6) {
+            return false;
+        }
+        res.push(item);
+    });
+    // @title break with return false
+    expect(count).toBe(7);
+    expect(res.join('')).toBe('012345');
+
+    count = 0;
+    res = [];
+    forEach(list, (item) => {
+        count += 1;
+        if (item === 6) {
+            return;
+        }
+        res.push(item);
+    });
+    expect(count).toBe(14);
+    expect(res.join('')).toBe('01234578910111213');
 
 });
 
