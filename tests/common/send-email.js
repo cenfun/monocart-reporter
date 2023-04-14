@@ -25,8 +25,8 @@ module.exports = async (reportData, capability) => {
             html: `
                 <h3>${reportData.name}</h3>
                 <ul>
-                    <li>Env: STG</li>
-                    <li>Type: Smoke</li>
+                    <li>Env: ${reportData.metadata.env}</li>
+                    <li>Type: ${reportData.metadata.type}</li>
                     <li>Url: ${reportData.metadata.url}</li>
                     <li>Date: ${reportData.dateH}</li>
                     <li>Duration: ${reportData.durationH}</li>
