@@ -492,10 +492,10 @@ module.exports = {
 };
 ```
 - Recommended: resolve the data by yourself (could be requested from the server), required data fields: 
-    - `date` the previous test date
-    - `duration` the previous test duration
-    - `summary` the previous test summary (Object)
-    - `trends` historical data list (Array), but except the previous self
+    - `date` (Number) the previous test date in milliseconds
+    - `duration` (Number) the previous test duration
+    - `summary` (Object) the previous test summary 
+    - `trends` (Array) historical data list, but except the previous self
 ```js
 // playwright.config.js
 module.exports = {
