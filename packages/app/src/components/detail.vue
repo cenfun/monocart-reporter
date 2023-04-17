@@ -116,6 +116,8 @@
             v-if="item.data.stepSubs"
             v-model="item.data.stepCollapsed"
             :disabled="data.stepCollapsedDisabled"
+            :label-clickable="true"
+            label-position="right"
             @click="onStepCollapsedClick(item.data)"
           >
             Collapse All
@@ -124,6 +126,8 @@
           <VuiSwitch
             v-if="item.data.stepFailed"
             v-model="item.data.stepFailedOnly"
+            :label-clickable="true"
+            label-position="right"
             @click="onStepFailedClick(item.data)"
           >
             Only Failed

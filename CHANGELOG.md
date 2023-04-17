@@ -1,3 +1,6 @@
+* 1.6.12
+  - fixed UI issue
+
 * 1.6.11
   - added feature collapse all steps
 

@@ -95,10 +95,18 @@
             @click="onSearchDropdownClick($event)"
           />
         </VuiFlex>
-        <VuiSwitch v-model="state.suiteVisible">
+        <VuiSwitch
+          v-model="state.suiteVisible"
+          :label-clickable="true"
+          label-position="right"
+        >
           Suite
         </VuiSwitch>
-        <VuiSwitch v-model="state.stepVisible">
+        <VuiSwitch
+          v-model="state.stepVisible"
+          :label-clickable="true"
+          label-position="right"
+        >
           Step
         </VuiSwitch>
       </VuiFlex>
