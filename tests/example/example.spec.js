@@ -14,6 +14,7 @@ test.describe('@util group', () => {
  * @owner Kevin
  * @jira MCR-16888
  * @testrail 2125
+ * @zephyr MON-T1
  */
     test('@util time format', () => {
 
@@ -50,6 +51,7 @@ test.describe('@util group', () => {
         expect(new Date(60 * 24 * 3601000).toISOString()).toBe('1970-03-02T00:24:00.000Z');
     });
 
+    // @zephyr MON-T2
     test('@util parseComments', () => {
         const str = `/**
 
@@ -78,6 +80,9 @@ test.describe('@util group', () => {
 
     });
 
+    /**
+     * @zephyr MON-T3
+     */
     test('@util forEach', () => {
         const list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, {
             toString: () => 10,

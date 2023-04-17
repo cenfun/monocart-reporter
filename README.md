@@ -27,6 +27,7 @@
 * [onEnd hook](#onend-hook)
     - [Send Email](#send-email)
     - [Testrail Integration](#testrail-integration)
+    - [Jira + Zephyr Scale Integration](#jira--zephyr-scale-integration)
     - [Slack Integration](#slack-integration)
     - [Discord Integration](#discord-integration)
     - [Teams Integration](#teams-integration)
@@ -610,6 +611,11 @@ Simply send email with [nodemailer](https://nodemailer.com), check example: [sen
 Send results to your Testrail with [testrail-api](https://github.com/rundef/node-testrail-api), check example: [testrail.js](/tests/common/testrail.js)
 
 ![](/docs/testrail.png)
+
+## Jira + Zephyr Scale Integration
+Create test cycle and executions with [zephyr-scale-api](https://support.smartbear.com/zephyr-scale-cloud/api-docs/), check example: [zephyr-scale.js](/tests/common/zephyr-scale.js)
+
+![](/docs/zephyr.png)
 
 
 ## Slack Integration
