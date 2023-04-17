@@ -137,7 +137,10 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 ```
 
 ## Columns and Formatter
-The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties refer to [columnProps](https://cenfun.github.io/turbogrid/api.html#options.columnProps)
+The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties refer to [columnProps](https://cenfun.github.io/turbogrid/api.html#options.columnProps), special properties:
+- `searchable` (Boolean) Specifies whether the column is searchable
+- `markdown` (Boolean) Specifies whether the column needs to use markdown conversion
+- `detailed` (Boolean) Specifies whether the column needs to display the layout in detail (horizontal)
 ```js
 // playwright.config.js
 module.exports = {
