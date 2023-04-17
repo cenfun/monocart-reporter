@@ -8,7 +8,7 @@
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
 * Shows Test Report in A [Tree Grid](https://github.com/cenfun/turbogrid)
-* [Output](#output) Report Data and Summary (json)
+* [Output](#output) HTML file and JSON file
 * [Custom Columns](#custom-columns) (extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
     - [Searchable Fields](#searchable-fields)
