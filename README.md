@@ -137,10 +137,20 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 ```
 
 ## Columns and Formatter
-The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties refer to [columnProps](https://cenfun.github.io/turbogrid/api.html#options.columnProps), special properties:
+The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties following:
+- `id` (String) Column id (required)
+- `name` (String) Column name, shows in grid header
+- `align` (String) left (default), center, right
+- `width` (Number) Column width
+- `minWidth`, `maxWidth` (Number) Default to 81 ~ 300
+- `styleMap` (Object, String) Column style (css)
+- `formatter` (Function) [column formatter](#custom-formatter), arguments: value, rowItem, columnItem, cellNode
+- `sortable` (Boolean) Column sortable when click column header name
+- `resizable` (Boolean) Column width resizable
 - `searchable` (Boolean) Specifies whether the column is searchable
 - `markdown` (Boolean) Specifies whether the column needs to use markdown conversion
 - `detailed` (Boolean) Specifies whether the column needs to display the layout in detail (horizontal)
+- more properties [columnProps](https://cenfun.github.io/turbogrid/api.html#options.columnProps)
 ```js
 // playwright.config.js
 module.exports = {
