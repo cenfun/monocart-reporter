@@ -28,6 +28,7 @@
     - [Send Email](#send-email)
     - [Testrail Integration](#testrail-integration)
     - [Jira + Zephyr Scale Integration](#jira--zephyr-scale-integration)
+    - [Jira + Xray Integration](#jira--xray-integration)
     - [Slack Integration](#slack-integration)
     - [Discord Integration](#discord-integration)
     - [Teams Integration](#teams-integration)
@@ -577,6 +578,14 @@ module.exports = {
                 // const testrail = require('./common/testrail.js');
                 // await testrail(reportData, capability);
 
+                // jira + zephyr scale integration
+                // const zephyrScale = require('./common/zephyr-scale.js');
+                // await zephyrScale(reportData, capability);
+
+                // jira + xray integration
+                // const xray = require('./common/xray.js');
+                // await xray(reportData, capability);
+
                 // slack integration with webhook
                 // const slackWebhook = require('./common/slack-webhook.js');
                 // await slackWebhook(reportData, capability);
@@ -616,6 +625,13 @@ Send results to your Testrail with [testrail-api](https://github.com/rundef/node
 Create test cycle and executions with [zephyr-scale-api](https://support.smartbear.com/zephyr-scale-cloud/api-docs/), check example: [zephyr-scale.js](/tests/common/zephyr-scale.js)
 
 ![](/docs/zephyr.png)
+
+## Jira + Xray Integration
+check example: [xray.js](/tests/common/xray.js)
+- Import test execution results with [Xray REST API](https://docs.getxray.app/display/XRAYCLOUD/REST+API)
+- Update Jira issue status with [Jira Transition API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-transitions-post)
+
+![](/docs/xray.png)
 
 
 ## Slack Integration

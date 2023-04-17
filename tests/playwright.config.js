@@ -257,9 +257,13 @@ module.exports = {
                 // const testrail = require('./common/testrail.js');
                 // await testrail(reportData, capability);
 
-                //  zephyr scale integration
+                // jira + zephyr scale integration
                 // const zephyrScale = require('./common/zephyr-scale.js');
                 // await zephyrScale(reportData, capability);
+
+                // jira + xray integration
+                // const xray = require('./common/xray.js');
+                // await xray(reportData, capability);
 
                 // slack integration with webhook
                 // const slackWebhook = require('./common/slack-webhook.js');
