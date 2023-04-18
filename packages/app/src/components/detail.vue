@@ -426,18 +426,16 @@ const getTrace = (path, name) => {
 
     const currentProtocol = `current protocol is <code style="color:${color}">${protocol}</code>`;
 
-    const showReport = 'try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server.';
-    const more = 'see <a href="https://playwright.dev/docs/trace-viewer" target="_blank">more</a>';
+    const showReport = 'try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server, please keep attachments and reports under the same directory.';
 
     const readme = `The Trace Viewer requires that the trace file must be loaded over the http:// or https:// protocols (${currentProtocol})  
             without <a href="https://developer.mozilla.org/en-US/docs/Glossary/CORS" target="_blank">CORS</a> issue,
             ${showReport}
-            ${more}
         `;
 
     ls.push(`<li><a href="${viewerUrl}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
 
-    ls.push(`<li>Or download the ${traceFile} file and load it to the page ${traceViewer}</li>`);
+    ls.push(`<li>or download the ${traceFile} file and load it on the page ${traceViewer}</li>`);
 
     ls.push('</div>');
     ls.push('</div>');
