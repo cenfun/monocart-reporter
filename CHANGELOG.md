@@ -1,3 +1,6 @@
+* 1.6.13
+  - added CLI to show report and view trace online
+
 * 1.6.12
   - fixed UI issue
 

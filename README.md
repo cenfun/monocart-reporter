@@ -93,6 +93,11 @@ module.exports = {
 - path-to/your-filename.json  
 Separated metadata file (Already included in the above HTML and compressed, it can be deleted). Can be used for debugging or custom data collection.
 
+## Viewing Trace Online 
+> The [Trace Viewer](https://trace.playwright.dev/) requires that the trace file must be loaded over the http:// or https:// protocols without [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS) issue, try following start a local web server:
+```sh
+npx monocart show-report <your-outputFile-path>
+```
 
 ## Reporter Options
 ```js
