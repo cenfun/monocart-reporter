@@ -419,13 +419,8 @@ const getTrace = (path, name) => {
 
     const traceViewer = '<a href="https://trace.playwright.dev/" target="_blank">Trace Viewer</a>';
 
-    console.log(path);
-    const link = new URL(path, window.location.href);
-    console.log(link);
-
-    const url = `https://trace.playwright.dev/?trace=${encodeURIComponent(link)}`;
-
-    console.log(url);
+    const traceUrl = new URL(path, window.location.href);
+    const viewerUrl = `https://trace.playwright.dev/?trace=${encodeURIComponent(traceUrl)}`;
 
     const color = isOnline ? 'green' : 'red';
 
@@ -440,7 +435,7 @@ const getTrace = (path, name) => {
             ${more}
         `;
 
-    ls.push(`<li><a href="${url}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
+    ls.push(`<li><a href="${viewerUrl}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
 
     ls.push(`<li>Or download the ${traceFile} file and load it to the page ${traceViewer}</li>`);
 
@@ -825,8 +820,8 @@ onMounted(() => {
 .mcr-detail-attachments {
     border-left-color: #aaa;
 
-    .mcr-detail-attachment {
-        position: relative;
+    .mcr-detail-attachment:not(:last-child) {
+        margin-bottom: 5px;
     }
 
     .mcr-attachment-head {
@@ -834,7 +829,6 @@ onMounted(() => {
     }
 
     .mcr-attachment-body {
-        margin-bottom: 5px;
         border: 1px solid #eee;
 
         img,
