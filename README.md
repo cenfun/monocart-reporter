@@ -7,7 +7,7 @@
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
-* Shows Test Report in A [Tree Grid](https://github.com/cenfun/turbogrid)
+* Shows Test Report in A `Tree Grid`
 * [Output](#output) HTML file and JSON file
 * [Custom Columns](#custom-columns) (extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
@@ -15,11 +15,11 @@
 * [Data Collection Visitor](#data-collection-visitor) (extra data collection for suite/case/step)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
-* Export Data (json)
+* [Custom Annotations](https://playwright.dev/docs/test-annotations#custom-annotations) with Markdown Support
 * Console Logs in Order (log/error/warn/debug/info)
 * Timeline Workers Graph
 * Monitor CPU and Memory Usage
-* [Custom Annotations](https://playwright.dev/docs/test-annotations#custom-annotations) with Markdown Support
+* Export Data (json)
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)

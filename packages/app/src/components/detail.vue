@@ -348,47 +348,35 @@ const getAnnotations = (item, column) => {
     };
 };
 
+// ===========================================================================
+
 const getAttachments = (item, column) => {
     const attachments = item.attachments;
     if (!Util.isList(attachments)) {
         return;
     }
-
     const list = attachments.map((attachment) => {
         // console.log(attachment);
-
         // contentType 'application/json' 'image/png' 'video/webm'
         const {
             contentType, name, path
         } = attachment;
-        if (contentType) {
-
-            if (contentType.startsWith('image')) {
-                return `<div class="mcr-detail-attachment mcr-detail-image">
-                            <a href="${path}" target="_blank"><img src="${path}" alt="${name}" /></a>
-                        </div>`;
-            }
-
-            if (contentType.startsWith('video')) {
-                return `<div class="mcr-detail-attachment mcr-detail-video">
-                            <video controls height="350">
-                                <source src="${path}" type="${contentType}">
-                                <p>Here is a <a href="${path}" target="_blank">link to the ${name}</a> instead if your browser doesn't support HTML5 video.</p>
-                            </video>
-                        </div>`;
-            }
-
-            if (contentType === 'application/zip' && name === 'trace') {
-                return `<div class="mcr-detail-attachment mcr-detail-trace">
-                            <a href="${path}" target="_blank">${name}</a>
-                            <span>(download trace.zip and viewing the trace using online <a href="https://trace.playwright.dev/" target="_blank">Trace Viewer</a>)</span>
-                        </div>`;
-            }
+        if (typeof path !== 'string') {
+            return '';
         }
 
-        return `<div class="mcr-detail-attachment mcr-detail-link">
-                  <a href="${path}" target="_blank">${name}</a>
-                </div>`;
+        if (contentType) {
+            if (contentType.startsWith('image')) {
+                return getImage(path, name);
+            }
+            if (contentType.startsWith('video')) {
+                return getVideo(path, name, contentType);
+            }
+            if (contentType === 'application/zip' && name === 'trace') {
+                return getTrace(path, name);
+            }
+        }
+        return getLink(path, name);
     });
 
     const content = list.join('');
@@ -400,6 +388,72 @@ const getAttachments = (item, column) => {
         icon: 'attachment',
         content
     };
+};
+
+const getImage = (path, name) => {
+    return `<div class="mcr-detail-attachment mcr-attachment-image">
+                <div class="mcr-attachment-head"><a href="${path}" target="_blank">${name}</a></div>
+                <div class="mcr-attachment-body"><img src="${path}" alt="${name}" /></div>
+            </div>`;
+};
+
+const getVideo = (path, name, contentType) => {
+    return `<div class="mcr-detail-attachment mcr-attachment-video">
+                <div class="mcr-attachment-head"><a href="${path}" target="_blank">${name}</a></div>
+                <div class="mcr-attachment-body">
+                    <video controls height="350">
+                        <source src="${path}" type="${contentType}">
+                    </video>
+                </div>
+            </div>`;
+};
+
+const getTrace = (path, name) => {
+    const protocol = window.location.protocol;
+    const isOnline = ['http:', 'https:'].includes(protocol);
+    const downloadLink = `<a href="${path}" target="_blank">${name}</a>`;
+
+    const ls = ['<div class="mcr-detail-attachment mcr-attachment-trace">'];
+    ls.push(`<div class="mcr-attachment-head">${downloadLink}</div>`);
+    ls.push('<div class="mcr-attachment-body">');
+
+    const traceViewer = '<a href="https://trace.playwright.dev/" target="_blank">Trace Viewer</a>';
+
+    if (isOnline) {
+        console.log(path);
+        const link = new URL(path, window.location.href);
+        console.log(link);
+
+        const url = `https://trace.playwright.dev/?trace=${encodeURIComponent(link)}`;
+
+        console.log(url);
+
+        const color = isOnline ? 'green' : 'red';
+
+        const currentProtocol = `current protocol is <code style="color:${color}">${protocol}</code>`;
+
+        const showReport = 'try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server.';
+
+        const readme = `The ${traceViewer} requires that the trace file must be loaded over the http:// or https:// protocols (${currentProtocol})  
+            without <a href="https://developer.mozilla.org/en-US/docs/Glossary/CORS" target="_blank">CORS</a> issue,
+            ${showReport}
+        `;
+
+        ls.push(`<li><a href="${url}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
+    }
+
+    ls.push(`<li>Or download ${downloadLink} and select/drag-drop it to the page ${traceViewer}</li>`);
+
+    ls.push('</div>');
+    ls.push('</div>');
+
+    return ls.join('');
+};
+
+const getLink = (path, name) => {
+    return `<div class="mcr-detail-attachment mcr-attachment-link">
+                <div class="mcr-attachment-head"><a href="${path}" target="_blank">${name}</a></div>
+            </div>`;
 };
 
 // ===========================================================================
@@ -702,7 +756,7 @@ onMounted(() => {
     line-height: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background: #f6f8fa;
+    background-color: rgb(175 184 193 / 20%);
 }
 
 .mcr-column-content {
@@ -772,10 +826,24 @@ onMounted(() => {
     border-left-color: #aaa;
 
     .mcr-detail-attachment {
-        padding: 5px;
+        position: relative;
     }
 
-    .mcr-detail-image {
+    .mcr-attachment-head {
+        padding: 5px 0;
+    }
+
+    .mcr-attachment-body {
+        margin-bottom: 5px;
+        border: 1px solid #eee;
+
+        img,
+        video {
+            display: block;
+        }
+    }
+
+    .mcr-attachment-image {
         a {
             display: block;
         }
@@ -786,13 +854,16 @@ onMounted(() => {
         }
     }
 
-    .mcr-detail-trace {
-        span {
-            margin-left: 10px;
-            font-size: 12px;
+    .mcr-attachment-trace {
+        .mcr-attachment-body {
+            padding: 5px;
 
-            a {
-                color: #333;
+            li {
+                line-height: 20px;
+            }
+
+            .mcr-readme {
+                margin-left: 5px;
             }
         }
     }

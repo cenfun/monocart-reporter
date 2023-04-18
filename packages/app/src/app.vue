@@ -982,4 +982,25 @@ icon
     background: #7e939c;
 }
 
+.mcr-readme {
+    code {
+        margin: 0;
+        padding: 0.2em 0.4em;
+        font-size: 85%;
+        font-family: var(--font-monospace);
+        white-space: break-spaces;
+        border-radius: 6px;
+        background-color: rgb(175 184 193 / 20%);
+    }
+
+    a:link,
+    a:visited {
+        color: #666;
+    }
+
+    a:hover {
+        color: #333;
+    }
+}
+
 </style>
