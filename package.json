@@ -3,6 +3,9 @@
     "version": "1.6.12",
     "description": "A playwright test reporter. Shows suites/cases/steps with tree style, markdown annotations, custom columns/formatters/data collection visitors, console logs, style tags, send email, testrail integration.",
     "main": "lib/index.js",
+    "bin": {
+        "monocart": "lib/cli.js"
+    },
     "scripts": {
         "test": "node ./scripts/link.js && npx playwright test -c tests",
         "build": "sf lint && sf b -p",
@@ -22,15 +25,14 @@
         "url": "git+https://github.com/cenfun/monocart-reporter.git"
     },
     "dependencies": {
-        "@babel/code-frame": "^7.21.4",
-        "@babel/parser": "^7.21.4",
         "console-grid": "^2.0.1",
         "eight-colors": "^1.0.3",
-        "lz-utils": "^1.0.6",
-        "nodemailer": "^6.9.1",
-        "stack-utils": "^2.0.6"
+        "koa-static-resolver": "^1.0.4",
+        "lz-utils": "^1.0.6"
     },
     "devDependencies": {
+        "@babel/code-frame": "^7.21.4",
+        "@babel/parser": "^7.21.4",
         "@playwright/test": "^1.32.3",
         "@slack/web-api": "^6.8.1",
         "@slack/webhook": "^6.1.0",
@@ -47,8 +49,12 @@
         "fps-detector": "^1.0.3",
         "github-markdown-css": "^5.2.0",
         "jira-client": "^8.2.2",
+        "koa": "^2.14.2",
         "marked": "^4.3.0",
+        "nodemailer": "^6.9.1",
+        "open": "^8.4.2",
         "playwright": "^1.32.3",
+        "stack-utils": "^2.0.6",
         "stylelint": "^15.5.0",
         "stylelint-config-plus": "^1.0.2",
         "testrail-api": "^1.3.6",

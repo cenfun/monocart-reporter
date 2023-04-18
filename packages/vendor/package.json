@@ -1,0 +1,12 @@
+{
+    "name": "monocart-vendor",
+    "version": "1.6.12",
+    "main": "dist/monocart-vendor.js",
+    "files": [
+        "dist"
+    ],
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {},
+    "platform": "node"
+}

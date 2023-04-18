@@ -411,38 +411,38 @@ const getVideo = (path, name, contentType) => {
 const getTrace = (path, name) => {
     const protocol = window.location.protocol;
     const isOnline = ['http:', 'https:'].includes(protocol);
-    const downloadLink = `<a href="${path}" target="_blank">${name}</a>`;
+    const traceFile = `<a href="${path}" target="_blank">${name}</a>`;
 
     const ls = ['<div class="mcr-detail-attachment mcr-attachment-trace">'];
-    ls.push(`<div class="mcr-attachment-head">${downloadLink}</div>`);
+    ls.push(`<div class="mcr-attachment-head">${traceFile}</div>`);
     ls.push('<div class="mcr-attachment-body">');
 
     const traceViewer = '<a href="https://trace.playwright.dev/" target="_blank">Trace Viewer</a>';
 
-    if (isOnline) {
-        console.log(path);
-        const link = new URL(path, window.location.href);
-        console.log(link);
+    console.log(path);
+    const link = new URL(path, window.location.href);
+    console.log(link);
 
-        const url = `https://trace.playwright.dev/?trace=${encodeURIComponent(link)}`;
+    const url = `https://trace.playwright.dev/?trace=${encodeURIComponent(link)}`;
 
-        console.log(url);
+    console.log(url);
 
-        const color = isOnline ? 'green' : 'red';
+    const color = isOnline ? 'green' : 'red';
 
-        const currentProtocol = `current protocol is <code style="color:${color}">${protocol}</code>`;
+    const currentProtocol = `current protocol is <code style="color:${color}">${protocol}</code>`;
 
-        const showReport = 'try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server.';
+    const showReport = 'try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server.';
+    const more = 'see <a href="https://playwright.dev/docs/trace-viewer" target="_blank">more</a>';
 
-        const readme = `The ${traceViewer} requires that the trace file must be loaded over the http:// or https:// protocols (${currentProtocol})  
+    const readme = `The Trace Viewer requires that the trace file must be loaded over the http:// or https:// protocols (${currentProtocol})  
             without <a href="https://developer.mozilla.org/en-US/docs/Glossary/CORS" target="_blank">CORS</a> issue,
             ${showReport}
+            ${more}
         `;
 
-        ls.push(`<li><a href="${url}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
-    }
+    ls.push(`<li><a href="${url}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
 
-    ls.push(`<li>Or download ${downloadLink} and select/drag-drop it to the page ${traceViewer}</li>`);
+    ls.push(`<li>Or download the ${traceFile} file and load it to the page ${traceViewer}</li>`);
 
     ls.push('</div>');
     ls.push('</div>');

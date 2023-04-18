@@ -15,6 +15,10 @@ module.exports = {
 
         before: (item, Util) => {
 
+            if (item.name !== 'app') {
+                return 0;
+            }
+
             // generate reportData for demo
             const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
 

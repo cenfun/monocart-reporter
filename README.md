@@ -674,23 +674,5 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
  - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
  - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
 
-## Dependencies
-```sh
-nmls -p
-┌────────────────────────────┬─────────┬──────────┬──────┬───────────┬────────┐
-│  Name                      │ Version │     Size │ Deps │ Deps Size │ Nested │
-├────────────────────────────┼─────────┼──────────┼──────┼───────────┼────────┤
-│ └ monocart-reporter        │ 1.6.12  │ 627.7 KB │   18 │   2.51 MB │      1 │
-│   ├ dependencies           │         │          │      │           │        │
-│   │ ├ @babel/code-frame    │ 7.21.4  │  19.6 KB │   10 │  153.0 KB │      0 │
-│   │ ├ @babel/parser        │ 7.21.4  │  1.79 MB │    0 │       0 B │      0 │
-│   │ ├ console-grid         │ 2.0.1   │  36.9 KB │    0 │       0 B │      0 │
-│   │ ├ eight-colors         │ 1.0.3   │  14.9 KB │    0 │       0 B │      0 │
-│   │ ├ lz-utils             │ 1.0.6   │  26.5 KB │    0 │       0 B │      0 │
-│   │ ├ nodemailer           │ 6.9.1   │ 476.0 KB │    0 │       0 B │      0 │
-│   │ └ stack-utils          │ 2.0.6   │  14.3 KB │    1 │   3.18 KB │      1 │
-└────────────────────────────┴─────────┴──────────┴──────┴───────────┴────────┘
-```
-
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)
