@@ -172,9 +172,12 @@ const formatters = {
             formattedValue = tagFormatter(rowItem);
         }
         const defaultFormatter = this.getDefaultFormatter('tree');
-        if (rowItem.type === 'suite') {
+
+        if (rowItem.type === 'suite' && rowItem.caseNum) {
+            // add case number for suite
             formattedValue = `${formattedValue} <span class="mcr-num">${Util.NF(rowItem.caseNum)}</span>`;
         } else if (rowItem.type === 'case') {
+            // add open icon for case
             formattedValue = `${formattedValue} <div class="tg-cell-hover-icon mcr-flyover-icon">
                 <div class="mcr-icon mcr-icon-open" />
             </div>`;
