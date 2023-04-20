@@ -36,6 +36,7 @@
     "dependencies": {
         "console-grid": "^2.0.1",
         "eight-colors": "^1.0.3",
+        "istanbul-reports": "^3.1.5",
         "koa-static-resolver": "^1.0.4",
         "lz-utils": "^1.0.6"
     },
@@ -59,7 +60,6 @@
         "github-markdown-css": "^5.2.0",
         "istanbul-lib-coverage": "^3.2.0",
         "istanbul-lib-report": "^3.0.0",
-        "istanbul-reports": "^3.1.5",
         "jira-client": "^8.2.2",
         "koa": "^2.14.2",
         "marked": "^4.3.0",
