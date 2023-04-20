@@ -1,8 +1,8 @@
 {
-    "name": "monocart-vendor",
+    "name": "monocart-coverage",
     "version": "1.6.13",
     "private": true,
-    "main": "dist/monocart-vendor.js",
+    "main": "dist/monocart-coverage.js",
     "files": [
         "dist"
     ],

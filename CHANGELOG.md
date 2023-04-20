@@ -1,3 +1,6 @@
+* 1.6.14
+  - fixed case number for merged report
+
 * 1.6.13
   - added CLI to show report and view trace online
 
