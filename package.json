@@ -6,6 +6,15 @@
     "bin": {
         "monocart": "lib/cli.js"
     },
+    "exports": {
+        ".": {
+            "import": "./lib/index.mjs",
+            "require": "./lib/index.js",
+            "default": "./lib/index.js"
+        },
+        "./cli": "./lib/cli.js",
+        "./package.json": "./package.json"
+    },
     "scripts": {
         "test": "node ./scripts/link.js && npx playwright test -c tests",
         "build": "sf lint && sf b -p",
@@ -38,7 +47,7 @@
         "@slack/webhook": "^6.1.0",
         "ansi-to-html": "^0.7.2",
         "async-tick": "^1.0.0",
-        "axios": "^1.3.5",
+        "axios": "^1.3.6",
         "dotenv": "^16.0.3",
         "eslint": "^8.38.0",
         "eslint-config-plus": "^1.0.6",
