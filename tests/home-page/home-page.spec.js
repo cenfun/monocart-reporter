@@ -2,7 +2,9 @@ const {
     test, expect, request
 } = require('@playwright/test');
 const EC = require('eight-colors');
+const { takeCoverage } = require('monocart-reporter');
 
+const { delay } = require('../common/util.js');
 // POM Page Object Model
 const HomePage = require('./home-page.js');
 
@@ -100,4 +102,18 @@ test('test with custom steps', async ({ page }, testInfo) => {
         await locator.fill('Text content');
         await expect(locator).toHaveValue('Text content');
     });
+});
+
+test('take v8 code coverage report', async ({ page }) => {
+    await page.coverage.startJSCoverage({
+        reportAnonymousScripts: true
+    });
+    // mock a page with script
+    await HomePage.mockPageGoto(page, 'https://anonymous');
+    await delay(500);
+    // JavaScript Coverage doesn't include anonymous scripts by default.
+    // However, scripts with sourceURLs are reported.
+    const jsCoverage = await page.coverage.stopJSCoverage();
+    const report = await takeCoverage(jsCoverage, test.info());
+    console.log(report.lines);
 });
