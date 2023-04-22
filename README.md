@@ -559,8 +559,10 @@ test.describe('take v8 coverage', () => {
     });
 });
 ```
-- [istanbul](https://github.com/istanbuljs) Requires your source code is instrumented, basically we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js))
+- [istanbul](https://github.com/istanbuljs) Requires your source code is instrumented, basically we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js))
 ```js
+import { test, expect } from '@playwright/test';
+import { takeCoverage } from 'monocart-reporter';
 test.describe('take istanbul coverage', () => {
     test('first, open page', async () => {
         await singlePage.goto(pageUrl);
