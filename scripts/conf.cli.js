@@ -20,10 +20,10 @@ module.exports = {
             }
 
             // generate reportData for demo
-            // const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
+            const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
 
             // coverage
-            const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
+            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
 
             // ten-minutes
             // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/ten-minutes/index.json');
@@ -103,38 +103,46 @@ module.exports = {
     pack: {
         after: (item, Util) => {
             console.log('after pack, copy attachments to docs');
-            //
 
             // console.log(item);
+
+            const copyDir = (fromDir, toDir) => {
+                if (!fs.existsSync(toDir)) {
+                    fs.mkdirSync(toDir, {
+                        recursive: true
+                    });
+                }
+
+                fs.readdirSync(fromDir, {
+                    withFileTypes: true
+                }).forEach((it) => {
+
+                    if (it.isFile()) {
+                        const fromFile = path.resolve(fromDir, it.name);
+                        const toFile = path.resolve(toDir, it.name);
+                        // do not copy previous
+                        if (!fs.existsSync(toFile)) {
+                            fs.cpSync(fromFile, toFile);
+                        }
+                        return;
+                    }
+
+                    if (it.isDirectory()) {
+                        fromDir = path.resolve(fromDir, it.name);
+                        toDir = path.resolve(toDir, it.name);
+                        copyDir(fromDir, toDir);
+                    }
+                });
+            };
 
             const reportPath = path.resolve(__dirname, '../.temp/monocart/');
             fs.readdirSync(reportPath, {
                 withFileTypes: true
             }).forEach((it) => {
                 if (it.isDirectory()) {
-                    const dir = `${reportPath}/${it.name}`;
-                    fs.readdirSync(dir, {
-                        withFileTypes: true
-                    }).forEach((sub) => {
-                        if (sub.isFile()) {
-
-                            const toDir = path.resolve(item.packPath, it.name);
-                            const toFile = path.resolve(toDir, sub.name);
-
-                            // do not copy previous
-                            if (fs.existsSync(toFile)) {
-                                return;
-                            }
-
-                            if (!fs.existsSync(toDir)) {
-                                fs.mkdirSync(toDir, {
-                                    recursive: true
-                                });
-                            }
-
-                            fs.cpSync(path.resolve(dir, sub.name), toFile);
-                        }
-                    });
+                    const fromDir = path.resolve(reportPath, it.name);
+                    const toDir = path.resolve(item.packPath, it.name);
+                    copyDir(fromDir, toDir);
                 }
             });
 
