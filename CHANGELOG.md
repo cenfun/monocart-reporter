@@ -1,5 +1,6 @@
 * 1.6.14
   - fixed case number for merged report
+  - added code coverage feature
 
 * 1.6.13
   - added CLI to show report and view trace online

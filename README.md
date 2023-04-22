@@ -23,6 +23,7 @@
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
+* [Code Coverage Reports](#code-coverage-reports)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd hook](#onend-hook)
     - [Send Email](#send-email)
@@ -521,6 +522,65 @@ module.exports = {
         }]
     ]
 };
+```
+
+## Code Coverage Reports
+Using `MonocartReporter.takeCoverage()` API to generate code coverage during the test. There are 2 supported data inputs: `V8` and `istanbul` (see example: [coverage.spec.js](https://github.com/cenfun/monocart-reporter-test/blob/main/tests/coverage/coverage.spec.js))
+- [V8](https://playwright.dev/docs/api/class-coverage) (Chromium-based only) The V8 coverage format will be converted to istanbul format and then generate istanbul report.
+```js
+import { test, expect } from '@playwright/test';
+import { takeCoverage } from 'monocart-reporter';
+test.describe('take v8 coverage', () => {
+    test('first, startJSCoverage and open page', async () => {
+        await singlePage.coverage.startJSCoverage();
+        await singlePage.goto(pageUrl);
+    });
+
+    test('next, run test cases', async () => {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 500);
+        });
+    });
+
+    test('finally, stopJSCoverage and take coverage', async () => {
+        // take v8 coverage
+        const jsCoverage = await singlePage.coverage.stopJSCoverage();
+        // filter file list
+        const coverageInput = jsCoverage.filter((item) => {
+            if (!item.url.endsWith('.js')) {
+                return false;
+            }
+            return true;
+        });
+        expect(coverageInput.length).toBeGreaterThan(0);
+        // coverage report
+        const report = await takeCoverage(coverageInput, test.info());
+        console.log(report.lines);
+    });
+});
+```
+- [istanbul](https://github.com/istanbuljs) Requires your source code is instrumented, basically we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js))
+```js
+test.describe('take istanbul coverage', () => {
+    test('first, open page', async () => {
+        await singlePage.goto(pageUrl);
+    });
+
+    test('next, run test cases', async () => {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 500);
+        });
+    });
+
+    test('finally, take coverage', async () => {
+        // take istanbul coverage
+        const coverageInput = await singlePage.evaluate(() => window.__coverage__);
+        expect(coverageInput, 'expect found istanbul data: __coverage__').toBeTruthy();
+        // coverage report
+        const report = await takeCoverage(coverageInput, test.info());
+        console.log(report.lines);
+    });
+});
 ```
 
 ## Merge Shard Reports
