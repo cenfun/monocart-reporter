@@ -459,7 +459,7 @@ const getCoverageBody = (report) => {
     const ls = [];
     ls.push('<table>');
 
-    ls.push('<tr><td></td><td class="mcr-left">File</td>');
+    ls.push('<tr class="mcr-head"><td></td><td class="mcr-left">File</td>');
     Object.keys(map).forEach((k) => {
         ls.push(`<td colspan="2">${map[k]}</td>`);
     });
@@ -915,6 +915,7 @@ onMounted(() => {
 
     .mcr-attachment-coverage {
         .mcr-attachment-body {
+            border: 1px solid #ddd;
             overflow-x: auto;
         }
 
@@ -930,12 +931,18 @@ onMounted(() => {
             background: rgb(230 245 208);
         }
 
+        .mcr-head {
+            background-color: #eee;
+        }
+
         .mcr-left {
+            min-width: 100px;
             text-align: left;
             word-break: break-all;
         }
 
         table {
+            width: 100%;
             border-collapse: collapse;
 
             tr {
@@ -943,7 +950,7 @@ onMounted(() => {
             }
 
             tr:not(:last-child) {
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1px solid #ddd;
             }
 
             tr:first-child {

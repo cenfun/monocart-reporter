@@ -20,10 +20,10 @@ module.exports = {
             }
 
             // generate reportData for demo
-            const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
+            // const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
 
-            // ten-minutes
-            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
+            // coverage
+            const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
 
             // ten-minutes
             // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/ten-minutes/index.json');
