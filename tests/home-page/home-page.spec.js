@@ -104,7 +104,7 @@ test('test with custom steps', async ({ page }, testInfo) => {
     });
 });
 
-test('take v8 code coverage report', async ({ page }) => {
+test('take v8 coverage report', async ({ page }) => {
     await page.coverage.startJSCoverage({
         reportAnonymousScripts: true
     });
