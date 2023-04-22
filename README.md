@@ -46,7 +46,7 @@
 
 ## Install
 ```sh
-npm i monocart-reporter
+npm i -D monocart-reporter
 ```
 
 ## Playwright Config
