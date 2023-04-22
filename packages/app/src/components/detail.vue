@@ -433,51 +433,62 @@ const getTrace = (path, name) => {
     return getLink(path, name, 'trace', body);
 };
 
-const getCoverage = (path, name, report) => {
-    const ls = [];
-    if (report) {
-        const items = [];
-        const map = {
-            statements: 'Statements',
-            branches: 'Branches',
-            functions: 'Functions',
-            lines: 'Lines'
-        };
-        Object.keys(map).forEach((k) => {
-            const item = report[k];
-            if (item) {
-                items.push({
-                    name: map[k],
-                    total: Util.NF(item.total),
-                    covered: Util.NF(item.covered),
-                    percent: `${item.pct}%`,
-                    // low, medium, high, unknown
-                    status: item.status
-                });
-            }
-        });
-        if (report.files && report.files > 1) {
-            items.push({
-                name: 'Files',
-                total: report.files,
-                covered: '',
-                percent: '',
-                status: 'unknown'
-            });
-        }
-        ls.push('<table>');
-        ls.push('<tr><td>Name</td><td>Total</td><td>Covered</td><td>Coverage</td></tr>');
-        items.forEach((item) => {
-            ls.push(`<tr>
-                        <td>${item.name}</td>
-                        <td>${item.total}</td>
-                        <td>${item.covered}</td>
-                        <td class="mcr-coverage-${item.status}">${item.percent}</td>
-                    </tr>`);
-        });
-        ls.push('</table>');
+const getCoverageBody = (report) => {
+    if (!report) {
+        return '';
     }
-    const body = ls.join('');
+    const files = report.files;
+    if (!files) {
+        return '';
+    }
+    const map = {
+        statements: 'Statements',
+        branches: 'Branches',
+        functions: 'Functions',
+        lines: 'Lines'
+    };
+    const items = [].concat(files);
+    if (files.length > 1) {
+        report.summary = true;
+        report.name = 'Summary';
+        items.push(report);
+    }
+
+    console.log(items);
+
+    const ls = [];
+    ls.push('<table>');
+
+    ls.push('<tr><td></td><td class="mcr-left">File</td>');
+    Object.keys(map).forEach((k) => {
+        ls.push(`<td colspan="2">${map[k]}</td>`);
+    });
+    ls.push('</tr>');
+
+    items.forEach((item, i) => {
+        ls.push('<tr>');
+
+        if (item.summary) {
+            ls.push('<td></td>');
+        } else {
+            ls.push(`<td>${i + 1}</td>`);
+        }
+        ls.push(`<td class="mcr-left">${item.name}</td>`);
+
+        Object.keys(map).forEach((k) => {
+            const d = item[k] || {};
+            ls.push(`<td>${Util.NF(d.covered)}/${Util.NF(d.total)}</td>`);
+            // low, medium, high, unknown
+            ls.push(`<td class="mcr-${d.status}">${Util.PF(d.pct, 100, 2)}</td>`);
+        });
+        ls.push('</tr>');
+    });
+    ls.push('</table>');
+    return ls.join('');
+};
+
+const getCoverage = (path, name, report) => {
+    const body = getCoverageBody(report);
     return getLink(path, name, 'coverage', body);
 };
 
@@ -904,19 +915,24 @@ onMounted(() => {
 
     .mcr-attachment-coverage {
         .mcr-attachment-body {
-            padding: 5px;
+            overflow-x: auto;
         }
 
-        .mcr-coverage-low {
+        .mcr-low {
             background: #fce1e5;
         }
 
-        .mcr-coverage-medium {
+        .mcr-medium {
             background: #fff4c2;
         }
 
-        .mcr-coverage-high {
+        .mcr-high {
             background: rgb(230 245 208);
+        }
+
+        .mcr-left {
+            text-align: left;
+            word-break: break-all;
         }
 
         table {
@@ -947,13 +963,8 @@ onMounted(() => {
             }
 
             td {
-                min-width: 80px;
-                padding: 5px 10px;
+                padding: 5px;
                 text-align: right;
-            }
-
-            td:first-child {
-                text-align: left;
             }
         }
     }
