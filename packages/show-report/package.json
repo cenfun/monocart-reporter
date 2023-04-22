@@ -1,6 +1,6 @@
 {
     "name": "monocart-show-report",
-    "version": "1.6.13",
+    "version": "1.6.14",
     "private": true,
     "main": "dist/monocart-show-report.js",
     "files": [
