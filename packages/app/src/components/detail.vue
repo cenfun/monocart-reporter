@@ -356,27 +356,10 @@ const getAttachments = (item, column) => {
         return;
     }
     const list = attachments.map((attachment) => {
-        // console.log(attachment);
-        // contentType 'application/json' 'image/png' 'video/webm'
-        const {
-            contentType, name, path
-        } = attachment;
-        if (typeof path !== 'string') {
+        if (typeof attachment.path !== 'string') {
             return '';
         }
-
-        if (contentType) {
-            if (contentType.startsWith('image')) {
-                return getImage(path, name);
-            }
-            if (contentType.startsWith('video')) {
-                return getVideo(path, name, contentType);
-            }
-            if (contentType === 'application/zip' && name === 'trace') {
-                return getTrace(path, name);
-            }
-        }
-        return getLink(path, name);
+        return getAttachment(attachment);
     });
 
     const content = list.join('');
@@ -390,62 +373,121 @@ const getAttachments = (item, column) => {
     };
 };
 
+const getAttachment = (item) => {
+    // console.log(attachment);
+    // contentType 'application/json' 'image/png' 'video/webm'
+    const {
+        contentType, name, path
+    } = item;
+    if (contentType) {
+        if (contentType.startsWith('image')) {
+            return getImage(path, name);
+        }
+        if (contentType.startsWith('video')) {
+            return getVideo(path, name, contentType);
+        }
+        if (contentType === 'application/zip' && name === 'trace') {
+            return getTrace(path, name);
+        }
+        if (contentType === 'text/html' && name === 'coverage') {
+            return getCoverage(path, name, item.report);
+        }
+    }
+    return getLink(path, name);
+};
+
 const getImage = (path, name) => {
-    return `<div class="mcr-detail-attachment mcr-attachment-image">
-                <div class="mcr-attachment-head"><a href="${path}" target="_blank">${name}</a></div>
-                <div class="mcr-attachment-body"><img src="${path}" alt="${name}" /></div>
-            </div>`;
+    const body = `<img src="${path}" alt="${name}" />`;
+    return getLink(path, name, 'image', body);
 };
 
 const getVideo = (path, name, contentType) => {
-    return `<div class="mcr-detail-attachment mcr-attachment-video">
-                <div class="mcr-attachment-head"><a href="${path}" target="_blank">${name}</a></div>
-                <div class="mcr-attachment-body">
-                    <video controls height="350">
-                        <source src="${path}" type="${contentType}">
-                    </video>
-                </div>
-            </div>`;
+    const body = `<video controls height="350"><source src="${path}" type="${contentType}"></video>`;
+    return getLink(path, name, 'video', body);
 };
 
 const getTrace = (path, name) => {
     const protocol = window.location.protocol;
     const isOnline = ['http:', 'https:'].includes(protocol);
+
     const traceFile = `<a href="${path}" target="_blank">${name}</a>`;
-
-    const ls = ['<div class="mcr-detail-attachment mcr-attachment-trace">'];
-    ls.push(`<div class="mcr-attachment-head">${traceFile}</div>`);
-    ls.push('<div class="mcr-attachment-body">');
-
     const traceViewer = '<a href="https://trace.playwright.dev/" target="_blank">Trace Viewer</a>';
 
     const traceUrl = new URL(path, window.location.href);
     const viewerUrl = `https://trace.playwright.dev/?trace=${encodeURIComponent(traceUrl)}`;
 
     const color = isOnline ? 'green' : 'red';
-
     const currentProtocol = `current protocol is <code style="color:${color}">${protocol}</code>`;
 
     const showReport = 'try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server, please keep attachments and reports under the same directory.';
-
     const readme = `The Trace Viewer requires that the trace file must be loaded over the http:// or https:// protocols (${currentProtocol})  
             without <a href="https://developer.mozilla.org/en-US/docs/Glossary/CORS" target="_blank">CORS</a> issue,
             ${showReport}
         `;
 
+    const ls = [];
     ls.push(`<li><a href="${viewerUrl}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
-
     ls.push(`<li>or download the ${traceFile} file and load it on the page ${traceViewer}</li>`);
 
-    ls.push('</div>');
-    ls.push('</div>');
-
-    return ls.join('');
+    const body = ls.join('');
+    return getLink(path, name, 'trace', body);
 };
 
-const getLink = (path, name) => {
-    return `<div class="mcr-detail-attachment mcr-attachment-link">
+const getCoverage = (path, name, report) => {
+    const ls = [];
+    if (report) {
+        const items = [];
+        const map = {
+            statements: 'Statements',
+            branches: 'Branches',
+            functions: 'Functions',
+            lines: 'Lines'
+        };
+        Object.keys(map).forEach((k) => {
+            const item = report[k];
+            if (item) {
+                items.push({
+                    name: map[k],
+                    total: Util.NF(item.total),
+                    covered: Util.NF(item.covered),
+                    percent: `${item.pct}%`,
+                    // low, medium, high, unknown
+                    status: item.status
+                });
+            }
+        });
+        if (report.files && report.files > 1) {
+            items.push({
+                name: 'Files',
+                total: report.files,
+                covered: '',
+                percent: '',
+                status: 'unknown'
+            });
+        }
+        ls.push('<table>');
+        ls.push('<tr><td>Name</td><td>Total</td><td>Covered</td><td>Coverage</td></tr>');
+        items.forEach((item) => {
+            ls.push(`<tr>
+                        <td>${item.name}</td>
+                        <td>${item.total}</td>
+                        <td>${item.covered}</td>
+                        <td class="mcr-coverage-${item.status}">${item.percent}</td>
+                    </tr>`);
+        });
+        ls.push('</table>');
+    }
+    const body = ls.join('');
+    return getLink(path, name, 'coverage', body);
+};
+
+const getLink = (path, name, type = 'link', body = '') => {
+    if (body) {
+        body = `<div class="mcr-attachment-body">${body}</div>`;
+    }
+    return `<div class="mcr-detail-attachment mcr-attachment-${type}">
                 <div class="mcr-attachment-head"><a href="${path}" target="_blank">${name}</a></div>
+                ${body}
             </div>`;
 };
 
@@ -856,6 +898,62 @@ onMounted(() => {
 
             .mcr-readme {
                 margin-left: 5px;
+            }
+        }
+    }
+
+    .mcr-attachment-coverage {
+        .mcr-attachment-body {
+            padding: 5px;
+        }
+
+        .mcr-coverage-low {
+            background: #fce1e5;
+        }
+
+        .mcr-coverage-medium {
+            background: #fff4c2;
+        }
+
+        .mcr-coverage-high {
+            background: rgb(230 245 208);
+        }
+
+        table {
+            border-collapse: collapse;
+
+            tr {
+                position: relative;
+            }
+
+            tr:not(:last-child) {
+                border-bottom: 1px solid #ccc;
+            }
+
+            tr:first-child {
+                font-weight: bold;
+            }
+
+            tr:hover::after {
+                position: absolute;
+                top: 0;
+                left: 0;
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+                background-color: rgb(0 0 0 / 2%);
+                pointer-events: none;
+            }
+
+            td {
+                min-width: 80px;
+                padding: 5px 10px;
+                text-align: right;
+            }
+
+            td:first-child {
+                text-align: left;
             }
         }
     }
