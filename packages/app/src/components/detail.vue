@@ -459,7 +459,7 @@ const getCoverageBody = (report) => {
     const ls = [];
     ls.push('<table>');
 
-    ls.push('<tr class="mcr-head"><td></td><td class="mcr-left">File</td>');
+    ls.push('<tr class="mcr-head"><td></td><td class="mcr-file">File</td>');
     Object.keys(map).forEach((k) => {
         ls.push(`<td colspan="2">${map[k]}</td>`);
     });
@@ -473,11 +473,11 @@ const getCoverageBody = (report) => {
         } else {
             ls.push(`<td>${i + 1}</td>`);
         }
-        ls.push(`<td class="mcr-left">${item.name}</td>`);
+        ls.push(`<td class="mcr-file">${item.name}</td>`);
 
         Object.keys(map).forEach((k) => {
             const d = item[k] || {};
-            ls.push(`<td>${Util.NF(d.covered)}/${Util.NF(d.total)}</td>`);
+            ls.push(`<td class="mcr-${d.status}">${Util.NF(d.covered)}/${Util.NF(d.total)}</td>`);
             // low, medium, high, unknown
             ls.push(`<td class="mcr-${d.status}">${Util.PF(d.pct, 100, 2)}</td>`);
         });
@@ -932,10 +932,10 @@ onMounted(() => {
         }
 
         .mcr-head {
-            background-color: #eee;
+            background-color: #f8f8f8;
         }
 
-        .mcr-left {
+        .mcr-file {
             min-width: 100px;
             text-align: left;
             word-break: break-all;
@@ -970,7 +970,7 @@ onMounted(() => {
             }
 
             td {
-                padding: 5px;
+                padding: 5px 8px;
                 text-align: right;
             }
         }
