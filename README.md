@@ -527,7 +527,6 @@ module.exports = {
 ## Code Coverage Reports
 Using `MonocartReporter.takeCoverage()` API to generate code coverage during the test. There are 2 supported data inputs: `V8` and `istanbul` (see example: [coverage.spec.js](https://github.com/cenfun/monocart-reporter-test/blob/main/tests/coverage/coverage.spec.js))
 - [V8](https://playwright.dev/docs/api/class-coverage) (Chromium-based only) Simply take V8 coverage with `startJSCoverage` and `stopJSCoverage`, then [converts](https://github.com/istanbuljs/v8-to-istanbul) from v8 coverage format to istanbul's coverage format, finally generate istanbul report. It works with any code format, but it will not be expected if your code is minified.
-> Note: 
 ```js
 import { test, expect } from '@playwright/test';
 import { takeCoverage } from 'monocart-reporter';
