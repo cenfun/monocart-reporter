@@ -403,14 +403,16 @@ const getAttachment = (item) => {
         }
     }, {
         condition: () => {
-            return name === 'coverage' && contentType === 'text/html';
+            const definition = Util.attachments.coverage;
+            return name === definition.name && contentType === definition.contentType;
         },
         handler: () => {
             return getCoverage(path, name, item.report);
         }
     }, {
         condition: () => {
-            return name === 'network' && contentType === 'application/javascript';
+            const definition = Util.attachments.network;
+            return name === definition.name && contentType === definition.contentType;
         },
         handler: () => {
             return getNetwork(path, name);
