@@ -235,7 +235,6 @@ import {
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import { debounce } from 'async-tick';
-import decompress from 'lz-utils/lib/decompress.js';
 
 import Util from './utils/util.js';
 import {
@@ -537,7 +536,7 @@ const onExportClick = () => {
 // =================================================================================
 
 onMounted(() => {
-    const reportData = JSON.parse(decompress(window.reportData));
+    const reportData = JSON.parse(Util.decompress(window.reportData));
     console.log(reportData);
 
     initData(reportData);

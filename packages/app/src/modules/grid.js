@@ -82,7 +82,7 @@ export const showFlyover = (caseItem) => {
     state.flyoverVisible = true;
 };
 
-const displayFlyoverByIndex = (grid, index, title) => {
+const showDetailByIndex = (grid, index, title) => {
     if (index) {
         const rowItem = grid.getRowItem(parseInt(index));
         if (rowItem && rowItem.title === title) {
@@ -92,7 +92,7 @@ const displayFlyoverByIndex = (grid, index, title) => {
     }
 };
 
-const displayFlyoverByTitle = (grid, title) => {
+const showDetailByTitle = (grid, title) => {
     if (title) {
         const rowItem = grid.getRowItemBy('title', title);
         if (rowItem) {
@@ -114,18 +114,32 @@ const showDetail = (pagePath) => {
     // console.log('page:', page, 'index:', index, 'title:', title);
 
     // match index and title
-    if (displayFlyoverByIndex(grid, index, title)) {
+    if (showDetailByIndex(grid, index, title)) {
         return true;
     }
 
     // only match title
-    if (displayFlyoverByTitle(grid, title)) {
+    if (showDetailByTitle(grid, title)) {
         return true;
     }
 };
 
-const showHar = (pagePath) => {
-    console.log(pagePath);
+const showHar = async (jsonpPath) => {
+    console.log(jsonpPath);
+
+    console.log('loading jsonp ...');
+
+    const str = await Util.loadJsonp(jsonpPath);
+
+    if (!str) {
+        console.log('failed to load jsonp data');
+        return;
+    }
+
+    const json = JSON.parse(Util.decompress(str));
+
+    console.log(json);
+
 };
 
 export const displayFlyoverWithHash = () => {
@@ -136,7 +150,6 @@ export const displayFlyoverWithHash = () => {
         const list = page.split('/');
         const pageName = list.shift();
         const pagePath = list.join('/');
-
 
         if (pageName === 'report') {
             showFlyover();

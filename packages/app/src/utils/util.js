@@ -1,12 +1,14 @@
 import { Util as GridUtil } from 'turbogrid';
 import { saveAs } from 'file-saver';
-
+import decompress from 'lz-utils/lib/decompress.js';
 import Share from '../../../../lib/utils/share.js';
 
 const Util = {
     ... GridUtil,
 
     ... Share,
+
+    decompress,
 
     findBetween: function(list, callback) {
         const end = list.length - 1;
@@ -58,6 +60,25 @@ const Util = {
             type: 'text/plain;charset=utf-8'
         });
         saveAs(blob, `${name}.json`);
+    },
+
+    loadJsonp(jsonpPath, callbackName = 'callback') {
+        return new Promise((resolve) => {
+            let data;
+            window[callbackName] = (v) => {
+                data = v;
+            };
+            const script = document.createElement('script');
+            const onLoad = () => {
+                script.remove();
+                window[callbackName] = null;
+                resolve(data);
+            };
+            script.onload = onLoad;
+            script.onerror = onLoad;
+            script.src = jsonpPath;
+            document.body.appendChild(script);
+        });
     },
 
     // =============================================================================
