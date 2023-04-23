@@ -23,7 +23,7 @@
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
-* [Code Coverage Reports](#code-coverage-reports)
+* [Attach Code Coverage Report](#attach-code-coverage-report)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd hook](#onend-hook)
     - [Send Email](#send-email)
@@ -524,12 +524,12 @@ module.exports = {
 };
 ```
 
-## Code Coverage Reports
-Using `MonocartReporter.takeCoverage()` API to generate code coverage during the test. There are 2 supported data inputs: `V8` and `istanbul` (see example: [coverage.spec.js](https://github.com/cenfun/monocart-reporter-test/blob/main/tests/coverage/coverage.spec.js))
+## Attach Code Coverage Report
+Using `MonocartReporter.attachCoverageReport()` API to generate coverage report during the test. There are 2 supported data inputs: `V8` and `istanbul` (see example: [coverage.spec.js](https://github.com/cenfun/monocart-reporter-test/blob/main/tests/coverage/coverage.spec.js))
 - [V8](https://playwright.dev/docs/api/class-coverage) (Chromium-based only) Simply take V8 coverage with `startJSCoverage` and `stopJSCoverage`, then [converts](https://github.com/istanbuljs/v8-to-istanbul) from v8 coverage format to istanbul's coverage format, finally generate istanbul report. It works with any code format, but it will not be expected if your code is minified.
 ```js
 import { test, expect } from '@playwright/test';
-import { takeCoverage } from 'monocart-reporter';
+import { attachCoverageReport } from 'monocart-reporter';
 test.describe('take v8 coverage', () => {
     test('first, startJSCoverage and open page', async () => {
         await page.coverage.startJSCoverage();
@@ -554,7 +554,7 @@ test.describe('take v8 coverage', () => {
         });
         expect(coverageInput.length).toBeGreaterThan(0);
         // coverage report
-        const report = await takeCoverage(coverageInput, test.info());
+        const report = await attachCoverageReport(coverageInput, test.info());
         console.log(report.lines);
     });
 });
@@ -562,7 +562,7 @@ test.describe('take v8 coverage', () => {
 - [istanbul](https://github.com/istanbuljs) Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`
 ```js
 import { test, expect } from '@playwright/test';
-import { takeCoverage } from 'monocart-reporter';
+import { attachCoverageReport } from 'monocart-reporter';
 test.describe('take istanbul coverage', () => {
     test('first, open page', async () => {
         await page.goto(pageUrl);
@@ -579,7 +579,7 @@ test.describe('take istanbul coverage', () => {
         const coverageInput = await page.evaluate(() => window.__coverage__);
         expect(coverageInput, 'expect found istanbul data: __coverage__').toBeTruthy();
         // coverage report
-        const report = await takeCoverage(coverageInput, test.info());
+        const report = await attachCoverageReport(coverageInput, test.info());
         console.log(report.lines);
     });
 });

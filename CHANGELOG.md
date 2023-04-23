@@ -1,3 +1,7 @@
+* 1.6.15
+  - rename takeCoverage to attachCoverageReport
+  - added attachNetworkReport
+
 * 1.6.14
   - fixed case number for merged report
   - added code coverage feature
