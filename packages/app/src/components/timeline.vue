@@ -651,10 +651,18 @@ const axisHandler = () => {
     chart.height = y + height + padding;
 };
 
-onMounted(() => {
+const update = () => {
     workerListHandler();
     usageHandler();
     axisHandler();
+};
+
+watch(() => state.system, (v) => {
+    update();
+});
+
+onMounted(() => {
+    update();
 });
 
 </script>
