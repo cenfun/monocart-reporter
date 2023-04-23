@@ -68,7 +68,7 @@ export const showFlyover = (caseItem) => {
         state.flyoverTitle = caseItem.title;
 
         const { tg_index, title } = caseItem;
-        Util.setHash('page', `${tg_index}/${title}`);
+        Util.setHash('page', `detail/${tg_index}/${title}`);
 
     } else {
 
@@ -90,7 +90,6 @@ const displayFlyoverByIndex = (grid, index, title) => {
             return true;
         }
     }
-    return false;
 };
 
 const displayFlyoverByTitle = (grid, title) => {
@@ -101,33 +100,57 @@ const displayFlyoverByTitle = (grid, title) => {
             return true;
         }
     }
-    return false;
+};
+
+const showDetail = (pagePath) => {
+    const grid = state.grid;
+    if (!pagePath || !grid) {
+        return;
+    }
+
+    const list = pagePath.split('/');
+    const index = list.shift();
+    const title = list.join('/');
+    // console.log('page:', page, 'index:', index, 'title:', title);
+
+    // match index and title
+    if (displayFlyoverByIndex(grid, index, title)) {
+        return true;
+    }
+
+    // only match title
+    if (displayFlyoverByTitle(grid, title)) {
+        return true;
+    }
+};
+
+const showHar = (pagePath) => {
+    console.log(pagePath);
 };
 
 export const displayFlyoverWithHash = () => {
 
     const page = Util.getHash('page');
-
-    if (page === 'report') {
-        showFlyover();
-        return;
-    }
-
-    const grid = state.grid;
-    if (page && grid) {
+    if (page) {
 
         const list = page.split('/');
-        const index = list.shift();
-        const title = list.join('/');
-        // console.log(page, index, title);
+        const pageName = list.shift();
+        const pagePath = list.join('/');
 
-        // match index and title
-        if (displayFlyoverByIndex(grid, index, title)) {
+
+        if (pageName === 'report') {
+            showFlyover();
             return;
         }
 
-        // only match title
-        if (displayFlyoverByTitle(grid, title)) {
+        if (pageName === 'detail') {
+            if (showDetail(pagePath)) {
+                return;
+            }
+        }
+
+        if (pageName === 'har') {
+            showHar(pagePath);
             return;
         }
 

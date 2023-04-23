@@ -525,11 +525,9 @@ const getCoverage = (path, name, report) => {
 };
 
 const getNetwork = (path, name) => {
-
-    const traceUrl = new URL(path, window.location.href);
-    const viewerUrl = `http://www.softwareishard.com/har/viewer/?inputUrl=${encodeURIComponent(traceUrl)}`;
-
-    const body = `<a href="${viewerUrl}" target="_blank">View HAR online</a>`;
+    const jsonpUrl = new URL(path, window.location.href);
+    const harPath = encodeURIComponent(`har/${jsonpUrl}`);
+    const body = `<a href="#page=${harPath}">View HAR</a>`;
     return getLink(path, name, 'network', body);
 };
 
