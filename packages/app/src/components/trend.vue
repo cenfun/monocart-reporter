@@ -132,7 +132,7 @@ const chart = shallowReactive({
     lines: [],
     list: null,
 
-    density: 'Series',
+    density: 'Serial',
     // depends on duration
     densityOptions: [],
 
@@ -311,7 +311,7 @@ const getListByDensity = () => {
     }
 
     const trendList = chart.trendList;
-    if (density === 'Series') {
+    if (density === 'Serial') {
         const list = trendList.map((item, i) => {
             return {
                 index: i,
@@ -544,7 +544,7 @@ const render = () => {
 };
 
 const initDensity = (duration) => {
-    const densityOptions = ['Series'];
+    const densityOptions = ['Serial'];
     const h = 60 * 60 * 1000;
     if (duration > h) {
         densityOptions.push('Hour');
