@@ -29,8 +29,9 @@
         />
       </VuiFlex>
       <div class="mcr-flyover-content vui-flex-auto">
-        <Detail v-show="state.caseItem" />
-        <Report v-show="!state.caseItem" />
+        <KeepAlive>
+          <component :is="flyoverComponents[state.flyoverComponent]" />
+        </KeepAlive>
       </div>
     </div>
   </VuiFlyover>
@@ -41,11 +42,18 @@ import { components } from 'vine-ui';
 import state from '../modules/state.js';
 import Util from '../utils/util.js';
 
+import IconLabel from './icon-label.vue';
 import Detail from './detail.vue';
 import Report from './report.vue';
-import IconLabel from './icon-label.vue';
+import Har from './har.vue';
 
 const { VuiFlex, VuiFlyover } = components;
+
+const flyoverComponents = {
+    detail: Detail,
+    report: Report,
+    har: Har
+};
 
 // remove tag till flyover animation end
 const onFlyoverEnd = () => {

@@ -50,33 +50,25 @@ const showTooltip = (elem, text, html) => {
 };
 
 export const hideFlyover = (immediately) => {
+    // console.log('hideFlyover');
     state.flyoverVisible = false;
-    state.caseItem = null;
+    state.flyoverData = null;
     if (immediately) {
         Util.delHash('page');
     }
 };
 
-export const showFlyover = (caseItem) => {
-    if (caseItem) {
+export const showFlyover = (component, data) => {
+    // console.log('showFlyover', component);
+    state.flyoverComponent = component;
+    state.flyoverData = data;
 
-        if (state.caseItem === caseItem) {
-            return;
-        }
-
-        state.caseItem = caseItem;
-        state.flyoverTitle = caseItem.title;
-
-        const { tg_index, title } = caseItem;
-        Util.setHash('page', `detail/${tg_index}/${title}`);
-
+    if (component === 'detail') {
+        state.flyoverTitle = data && data.title;
+    } else if (component === 'har') {
+        state.flyoverTitle = 'HAR';
     } else {
-
-        state.caseItem = null;
-
         state.flyoverTitle = state.title;
-        Util.setHash('page', 'report');
-
     }
 
     state.flyoverVisible = true;
@@ -86,7 +78,7 @@ const showDetailByIndex = (grid, index, title) => {
     if (index) {
         const rowItem = grid.getRowItem(parseInt(index));
         if (rowItem && rowItem.title === title) {
-            showFlyover(rowItem);
+            showFlyover('detail', rowItem);
             return true;
         }
     }
@@ -96,7 +88,7 @@ const showDetailByTitle = (grid, title) => {
     if (title) {
         const rowItem = grid.getRowItemBy('title', title);
         if (rowItem) {
-            showFlyover(rowItem);
+            showFlyover('detail', rowItem);
             return true;
         }
     }
@@ -106,6 +98,12 @@ const showDetail = (pagePath) => {
     const grid = state.grid;
     if (!pagePath || !grid) {
         return;
+    }
+
+    const data = state.flyoverData;
+    if (data) {
+        showFlyover('detail', data);
+        return true;
     }
 
     const list = pagePath.split('/');
@@ -136,9 +134,10 @@ const showHar = async (jsonpPath) => {
         return;
     }
 
-    const json = JSON.parse(Util.decompress(str));
+    const harData = JSON.parse(Util.decompress(str));
+    console.log(harData);
 
-    console.log(json);
+    showFlyover('har', harData);
 
 };
 
@@ -152,7 +151,7 @@ export const displayFlyoverWithHash = () => {
         const pagePath = list.join('/');
 
         if (pageName === 'report') {
-            showFlyover();
+            showFlyover('report');
             return;
         }
 
@@ -188,7 +187,13 @@ const getClickCaseItem = (rowItem) => {
     }
 };
 
-const showFlyoverHandler = (d, force) => {
+const showRowDetail = (data) => {
+    state.flyoverData = data;
+    const { tg_index, title } = data;
+    Util.setHash('page', `detail/${tg_index}/${title}`);
+};
+
+const onRowClickHandler = (d, force) => {
 
     const {
         e, rowItem, columnItem
@@ -200,7 +205,7 @@ const showFlyoverHandler = (d, force) => {
     }
 
     if (state.flyoverVisible || force) {
-        showFlyover(caseItem);
+        showRowDetail(caseItem);
         return;
     }
 
@@ -218,7 +223,7 @@ const showFlyoverHandler = (d, force) => {
     ].includes(columnId) && !cls.contains('tg-cell');
 
     if (isInfo || isClickColumn) {
-        showFlyover(caseItem);
+        showRowDetail(caseItem);
     }
 
 };
@@ -391,7 +396,7 @@ const bindGridEvents = () => {
             return;
         }
 
-        showFlyoverHandler(d);
+        onRowClickHandler(d);
         showPositionHandler(d);
 
     });
@@ -401,7 +406,7 @@ const bindGridEvents = () => {
             return;
         }
 
-        showFlyoverHandler(d, true);
+        onRowClickHandler(d, true);
         showPositionHandler(d);
 
     });

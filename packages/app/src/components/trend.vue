@@ -111,7 +111,7 @@
 </template>
 <script setup>
 import {
-    shallowReactive, computed, watch, ref
+    shallowReactive, computed, watch, ref, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
 import { microtask } from 'async-tick';
@@ -608,10 +608,8 @@ watch([
     render();
 });
 
-watch(() => state.reportData, (v) => {
-    if (v) {
-        trendsHandler();
-    }
+onMounted(() => {
+    trendsHandler();
 });
 
 </script>

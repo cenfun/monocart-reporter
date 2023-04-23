@@ -234,11 +234,11 @@ import {
     watch, onMounted, reactive, computed
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
-import { debounce } from 'async-tick';
+import { debounce, microtask } from 'async-tick';
 
 import Util from './utils/util.js';
 import {
-    createGrid, renderGrid, updateGrid, initCustomsFormatters, showFlyover, displayFlyoverWithHash, expandRowLevel
+    createGrid, renderGrid, updateGrid, initCustomsFormatters, displayFlyoverWithHash, expandRowLevel
 } from './modules/grid.js';
 
 import Flyover from './components/flyover.vue';
@@ -481,7 +481,7 @@ const onSearchDropdownClick = (e) => {
 };
 
 const onMenuClick = (e) => {
-    showFlyover();
+    Util.setHash('page', 'report');
 };
 
 const onExportClick = () => {
@@ -611,11 +611,11 @@ watch([
     renderGrid();
 });
 
-window.addEventListener('popstate', (e) => {
+window.addEventListener('popstate', microtask(() => {
     const caseType = Util.getHash('caseType');
     state.caseType = caseType || 'tests';
     displayFlyoverWithHash();
-});
+}));
 
 window.addEventListener('resize', () => {
     state.windowWidth = window.innerWidth;
@@ -636,7 +636,6 @@ window.addEventListener('message', (e) => {
         Object.assign(state, data);
     }
 });
-
 </script>
 <style lang="scss">
 @keyframes mcr-blink-fade-in {

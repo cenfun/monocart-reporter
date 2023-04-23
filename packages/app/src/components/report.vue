@@ -357,7 +357,9 @@
 </template>
 
 <script setup>
-import { shallowReactive, watch } from 'vue';
+import {
+    shallowReactive, watch, onActivated
+} from 'vue';
 
 import { components } from 'vine-ui';
 
@@ -669,15 +671,14 @@ watch(() => report.systemIndex, (v) => {
     timelineHandler();
 });
 
-watch(() => state.reportData, (v) => {
-    if (v) {
-        pieHandler();
-        systemHandler();
-        timelineHandler();
-        tagsHandler();
-        metadataHandler();
-        exportHandler();
-    }
+
+onActivated(() => {
+    pieHandler();
+    systemHandler();
+    timelineHandler();
+    tagsHandler();
+    metadataHandler();
+    exportHandler();
 });
 
 </script>

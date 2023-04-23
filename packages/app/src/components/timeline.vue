@@ -218,7 +218,7 @@
 </template>
 <script setup>
 import {
-    shallowReactive, watch, computed, ref
+    shallowReactive, watch, computed, ref, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
 import { microtask } from 'async-tick';
@@ -651,16 +651,10 @@ const axisHandler = () => {
     chart.height = y + height + padding;
 };
 
-const initTimelineData = () => {
+onMounted(() => {
     workerListHandler();
     usageHandler();
     axisHandler();
-};
-
-watch(() => state.system, (v) => {
-    if (v) {
-        initTimelineData();
-    }
 });
 
 </script>

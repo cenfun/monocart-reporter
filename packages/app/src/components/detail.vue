@@ -139,10 +139,10 @@
 </template>
 <script setup>
 import {
-    ref, watch, shallowReactive, onMounted
+    ref, watch, shallowReactive, onMounted, onActivated
 } from 'vue';
 import { components } from 'vine-ui';
-import { debounce } from 'async-tick';
+import { debounce, microtask } from 'async-tick';
 import 'github-markdown-css/github-markdown-light.css';
 
 import Convert from 'ansi-to-html';
@@ -737,7 +737,9 @@ const initDataList = () => {
 
 };
 
-const updateCase = (caseItem) => {
+const updateCase = microtask(() => {
+    const caseItem = state.flyoverData;
+
     if (!caseItem) {
         return;
     }
@@ -746,13 +748,9 @@ const updateCase = (caseItem) => {
 
     initDataList();
 
-};
+});
 
 // ===========================================================================
-
-watch(() => state.caseItem, (v) => {
-    updateCase(v);
-});
 
 watch(() => state.position, (v) => {
     if (v) {
@@ -761,8 +759,18 @@ watch(() => state.position, (v) => {
     }
 });
 
+watch(() => state.flyoverData, (v) => {
+    if (state.flyoverComponent === 'detail') {
+        updateCase();
+    }
+});
+
 onMounted(() => {
     $el = el.value;
+});
+
+onActivated(() => {
+    updateCase();
 });
 
 </script>
