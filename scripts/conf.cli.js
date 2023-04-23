@@ -25,6 +25,9 @@ module.exports = {
             // coverage
             // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
 
+            // merge
+            // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/merged/index.json');
+
             // ten-minutes
             // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/ten-minutes/index.json');
 

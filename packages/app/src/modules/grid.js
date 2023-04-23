@@ -50,7 +50,6 @@ const showTooltip = (elem, text, html) => {
 };
 
 export const hideFlyover = (immediately) => {
-    // console.log('hideFlyover');
     state.flyoverVisible = false;
     state.flyoverData = null;
     if (immediately) {
@@ -59,18 +58,10 @@ export const hideFlyover = (immediately) => {
 };
 
 export const showFlyover = (component, data) => {
-    // console.log('showFlyover', component);
     state.flyoverComponent = component;
     state.flyoverData = data;
-
-    if (component === 'detail') {
-        state.flyoverTitle = data && data.title;
-    } else if (component === 'har') {
-        state.flyoverTitle = 'HAR';
-    } else {
-        state.flyoverTitle = state.title;
-    }
-
+    const title = data ? data.title : state.title;
+    state.flyoverTitle = title;
     state.flyoverVisible = true;
 };
 
@@ -122,22 +113,15 @@ const showDetail = (pagePath) => {
     }
 };
 
-const showHar = async (jsonpPath) => {
-    console.log(jsonpPath);
+const showHar = (jsonpPath) => {
 
-    console.log('loading jsonp ...');
+    const data = state.flyoverData;
+    const title = data ? data.title : 'HAR Viewer';
 
-    const str = await Util.loadJsonp(jsonpPath);
-
-    if (!str) {
-        console.log('failed to load jsonp data');
-        return;
-    }
-
-    const harData = JSON.parse(Util.decompress(str));
-    console.log(harData);
-
-    showFlyover('har', harData);
+    showFlyover('har', {
+        title,
+        path: jsonpPath
+    });
 
 };
 
