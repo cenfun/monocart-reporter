@@ -2,7 +2,7 @@ const {
     test, expect, request
 } = require('@playwright/test');
 const EC = require('eight-colors');
-const { takeCoverage } = require('monocart-reporter');
+const { attachCoverageReport } = require('monocart-reporter');
 
 const { delay } = require('../common/util.js');
 // POM Page Object Model
@@ -114,6 +114,6 @@ test('take v8 coverage report', async ({ page }) => {
     // JavaScript Coverage doesn't include anonymous scripts by default.
     // However, scripts with sourceURLs are reported.
     const jsCoverage = await page.coverage.stopJSCoverage();
-    const report = await takeCoverage(jsCoverage, test.info());
+    const report = await attachCoverageReport(jsCoverage, test.info());
     console.log(report.lines);
 });

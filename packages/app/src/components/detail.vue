@@ -379,18 +379,48 @@ const getAttachment = (item) => {
     const {
         contentType, name, path
     } = item;
-    if (contentType) {
-        if (contentType.startsWith('image')) {
+
+    const list = [{
+        condition: () => {
+            return contentType.startsWith('image');
+        },
+        handler: () => {
             return getImage(path, name);
         }
-        if (contentType.startsWith('video')) {
+    }, {
+        condition: () => {
+            return contentType.startsWith('video');
+        },
+        handler: () => {
             return getVideo(path, name, contentType);
         }
-        if (contentType === 'application/zip' && name === 'trace') {
+    }, {
+        condition: () => {
+            return name === 'trace' && contentType === 'application/zip';
+        },
+        handler: () => {
             return getTrace(path, name);
         }
-        if (contentType === 'text/html' && name === 'coverage') {
+    }, {
+        condition: () => {
+            return name === 'coverage' && contentType === 'text/html';
+        },
+        handler: () => {
             return getCoverage(path, name, item.report);
+        }
+    }, {
+        condition: () => {
+            return name === 'network' && contentType === 'application/javascript';
+        },
+        handler: () => {
+            return getNetwork(path, name);
+        }
+    }];
+
+    if (contentType) {
+        const res = list.find((it) => it.condition());
+        if (res) {
+            return res.handler();
         }
     }
     return getLink(path, name);
@@ -490,6 +520,15 @@ const getCoverageBody = (report) => {
 const getCoverage = (path, name, report) => {
     const body = getCoverageBody(report);
     return getLink(path, name, 'coverage', body);
+};
+
+const getNetwork = (path, name) => {
+
+    const traceUrl = new URL(path, window.location.href);
+    const viewerUrl = `http://www.softwareishard.com/har/viewer/?inputUrl=${encodeURIComponent(traceUrl)}`;
+
+    const body = `<a href="${viewerUrl}" target="_blank">View HAR online</a>`;
+    return getLink(path, name, 'network', body);
 };
 
 const getLink = (path, name, type = 'link', body = '') => {
@@ -973,6 +1012,12 @@ onMounted(() => {
                 padding: 5px 8px;
                 text-align: right;
             }
+        }
+    }
+
+    .mcr-attachment-network {
+        .mcr-attachment-body {
+            padding: 5px;
         }
     }
 }
