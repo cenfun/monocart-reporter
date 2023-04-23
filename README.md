@@ -532,8 +532,8 @@ import { test, expect } from '@playwright/test';
 import { takeCoverage } from 'monocart-reporter';
 test.describe('take v8 coverage', () => {
     test('first, startJSCoverage and open page', async () => {
-        await singlePage.coverage.startJSCoverage();
-        await singlePage.goto(pageUrl);
+        await page.coverage.startJSCoverage();
+        await page.goto(pageUrl);
     });
 
     test('next, run test cases', async () => {
@@ -544,7 +544,7 @@ test.describe('take v8 coverage', () => {
 
     test('finally, stopJSCoverage and take coverage', async () => {
         // take v8 coverage
-        const jsCoverage = await singlePage.coverage.stopJSCoverage();
+        const jsCoverage = await page.coverage.stopJSCoverage();
         // filter file list
         const coverageInput = jsCoverage.filter((item) => {
             if (!item.url.endsWith('.js')) {
@@ -565,7 +565,7 @@ import { test, expect } from '@playwright/test';
 import { takeCoverage } from 'monocart-reporter';
 test.describe('take istanbul coverage', () => {
     test('first, open page', async () => {
-        await singlePage.goto(pageUrl);
+        await page.goto(pageUrl);
     });
 
     test('next, run test cases', async () => {
@@ -576,7 +576,7 @@ test.describe('take istanbul coverage', () => {
 
     test('finally, take coverage', async () => {
         // take istanbul coverage
-        const coverageInput = await singlePage.evaluate(() => window.__coverage__);
+        const coverageInput = await page.evaluate(() => window.__coverage__);
         expect(coverageInput, 'expect found istanbul data: __coverage__').toBeTruthy();
         // coverage report
         const report = await takeCoverage(coverageInput, test.info());
