@@ -162,7 +162,47 @@ const getIstanbulSummary = (report) => {
 
 
 const getV8Summary = (report) => {
-    return 'v8';
+    const files = report.files;
+    const items = [].concat(files);
+    if (files.length > 1) {
+        const summary = report.summary;
+        summary.isSummary = true;
+        summary.name = 'Summary';
+        summary.type = '';
+        items.push(summary);
+    }
+
+    const ls = [];
+    ls.push('<table>');
+
+    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-file">File</td>');
+    ls.push('<td>Type</td><td>Total Bytes</td><td>Used Bytes</td><td>Coverage</td>');
+    ls.push('</tr>');
+
+    items.forEach((item, i) => {
+
+        if (item.isSummary) {
+            ls.push('<tr class="mcr-row-summary">');
+        } else {
+            ls.push('<tr>');
+        }
+        if (item.isSummary) {
+            ls.push('<td></td>');
+        } else {
+            ls.push(`<td>${i + 1}</td>`);
+        }
+        ls.push(`<td class="mcr-column-file">${item.name}</td>`);
+
+        ls.push(`<td>${item.type}</td>`);
+        ls.push(`<td>${Util.BF(item.total)}</td>`);
+        ls.push(`<td>${Util.BF(item.covered)}</td>`);
+        // low, medium, high, unknown
+        ls.push(`<td class="mcr-${item.status}">${Util.PF(item.pct, 100, 2)}</td>`);
+
+        ls.push('</tr>');
+    });
+    ls.push('</table>');
+    return ls.join('');
 };
 
 const getCoverageBody = (report) => {
