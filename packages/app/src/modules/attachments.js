@@ -118,6 +118,14 @@ const getIstanbulSummary = (report) => {
         lines: 'Lines'
     };
     const items = [].concat(files);
+
+    // refer to sonar coverage are lines + branches
+    items.sort((a, b) => {
+        const ac = (a.lines.covered + a.branches.covered) / (a.lines.total + a.branches.total);
+        const bc = (b.lines.covered + b.branches.covered) / (b.lines.total + b.branches.total);
+        return bc - ac;
+    });
+
     if (files.length > 1) {
         const summary = report.summary;
         summary.isSummary = true;
@@ -164,8 +172,18 @@ const getIstanbulSummary = (report) => {
 const getV8Summary = (report) => {
     const files = report.files;
     const items = [].concat(files);
+
+    items.forEach((item) => {
+        item.unused = item.total - item.covered;
+    });
+
+    items.sort((a, b) => {
+        return b.unused - a.unused;
+    });
+
     if (files.length > 1) {
         const summary = report.summary;
+        summary.unused = summary.total - summary.covered;
         summary.isSummary = true;
         summary.name = 'Summary';
         summary.type = '';
@@ -176,7 +194,7 @@ const getV8Summary = (report) => {
     ls.push('<table>');
 
     ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-file">File</td>');
-    ls.push('<td>Type</td><td>Total Bytes</td><td>Used Bytes</td><td>Coverage</td>');
+    ls.push('<td>Type</td><td>Total Bytes</td><td>Used Bytes</td><td>Unused Bytes</td><td>Coverage</td>');
     ls.push('</tr>');
 
     items.forEach((item, i) => {
@@ -194,8 +212,9 @@ const getV8Summary = (report) => {
         ls.push(`<td class="mcr-column-file">${item.name}</td>`);
 
         ls.push(`<td>${item.type}</td>`);
-        ls.push(`<td>${Util.BF(item.total)}</td>`);
-        ls.push(`<td>${Util.BF(item.covered)}</td>`);
+        ls.push(`<td tooltip="${Util.BF(item.total)}">${Util.NF(item.total)}</td>`);
+        ls.push(`<td tooltip="${Util.BF(item.covered)}">${Util.NF(item.covered)}</td>`);
+        ls.push(`<td tooltip="${Util.BF(item.unused)}">${Util.NF(item.unused)}</td>`);
         // low, medium, high, unknown
         ls.push(`<td class="mcr-${item.status}">${Util.PF(item.pct, 100, 2)}</td>`);
 
