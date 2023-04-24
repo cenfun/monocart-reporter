@@ -7,8 +7,7 @@ module.exports = {
         'browser': true,
         'amd': true,
         'commonjs': true,
-        'es6': true,
-        'mocha': true
+        'es6': true
     },
     // other globals
     'globals': {
