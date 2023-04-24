@@ -114,7 +114,7 @@ test.describe('take v8 js and css coverage report', () => {
         const report = await attachCoverageReport(list, test.info(), {
             // toIstanbul: true
         });
-        console.log(report);
+        console.log(report.summary);
     });
 
 });

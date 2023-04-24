@@ -212,9 +212,9 @@ const getV8Summary = (report) => {
         ls.push(`<td class="mcr-column-file">${item.name}</td>`);
 
         ls.push(`<td>${item.type}</td>`);
-        ls.push(`<td tooltip="${Util.BF(item.total)}">${Util.NF(item.total)}</td>`);
-        ls.push(`<td tooltip="${Util.BF(item.covered)}">${Util.NF(item.covered)}</td>`);
-        ls.push(`<td tooltip="${Util.BF(item.unused)}">${Util.NF(item.unused)}</td>`);
+        ls.push(`<td title="${Util.BF(item.total)}">${Util.NF(item.total)}</td>`);
+        ls.push(`<td title="${Util.BF(item.covered)}">${Util.NF(item.covered)}</td>`);
+        ls.push(`<td title="${Util.BF(item.unused)}">${Util.NF(item.unused)}</td>`);
         // low, medium, high, unknown
         ls.push(`<td class="mcr-${item.status}">${Util.PF(item.pct, 100, 2)}</td>`);
 
