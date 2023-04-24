@@ -1,0 +1,11 @@
+{
+    "name": "monocart-coverage-v8",
+    "version": "1.6.15",
+    "private": true,
+    "main": "dist/monocart-coverage-v8.js",
+    "files": [
+        "dist"
+    ],
+    "dependencies": {},
+    "devDependencies": {}
+}

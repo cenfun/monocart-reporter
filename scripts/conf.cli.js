@@ -19,6 +19,8 @@ module.exports = {
                 return 0;
             }
 
+            const EC = require('eight-colors');
+
             // generate reportData for demo
             const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
 
@@ -32,12 +34,12 @@ module.exports = {
             // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/ten-minutes/index.json');
 
             if (!fs.existsSync(jsonPath)) {
-                Util.logRed(`ERROR: Not found test json: ${jsonPath}`);
+                EC.logRed(`ERROR: Not found test json: ${jsonPath}`);
                 return 1;
             }
             const reportData = Util.readJSONSync(jsonPath);
             if (!reportData) {
-                Util.logRed(`ERROR: Invalid json: ${jsonPath}`);
+                EC.logRed(`ERROR: Invalid json: ${jsonPath}`);
                 return 1;
             }
 
@@ -64,7 +66,7 @@ module.exports = {
             const reportDataStr = compress(JSON.stringify(reportData));
             const jsContent = `window.reportData = '${reportDataStr}';`;
             const jsPath = path.resolve(item.buildPath, 'report-data.js');
-            Util.writeFileContentSync(jsPath, jsContent, true);
+            Util.writeFileSync(jsPath, jsContent);
 
             if (!item.dependencies.files.includes(jsPath)) {
                 item.dependencies.files.unshift(jsPath);
@@ -80,11 +82,12 @@ module.exports = {
         after: (item, Util) => {
 
             if (item.production) {
+                const EC = require('eight-colors');
                 const filename = `${item.fullName}.js`;
                 // copy dist file to lib
                 const fromJs = path.resolve(item.buildPath, filename);
                 if (!fs.existsSync(fromJs)) {
-                    Util.logRed(`ERROR: Not found dist: ${fromJs}`);
+                    EC.logRed(`ERROR: Not found dist: ${fromJs}`);
                     return 1;
                 }
                 const toPath = path.resolve(__dirname, '../lib/runtime');
