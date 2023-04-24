@@ -69,6 +69,7 @@ const showDetailByIndex = (grid, index, title) => {
     if (index) {
         const rowItem = grid.getRowItem(parseInt(index));
         if (rowItem && rowItem.title === title) {
+            grid.scrollRowIntoView(rowItem);
             showFlyover('detail', rowItem);
             return true;
         }
@@ -79,6 +80,7 @@ const showDetailByTitle = (grid, title) => {
     if (title) {
         const rowItem = grid.getRowItemBy('title', title);
         if (rowItem) {
+            grid.scrollRowIntoView(rowItem);
             showFlyover('detail', rowItem);
             return true;
         }

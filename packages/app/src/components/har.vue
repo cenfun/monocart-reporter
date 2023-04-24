@@ -55,6 +55,7 @@ const updateGrid = (gridData) => {
 const getGridData = (harData) => {
     console.log(harData);
 
+    // https://nodejs.org/dist/latest-v18.x/docs/api/url.html
     const rows = harData.log.entries.map((item) => {
 
         const req = item.request;
