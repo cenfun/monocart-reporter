@@ -111,9 +111,6 @@ const getTrace = (path, name) => {
 
 const getIstanbulSummary = (report) => {
     const files = report.files;
-    if (!files) {
-        return '';
-    }
     const map = {
         statements: 'Statements',
         branches: 'Branches',
@@ -122,31 +119,34 @@ const getIstanbulSummary = (report) => {
     };
     const items = [].concat(files);
     if (files.length > 1) {
-        report.summary = true;
-        report.name = 'Summary';
-        items.push(report);
+        const summary = report.summary;
+        summary.isSummary = true;
+        summary.name = 'Summary';
+        items.push(summary);
     }
-
-    console.log(items);
 
     const ls = [];
     ls.push('<table>');
 
-    ls.push('<tr class="mcr-head"><td></td><td class="mcr-file">File</td>');
+    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-file">File</td>');
     Object.keys(map).forEach((k) => {
         ls.push(`<td colspan="2">${map[k]}</td>`);
     });
     ls.push('</tr>');
 
     items.forEach((item, i) => {
-        ls.push('<tr>');
 
-        if (item.summary) {
+        if (item.isSummary) {
+            ls.push('<tr class="mcr-row-summary">');
+        } else {
+            ls.push('<tr>');
+        }
+        if (item.isSummary) {
             ls.push('<td></td>');
         } else {
             ls.push(`<td>${i + 1}</td>`);
         }
-        ls.push(`<td class="mcr-file">${item.name}</td>`);
+        ls.push(`<td class="mcr-column-file">${item.name}</td>`);
 
         Object.keys(map).forEach((k) => {
             const d = item[k] || {};
@@ -166,7 +166,7 @@ const getV8Summary = (report) => {
 };
 
 const getCoverageBody = (report) => {
-    if (!report) {
+    if (!report || !report.files || !report.summary) {
         return '';
     }
 

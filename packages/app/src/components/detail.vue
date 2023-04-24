@@ -815,7 +815,7 @@ onActivated(() => {
             background-color: #f8f8f8;
         }
 
-        .mcr-file {
+        .mcr-column-file {
             min-width: 100px;
             text-align: left;
             word-break: break-all;
@@ -831,6 +831,10 @@ onActivated(() => {
 
             tr:not(:last-child) {
                 border-bottom: 1px solid #ddd;
+            }
+
+            tr.mcr-row-summary {
+                border-top: 2px solid #ddd;
             }
 
             tr:first-child {
