@@ -65,51 +65,104 @@ const format = (type, text) => {
     });
 };
 
-const rangeLinesHandler = (formattedMapping, start, end, lines) => {
-    const [sLine] = formattedMapping.positionToFormatted(start);
-    const [eLine, eColumn] = formattedMapping.positionToFormatted(end);
+const oneLineHandler = (sLoc, eLoc, type, gutterMap, bgMap) => {
+    if (sLoc.column === 0 && eLoc.column === eLoc.last) {
+        gutterMap.set(sLoc.line, type);
+    } else {
+        gutterMap.set(sLoc.line, 'partial');
+        bgMap.set(sLoc.line, {
+            start: sLoc.column,
+            end: eLoc.column
+        });
+    }
+};
 
-    // console.log(start, sLine, sColumn);
-    // console.log(end, eLine, eColumn);
+const multipleLineHandler = (sLoc, eLoc, type, gutterMap, bgMap) => {
 
-    lines.push(sLine);
+    if (sLoc.column < sLoc.last) {
 
-    if (eLine > sLine) {
-
-        for (let i = sLine + 1; i < eLine; i++) {
-            lines.push(i);
+        if (sLoc.column === 0) {
+            gutterMap.set(sLoc.line, type);
+        } else {
+            gutterMap.set(sLoc.line, 'partial');
+            bgMap.set(sLoc.line, {
+                start: sLoc.column,
+                end: sLoc.last
+            });
         }
 
-        if (eColumn > 0) {
-            lines.push(eLine);
+    }
+
+    for (let i = sLoc.line + 1; i < eLoc.line; i++) {
+        gutterMap.set(i, type);
+    }
+
+    if (eLoc.column > 0) {
+
+        if (eLoc.column === eLoc.last) {
+            gutterMap.set(eLoc.line, type);
+        } else {
+            gutterMap.set(eLoc.line, 'partial');
+            bgMap.set(eLoc.line, {
+                start: 0,
+                end: eLoc.column
+            });
         }
 
     }
 };
 
-const getRanges = (item, text, content, mapping) => {
+const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
+    const sLoc = formattedMapping.originalToFormattedLocation(start);
+    const eLoc = formattedMapping.originalToFormattedLocation(end);
+
+    // console.log('start', start, sLoc);
+    // console.log('end', end, eLoc);
+
+    const {
+        type, gutterMap, bgMap
+    } = coverage;
 
 
-    const formattedMapping = new FormatterSourceMapping(text, content, mapping);
+    if (eLoc.line === sLoc.line) {
+        oneLineHandler(sLoc, eLoc, type, gutterMap, bgMap);
+        return;
+    }
+
+    multipleLineHandler(sLoc, eLoc, type, gutterMap, bgMap);
+
+};
+
+const getCoverage = (item, content, mapping) => {
+
+
+    const formattedMapping = new FormatterSourceMapping(content, mapping);
 
     // css, text, ranges: [ {start, end} ]
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
     if (item.type === 'css') {
-        const lines = [];
+        const coverage = {
+            type: 'covered',
+            gutterMap: new Map(),
+            bgMap: new Map()
+        };
         const ranges = item.ranges;
         if (ranges) {
             ranges.forEach((range) => {
                 const { start, end } = range;
-                rangeLinesHandler(formattedMapping, start, end, lines);
+                rangeLinesHandler(formattedMapping, start, end, coverage);
             });
         }
-        return {
-            type: 'covered',
-            lines
-        };
+
+        return coverage;
+
     }
 
-    const lines = [];
+    const coverage = {
+        type: 'uncovered',
+        gutterMap: new Map(),
+        bgMap: new Map()
+    };
     const functions = item.functions;
     if (functions) {
         functions.forEach((fun) => {
@@ -118,17 +171,14 @@ const getRanges = (item, text, content, mapping) => {
                 ranges.forEach((range) => {
                     if (range.count === 0) {
                         const { startOffset, endOffset } = range;
-                        rangeLinesHandler(formattedMapping, startOffset, endOffset, lines);
+                        rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
                     }
                 });
             }
         });
     }
 
-    return {
-        type: 'uncovered',
-        lines
-    };
+    return coverage;
 
 };
 
@@ -148,10 +198,10 @@ const getReport = async (item) => {
     }
 
     const { content, mapping } = res;
-    const ranges = getRanges(item, text, content, mapping);
+    const coverage = getCoverage(item, content, mapping);
 
     const report = {
-        ranges,
+        coverage,
         content
     };
 
@@ -247,6 +297,10 @@ onMounted(() => {
 
     .mcr-line-covered {
         background-color: green;
+    }
+
+    .mcr-line-partial {
+        background-color: orange;
     }
 
     .mcr-line-uncovered {

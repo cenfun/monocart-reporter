@@ -58,34 +58,43 @@ export const createEditor = (container, report) => {
 
     const coveredMarker = new GutterMarker();
     coveredMarker.elementClass = 'mcr-line-covered';
+    const partialMarker = new GutterMarker();
+    partialMarker.elementClass = 'mcr-line-partial';
     const uncoveredMarker = new GutterMarker();
     uncoveredMarker.elementClass = 'mcr-line-uncovered';
 
-    let rangeLines;
-    let lineTypes;
-    const updateRanges = (ranges) => {
-        rangeLines = ranges.lines;
-        if (ranges.type === 'covered') {
-            lineTypes = [coveredMarker, uncoveredMarker];
+    let gutterTypes;
+    let gutterMap;
+    // let bgMap;
+
+    const updateCoverage = (coverage) => {
+        if (coverage.type === 'covered') {
+            gutterTypes = [coveredMarker, partialMarker, uncoveredMarker];
         } else {
-            lineTypes = [uncoveredMarker, coveredMarker];
+            gutterTypes = [uncoveredMarker, partialMarker, coveredMarker];
         }
+        gutterMap = coverage.gutterMap;
+        // bgMap = coverage.bgMap;
     };
 
-    updateRanges(report.ranges);
+    updateCoverage(report.coverage);
 
     const coverageGutter = gutter({
         class: 'mcr-coverage-gutter',
         lineMarker(view, line) {
-
             if (line.length === 0) {
                 return null;
             }
-
             const lineIndex = Math.round(line.top / line.height);
             // console.log('lineIndex', lineIndex);
-
-            return rangeLines.includes(lineIndex) ? lineTypes[0] : lineTypes[1];
+            const v = gutterMap.get(lineIndex);
+            if (v) {
+                if (v === 'partial') {
+                    return gutterTypes[1];
+                }
+                return gutterTypes[0];
+            }
+            return gutterTypes[2];
         }
     });
 
@@ -110,7 +119,7 @@ export const createEditor = (container, report) => {
 
     return {
         showContent: (newReport) => {
-            updateRanges(newReport.ranges);
+            updateCoverage(newReport.coverage);
             const text = editor.state.doc.toString();
             const transaction = editor.state.update({
                 changes: {

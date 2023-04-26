@@ -15,11 +15,6 @@ const findLineEndingIndexes = (inputString) => {
     return endings;
 };
 
-const locationToPosition = (lineEndings, lineNumber, columnNumber) => {
-    const position = lineNumber ? lineEndings[lineNumber - 1] + 1 : 0;
-    return position + columnNumber;
-};
-
 const DEFAULT_COMPARATOR = (a, b) => {
     const n = a > b ? 1 : 0;
     return a < b ? -1 : n;
@@ -39,45 +34,23 @@ const upperBound = (array, needle, comparator) => {
     return r;
 };
 
-const positionToLocation = (lineEndings, position) => {
-    const lineNumber = upperBound(lineEndings, position - 1, DEFAULT_COMPARATOR);
-    let columnNumber;
-    if (lineNumber) {
-        columnNumber = position - lineEndings[lineNumber - 1] - 1;
-    } else {
-        columnNumber = position;
-    }
-    return [lineNumber, columnNumber];
-};
-
 
 export default class {
 
-    constructor(originalContent, formattedContent, mapping) {
-
-        const originalLineEndings = findLineEndingIndexes(originalContent);
+    constructor(formattedContent, mapping) {
         const formattedLineEndings = findLineEndingIndexes(formattedContent);
+        // console.log(formattedLineEndings);
 
-        this.originalLineEndings = originalLineEndings;
         this.formattedLineEndings = formattedLineEndings;
         this.mapping = mapping;
+
+        this.formattedLines = this.formattedLineEndings.length;
+        this.formattedLength = formattedContent.length;
     }
 
-    positionToFormatted(originalPosition) {
+    originalToFormattedLocation(originalPosition) {
         const formattedPosition = this.convertPosition(this.mapping.original, this.mapping.formatted, originalPosition);
-        return positionToLocation(this.formattedLineEndings, formattedPosition);
-    }
-
-    originalToFormatted(lineNumber, columnNumber) {
-        const originalPosition = locationToPosition(this.originalLineEndings, lineNumber, columnNumber || 0);
-        const formattedPosition = this.convertPosition(this.mapping.original, this.mapping.formatted, originalPosition);
-        return positionToLocation(this.formattedLineEndings, formattedPosition);
-    }
-
-    formattedToOriginal(lineNumber, columnNumber) {
-        const formattedPosition = locationToPosition(this.formattedLineEndings, lineNumber, columnNumber || 0);
-        const originalPosition = this.convertPosition(this.mapping.formatted, this.mapping.original, formattedPosition);
-        return positionToLocation(this.originalLineEndings, originalPosition);
+        return this.positionToLocation(this.formattedLineEndings, formattedPosition);
     }
 
     convertPosition(positions1, positions2, position) {
@@ -87,5 +60,27 @@ export default class {
             convertedPosition = positions2[index + 1];
         }
         return convertedPosition;
+    }
+
+    positionToLocation(lineEndings, position) {
+        const line = upperBound(lineEndings, position - 1, DEFAULT_COMPARATOR);
+        let startPos;
+        let column;
+        if (line) {
+            startPos = lineEndings[line - 1] + 1;
+            column = position - startPos;
+        } else {
+            startPos = 0;
+            column = position;
+        }
+
+        const endPos = lineEndings[line];
+        const last = endPos - startPos;
+
+        return {
+            line,
+            column,
+            last
+        };
     }
 }

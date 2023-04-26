@@ -298,7 +298,7 @@ const getGridData = () => {
     }, {
         id: 'url',
         name: 'URL',
-        width: 300,
+        width: 350,
         maxWidth: 2000,
         formatter: 'url'
     }];

@@ -95,7 +95,7 @@ test.describe('take v8 js and css coverage report', () => {
             page.coverage.startCSSCoverage()
         ]);
 
-        await page.goto('http://localhost:8090/demo/');
+        await page.goto('http://localhost:8090/playwright.dev/');
     });
 
     test('next, run test cases', async () => {
