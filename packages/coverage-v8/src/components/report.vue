@@ -22,8 +22,6 @@ import {
 import { components } from 'vine-ui';
 // import { microtask } from 'async-tick';
 
-import beautify from 'js-beautify';
-
 // import Util from '../utils/util.js';
 
 import { createEditor } from './editor.js';
@@ -36,56 +34,31 @@ const el = ref(null);
 let $el;
 let editor;
 
-// const encodeHtml = (code) => {
-//     code = code.replace(/</g, '&lt;');
-//     code = code.replace(/>/g, '&gt;');
-//     return code;
-// str = str.replace(/\n?\s?\/\*mcr_token_s\*\/\s?\n?/g, '<span class="mcr-covered">');
-// str = str.replace(/\n?\s?\/\*mcr_token_e\*\/\s?\n?/g, '</span>');
-// };
+const format = (type, text) => {
+    return new Promise((resolve) => {
+        const workerUrl = 'devtools-formatter-worker.js';
+        const worker = new Worker(workerUrl);
+        worker.onmessage = (e) => {
+            if (e.data === 'workerReady') {
+                worker.postMessage({
+                    type,
+                    text
+                });
+                return;
+            }
+            resolve(e.data);
+            worker.terminate();
+        };
+        worker.onerror = (e) => {
+            console.error(e);
+            resolve();
+            worker.terminate();
+        };
 
-const getCssReport = (item) => {
-
-    const source = item.text;
-
-    const ranges = item.ranges;
-    const list = [];
-    let pos = 0;
-    ranges.forEach(function(range) {
-        if (range.start > pos) {
-            const f = source.slice(pos, range.start);
-            list.push(f);
-        }
-        const t = source.slice(range.start, range.end);
-        list.push(`/*mcr_token_s*/${t}/*mcr_token_e*/`);
-        pos = range.end;
     });
-
-    if (pos < source.length) {
-        list.push(source.slice(pos));
-    }
-
-    let code = list.join('');
-
-    code = beautify.css(code);
-
-    return {
-        code
-    };
 };
 
-const getJsReport = (item) => {
-    const source = item.source;
-
-    let code = source;
-    code = beautify.js(code);
-
-    return {
-        code
-    };
-};
-
-const getReport = (item) => {
+const getReport = async (item) => {
     if (item.report) {
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -94,13 +67,22 @@ const getReport = (item) => {
         });
     }
 
-    if (item.type === 'css') {
-        const report = getCssReport(item);
-        item.report = report;
-        return report;
+    const text = item.source || item.text;
+    const res = await format(item.type, text);
+    if (!res) {
+        return;
     }
-    const report = getJsReport(item);
-    item.report = report;
+
+    const { mapping, content } = res;
+
+    console.log(item.filename, mapping);
+    const ranges = [];
+
+    const report = {
+        ranges,
+        content
+    };
+
     return report;
 };
 
@@ -110,17 +92,18 @@ const showReport = async () => {
         return;
     }
     const item = state.fileMap[id];
-    state.language = `language-${item.type}`;
     state.loading = true;
 
     const report = await getReport(item);
-
-    const content = report.code;
+    if (!report) {
+        console.log('failed to format source');
+        return;
+    }
 
     if (editor) {
-        editor.showContent(content);
+        editor.showContent(report);
     } else {
-        editor = createEditor($el, content);
+        editor = createEditor($el, report);
     }
 
     state.loading = false;

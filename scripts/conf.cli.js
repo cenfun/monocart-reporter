@@ -67,13 +67,13 @@ const beforeApp = (item, Util) => {
 const beforeCoverageV8 = (item, Util) => {
 
     const EC = require('eight-colors');
-    const jsDataPath = path.resolve(__dirname, '../.temp/coverage-v8-report-data.js');
+    const jsDataPath = path.resolve(__dirname, '../.temp/coverage-data.js');
     if (!fs.existsSync(jsDataPath)) {
-        EC.logRed(`ERROR: Not found test json: ${jsDataPath}`);
+        EC.logRed(`ERROR: Not found coverage-data.js: ${jsDataPath}`);
         return 1;
     }
 
-    const jsPath = path.resolve(item.buildPath, 'report-data.js');
+    const jsPath = path.resolve(item.buildPath, 'coverage-data.js');
 
     fs.copyFileSync(jsDataPath, jsPath);
 
@@ -114,24 +114,36 @@ module.exports = {
 
         after: (item, Util) => {
 
-            if (item.production) {
-                const EC = require('eight-colors');
-                const filename = `${item.fullName}.js`;
-                // copy dist file to lib
-                const fromJs = path.resolve(item.buildPath, filename);
-                if (!fs.existsSync(fromJs)) {
-                    EC.logRed(`ERROR: Not found dist: ${fromJs}`);
-                    return 1;
-                }
-                const toPath = path.resolve(__dirname, '../lib/runtime');
-                if (!fs.existsSync(toPath)) {
-                    fs.mkdirSync(toPath);
-                }
-                const toJs = path.resolve(toPath, filename);
-                // console.log(fromJs, toJs);
-                fs.cpSync(fromJs, toJs);
+            if (!item.production) {
+                return 0;
+            }
 
-                Util.logGreen(`Copied: ${toJs}`);
+            const EC = require('eight-colors');
+            const filename = `${item.fullName}.js`;
+            // copy dist file to lib
+            const fromJs = path.resolve(item.buildPath, filename);
+            if (!fs.existsSync(fromJs)) {
+                EC.logRed(`ERROR: Not found dist: ${fromJs}`);
+                return 1;
+            }
+            const toPath = path.resolve(__dirname, '../lib/runtime');
+            if (!fs.existsSync(toPath)) {
+                fs.mkdirSync(toPath);
+            }
+            const toJs = path.resolve(toPath, filename);
+            // console.log(fromJs, toJs);
+            fs.cpSync(fromJs, toJs);
+
+            Util.logGreen(`runtime file Copied: ${filename}`);
+
+            if (item.name === 'coverage-v8') {
+                const workerName = 'devtools-formatter-worker.js';
+                fs.cpSync(
+                    path.resolve(item.devPath, workerName),
+                    path.resolve(toPath, workerName)
+                );
+
+                Util.logGreen(`runtime file Copied: ${workerName}`);
             }
 
             return 0;

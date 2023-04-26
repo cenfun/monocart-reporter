@@ -20,7 +20,7 @@ import { css } from '@codemirror/lang-css';
 const readOnlyCompartment = new Compartment();
 
 let editor;
-export const createEditor = (container, content) => {
+export const createEditor = (container, report) => {
 
 
     // https://github.com/codemirror/basic-setup/
@@ -54,25 +54,47 @@ export const createEditor = (container, content) => {
         ])
     ];
 
+    // =====================================================================
 
     const coveredMarker = new GutterMarker();
     coveredMarker.elementClass = 'mcr-line-covered';
+    const uncoveredMarker = new GutterMarker();
+    uncoveredMarker.elementClass = 'mcr-line-uncovered';
 
+    let ranges = report.ranges;
     const coverageGutter = gutter({
         class: 'mcr-coverage-gutter',
         lineMarker(view, line) {
 
-            console.log(line);
-            return line.length === 0 ? coveredMarker : null;
+            if (line.length === 0) {
+                return null;
+            }
+
+            const from = line.from;
+            const to = line.to;
+            // console.log(from, to, report.code.slice(from, to));
+
+            const res = ranges.find((range) => {
+                if (from >= range.start && to <= range.end) {
+                    return true;
+                }
+            });
+
+            if (res) {
+                return coveredMarker;
+            }
+
+            return uncoveredMarker;
         }
     });
 
+    // =====================================================================
 
     const readOnly = readOnlyCompartment.of(EditorState.readOnly.of(true));
 
     editor = new EditorView({
         parent: container,
-        doc: content,
+        doc: report.content,
         extensions: [
             basicSetup,
 
@@ -86,13 +108,14 @@ export const createEditor = (container, content) => {
     });
 
     return {
-        showContent: (newContent) => {
+        showContent: (newReport) => {
+            ranges = newReport.ranges;
             const text = editor.state.doc.toString();
             const transaction = editor.state.update({
                 changes: {
                     from: 0,
                     to: text.length,
-                    insert: newContent
+                    insert: newReport.content
                 }
             });
             editor.dispatch(transaction);
