@@ -67,19 +67,29 @@ const beforeApp = (item, Util) => {
 const beforeCoverageV8 = (item, Util) => {
 
     const EC = require('eight-colors');
-    const jsDataPath = path.resolve(__dirname, '../.temp/coverage-data.js');
+    const dataFile = 'coverage-data.js';
+    const jsDataPath = path.resolve(__dirname, `../.temp/${dataFile}`);
     if (!fs.existsSync(jsDataPath)) {
-        EC.logRed(`ERROR: Not found coverage-data.js: ${jsDataPath}`);
+        EC.logRed(`ERROR: Not found: ${jsDataPath}`);
         return 1;
     }
 
-    const jsPath = path.resolve(item.buildPath, 'coverage-data.js');
-
+    const jsPath = path.resolve(item.buildPath, dataFile);
     fs.copyFileSync(jsDataPath, jsPath);
+    Util.logGreen(`coverage data file copied: ${dataFile}`);
 
     if (!item.dependencies.files.includes(jsPath)) {
         item.dependencies.files.unshift(jsPath);
     }
+
+    // copy format dataurl
+    const workerFile = 'devtools-formatter-dataurl.js';
+    fs.copyFileSync(
+        path.resolve(`../devtools-packages/packages/formatter-dataurl/dist/${workerFile}`),
+        path.resolve(`.temp/${workerFile}`)
+    );
+
+    Util.logGreen(`format dataurl file copied: ${workerFile}`);
 
     return 0;
 };
@@ -134,17 +144,7 @@ module.exports = {
             // console.log(fromJs, toJs);
             fs.cpSync(fromJs, toJs);
 
-            Util.logGreen(`runtime file Copied: ${filename}`);
-
-            if (item.name === 'coverage-v8') {
-                const workerName = 'devtools-formatter-worker.js';
-                fs.cpSync(
-                    path.resolve(item.devPath, workerName),
-                    path.resolve(toPath, workerName)
-                );
-
-                Util.logGreen(`runtime file Copied: ${workerName}`);
-            }
+            Util.logGreen(`runtime file copied: ${filename}`);
 
             return 0;
         }

@@ -112,7 +112,8 @@ test.describe('take v8 js and css coverage report', () => {
         const list = [... jsCoverage, ... cssCoverage];
 
         const report = await attachCoverageReport(list, test.info(), {
-            // toIstanbul: true
+            // toIstanbul: true,
+            inline: false
         });
         console.log(report.summary);
     });

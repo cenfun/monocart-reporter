@@ -26,6 +26,8 @@ import { components } from 'vine-ui';
 
 import { createEditor } from './editor.js';
 
+import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
+
 const { VuiFlex, VuiLoading } = components;
 
 const state = inject('state');
@@ -33,10 +35,14 @@ const state = inject('state');
 const el = ref(null);
 let $el;
 let editor;
+let workerUrl;
 
 const format = (type, text) => {
+    if (!workerUrl) {
+        workerUrl = new URL(formatterDataUrl());
+    }
+
     return new Promise((resolve) => {
-        const workerUrl = 'devtools-formatter-worker.js';
         const worker = new Worker(workerUrl);
         worker.onmessage = (e) => {
             if (e.data === 'workerReady') {
