@@ -503,7 +503,7 @@ icon
 }
 
 .mcr-high {
-    background: rgb(230 245 208);
+    background: #e6f5d0;
 }
 
 </style>

@@ -1,12 +1,17 @@
 import { EditorView } from 'codemirror';
 
-import { EditorState, Compartment } from '@codemirror/state';
+import {
+    EditorState, Compartment,
+    RangeSetBuilder
+} from '@codemirror/state';
 
 import {
     keymap, highlightSpecialChars, drawSelection, highlightActiveLine, dropCursor,
     rectangularSelection, crosshairCursor,
     lineNumbers, highlightActiveLineGutter,
-    gutter, GutterMarker
+    gutter, GutterMarker,
+    Decoration,
+    ViewPlugin
 } from '@codemirror/view';
 
 import {
@@ -56,6 +61,12 @@ export const createEditor = (container, report) => {
 
     // =====================================================================
 
+    let gutterMap;
+    let bgMap;
+
+    let gutterTypes;
+    let bgType;
+
     const coveredMarker = new GutterMarker();
     coveredMarker.elementClass = 'mcr-line-covered';
     const partialMarker = new GutterMarker();
@@ -63,21 +74,30 @@ export const createEditor = (container, report) => {
     const uncoveredMarker = new GutterMarker();
     uncoveredMarker.elementClass = 'mcr-line-uncovered';
 
-    let gutterTypes;
-    let gutterMap;
-    // let bgMap;
+    const coveredBg = Decoration.mark({
+        class: 'mcr-bg-covered'
+    });
+    const uncoveredBg = Decoration.mark({
+        class: 'mcr-bg-uncovered'
+    });
+
 
     const updateCoverage = (coverage) => {
+        gutterMap = coverage.gutterMap;
+        bgMap = coverage.bgMap;
+
         if (coverage.type === 'covered') {
             gutterTypes = [coveredMarker, partialMarker, uncoveredMarker];
+            bgType = coveredBg;
         } else {
             gutterTypes = [uncoveredMarker, partialMarker, coveredMarker];
+            bgType = uncoveredBg;
         }
-        gutterMap = coverage.gutterMap;
-        // bgMap = coverage.bgMap;
     };
 
     updateCoverage(report.coverage);
+
+    // =====================================================================
 
     const coverageGutter = gutter({
         class: 'mcr-coverage-gutter',
@@ -100,6 +120,40 @@ export const createEditor = (container, report) => {
 
     // =====================================================================
 
+    function getCoverageBg(view) {
+
+        const builder = new RangeSetBuilder();
+        for (const { from, to } of view.visibleRanges) {
+            for (let pos = from; pos <= to;) {
+                const line = view.state.doc.lineAt(pos);
+                const v = bgMap.get(line.number - 1);
+                if (v) {
+                    builder.add(line.from + v.start, line.from + v.end, bgType);
+                }
+                pos = line.to + 1;
+            }
+        }
+        return builder.finish();
+    }
+
+    const coverageBg = ViewPlugin.fromClass(class {
+
+        constructor(view) {
+            this.decorations = getCoverageBg(view);
+        }
+
+        update(update) {
+            if (update.docChanged || update.viewportChanged) {
+                this.decorations = getCoverageBg(update.view);
+            }
+        }
+    }, {
+        decorations: (v) => v.decorations
+    });
+
+
+    // =====================================================================
+
     const readOnly = readOnlyCompartment.of(EditorState.readOnly.of(true));
 
     editor = new EditorView({
@@ -109,6 +163,8 @@ export const createEditor = (container, report) => {
             basicSetup,
 
             coverageGutter,
+
+            coverageBg,
 
             javascript(),
             css(),

@@ -308,4 +308,12 @@ onMounted(() => {
     }
 }
 
+.mcr-bg-covered {
+    background: #e6f5d0;
+}
+
+.mcr-bg-uncovered {
+    background: #fce1e5;
+}
+
 </style>
