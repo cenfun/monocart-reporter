@@ -24,7 +24,8 @@ import { components } from 'vine-ui';
 
 // import Util from '../utils/util.js';
 
-import { createEditor } from './editor.js';
+import { createEditor } from '../utils/editor.js';
+import FormatterSourceMapping from '../utils/formatter-source-mapping.js';
 
 import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
 
@@ -64,6 +65,73 @@ const format = (type, text) => {
     });
 };
 
+const rangeLinesHandler = (formattedMapping, start, end, lines) => {
+    const [sLine] = formattedMapping.positionToFormatted(start);
+    const [eLine, eColumn] = formattedMapping.positionToFormatted(end);
+
+    // console.log(start, sLine, sColumn);
+    // console.log(end, eLine, eColumn);
+
+    lines.push(sLine);
+
+    if (eLine > sLine) {
+
+        for (let i = sLine + 1; i < eLine; i++) {
+            lines.push(i);
+        }
+
+        if (eColumn > 0) {
+            lines.push(eLine);
+        }
+
+    }
+};
+
+const getRanges = (item, text, content, mapping) => {
+
+
+    const formattedMapping = new FormatterSourceMapping(text, content, mapping);
+
+    // css, text, ranges: [ {start, end} ]
+    // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
+    if (item.type === 'css') {
+        const lines = [];
+        const ranges = item.ranges;
+        if (ranges) {
+            ranges.forEach((range) => {
+                const { start, end } = range;
+                rangeLinesHandler(formattedMapping, start, end, lines);
+            });
+        }
+        return {
+            type: 'covered',
+            lines
+        };
+    }
+
+    const lines = [];
+    const functions = item.functions;
+    if (functions) {
+        functions.forEach((fun) => {
+            const ranges = fun.ranges;
+            if (ranges) {
+                ranges.forEach((range) => {
+                    if (range.count === 0) {
+                        const { startOffset, endOffset } = range;
+                        rangeLinesHandler(formattedMapping, startOffset, endOffset, lines);
+                    }
+                });
+            }
+        });
+    }
+
+    return {
+        type: 'uncovered',
+        lines
+    };
+
+};
+
 const getReport = async (item) => {
     if (item.report) {
         return new Promise((resolve) => {
@@ -79,10 +147,8 @@ const getReport = async (item) => {
         return;
     }
 
-    const { mapping, content } = res;
-
-    console.log(item.filename, mapping);
-    const ranges = [];
+    const { content, mapping } = res;
+    const ranges = getRanges(item, text, content, mapping);
 
     const report = {
         ranges,
@@ -102,7 +168,7 @@ const showReport = async () => {
 
     const report = await getReport(item);
     if (!report) {
-        console.log('failed to format source');
+        console.log(`failed to format source: ${item.filename}`);
         return;
     }
 

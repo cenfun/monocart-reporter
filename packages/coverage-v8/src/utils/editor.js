@@ -61,7 +61,19 @@ export const createEditor = (container, report) => {
     const uncoveredMarker = new GutterMarker();
     uncoveredMarker.elementClass = 'mcr-line-uncovered';
 
-    let ranges = report.ranges;
+    let rangeLines;
+    let lineTypes;
+    const updateRanges = (ranges) => {
+        rangeLines = ranges.lines;
+        if (ranges.type === 'covered') {
+            lineTypes = [coveredMarker, uncoveredMarker];
+        } else {
+            lineTypes = [uncoveredMarker, coveredMarker];
+        }
+    };
+
+    updateRanges(report.ranges);
+
     const coverageGutter = gutter({
         class: 'mcr-coverage-gutter',
         lineMarker(view, line) {
@@ -70,21 +82,10 @@ export const createEditor = (container, report) => {
                 return null;
             }
 
-            const from = line.from;
-            const to = line.to;
-            // console.log(from, to, report.code.slice(from, to));
+            const lineIndex = Math.round(line.top / line.height);
+            // console.log('lineIndex', lineIndex);
 
-            const res = ranges.find((range) => {
-                if (from >= range.start && to <= range.end) {
-                    return true;
-                }
-            });
-
-            if (res) {
-                return coveredMarker;
-            }
-
-            return uncoveredMarker;
+            return rangeLines.includes(lineIndex) ? lineTypes[0] : lineTypes[1];
         }
     });
 
@@ -109,7 +110,7 @@ export const createEditor = (container, report) => {
 
     return {
         showContent: (newReport) => {
-            ranges = newReport.ranges;
+            updateRanges(newReport.ranges);
             const text = editor.state.doc.toString();
             const transaction = editor.state.update({
                 changes: {
