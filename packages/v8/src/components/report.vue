@@ -29,7 +29,10 @@
         gap="10px"
       >
         <div><b>Coverage:</b> {{ Util.PF(summary.pct, 100) }}</div>
-        <div v-html="summary.percentChart" />
+        <div
+          style="width: 100px;"
+          v-html="summary.percentChart"
+        />
       </VuiFlex>
     </VuiFlex>
     <div

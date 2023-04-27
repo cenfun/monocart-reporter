@@ -524,7 +524,7 @@ icon
 .mcr-percent-chart {
     position: relative;
     display: inline-block;
-    width: 100px;
+    width: 100%;
     height: 10px;
     box-sizing: border-box;
     border-radius: 3px;
