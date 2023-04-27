@@ -70,6 +70,7 @@ const showDetailByIndex = (grid, index, title) => {
         const rowItem = grid.getRowItem(parseInt(index));
         if (rowItem && rowItem.title === title) {
             grid.scrollRowIntoView(rowItem);
+            grid.setRowSelected(rowItem);
             showFlyover('detail', rowItem);
             return true;
         }
@@ -81,6 +82,7 @@ const showDetailByTitle = (grid, title) => {
         const rowItem = grid.getRowItemBy('title', title);
         if (rowItem) {
             grid.scrollRowIntoView(rowItem);
+            grid.setRowSelected(rowItem);
             showFlyover('detail', rowItem);
             return true;
         }
@@ -381,6 +383,9 @@ const bindGridEvents = () => {
         if (!d.cellNode) {
             return;
         }
+
+        grid.selectAll(false);
+        grid.setRowSelected(d.rowItem);
 
         onRowClickHandler(d);
         showPositionHandler(d);

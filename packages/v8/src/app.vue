@@ -360,7 +360,7 @@ const initGrid = () => {
         },
         percent: (v) => {
             if (typeof v === 'number') {
-                return Util.PF(v, 100);
+                return Util.PF(v, 100, 2);
             }
             return v;
         },

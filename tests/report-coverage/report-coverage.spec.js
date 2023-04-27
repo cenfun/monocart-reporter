@@ -8,17 +8,9 @@ test.describe.configure({
 
 let page;
 
-test.beforeAll(async ({ browser }) => {
-    console.log('beforeAll new page');
-    page = await browser.newPage();
-});
-test.afterAll(async () => {
-    await page.close();
-    console.log('afterAll close page');
-});
-
 test.describe('take istanbul coverage report', () => {
-    test('first, open page', async () => {
+    test('first, open page', async ({ browser }) => {
+        page = await browser.newPage();
         await page.goto('http://localhost:8090/istanbul/');
     });
 
@@ -33,12 +25,15 @@ test.describe('take istanbul coverage report', () => {
         // coverage report
         const report = await attachCoverageReport(coverageInput, test.info());
         console.log(report.lines);
+
+        await page.close();
     });
 });
 
 test.describe('take v8 js to istanbul coverage report', () => {
 
-    test('first, open page', async () => {
+    test('first, open page', async ({ browser }) => {
+        page = await browser.newPage();
         await page.coverage.startJSCoverage();
         await page.goto('http://localhost:8090/playwright.dev/');
     });
@@ -59,7 +54,8 @@ test.describe('take v8 js to istanbul coverage report', () => {
 
 
 test.describe('take v8 anonymous js to istanbul coverage report', () => {
-    test('first, open page', async () => {
+    test('first, open page', async ({ browser }) => {
+        page = await browser.newPage();
         // JavaScript Coverage doesn't include anonymous scripts by default.
         await page.coverage.startJSCoverage({
             reportAnonymousScripts: true
@@ -87,9 +83,40 @@ test.describe('take v8 anonymous js to istanbul coverage report', () => {
     });
 });
 
+test.describe('take v8 anonymous js coverage report', () => {
+    test('first, open page', async ({ browser }) => {
+        page = await browser.newPage();
+        // JavaScript Coverage doesn't include anonymous scripts by default.
+        await page.coverage.startJSCoverage({
+            reportAnonymousScripts: true
+        });
+        await page.setContent(`<html>
+            <head>
+                <title>mock page anonymous</title>
+            </head>
+            <body>
+                mock page anonymous
+            </body>
+            </html>`);
+    });
+
+    test('next, run test cases', async () => {
+        await delay(500);
+    });
+
+    test('finally, take coverage', async () => {
+        const jsCoverage = await page.coverage.stopJSCoverage();
+        const report = await attachCoverageReport(jsCoverage, test.info(), {
+            inline: false
+        });
+        console.log(report.summary);
+    });
+});
+
 test.describe('take v8 js and css coverage report', () => {
 
-    test('first, open page', async () => {
+    test('first, open page', async ({ browser }) => {
+        page = await browser.newPage();
         await Promise.all([
             page.coverage.startJSCoverage(),
             page.coverage.startCSSCoverage()
