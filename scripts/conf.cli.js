@@ -157,45 +157,58 @@ module.exports = {
 
             // console.log(item);
 
-            const copyDir = (fromDir, toDir) => {
+            const forEachFile = (dir, callback) => {
+                if (!fs.existsSync(dir)) {
+                    return;
+                }
+                const dirs = [];
+                fs.readdirSync(dir, {
+                    withFileTypes: true
+                }).forEach((it) => {
+
+                    if (it.isFile()) {
+                        callback(it.name, dir);
+                        return;
+                    }
+
+                    if (it.isDirectory()) {
+                        dirs.push(path.resolve(dir, it.name));
+                    }
+                });
+
+                for (const subDir of dirs) {
+                    forEachFile(subDir, callback);
+                }
+
+            };
+
+            const reportPath = path.resolve(__dirname, '../.temp/monocart/');
+            const files = [];
+            forEachFile(reportPath, (filename, dir) => {
+                files.push(path.relative(reportPath, path.resolve(dir, filename)));
+            });
+            const list = files.filter((it) => !['index.html', 'index.json'].includes(it));
+
+            for (const filePath of list) {
+                const fromFile = path.resolve(reportPath, filePath);
+                const toFile = path.resolve(item.packPath, filePath);
+
+                // do not copy previous
+                if (fs.existsSync(toFile)) {
+                    continue;
+                }
+
+                const toDir = path.dirname(toFile);
                 if (!fs.existsSync(toDir)) {
                     fs.mkdirSync(toDir, {
                         recursive: true
                     });
                 }
 
-                fs.readdirSync(fromDir, {
-                    withFileTypes: true
-                }).forEach((it) => {
+                fs.cpSync(fromFile, toFile);
+                Util.logGreen(`file copied: ${filePath}`);
 
-                    if (it.isFile()) {
-                        const fromFile = path.resolve(fromDir, it.name);
-                        const toFile = path.resolve(toDir, it.name);
-                        // do not copy previous
-                        if (!fs.existsSync(toFile)) {
-                            fs.cpSync(fromFile, toFile);
-                        }
-                        return;
-                    }
-
-                    if (it.isDirectory()) {
-                        fromDir = path.resolve(fromDir, it.name);
-                        toDir = path.resolve(toDir, it.name);
-                        copyDir(fromDir, toDir);
-                    }
-                });
-            };
-
-            const reportPath = path.resolve(__dirname, '../.temp/monocart/');
-            fs.readdirSync(reportPath, {
-                withFileTypes: true
-            }).forEach((it) => {
-                if (it.isDirectory()) {
-                    const fromDir = path.resolve(reportPath, it.name);
-                    const toDir = path.resolve(item.packPath, it.name);
-                    copyDir(fromDir, toDir);
-                }
-            });
+            }
 
             return 0;
         }

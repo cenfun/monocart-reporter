@@ -1,0 +1,73 @@
+{
+    "type": "istanbul",
+    "summary": {
+        "lines": {
+            "total": 55,
+            "covered": 41,
+            "skipped": 0,
+            "pct": 74.54,
+            "status": "medium"
+        },
+        "statements": {
+            "total": 55,
+            "covered": 41,
+            "skipped": 0,
+            "pct": 74.54,
+            "status": "medium"
+        },
+        "functions": {
+            "total": 22,
+            "covered": 10,
+            "skipped": 0,
+            "pct": 45.45,
+            "status": "low"
+        },
+        "branches": {
+            "total": 2,
+            "covered": 1,
+            "skipped": 0,
+            "pct": 50,
+            "status": "medium"
+        },
+        "branchesTrue": {
+            "total": 0,
+            "covered": 0,
+            "skipped": 0,
+            "pct": "Unknown",
+            "status": "unknown"
+        }
+    },
+    "files": [
+        {
+            "lines": {
+                "total": 55,
+                "covered": 41,
+                "skipped": 0,
+                "pct": 74.54,
+                "status": "medium"
+            },
+            "functions": {
+                "total": 22,
+                "covered": 10,
+                "skipped": 0,
+                "pct": 45.45,
+                "status": "low"
+            },
+            "statements": {
+                "total": 55,
+                "covered": 41,
+                "skipped": 0,
+                "pct": 74.54,
+                "status": "medium"
+            },
+            "branches": {
+                "total": 2,
+                "covered": 1,
+                "skipped": 0,
+                "pct": 50,
+                "status": "medium"
+            },
+            "name": "index.js"
+        }
+    ]
+}
