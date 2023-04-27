@@ -220,8 +220,20 @@ const bindGridEvents = (grid) => {
     });
 };
 
+const generatePercentChart = (percent) => {
+    return `<div style="--mcr-percent:${percent}%;" class="mcr-percent-chart"></div>`;
+};
+
 const getGridData = () => {
     const { summary, files } = state.reportData;
+
+    // init unused and percentChart
+    files.forEach((item) => {
+        item.summary.unused = item.summary.total - item.summary.covered;
+        item.summary.percentChart = generatePercentChart(item.summary.pct);
+    });
+    summary.unused = summary.total - summary.covered;
+    summary.percentChart = generatePercentChart(summary.pct);
 
     const fileMap = {};
 
@@ -255,7 +267,6 @@ const getGridData = () => {
     }
 
     rows.forEach((item) => {
-        item.unused = item.total - item.covered;
         item.pctClassMap = `mcr-${item.status}`;
     });
 
@@ -272,6 +283,10 @@ const getGridData = () => {
         name: 'Coverage',
         align: 'right',
         formatter: 'percent'
+    }, {
+        id: 'percentChart',
+        name: '',
+        width: 110
     }, {
         id: 'type',
         name: 'Type',
@@ -504,6 +519,27 @@ icon
 
 .mcr-high {
     background: #e6f5d0;
+}
+
+.mcr-percent-chart {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 10px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    background-color: #ee442f;
+    overflow: hidden;
+}
+
+.mcr-percent-chart::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    width: var(--mcr-percent);
+    height: 100%;
+    background-color: #4d9221;
 }
 
 </style>

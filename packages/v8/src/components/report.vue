@@ -3,6 +3,35 @@
     direction="column"
     class="mcr-report"
   >
+    <VuiFlex
+      direction="column"
+      padding="5px"
+      class="mcr-report-head"
+    >
+      <VuiFlex padding="5px">
+        <div class="vui-flex-auto">
+          <b>URL:</b> <a
+            :href="summary.url"
+            target="_blank"
+          >{{ summary.url }}</a>
+        </div>
+      </VuiFlex>
+      <VuiFlex
+        padding="5px"
+        gap="10px"
+      >
+        <div><b>Total Bytes:</b> {{ Util.NF(summary.total) }} ({{ Util.BF(summary.total) }})</div>
+        <div><b>Used Bytes:</b> {{ Util.NF(summary.covered) }} ({{ Util.BF(summary.covered) }})</div>
+        <div><b>Unused Bytes:</b> {{ Util.NF(summary.unused) }} ({{ Util.BF(summary.unused) }})</div>
+      </VuiFlex>
+      <VuiFlex
+        padding="5px"
+        gap="10px"
+      >
+        <div><b>Coverage:</b> {{ Util.PF(summary.pct, 100) }}</div>
+        <div v-html="summary.percentChart" />
+      </VuiFlex>
+    </VuiFlex>
     <div
       ref="el"
       class="mcr-report-code vui-flex-auto"
@@ -16,13 +45,13 @@
 
 <script setup>
 import {
-    ref, watch, inject, onMounted
+    ref, watch, inject, onMounted, shallowReactive
 } from 'vue';
 
 import { components } from 'vine-ui';
 // import { microtask } from 'async-tick';
 
-// import Util from '../utils/util.js';
+import Util from '../utils/util.js';
 
 import { createEditor } from '../utils/editor.js';
 import FormatterSourceMapping from '../utils/formatter-source-mapping.js';
@@ -32,6 +61,9 @@ import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
 const { VuiFlex, VuiLoading } = components;
 
 const state = inject('state');
+
+const summary = shallowReactive({
+});
 
 const el = ref(null);
 let $el;
@@ -216,6 +248,8 @@ const showReport = async () => {
     const item = state.fileMap[id];
     state.loading = true;
 
+    Object.assign(summary, item.summary);
+
     const report = await getReport(item);
     if (!report) {
         console.log(`failed to format source: ${item.filename}`);
@@ -245,6 +279,16 @@ onMounted(() => {
 .mcr-report {
     position: relative;
     height: 100%;
+}
+
+.mcr-report-head {
+    width: 100%;
+    border-bottom: 1px solid #dae9fa;
+    background-color: #eef6ff;
+
+    a {
+        word-break: break-all;
+    }
 }
 
 .mcr-report-code {
