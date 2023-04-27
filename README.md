@@ -621,7 +621,7 @@ const report = await attachCoverageReport(v8list, test.info(), {
 | :--------------| :------ | :------ | :----------------------  |
 | Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
 | Options  | `watermarks: {}`  | `watermarks: [50, 80]` | `toIstanbul: true, watermarks: {}` |
-| Output report | Istanbul HTML report | V8 HTML report  | Istanbul HTML report |
+| Output report | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-Istanbul-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-V8-js-and-css-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-V8-js-to-Istanbul-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html) |
 | Indicators | Covered Lines, Branches | Used Bytes | Covered Lines, Branches |
 | CSS coverage | ❌ | ✅ | ❌ |
 | Minified code | N/A | ✅ | ❌ |
