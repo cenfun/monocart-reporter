@@ -268,6 +268,11 @@ const getGridData = () => {
         name: 'File',
         classMap: 'mcr-column-name'
     }, {
+        id: 'pct',
+        name: 'Coverage',
+        align: 'right',
+        formatter: 'percent'
+    }, {
         id: 'type',
         name: 'Type',
         align: 'center',
@@ -290,11 +295,6 @@ const getGridData = () => {
         align: 'right',
         width: 81,
         formatter: 'bytes'
-    }, {
-        id: 'pct',
-        name: 'Coverage',
-        align: 'right',
-        formatter: 'percent'
     }, {
         id: 'url',
         name: 'URL',
