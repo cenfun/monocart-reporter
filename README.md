@@ -525,46 +525,19 @@ module.exports = {
 ```
 
 ## Attach Code Coverage Report
-Using `MonocartReporter.attachCoverageReport()` API to generate coverage report during the test. There are 2 supported data inputs: `V8` and `istanbul` (see example: [coverage.spec.js](https://github.com/cenfun/monocart-reporter-test/blob/main/tests/coverage/coverage.spec.js))
-- [V8](https://playwright.dev/docs/api/class-coverage) (Chromium-based only) Simply take V8 coverage with `startJSCoverage` and `stopJSCoverage`, then [converts](https://github.com/istanbuljs/v8-to-istanbul) from v8 coverage format to istanbul's coverage format, finally generate istanbul report. It works with any code format, but it will not be expected if your code is minified.
+Using `MonocartReporter.attachCoverageReport()` API to generate coverage report during the test. There are 2 supported data inputs: `Istanbul` and `V8` (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
+
+- [Istanbul](https://github.com/istanbuljs) Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
 ```js
 import { test, expect } from '@playwright/test';
 import { attachCoverageReport } from 'monocart-reporter';
-test.describe('take v8 coverage', () => {
-    test('first, startJSCoverage and open page', async () => {
-        await page.coverage.startJSCoverage();
-        await page.goto(pageUrl);
-    });
-
-    test('next, run test cases', async () => {
-        await new Promise((resolve) => {
-            setTimeout(resolve, 500);
-        });
-    });
-
-    test('finally, stopJSCoverage and take coverage', async () => {
-        // take v8 coverage
-        const jsCoverage = await page.coverage.stopJSCoverage();
-        // filter file list
-        const coverageInput = jsCoverage.filter((item) => {
-            if (!item.url.endsWith('.js')) {
-                return false;
-            }
-            return true;
-        });
-        expect(coverageInput.length).toBeGreaterThan(0);
-        // coverage report
-        const report = await attachCoverageReport(coverageInput, test.info());
-        console.log(report.lines);
-    });
+test.describe.configure({
+    mode: 'serial'
 });
-```
-- [istanbul](https://github.com/istanbuljs) Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`
-```js
-import { test, expect } from '@playwright/test';
-import { attachCoverageReport } from 'monocart-reporter';
-test.describe('take istanbul coverage', () => {
-    test('first, open page', async () => {
+let page;
+test.describe('take Istanbul coverage', () => {
+    test('first, open page', async ({ browser }) => {
+        page = await browser.newPage();
         await page.goto(pageUrl);
     });
 
@@ -575,15 +548,77 @@ test.describe('take istanbul coverage', () => {
     });
 
     test('finally, take coverage', async () => {
-        // take istanbul coverage
+        // take Istanbul coverage
         const coverageInput = await page.evaluate(() => window.__coverage__);
-        expect(coverageInput, 'expect found istanbul data: __coverage__').toBeTruthy();
+        expect(coverageInput, 'expect found Istanbul data: __coverage__').toBeTruthy();
         // coverage report
         const report = await attachCoverageReport(coverageInput, test.info());
-        console.log(report.lines);
+        console.log(report.summary);
     });
 });
 ```
+
+- [V8](https://v8.dev/blog/javascript-code-coverage) (Chromium-based only) Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, the V8 HTML report will be generated.
+```js
+import { test, expect } from '@playwright/test';
+import { attachCoverageReport } from 'monocart-reporter';
+test.describe.configure({
+    mode: 'serial'
+});
+let page;
+test.describe('take V8 coverage', () => {
+    test('first, startJSCoverage and open page', async ({ browser }) => {
+        page = await browser.newPage();
+        await Promise.all([
+            page.coverage.startJSCoverage(),
+            page.coverage.startCSSCoverage()
+        ]);
+        await page.goto(pageUrl);
+    });
+
+    test('next, run test cases', async () => {
+        await new Promise((resolve) => {
+            setTimeout(resolve, 500);
+        });
+    });
+
+    test('finally, stopJSCoverage and take coverage', async () => {
+        const [jsCoverage, cssCoverage] = await Promise.all([
+            page.coverage.stopJSCoverage(),
+            page.coverage.stopCSSCoverage()
+        ]);
+        // filter file list
+        const v8list = [... jsCoverage, ... cssCoverage].filter((item) => {
+            if (!item.url.endsWith('.js') || !item.url.endsWith('.css')) {
+                return false;
+            }
+            return true;
+        });
+        expect(v8list.length).toBeGreaterThan(0);
+        // coverage report
+        const report = await attachCoverageReport(v8list, test.info());
+        console.log(report.summary);
+    });
+});
+```
+
+- [V8 to Istanbul](https://github.com/istanbuljs/v8-to-istanbul) Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
+```js
+const report = await attachCoverageReport(v8list, test.info(), {
+    toIstanbul: true
+});
+```
+
+### Compare Istanbul, V8 and V8 to Istanbul
+| | Istanbul | V8 | V8 to Istanbul |
+| :--------------| :------ | :------ | :----------------------  |
+| Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
+| Options  | `{ watermarks: {} }`  | `{ watermarks: [] }` | `{ toIstanbul: true, watermarks: {} }` |
+| Output Report | Istanbul HTML report | V8 HTML report  | Istanbul HTML report |
+| Indicators | Covered Lines, Branches | Used Bytes | Covered Lines, Branches |
+| CSS coverage supported | ❌ | ✅ | ❌ |
+| Minified code supported | N/A | ✅ | ❌ |
+| Code formatting | N/A | ✅ | ❌ |
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:

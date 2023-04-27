@@ -8,7 +8,7 @@ test.describe.configure({
 
 let page;
 
-test.describe('take istanbul coverage report', () => {
+test.describe('take Istanbul coverage report', () => {
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
         await page.goto('http://localhost:8090/istanbul/');
@@ -19,9 +19,9 @@ test.describe('take istanbul coverage report', () => {
     });
 
     test('finally, take coverage', async () => {
-        // take istanbul coverage
+        // take Istanbul coverage
         const coverageInput = await page.evaluate(() => window.__coverage__);
-        expect(coverageInput, 'expect found istanbul data: __coverage__').toBeTruthy();
+        expect(coverageInput, 'expect found Istanbul data: __coverage__').toBeTruthy();
         // coverage report
         const report = await attachCoverageReport(coverageInput, test.info());
         console.log(report.lines);
@@ -30,7 +30,7 @@ test.describe('take istanbul coverage report', () => {
     });
 });
 
-test.describe('take v8 js to istanbul coverage report', () => {
+test.describe('take V8 js to Istanbul coverage report', () => {
 
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
@@ -53,7 +53,7 @@ test.describe('take v8 js to istanbul coverage report', () => {
 });
 
 
-test.describe('take v8 anonymous js to istanbul coverage report', () => {
+test.describe('take V8 anonymous js to Istanbul coverage report', () => {
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
         // JavaScript Coverage doesn't include anonymous scripts by default.
@@ -83,7 +83,7 @@ test.describe('take v8 anonymous js to istanbul coverage report', () => {
     });
 });
 
-test.describe('take v8 anonymous js coverage report', () => {
+test.describe('take V8 anonymous js coverage report', () => {
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
         // JavaScript Coverage doesn't include anonymous scripts by default.
@@ -113,7 +113,7 @@ test.describe('take v8 anonymous js coverage report', () => {
     });
 });
 
-test.describe('take v8 js and css coverage report', () => {
+test.describe('take V8 js and css coverage report', () => {
 
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
@@ -122,7 +122,7 @@ test.describe('take v8 js and css coverage report', () => {
             page.coverage.startCSSCoverage()
         ]);
 
-        await page.goto('http://localhost:8090/youtube.com/');
+        await page.goto('http://localhost:8090/demo/');
     });
 
     test('next, run test cases', async () => {

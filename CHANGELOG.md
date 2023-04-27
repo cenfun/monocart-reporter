@@ -1,3 +1,6 @@
+* 1.6.16
+  - added v8 HTML report
+
 * 1.6.15
   - rename takeCoverage to attachCoverageReport
   - added attachNetworkReport
