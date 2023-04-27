@@ -150,7 +150,7 @@ The report will be displayed in a `Tree Grid`. The `columns` function is used to
 - `width` (Number) Column width
 - `minWidth`, `maxWidth` (Number) Default to 81 ~ 300
 - `styleMap` (Object, String) Column style (css)
-- `formatter` (Function) [column formatter](#custom-formatter), arguments: value, rowItem, columnItem, cellNode
+- `formatter` (Function) [column formatter](#custom-formatter). Arguments: value, rowItem, columnItem, cellNode
 - `sortable` (Boolean) Column sortable when click column header name
 - `resizable` (Boolean) Column width resizable
 - `searchable` (Boolean) Specifies whether the column is searchable
@@ -254,7 +254,7 @@ module.exports = {
 ```
 
 ## Data Collection Visitor
-The `visitor` function will be executed for each row item (suite, case and step), the arguments are:
+The `visitor` function will be executed for each row item (suite, case and step). Arguments:
 - `data` data item (suite/case/step) for reporter, you can override some of its properties or add more
 - `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
 - `collect` only one self collection for now: `collect.comments(parserOptions)` and parser options following:
@@ -525,7 +525,14 @@ module.exports = {
 ```
 
 ## Attach Code Coverage Report
-Using `MonocartReporter.attachCoverageReport()` API to generate coverage report during the test. There are 2 supported data inputs: `Istanbul` and `V8` (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
+Using `MonocartReporter.attachCoverageReport(data, testInfo, options)` API to generate coverage report during the test. Arguments:
+- `data` There are 2 supported data inputs `Istanbul`(Object) or `V8`(Array)
+- `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
+- `options` 
+    - `watermarks` By default, Istanbul (Object) see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report), V8 (Array) is `[50, 80]`
+    - `toIstanbul` (Boolean) for V8 data conversion
+
+ (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
 
 - [Istanbul](https://github.com/istanbuljs) Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
 ```js
@@ -654,7 +661,7 @@ await MonocartReporter.merge(reportDataList, {
 example: [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
 ## onEnd hook
-The `onEnd` function will be executed after report generated. the arguments are:
+The `onEnd` function will be executed after report generated. Arguments:
 - `reportData` all report data, properties:
     - `name` (String) report name 
     - `date` (Number) start date in milliseconds 
