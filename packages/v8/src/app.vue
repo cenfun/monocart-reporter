@@ -204,6 +204,8 @@ const bindGridEvents = (grid) => {
             return;
         }
 
+        grid.setRowSelected(rowItem);
+
         if (state.flyoverVisible) {
             showFlyover(rowItem);
             return;
@@ -338,6 +340,7 @@ const initGrid = () => {
         textSelectable: false,
         collapseAllVisible: true,
         rowHeight: 36,
+        selectMultiple: false,
         // sortField: 'unused',
         // sortAsc: false,
         // sortOnInit: true,

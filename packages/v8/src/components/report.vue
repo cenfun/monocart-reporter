@@ -221,24 +221,25 @@ const getCoverage = (item, text, content, mapping) => {
 
     }
 
+    const countMap = new Map();
     const coverage = {
         gutterMap: new Map(),
-        bgMap: new Map()
+        bgMap: new Map(),
+        countMap
     };
-    const functions = item.functions;
-    if (functions) {
-        functions.forEach((fun) => {
-            const ranges = fun.ranges;
-            if (ranges) {
-                ranges.forEach((range) => {
-                    if (range.count === 0) {
-                        const { startOffset, endOffset } = range;
-                        rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
-                    }
-                });
-            }
-        });
-    }
+
+    const flatRanges = Util.getFlatRanges(item.functions);
+    flatRanges.forEach((range) => {
+        const {
+            startOffset, endOffset, count
+        } = range;
+        if (count === 0) {
+            rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
+        } else if (count > 1) {
+            const sLoc = formattedMapping.originalToFormattedLocation(startOffset);
+            countMap.set(sLoc.line, count);
+        }
+    });
 
     return coverage;
 
@@ -379,6 +380,16 @@ onMounted(() => {
 
     .mcr-line-uncovered {
         background-color: red;
+    }
+}
+
+.mcr-count-gutter {
+    .mcr-line-count {
+        padding: 0 3px;
+        font-size: 12px;
+        font-family: var(--font-monospace);
+        text-align: right;
+        background-color: #e6f5d0;
     }
 }
 

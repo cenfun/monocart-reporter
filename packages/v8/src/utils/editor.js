@@ -63,6 +63,17 @@ export const createEditor = (container, report) => {
 
     let gutterMap;
     let bgMap;
+    let countMap;
+
+    const updateCoverage = (coverage) => {
+        gutterMap = coverage.gutterMap;
+        bgMap = coverage.bgMap;
+        countMap = coverage.countMap;
+    };
+
+    updateCoverage(report.coverage);
+
+    // =====================================================================
 
     const coveredMarker = new GutterMarker();
     coveredMarker.elementClass = 'mcr-line-covered';
@@ -70,20 +81,6 @@ export const createEditor = (container, report) => {
     partialMarker.elementClass = 'mcr-line-partial';
     const uncoveredMarker = new GutterMarker();
     uncoveredMarker.elementClass = 'mcr-line-uncovered';
-
-    const uncoveredBg = Decoration.mark({
-        class: 'mcr-bg-uncovered'
-    });
-
-
-    const updateCoverage = (coverage) => {
-        gutterMap = coverage.gutterMap;
-        bgMap = coverage.bgMap;
-    };
-
-    updateCoverage(report.coverage);
-
-    // =====================================================================
 
     const coverageGutter = gutter({
         class: 'mcr-coverage-gutter',
@@ -108,6 +105,37 @@ export const createEditor = (container, report) => {
     });
 
     // =====================================================================
+
+    const createCountMaker = (count) => {
+        const countMarker = new GutterMarker();
+        countMarker.elementClass = 'mcr-line-count';
+        countMarker.count = count;
+        countMarker.toDOM = function() {
+            return document.createTextNode(`${this.count}x`);
+        };
+        return countMarker;
+    };
+
+    const countGutter = gutter({
+        class: 'mcr-count-gutter',
+        lineMarker(view, line) {
+            if (line.length === 0 || !countMap) {
+                return null;
+            }
+            const lineIndex = Math.round(line.top / line.height);
+            // console.log('lineIndex', lineIndex);
+            const v = countMap.get(lineIndex);
+            if (!v) {
+                return null;
+            }
+            return createCountMaker(v);
+        }
+    });
+    // =====================================================================
+
+    const uncoveredBg = Decoration.mark({
+        class: 'mcr-bg-uncovered'
+    });
 
     const getCoverageBg = (view) => {
         const builder = new RangeSetBuilder();
@@ -154,6 +182,7 @@ export const createEditor = (container, report) => {
             basicSetup,
 
             coverageGutter,
+            countGutter,
 
             coverageBg,
 
@@ -176,6 +205,7 @@ export const createEditor = (container, report) => {
                 }
             });
             editor.dispatch(transaction);
+            editor.scrollDOM.scrollTo(0, 0);
         }
     };
 
