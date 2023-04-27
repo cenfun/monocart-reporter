@@ -98,7 +98,10 @@ export const createEditor = (container, report) => {
                 if (v === 'partial') {
                     return partialMarker;
                 }
-                return uncoveredMarker;
+                if (v === 'uncovered') {
+                    return uncoveredMarker;
+                }
+                return null;
             }
             return coveredMarker;
         }
