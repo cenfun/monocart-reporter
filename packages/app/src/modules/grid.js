@@ -384,8 +384,10 @@ const bindGridEvents = () => {
             return;
         }
 
-        grid.selectAll(false);
-        grid.setRowSelected(d.rowItem);
+        if (!state.exportSelected) {
+            grid.selectAll(false);
+            grid.setRowSelected(d.rowItem);
+        }
 
         onRowClickHandler(d);
         showPositionHandler(d);
@@ -411,6 +413,10 @@ const bindGridEvents = () => {
     });
 
     grid.bind('onSelectChanged', (e, ls) => {
+        if (!state.exportSelected) {
+            return;
+        }
+
         if (ls.length === 1) {
             const item = ls[0];
             if (item.subs) {

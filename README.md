@@ -613,7 +613,7 @@ const report = await attachCoverageReport(v8list, test.info(), {
 | | Istanbul | V8 | V8 to Istanbul |
 | :--------------| :------ | :------ | :----------------------  |
 | Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
-| Options  | `watermarks: {}`  | `watermarks: []` | `toIstanbul: true, watermarks: {}` |
+| Options  | `watermarks: {}`  | `watermarks: [50, 80]` | `toIstanbul: true, watermarks: {}` |
 | Output report | Istanbul HTML report | V8 HTML report  | Istanbul HTML report |
 | Indicators | Covered Lines, Branches | Used Bytes | Covered Lines, Branches |
 | CSS coverage | ❌ | ✅ | ❌ |
