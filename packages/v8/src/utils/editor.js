@@ -64,9 +64,6 @@ export const createEditor = (container, report) => {
     let gutterMap;
     let bgMap;
 
-    let gutterTypes;
-    let bgType;
-
     const coveredMarker = new GutterMarker();
     coveredMarker.elementClass = 'mcr-line-covered';
     const partialMarker = new GutterMarker();
@@ -74,9 +71,6 @@ export const createEditor = (container, report) => {
     const uncoveredMarker = new GutterMarker();
     uncoveredMarker.elementClass = 'mcr-line-uncovered';
 
-    const coveredBg = Decoration.mark({
-        class: 'mcr-bg-covered'
-    });
     const uncoveredBg = Decoration.mark({
         class: 'mcr-bg-uncovered'
     });
@@ -85,14 +79,6 @@ export const createEditor = (container, report) => {
     const updateCoverage = (coverage) => {
         gutterMap = coverage.gutterMap;
         bgMap = coverage.bgMap;
-
-        if (coverage.type === 'covered') {
-            gutterTypes = [coveredMarker, partialMarker, uncoveredMarker];
-            bgType = coveredBg;
-        } else {
-            gutterTypes = [uncoveredMarker, partialMarker, coveredMarker];
-            bgType = uncoveredBg;
-        }
     };
 
     updateCoverage(report.coverage);
@@ -110,31 +96,33 @@ export const createEditor = (container, report) => {
             const v = gutterMap.get(lineIndex);
             if (v) {
                 if (v === 'partial') {
-                    return gutterTypes[1];
+                    return partialMarker;
                 }
-                return gutterTypes[0];
+                return uncoveredMarker;
             }
-            return gutterTypes[2];
+            return coveredMarker;
         }
     });
 
     // =====================================================================
 
-    function getCoverageBg(view) {
-
+    const getCoverageBg = (view) => {
         const builder = new RangeSetBuilder();
         for (const { from, to } of view.visibleRanges) {
             for (let pos = from; pos <= to;) {
                 const line = view.state.doc.lineAt(pos);
-                const v = bgMap.get(line.number - 1);
+                const lineIndex = line.number - 1;
+                const v = bgMap.get(lineIndex);
                 if (v) {
-                    builder.add(line.from + v.start, line.from + v.end, bgType);
+                    builder.add(line.from + v.start, line.from + v.end, uncoveredBg);
+                } else if (gutterMap.has(lineIndex)) {
+                    builder.add(line.from, line.to, uncoveredBg);
                 }
                 pos = line.to + 1;
             }
         }
         return builder.finish();
-    }
+    };
 
     const coverageBg = ViewPlugin.fromClass(class {
 

@@ -97,9 +97,9 @@ const format = (type, text) => {
     });
 };
 
-const oneLineHandler = (sLoc, eLoc, type, gutterMap, bgMap) => {
+const oneLineHandler = (sLoc, eLoc, gutterMap, bgMap) => {
     if (sLoc.column === 0 && eLoc.column === eLoc.last) {
-        gutterMap.set(sLoc.line, type);
+        gutterMap.set(sLoc.line, 'uncovered');
     } else {
         gutterMap.set(sLoc.line, 'partial');
         bgMap.set(sLoc.line, {
@@ -109,12 +109,12 @@ const oneLineHandler = (sLoc, eLoc, type, gutterMap, bgMap) => {
     }
 };
 
-const multipleLineHandler = (sLoc, eLoc, type, gutterMap, bgMap, formattedMapping) => {
+const multipleLineHandler = (sLoc, eLoc, gutterMap, bgMap, formattedMapping) => {
 
     if (sLoc.column < sLoc.last) {
 
         if (sLoc.column === 0) {
-            gutterMap.set(sLoc.line, type);
+            gutterMap.set(sLoc.line, 'uncovered');
         } else {
             gutterMap.set(sLoc.line, 'partial');
             bgMap.set(sLoc.line, {
@@ -126,13 +126,13 @@ const multipleLineHandler = (sLoc, eLoc, type, gutterMap, bgMap, formattedMappin
     }
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
-        gutterMap.set(i, type);
+        gutterMap.set(i, 'uncovered');
     }
 
     if (eLoc.column > 0) {
 
         if (eLoc.column === eLoc.last) {
-            gutterMap.set(eLoc.line, type);
+            gutterMap.set(eLoc.line, 'uncovered');
         } else {
 
             // check if all \s
@@ -156,22 +156,48 @@ const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
     // console.log('start', start, sLoc);
     // console.log('end', end, eLoc);
 
-    const {
-        type, gutterMap, bgMap
-    } = coverage;
+    const { gutterMap, bgMap } = coverage;
 
 
     if (eLoc.line === sLoc.line) {
-        oneLineHandler(sLoc, eLoc, type, gutterMap, bgMap);
+        oneLineHandler(sLoc, eLoc, gutterMap, bgMap);
         return;
     }
 
-    multipleLineHandler(sLoc, eLoc, type, gutterMap, bgMap, formattedMapping);
+    multipleLineHandler(sLoc, eLoc, gutterMap, bgMap, formattedMapping);
 
 };
 
-const getCoverage = (item, content, mapping) => {
+const cssCoveredToUncovered = (ranges, contentLength) => {
+    const uncoveredRanges = [];
+    if (!ranges || !ranges.length) {
+        return uncoveredRanges;
+    }
 
+    ranges.sort((a, b) => a.start - b.start);
+
+    let pos = 0;
+    ranges.forEach((range) => {
+        if (range.start > pos) {
+            uncoveredRanges.push({
+                start: pos,
+                end: range.start
+            });
+        }
+        pos = range.end;
+    });
+
+    if (pos < contentLength) {
+        uncoveredRanges.push({
+            start: pos,
+            end: contentLength
+        });
+    }
+
+    return uncoveredRanges;
+};
+
+const getCoverage = (item, text, content, mapping) => {
 
     const formattedMapping = new FormatterMapping(content, mapping);
 
@@ -179,24 +205,20 @@ const getCoverage = (item, content, mapping) => {
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
     if (item.type === 'css') {
         const coverage = {
-            type: 'covered',
             gutterMap: new Map(),
             bgMap: new Map()
         };
-        const ranges = item.ranges;
-        if (ranges) {
-            ranges.forEach((range) => {
-                const { start, end } = range;
-                rangeLinesHandler(formattedMapping, start, end, coverage);
-            });
-        }
+        const ranges = cssCoveredToUncovered(item.ranges, text.length);
+        ranges.forEach((range) => {
+            const { start, end } = range;
+            rangeLinesHandler(formattedMapping, start, end, coverage);
+        });
 
         return coverage;
 
     }
 
     const coverage = {
-        type: 'uncovered',
         gutterMap: new Map(),
         bgMap: new Map()
     };
@@ -235,7 +257,7 @@ const getReport = async (item) => {
     }
 
     const { content, mapping } = res;
-    const coverage = getCoverage(item, content, mapping);
+    const coverage = getCoverage(item, text, content, mapping);
 
     const report = {
         coverage,
