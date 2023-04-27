@@ -1,3 +1,3 @@
-# monocart-coverage
+# monocart-istanbul
 
 ## Getting Started

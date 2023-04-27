@@ -103,7 +103,7 @@ module.exports = {
 
     build: {
 
-        vendors: ['app', 'coverage-v8'],
+        vendors: ['app', 'v8'],
 
         before: (item, Util) => {
 
@@ -115,7 +115,7 @@ module.exports = {
                 return beforeApp(item, Util);
             }
 
-            if (item.name === 'coverage-v8') {
+            if (item.name === 'v8') {
                 return beforeCoverageV8(item, Util);
             }
 

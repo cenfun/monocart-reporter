@@ -1,12 +1,13 @@
 {
-    "name": "monocart-coverage-v8",
+    "name": "monocart-istanbul",
     "version": "1.6.15",
     "private": true,
-    "main": "dist/monocart-coverage-v8.js",
+    "main": "dist/monocart-istanbul.js",
     "files": [
         "dist"
     ],
     "license": "MIT",
     "dependencies": {},
-    "devDependencies": {}
+    "devDependencies": {},
+    "platform": "node"
 }
