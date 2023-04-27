@@ -89,7 +89,7 @@ const beforeCoverageV8 = (item, Util) => {
         path.resolve(`.temp/${workerFile}`)
     );
 
-    Util.logGreen(`format dataurl file copied: ${workerFile}`);
+    Util.logGreen(`formatter dataurl file copied: ${workerFile}`);
 
     return 0;
 };
