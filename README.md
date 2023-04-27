@@ -602,7 +602,7 @@ test.describe('take V8 coverage', () => {
 });
 ```
 
-- [V8 to Istanbul](https://github.com/istanbuljs/v8-to-istanbul) Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
+- [V8 to Istanbul](https://github.com/istanbuljs/v8-to-istanbul) Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
 const report = await attachCoverageReport(v8list, test.info(), {
     toIstanbul: true
@@ -613,11 +613,11 @@ const report = await attachCoverageReport(v8list, test.info(), {
 | | Istanbul | V8 | V8 to Istanbul |
 | :--------------| :------ | :------ | :----------------------  |
 | Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
-| Options  | `{ watermarks: {} }`  | `{ watermarks: [] }` | `{ toIstanbul: true, watermarks: {} }` |
-| Output Report | Istanbul HTML report | V8 HTML report  | Istanbul HTML report |
+| Options  | `watermarks: {}`  | `watermarks: []` | `toIstanbul: true, watermarks: {}` |
+| Output report | Istanbul HTML report | V8 HTML report  | Istanbul HTML report |
 | Indicators | Covered Lines, Branches | Used Bytes | Covered Lines, Branches |
-| CSS coverage supported | ❌ | ✅ | ❌ |
-| Minified code supported | N/A | ✅ | ❌ |
+| CSS coverage | ❌ | ✅ | ❌ |
+| Minified code | N/A | ✅ | ❌ |
 | Code formatting | N/A | ✅ | ❌ |
 
 ## Merge Shard Reports
