@@ -54,7 +54,7 @@ import { components } from 'vine-ui';
 import Util from '../utils/util.js';
 
 import { createEditor } from '../utils/editor.js';
-import FormatterSourceMapping from '../utils/formatter-source-mapping.js';
+import FormatterMapping from '../utils/mapping.js';
 
 import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
 
@@ -109,7 +109,7 @@ const oneLineHandler = (sLoc, eLoc, type, gutterMap, bgMap) => {
     }
 };
 
-const multipleLineHandler = (sLoc, eLoc, type, gutterMap, bgMap) => {
+const multipleLineHandler = (sLoc, eLoc, type, gutterMap, bgMap, formattedMapping) => {
 
     if (sLoc.column < sLoc.last) {
 
@@ -134,11 +134,16 @@ const multipleLineHandler = (sLoc, eLoc, type, gutterMap, bgMap) => {
         if (eLoc.column === eLoc.last) {
             gutterMap.set(eLoc.line, type);
         } else {
-            gutterMap.set(eLoc.line, 'partial');
-            bgMap.set(eLoc.line, {
-                start: 0,
-                end: eLoc.column
-            });
+
+            // check if all \s
+            const s = formattedMapping.getSlice(eLoc.offset, eLoc.offset + eLoc.column);
+            if ((/[^\s]/).test(s)) {
+                gutterMap.set(eLoc.line, 'partial');
+                bgMap.set(eLoc.line, {
+                    start: 0,
+                    end: eLoc.column
+                });
+            }
         }
 
     }
@@ -161,14 +166,14 @@ const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
         return;
     }
 
-    multipleLineHandler(sLoc, eLoc, type, gutterMap, bgMap);
+    multipleLineHandler(sLoc, eLoc, type, gutterMap, bgMap, formattedMapping);
 
 };
 
 const getCoverage = (item, content, mapping) => {
 
 
-    const formattedMapping = new FormatterSourceMapping(content, mapping);
+    const formattedMapping = new FormatterMapping(content, mapping);
 
     // css, text, ranges: [ {start, end} ]
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]

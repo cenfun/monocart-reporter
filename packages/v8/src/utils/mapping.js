@@ -43,14 +43,16 @@ const upperBound = (array, needle, comparator) => {
 export default class {
 
     constructor(formattedContent, mapping) {
+        this.formattedContent = formattedContent;
         const formattedLineEndings = findLineEndingIndexes(formattedContent);
         // console.log(formattedLineEndings);
 
         this.formattedLineEndings = formattedLineEndings;
         this.mapping = mapping;
+    }
 
-        this.formattedLines = this.formattedLineEndings.length;
-        this.formattedLength = formattedContent.length;
+    getSlice(s, e) {
+        return this.formattedContent.slice(s, e);
     }
 
     originalToFormattedLocation(originalPosition) {
@@ -69,23 +71,25 @@ export default class {
 
     positionToLocation(lineEndings, position) {
         const line = upperBound(lineEndings, position - 1, DEFAULT_COMPARATOR);
-        let startPos;
+        const endPos = lineEndings[line];
+
+        let offset;
         let column;
         if (line) {
-            startPos = lineEndings[line - 1] + 1;
-            column = position - startPos;
+            offset = lineEndings[line - 1] + 1;
+            column = position - offset;
         } else {
-            startPos = 0;
+            offset = 0;
             column = position;
         }
 
-        const endPos = lineEndings[line];
-        const last = endPos - startPos;
+        const last = endPos - offset;
 
         return {
             line,
             column,
-            last
+            last,
+            offset
         };
     }
 }
