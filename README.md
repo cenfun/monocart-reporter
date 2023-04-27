@@ -528,7 +528,7 @@ module.exports = {
 Using `MonocartReporter.attachCoverageReport(data, testInfo, options)` API to generate coverage report during the test. Arguments:
 - `data` There are 2 supported data inputs `Istanbul`(Object) or `V8`(Array)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
-- `options` 
+- `options` (Object)
     - `watermarks` By default, Istanbul (Object) see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report), V8 (Array) is `[50, 80]`
     - `toIstanbul` (Boolean) for V8 data conversion
 
@@ -564,6 +564,8 @@ test.describe('take Istanbul coverage', () => {
     });
 });
 ```
+
+![](/docs/istanbul.png)
 
 - [V8](https://v8.dev/blog/javascript-code-coverage) (Chromium-based only) Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, the V8 HTML report will be generated.
 ```js
@@ -608,6 +610,8 @@ test.describe('take V8 coverage', () => {
     });
 });
 ```
+
+![](/docs/v8.gif)
 
 - [V8 to Istanbul](https://github.com/istanbuljs/v8-to-istanbul) Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
