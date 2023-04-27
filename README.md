@@ -574,7 +574,7 @@ test.describe.configure({
 });
 let page;
 test.describe('take V8 coverage', () => {
-    test('first, startJSCoverage and open page', async ({ browser }) => {
+    test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
         await Promise.all([
             page.coverage.startJSCoverage(),
@@ -589,7 +589,7 @@ test.describe('take V8 coverage', () => {
         });
     });
 
-    test('finally, stopJSCoverage and take coverage', async () => {
+    test('finally, take coverage', async () => {
         const [jsCoverage, cssCoverage] = await Promise.all([
             page.coverage.stopJSCoverage(),
             page.coverage.stopCSSCoverage()
