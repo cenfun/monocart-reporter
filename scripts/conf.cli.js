@@ -64,7 +64,7 @@ const beforeApp = (item, Util) => {
     return 0;
 };
 
-const beforeCoverageV8 = (item, Util) => {
+const beforeV8 = (item, Util) => {
 
     const EC = require('eight-colors');
     const dataFile = 'coverage-data.js';
@@ -94,6 +94,28 @@ const beforeCoverageV8 = (item, Util) => {
     return 0;
 };
 
+const beforeNetwork = (item, Util) => {
+
+    const EC = require('eight-colors');
+    const dataFile = 'network-data.js';
+    const jsDataPath = path.resolve(__dirname, `../.temp/${dataFile}`);
+    if (!fs.existsSync(jsDataPath)) {
+        EC.logRed(`ERROR: Not found: ${jsDataPath}`);
+        return 1;
+    }
+
+    const jsPath = path.resolve(item.buildPath, dataFile);
+    fs.copyFileSync(jsDataPath, jsPath);
+    Util.logGreen(`network data file copied: ${dataFile}`);
+
+    if (!item.dependencies.files.includes(jsPath)) {
+        item.dependencies.files.unshift(jsPath);
+    }
+
+    return 0;
+};
+
+
 module.exports = {
 
     precommit: {
@@ -103,7 +125,7 @@ module.exports = {
 
     build: {
 
-        vendors: ['app', 'v8'],
+        vendors: ['app', 'v8', 'network'],
 
         before: (item, Util) => {
 
@@ -116,7 +138,11 @@ module.exports = {
             }
 
             if (item.name === 'v8') {
-                return beforeCoverageV8(item, Util);
+                return beforeV8(item, Util);
+            }
+
+            if (item.name === 'network') {
+                return beforeNetwork(item, Util);
             }
 
             return 0;
@@ -206,7 +232,7 @@ module.exports = {
                 }
 
                 fs.cpSync(fromFile, toFile);
-                Util.logGreen(`file copied: ${filePath}`);
+                Util.logGreen(`pack file copied: ${filePath}`);
 
             }
 

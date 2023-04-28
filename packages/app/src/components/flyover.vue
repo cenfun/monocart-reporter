@@ -45,14 +45,12 @@ import Util from '../utils/util.js';
 import IconLabel from './icon-label.vue';
 import Detail from './detail.vue';
 import Report from './report.vue';
-import Har from './har.vue';
 
 const { VuiFlex, VuiFlyover } = components;
 
 const flyoverComponents = {
     detail: Detail,
-    report: Report,
-    har: Har
+    report: Report
 };
 
 // remove tag till flyover animation end

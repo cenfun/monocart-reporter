@@ -117,18 +117,6 @@ const showDetail = (pagePath) => {
     }
 };
 
-const showHar = (jsonpPath) => {
-
-    const data = state.flyoverData;
-    const title = data ? data.title : 'HAR Viewer';
-
-    showFlyover('har', {
-        title,
-        path: jsonpPath
-    });
-
-};
-
 export const displayFlyoverWithHash = () => {
 
     const page = Util.getHash('page');
@@ -147,11 +135,6 @@ export const displayFlyoverWithHash = () => {
             if (showDetail(pagePath)) {
                 return;
             }
-        }
-
-        if (pageName === 'har') {
-            showHar(pagePath);
-            return;
         }
 
     }

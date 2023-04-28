@@ -43,7 +43,7 @@ export const getAttachment = (item) => {
             return name === definition.name && contentType === definition.contentType;
         },
         handler: () => {
-            return getNetwork(path, name);
+            return getNetwork(path, name, item.report);
         }
     }];
 
@@ -244,10 +244,20 @@ const getCoverage = (path, name, report) => {
 
 // ================================================================================================
 
-const getNetwork = (path, name) => {
-    const jsonpUrl = new URL(path, window.location.href);
-    const harPath = encodeURIComponent(`har/${jsonpUrl}`);
-    const body = `<a href="#page=${harPath}">View HAR</a>`;
+const getNetworkBody = (report) => {
+    if (!report) {
+        return '';
+    }
+
+    console.log('network report', report);
+
+    const body = '<a href="">View HAR</a>';
+
+    return body;
+};
+
+const getNetwork = (path, name, report) => {
+    const body = getNetworkBody(report);
     return getLink(path, name, 'network', body);
 };
 

@@ -791,7 +791,7 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
     - `packages/istanbul` Istanbul report libs
     - `packages/show-report` Monocart show-report CLI libs
     - `packages/v8` V8 HTML report UI
-    - `packages/vendor` third-party libs
+    - `packages/vendor` Third-party libs
 
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)

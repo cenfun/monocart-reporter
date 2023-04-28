@@ -44,6 +44,8 @@ test('finally, attach HAR', async () => {
     // Close context to ensure HAR is saved to disk.
     await context.close();
 
-    await attachNetworkReport(harPath, test.info());
+    await attachNetworkReport(harPath, test.info(), {
+        inline: false
+    });
 
 });
