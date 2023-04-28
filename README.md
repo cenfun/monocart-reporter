@@ -556,10 +556,10 @@ test.describe('take Istanbul coverage', () => {
 
     test('finally, take coverage', async () => {
         // take Istanbul coverage
-        const coverageInput = await page.evaluate(() => window.__coverage__);
-        expect(coverageInput, 'expect found Istanbul data: __coverage__').toBeTruthy();
+        const coverageData = await page.evaluate(() => window.__coverage__);
+        expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
         // coverage report
-        const report = await attachCoverageReport(coverageInput, test.info());
+        const report = await attachCoverageReport(coverageData, test.info());
         console.log(report.summary);
     });
 });
@@ -567,7 +567,7 @@ test.describe('take Istanbul coverage', () => {
 
 ![](/docs/istanbul.png)
 
-- [V8](https://v8.dev/blog/javascript-code-coverage) (Chromium-based only) Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, the V8 HTML report will be generated.
+- [V8](https://v8.dev/blog/javascript-code-coverage) ([Chromium-based only](https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#type-ScriptCoverage)) Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, the V8 HTML report will be generated.
 ```js
 import { test, expect } from '@playwright/test';
 import { attachCoverageReport } from 'monocart-reporter';
@@ -596,16 +596,16 @@ test.describe('take V8 coverage', () => {
             page.coverage.stopJSCoverage(),
             page.coverage.stopCSSCoverage()
         ]);
+        const coverageList = [... jsCoverage, ... cssCoverage];
         // filter file list
-        const v8list = [... jsCoverage, ... cssCoverage].filter((item) => {
-            if (!item.url.endsWith('.js') || !item.url.endsWith('.css')) {
-                return false;
-            }
-            return true;
-        });
-        expect(v8list.length).toBeGreaterThan(0);
+        // coverageList = coverageList.filter((item) => {
+        //     if (item.url.endsWith('.js') || item.url.endsWith('.css')) {
+        //         return true;
+        //     }
+        // });
+        expect(coverageList.length).toBeGreaterThan(0);
         // coverage report
-        const report = await attachCoverageReport(v8list, test.info());
+        const report = await attachCoverageReport(coverageList, test.info());
         console.log(report.summary);
     });
 });
@@ -615,7 +615,7 @@ test.describe('take V8 coverage', () => {
 
 - [V8 to Istanbul](https://github.com/istanbuljs/v8-to-istanbul) Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
-const report = await attachCoverageReport(v8list, test.info(), {
+const report = await attachCoverageReport(coverageList, test.info(), {
     toIstanbul: true
 });
 ```
@@ -626,7 +626,7 @@ const report = await attachCoverageReport(v8list, test.info(), {
 | Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
 | Options  | `watermarks: {}`  | `watermarks: [50, 80]` | `toIstanbul: true, watermarks: {}` |
 | Output report | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-Istanbul-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-V8-js-and-css-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-V8-js-to-Istanbul-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html) |
-| Indicators | Covered Lines, Branches | Used Bytes | Covered Lines, Branches |
+| Indicators | Covered Lines, Branches, Statements and Functions, Execution Counts | Covered Bytes, Execution Counts | Covered Lines, Branches, Statements and Functions, Execution Counts |
 | CSS coverage | ❌ | ✅ | ❌ |
 | Minified code | N/A | ✅ | ❌ |
 | Code formatting | N/A | ✅ | ❌ |

@@ -20,10 +20,10 @@ test.describe('take Istanbul coverage report', () => {
 
     test('finally, take coverage', async () => {
         // take Istanbul coverage
-        const coverageInput = await page.evaluate(() => window.__coverage__);
-        expect(coverageInput, 'expect found Istanbul data: __coverage__').toBeTruthy();
+        const coverageData = await page.evaluate(() => window.__coverage__);
+        expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
         // coverage report
-        const report = await attachCoverageReport(coverageInput, test.info());
+        const report = await attachCoverageReport(coverageData, test.info());
         console.log(report.lines);
 
         await page.close();
@@ -43,8 +43,8 @@ test.describe('take V8 js to Istanbul coverage report', () => {
     });
 
     test('finally, take coverage', async () => {
-        const jsCoverage = await page.coverage.stopJSCoverage();
-        const report = await attachCoverageReport(jsCoverage, test.info(), {
+        const jsCoverageList = await page.coverage.stopJSCoverage();
+        const report = await attachCoverageReport(jsCoverageList, test.info(), {
             toIstanbul: true
         });
         console.log(report.summary);
@@ -75,8 +75,8 @@ test.describe('take V8 anonymous js to Istanbul coverage report', () => {
     });
 
     test('finally, take coverage', async () => {
-        const jsCoverage = await page.coverage.stopJSCoverage();
-        const report = await attachCoverageReport(jsCoverage, test.info(), {
+        const jsCoverageList = await page.coverage.stopJSCoverage();
+        const report = await attachCoverageReport(jsCoverageList, test.info(), {
             toIstanbul: true
         });
         console.log(report.summary);
@@ -105,8 +105,8 @@ test.describe('take V8 anonymous js coverage report', () => {
     });
 
     test('finally, take coverage', async () => {
-        const jsCoverage = await page.coverage.stopJSCoverage();
-        const report = await attachCoverageReport(jsCoverage, test.info(), {
+        const jsCoverageList = await page.coverage.stopJSCoverage();
+        const report = await attachCoverageReport(jsCoverageList, test.info(), {
             inline: false
         });
         console.log(report.summary);
@@ -136,10 +136,14 @@ test.describe('take V8 js and css coverage report', () => {
             page.coverage.stopCSSCoverage()
         ]);
 
-        const list = [... jsCoverage, ... cssCoverage];
-
-        const report = await attachCoverageReport(list, test.info(), {
-            // toIstanbul: true,
+        const coverageList = [... jsCoverage, ... cssCoverage];
+        // filter file list
+        // coverageList = coverageList.filter((item) => {
+        //     if (item.url.endsWith('.js') || item.url.endsWith('.css')) {
+        //         return true;
+        //     }
+        // });
+        const report = await attachCoverageReport(coverageList, test.info(), {
             inline: false
         });
         console.log(report.summary);
