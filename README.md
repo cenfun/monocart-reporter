@@ -781,11 +781,17 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
 - [weixin-webhook.js](/tests/common/weixin-webhook.js)
 - [feishu-webhook.js](/tests/common/feishu-webhook.js)
 
-## Report UI [packages/app](packages/app)
- - Base on [Vue 3](https://github.com/vuejs/core)
+## Dependencies and Packages
+ - UI framework [Vue 3](https://github.com/vuejs/core)
  - Lightweight UI components [vine-ui](https://github.com/cenfun/vine-ui)
- - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
- - JSON compress/decompress with [lz-utils](https://github.com/cenfun/lz-utils)
+ - High performance grid [turbogrid](https://github.com/cenfun/turbogrid)
+ - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
+ - Packages
+    - `packages/app` Monocart report UI
+    - `packages/istanbul` Istanbul report libs
+    - `packages/show-report` Monocart show-report CLI libs
+    - `packages/v8` V8 HTML report UI
+    - `packages/vendor` third-party libs
 
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)
