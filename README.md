@@ -526,10 +526,10 @@ module.exports = {
 
 ## Attach Code Coverage Report
 Using `MonocartReporter.attachCoverageReport(data, testInfo, options)` API to generate coverage report during the test. Arguments:
-- `data` There are 2 supported data inputs `Istanbul`(Object) or `V8`(Array)
+- `data` There are 2 supported data inputs `Istanbul` (Object) or `V8` (Array)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 - `options` (Object)
-    - `watermarks` By default, Istanbul (Object) see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report), V8 (Array) is `[50, 80]`
+    - `watermarks` By default, watermarks of Istanbul see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) (Object), watermarks of V8 is `[50, 80]` (Array)
     - `toIstanbul` (Boolean) for V8 data conversion
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
