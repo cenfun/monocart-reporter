@@ -862,6 +862,9 @@ onActivated(() => {
 
     .mcr-attachment-network {
         .mcr-attachment-body {
+            display: flex;
+            flex-flow: row wrap;
+            gap: 10px;
             padding: 5px;
         }
     }

@@ -21,7 +21,6 @@ test.beforeAll(async ({ browser }) => {
     console.log('beforeAll new page');
     context = await browser.newContext({
         recordHar: {
-            // urlFilter: '**/api/**',
             path: harPath
         }
     });
@@ -30,7 +29,11 @@ test.beforeAll(async ({ browser }) => {
 
 
 test('first, open page', async () => {
-    await page.goto('https://playwright.dev/docs/api/class-browsercontext');
+    // await page.goto('http://localhost:8090/playwright.dev/');
+    // await page.goto('http://localhost:8080/');
+    await page.goto('http://playwright.dev/', {
+        waitUntil: 'networkidle'
+    });
 });
 
 test('next, run test cases', async () => {

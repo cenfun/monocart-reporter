@@ -1,0 +1,11 @@
+{
+    "name": "monocart-network",
+    "version": "1.6.16",
+    "main": "dist/monocart-network.js",
+    "files": [
+        "dist"
+    ],
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {}
+}
