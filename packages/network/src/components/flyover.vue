@@ -5,83 +5,96 @@
     :visible="state.flyoverVisible"
     :width="state.flyoverWidth"
     min-width="350"
-    @end="onFlyoverEnd"
     @resize="onFlyoverResize"
   >
-    <div class="mcr-flyover-main vui-flex-column">
-      <VuiFlex
-        gap="10px"
-        padding="10px"
-        class="mcr-flyover-header"
-      >
+    <VuiTab
+      v-model="state.tabIndex"
+      align="center"
+      class="mcr-report"
+    >
+      <template #left>
         <IconLabel
           icon="arrow-right"
           size="20px"
           @click="state.flyoverVisible=false"
         />
-        <div class="mcr-flyover-title vui-flex-auto">
-          {{ state.flyoverTitle }}
-        </div>
+      </template>
+      <template #right>
         <IconLabel
           icon="close"
           size="20px"
           @click="state.flyoverVisible=false"
         />
-      </VuiFlex>
-      <div class="mcr-flyover-content vui-flex-auto">
-        <slot />
-      </div>
-    </div>
+      </template>
+      <template #tabs>
+        <div>Request</div>
+        <div>Response</div>
+        <div>Timing</div>
+      </template>
+      <template #panes>
+        <Request />
+        <Response />
+        <Timing />
+      </template>
+    </VuiTab>
+    <VuiLoading
+      center
+      :visible="state.loading"
+    />
   </VuiFlyover>
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { inject, watch } from 'vue';
 import { components } from 'vine-ui';
 
 import IconLabel from './icon-label.vue';
 
-const { VuiFlex, VuiFlyover } = components;
+import Request from './request.vue';
+import Response from './response.vue';
+import Timing from './timing.vue';
+
+const {
+    VuiFlyover, VuiTab, VuiLoading
+} = components;
 
 const state = inject('state');
-
-// remove tag till flyover animation end
-const onFlyoverEnd = () => {
-
-};
 
 const onFlyoverResize = (width) => {
     state.flyoverWidth = width;
 };
 
+const showReport = () => {
+    const id = state.flyoverData;
+    if (!id) {
+        return;
+    }
+    state.entry = state.entryMap[id];
+};
+
+watch(() => state.flyoverData, (v) => {
+    showReport();
+});
+
 </script>
 <style lang="scss">
-.mcr-flyover-icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 20px;
+.mcr-report {
+    position: relative;
     height: 100%;
-}
 
-.mcr-flyover-main {
-    height: 100%;
-    overflow: hidden;
-}
+    .vui-tab-item {
+        font-weight: bold;
+    }
 
-.mcr-flyover-header {
-    color: #fff;
-    background-color: #005ba4;
-}
+    .vui-tab-header-left,
+    .vui-tab-header-right {
+        padding: 0 10px;
+    }
 
-.mcr-flyover-title {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 22px;
-}
-
-.mcr-flyover-content {
-    overflow: auto;
+    .vui-tab-pane {
+        padding: 10px;
+        overflow-y: auto;
+    }
 }
 
 </style>

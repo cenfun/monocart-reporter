@@ -31,7 +31,7 @@ test.beforeAll(async ({ browser }) => {
 test('first, open page', async () => {
     // await page.goto('http://localhost:8090/playwright.dev/');
     // await page.goto('http://localhost:8080/');
-    await page.goto('http://playwright.dev/', {
+    await page.goto('https://music.163.com/', {
         waitUntil: 'networkidle'
     });
 });

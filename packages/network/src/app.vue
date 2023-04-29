@@ -20,9 +20,7 @@
 
     <div class="mcr-network-grid vui-flex-auto" />
 
-    <Flyover>
-      <Report />
-    </Flyover>
+    <Flyover />
 
     <VuiTooltip
       :class="tooltip.classMap"
@@ -43,7 +41,6 @@ import { components, generateTooltips } from 'vine-ui';
 import Util from './utils/util.js';
 
 import Flyover from './components/flyover.vue';
-import Report from './components/report.vue';
 
 const {
     VuiFlex,
@@ -65,6 +62,8 @@ const state = shallowReactive({
     flyoverTitle: '',
     flyoverComponent: '',
     flyoverData: null,
+
+    loading: false,
 
     grid: null
 
@@ -625,7 +624,9 @@ icon
 }
 
 .mcr-header {
+    height: 44px;
     color: #fff;
+    line-height: 44px;
     background-color: #24292f;
 
     .mcr-title {
