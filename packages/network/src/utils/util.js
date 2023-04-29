@@ -19,8 +19,8 @@ const Util = {
         bodySize = Math.max(bodySize, 0);
         const transferSize = headersSize + bodySize;
         const list = [];
-        list.push(Util.NF(transferSize));
-        list.push(`(Headers: ${Util.NF(headersSize)}, Body: ${Util.NF(bodySize)})`);
+        list.push(`${Util.NF(transferSize)} Bytes`);
+        list.push(`(Headers: ${Util.NF(headersSize)} Bytes, Body: ${Util.NF(bodySize)} Bytes)`);
         return list.join(' ');
     }
 };

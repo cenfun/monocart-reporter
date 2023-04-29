@@ -406,7 +406,9 @@ const getColumns = () => {
         id: 'resourceType',
         name: 'Type',
         init: (entry) => {
-            return getResourceType(entry);
+            const resourceType = getResourceType(entry);
+            entry.resourceType = resourceType;
+            return resourceType;
         }
     }, {
         id: 'size',
@@ -526,7 +528,7 @@ onMounted(() => {
 
     // for export all data JSON able
     state.reportData = reportData;
-    state.title = reportData.title;
+    state.title = reportData.title || 'Network Report';
 
     initTooltip();
 

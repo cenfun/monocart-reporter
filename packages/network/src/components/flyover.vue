@@ -29,11 +29,13 @@
       <template #tabs>
         <div>Request</div>
         <div>Response</div>
+        <div>Content</div>
         <div>Timing</div>
       </template>
       <template #panes>
         <Request />
         <Response />
+        <Content />
         <Timing />
       </template>
     </VuiTab>
@@ -52,6 +54,7 @@ import IconLabel from './icon-label.vue';
 
 import Request from './request.vue';
 import Response from './response.vue';
+import Content from './content.vue';
 import Timing from './timing.vue';
 
 const {
