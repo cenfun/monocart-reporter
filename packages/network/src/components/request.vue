@@ -25,7 +25,9 @@
     <SummaryList
       title="Post Data"
       :list="data.postData"
-    />
+    >
+      <Params :list="data.params" />
+    </SummaryList>
   </VuiFlex>
 </template>
 <script setup>
@@ -35,6 +37,8 @@ import {
 import { components } from 'vine-ui';
 
 import SummaryList from './summary-list.vue';
+import Params from './params.vue';
+
 import Util from '../utils/util.js';
 
 const { VuiFlex } = components;
@@ -57,20 +61,17 @@ const update = (entry) => {
 
     // http://www.softwareishard.com/blog/har-12-spec/
     data.list = [{
-        name: 'url',
+        name: 'Request URL',
         value: request.url
     }, {
-        name: 'method',
+        name: 'Request Method',
         value: request.method
     }, {
-        name: 'http version',
+        name: 'HTTP Version',
         value: request.httpVersion
     }, {
-        name: 'heads size',
-        value: Util.NF(request.headersSize)
-    }, {
-        name: 'body size',
-        value: Util.NF(request.bodySize)
+        name: 'Transfer Size',
+        value: Util.getTransferSize(request)
     }];
 
     if (request.comment) {
@@ -89,13 +90,16 @@ const update = (entry) => {
     const postData = request.postData;
     if (postData) {
         Object.keys(postData).forEach((k) => {
+            if (k === 'params') {
+                data.params = postData[k];
+                return;
+            }
             data.postData.push({
                 name: k,
                 value: postData[k]
             });
         });
     }
-
 
 };
 

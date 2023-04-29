@@ -5,7 +5,7 @@
   >
     <details open>
       <summary>
-        <b>{{ props.title }}</b>
+        <b>params</b>
       </summary>
       <VuiFlex
         class="mcr-summary-subs-body"
@@ -27,13 +27,13 @@
             v-if="item.fileName"
             class="mcr-summary-subs-value"
           >
-            fileName: {{ item.fileName }}
+            File Name: {{ item.fileName }}
           </span>
           <span
             v-if="item.contentType"
             class="mcr-summary-subs-value"
           >
-            contentType: {{ item.contentType }}
+            Content Type: {{ item.contentType }}
           </span>
         </div>
       </VuiFlex>
@@ -57,7 +57,6 @@ const props = defineProps({
         }
     }
 });
-
 
 </script>
 <style lang="scss">

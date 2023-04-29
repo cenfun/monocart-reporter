@@ -27,6 +27,8 @@ import { components } from 'vine-ui';
 
 import SummaryList from './summary-list.vue';
 
+import Util from '../utils/util.js';
+
 const { VuiFlex } = components;
 
 const state = inject('state');
@@ -45,6 +47,27 @@ const update = (entry) => {
     console.log('response', response);
 
     // http://www.softwareishard.com/blog/har-12-spec/
+    data.list = [{
+        name: 'Status Code',
+        value: response.status
+    }, {
+        name: 'Status Text',
+        value: response.statusText
+    }, {
+        name: 'HTTP Version',
+        value: response.httpVersion
+    }, {
+        name: 'Transfer Size',
+        value: Util.getTransferSize(response)
+    }];
+
+    if (response.comment) {
+        data.list.push({
+            name: 'comment',
+            value: response.comment
+        });
+    }
+
     data.headers = response.headers;
     data.cookies = response.cookies;
 };

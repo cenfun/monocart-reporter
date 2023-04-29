@@ -17,29 +17,20 @@
           :key="i"
           class="mcr-summary-item"
         >
-          <SummarySubs
-            v-if="Array.isArray(item.value)"
-            :title="item.name"
-            :list="item.value"
-          />
-
-          <template v-else>
-            <span class="mcr-summary-name">
-              {{ item.name }}:
-            </span>
-            <span class="mcr-summary-value">
-              {{ item.value }}
-            </span>
-          </template>
+          <span class="mcr-summary-name">
+            {{ item.name }}:
+          </span>
+          <span class="mcr-summary-value">
+            {{ item.value }}
+          </span>
         </div>
+        <slot />
       </VuiFlex>
     </details>
   </div>
 </template>
 <script setup>
 import { components } from 'vine-ui';
-
-import SummarySubs from './summary-subs.vue';
 
 const { VuiFlex } = components;
 

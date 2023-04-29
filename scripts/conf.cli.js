@@ -97,16 +97,15 @@ const beforeV8 = (item, Util) => {
 const beforeNetwork = (item, Util) => {
 
     const EC = require('eight-colors');
-    const dataFile = 'network-data.js';
-    const jsDataPath = path.resolve(__dirname, `../.temp/${dataFile}`);
-    if (!fs.existsSync(jsDataPath)) {
-        EC.logRed(`ERROR: Not found: ${jsDataPath}`);
-        return 1;
-    }
 
+    const compress = require('lz-utils/lib/compress.js');
+    const harData = fs.readFileSync(path.resolve(__dirname, '../.temp/har/music.163.com.har'));
+    const reportDataStr = `window.reportData = "${compress(harData.toString('utf-8'))}";`;
+
+    const dataFile = 'network-data.js';
     const jsPath = path.resolve(item.buildPath, dataFile);
-    fs.copyFileSync(jsDataPath, jsPath);
-    Util.logGreen(`network data file copied: ${dataFile}`);
+    fs.writeFileSync(jsPath, reportDataStr);
+    EC.logGreen(`network data file copied: ${dataFile}`);
 
     if (!item.dependencies.files.includes(jsPath)) {
         item.dependencies.files.unshift(jsPath);
