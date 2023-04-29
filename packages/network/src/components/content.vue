@@ -1,10 +1,20 @@
 <template>
-  <div class="mcr-summary-container">
+  <div class="mcr-content">
     <div
-      v-if="data.resourceType==='image'"
-      class="mcr-content-preview-image"
+      v-show="data.previewType==='image'"
+      class="mcr-content-image"
     >
       <img :src="data.imageSrc">
+    </div>
+    <div
+      v-show="data.previewType==='editor'"
+      class="mcr-content-editor"
+    />
+    <div
+      v-show="data.previewType==='other'"
+      class="mcr-content-other"
+    >
+      No content preview
     </div>
   </div>
 </template>
@@ -13,14 +23,75 @@ import {
     inject, watch, shallowReactive
 } from 'vue';
 
+import { createEditor } from '../utils/editor.js';
+
 // import Util from '../utils/util.js';
+import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
 
 const state = inject('state');
 
 const data = shallowReactive({
-    resourceType: '',
+    previewType: 'other',
     imageSrc: ''
 });
+
+let editor;
+let workerUrl;
+
+const format = (type, text) => {
+    if (!workerUrl) {
+        workerUrl = new URL(formatterDataUrl());
+    }
+
+    return new Promise((resolve) => {
+        const worker = new Worker(workerUrl);
+        worker.onmessage = (e) => {
+            if (e.data === 'workerReady') {
+                worker.postMessage({
+                    type,
+                    text
+                });
+                return;
+            }
+            resolve(e.data);
+            worker.terminate();
+        };
+        worker.onerror = (e) => {
+            console.error(e);
+            resolve();
+            worker.terminate();
+        };
+
+    });
+};
+
+const showEditor = async (type, content) => {
+
+    state.loading = true;
+    data.previewType = 'editor';
+
+    let textFormatted = content.textFormatted;
+    if (!textFormatted) {
+        const res = await format(type, content.text);
+        if (res) {
+            textFormatted = res.content;
+        } else {
+            textFormatted = content.text;
+        }
+        content.textFormatted = textFormatted;
+    }
+
+    // console.log(textFormatted);
+
+    if (editor) {
+        editor.showContent(textFormatted);
+    } else {
+        const container = document.querySelector('.mcr-content-editor');
+        editor = createEditor(container, textFormatted);
+    }
+
+    state.loading = false;
+};
 
 const update = (entry) => {
     // console.log(entry);
@@ -28,15 +99,34 @@ const update = (entry) => {
     const content = entry.response.content;
 
     // console.log(content);
+    data.previewType = 'other';
 
     const resourceType = entry.resourceType;
-    data.resourceType = resourceType;
-
     if (resourceType === 'image') {
         // console.log(content.encoding);
         data.imageSrc = `data:${content.mimeType};base64,${content.text}`;
+        data.previewType = 'image';
+        return;
     }
 
+    if (resourceType === 'script') {
+        showEditor('js', content);
+        return;
+    }
+
+    if (resourceType === 'json') {
+        showEditor('json', content);
+        return;
+    }
+
+    if (resourceType === 'html') {
+        showEditor('html', content);
+        return;
+    }
+
+    if (resourceType === 'css') {
+        showEditor('css', content);
+    }
 
 };
 
@@ -50,20 +140,65 @@ watch(() => state.entry, (v) => {
 <style lang="scss">
 .mcr-content {
     position: relative;
+    padding: 0;
 }
 
-.mcr-content-preview {
-    > summary {
-        padding: 5px 0;
-        cursor: pointer;
-        user-select: none;
-    }
+.mcr-content-other {
+    padding: 20px;
+    color: gray;
 }
 
-.mcr-content-preview-image {
+.mcr-content-image {
+    padding: 10px;
+
     img {
         display: block;
         border: 1px solid #f5f5f5;
+    }
+}
+
+.mcr-content-editor {
+    height: 100%;
+
+    .cm-editor {
+        width: 100%;
+        height: 100%;
+    }
+
+    .cm-scroller {
+        overflow: auto;
+    }
+
+    /* stylelint-disable-next-line selector-class-pattern */
+    .cm-gutterElement {
+        .cm-fold {
+            display: block;
+            width: 15px;
+            height: 100%;
+            padding-left: 3px;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 10px 10px;
+            cursor: pointer;
+            opacity: 0.6;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .cm-fold-open {
+            background-image: url("../images/arrow-fold-open.svg");
+        }
+
+        .cm-fold-close {
+            background-image: url("../images/arrow-fold-close.svg");
+        }
+    }
+
+    /* stylelint-disable-next-line selector-class-pattern */
+    .cm-activeLineGutter {
+        .cm-fold {
+            opacity: 1;
+        }
     }
 }
 </style>

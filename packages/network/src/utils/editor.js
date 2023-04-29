@@ -1,17 +1,11 @@
 import { EditorView } from 'codemirror';
 
-import {
-    EditorState, Compartment,
-    RangeSetBuilder
-} from '@codemirror/state';
+import { EditorState, Compartment } from '@codemirror/state';
 
 import {
     keymap, highlightSpecialChars, drawSelection, highlightActiveLine, dropCursor,
     rectangularSelection, crosshairCursor,
-    lineNumbers, highlightActiveLineGutter,
-    gutter, GutterMarker,
-    Decoration,
-    ViewPlugin
+    lineNumbers, highlightActiveLineGutter
 } from '@codemirror/view';
 
 import {
@@ -25,8 +19,7 @@ import { css } from '@codemirror/lang-css';
 const readOnlyCompartment = new Compartment();
 
 let editor;
-export const createEditor = (container, report) => {
-
+export const createEditor = (container, textFormatted) => {
 
     // https://github.com/codemirror/basic-setup/
     const basicSetup = [
@@ -61,130 +54,13 @@ export const createEditor = (container, report) => {
 
     // =====================================================================
 
-    let gutterMap;
-    let bgMap;
-    let countMap;
-
-    const updateNetwork = (network) => {
-        gutterMap = network.gutterMap;
-        bgMap = network.bgMap;
-        countMap = network.countMap;
-    };
-
-    updateNetwork(report.network);
-
-    // =====================================================================
-
-    const coveredMarker = new GutterMarker();
-    coveredMarker.elementClass = 'mcr-line-covered';
-    const partialMarker = new GutterMarker();
-    partialMarker.elementClass = 'mcr-line-partial';
-    const uncoveredMarker = new GutterMarker();
-    uncoveredMarker.elementClass = 'mcr-line-uncovered';
-
-    const networkGutter = gutter({
-        class: 'mcr-network-gutter',
-        lineMarker(view, line) {
-            if (line.length === 0) {
-                return null;
-            }
-            const lineIndex = Math.round(line.top / line.height);
-            // console.log('lineIndex', lineIndex);
-            const v = gutterMap.get(lineIndex);
-            if (v) {
-                if (v === 'partial') {
-                    return partialMarker;
-                }
-                if (v === 'uncovered') {
-                    return uncoveredMarker;
-                }
-                return null;
-            }
-            return coveredMarker;
-        }
-    });
-
-    // =====================================================================
-
-    const createCountMaker = (count) => {
-        const countMarker = new GutterMarker();
-        countMarker.elementClass = 'mcr-line-count';
-        countMarker.count = count;
-        countMarker.toDOM = function() {
-            return document.createTextNode(`${this.count}x`);
-        };
-        return countMarker;
-    };
-
-    const countGutter = gutter({
-        class: 'mcr-count-gutter',
-        lineMarker(view, line) {
-            if (line.length === 0 || !countMap) {
-                return null;
-            }
-            const lineIndex = Math.round(line.top / line.height);
-            // console.log('lineIndex', lineIndex);
-            const v = countMap.get(lineIndex);
-            if (!v) {
-                return null;
-            }
-            return createCountMaker(v);
-        }
-    });
-    // =====================================================================
-
-    const uncoveredBg = Decoration.mark({
-        class: 'mcr-bg-uncovered'
-    });
-
-    const getNetworkBg = (view) => {
-        const builder = new RangeSetBuilder();
-        for (const { from, to } of view.visibleRanges) {
-            for (let pos = from; pos <= to;) {
-                const line = view.state.doc.lineAt(pos);
-                const lineIndex = line.number - 1;
-                const v = bgMap.get(lineIndex);
-                if (v) {
-                    builder.add(line.from + v.start, line.from + v.end, uncoveredBg);
-                } else if (gutterMap.has(lineIndex)) {
-                    builder.add(line.from, line.to, uncoveredBg);
-                }
-                pos = line.to + 1;
-            }
-        }
-        return builder.finish();
-    };
-
-    const networkBg = ViewPlugin.fromClass(class {
-
-        constructor(view) {
-            this.decorations = getNetworkBg(view);
-        }
-
-        update(update) {
-            if (update.docChanged || update.viewportChanged) {
-                this.decorations = getNetworkBg(update.view);
-            }
-        }
-    }, {
-        decorations: (v) => v.decorations
-    });
-
-
-    // =====================================================================
-
     const readOnly = readOnlyCompartment.of(EditorState.readOnly.of(true));
 
     editor = new EditorView({
         parent: container,
-        doc: report.content,
+        doc: textFormatted,
         extensions: [
             basicSetup,
-
-            networkGutter,
-            countGutter,
-
-            networkBg,
 
             javascript(),
             css(),
@@ -194,14 +70,13 @@ export const createEditor = (container, report) => {
     });
 
     return {
-        showContent: (newReport) => {
-            updateNetwork(newReport.network);
+        showContent: (newTextFormatted) => {
             const text = editor.state.doc.toString();
             const transaction = editor.state.update({
                 changes: {
                     from: 0,
                     to: text.length,
-                    insert: newReport.content
+                    insert: newTextFormatted
                 }
             });
             editor.dispatch(transaction);

@@ -234,30 +234,47 @@ const resourceFromMimeType = (mimeType) => {
     if (!mimeType) {
         return 'other';
     }
-    if (mimeType.startsWith('text/html')) {
-        return 'document';
-    }
+
     if (mimeType.startsWith('text/css')) {
-        return 'stylesheet';
-    }
-    if (mimeType.startsWith('image/')) {
-        return 'image';
-    }
-    if (mimeType.startsWith('text/')) {
-        return 'script';
+        return 'css';
     }
 
     if (mimeType.includes('font')) {
         return 'font';
     }
-    if (mimeType.includes('script')) {
-        return 'script';
+
+    const [mainType, subType] = mimeType.split('/');
+
+    if (mainType === 'image') {
+        return 'image';
     }
-    if (mimeType.includes('octet')) {
+
+    if (mainType === 'audio') {
+        return 'audio';
+    }
+
+    if (mainType === 'video') {
+        return 'video';
+    }
+
+    if (!subType) {
         return 'other';
     }
-    if (mimeType.includes('application')) {
+
+    if (subType.includes('json')) {
+        return 'json';
+    }
+
+    if (subType.includes('script')) {
         return 'script';
+    }
+
+    if (subType.includes('html')) {
+        return 'html';
+    }
+
+    if (mainType === 'text') {
+        return 'text';
     }
 
     return 'other';
@@ -267,8 +284,8 @@ const resourceTypeByExtension = new Map([
     ['js', 'script'],
     ['mjs', 'script'],
 
-    ['css', 'stylesheet'],
-    ['xsl', 'stylesheet'],
+    ['css', 'css'],
+    ['xsl', 'css'],
 
     ['avif', 'image'],
     ['avifs', 'image'],

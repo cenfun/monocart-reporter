@@ -94,7 +94,7 @@ watch(() => state.flyoverData, (v) => {
         padding: 0 10px;
     }
 
-    .vui-tab-pane {
+    .vui-tab-pane:not(.mcr-content) {
         padding: 10px;
         overflow-y: auto;
     }
