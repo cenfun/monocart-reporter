@@ -1,8 +1,5 @@
 <template>
-  <VuiFlex
-    class="mcr-response"
-    direction="column"
-  >
+  <div class="mcr-summary-container">
     <SummaryList
       title="Response"
       :list="data.list"
@@ -13,23 +10,21 @@
       :list="data.headers"
     />
 
-    <SummaryList
+    <SummaryTable
       title="Response Cookies"
       :list="data.cookies"
     />
-  </VuiFlex>
+  </div>
 </template>
 <script setup>
 import {
     inject, watch, shallowReactive
 } from 'vue';
-import { components } from 'vine-ui';
 
 import SummaryList from './summary-list.vue';
+import SummaryTable from './summary-table.vue';
 
 import Util from '../utils/util.js';
-
-const { VuiFlex } = components;
 
 const state = inject('state');
 
@@ -44,7 +39,7 @@ const update = (entry) => {
 
     const { response } = entry;
 
-    console.log('response', response);
+    // console.log('response', response);
 
     // http://www.softwareishard.com/blog/har-12-spec/
     data.list = [{
@@ -79,7 +74,7 @@ watch(() => state.entry, (v) => {
 });
 </script>
 <style lang="scss">
-.mcr-response {
+.mcr-summary-container {
     position: relative;
 }
 </style>

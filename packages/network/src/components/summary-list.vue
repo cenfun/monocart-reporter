@@ -52,9 +52,6 @@ const props = defineProps({
 <style lang="scss">
 .mcr-summary-list {
     position: relative;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ccc;
 
     > details {
         > summary {
