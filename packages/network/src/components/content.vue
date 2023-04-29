@@ -65,21 +65,28 @@ const format = (type, text) => {
     });
 };
 
-const showEditor = async (type, content) => {
+const getTextFormatted = async (content, type) => {
+    if (content.textFormatted) {
+        return content.textFormatted;
+    }
+
+    if (type) {
+        const resFormatted = await format(type, content.text);
+        if (resFormatted) {
+            content.textFormatted = resFormatted.content;
+            return resFormatted.content;
+        }
+    }
+
+    return content.text;
+};
+
+const showEditor = async (content, type) => {
 
     state.loading = true;
     data.previewType = 'editor';
 
-    let textFormatted = content.textFormatted;
-    if (!textFormatted) {
-        const res = await format(type, content.text);
-        if (res) {
-            textFormatted = res.content;
-        } else {
-            textFormatted = content.text;
-        }
-        content.textFormatted = textFormatted;
-    }
+    const textFormatted = await getTextFormatted(content, type);
 
     // console.log(textFormatted);
 
@@ -110,23 +117,29 @@ const update = (entry) => {
     }
 
     if (resourceType === 'script') {
-        showEditor('js', content);
+        showEditor(content, 'js');
         return;
     }
 
     if (resourceType === 'json') {
-        showEditor('json', content);
+        showEditor(content, 'json');
         return;
     }
 
     if (resourceType === 'html') {
-        showEditor('html', content);
+        showEditor(content, 'html');
         return;
     }
 
     if (resourceType === 'css') {
-        showEditor('css', content);
+        showEditor(content, 'css');
+        return;
     }
+
+    if (resourceType === 'text' && content.text) {
+        showEditor(content);
+    }
+
 
 };
 
