@@ -1,40 +1,25 @@
 <template>
   <div class="mcr-summary-container">
-    <SummaryList
-      title="Content"
-      :list="data.list"
-    />
-    <details
-      v-show="data.preview"
-      open
-      class="mcr-content-preview"
+    <div
+      v-if="data.resourceType==='image'"
+      class="mcr-content-preview-image"
     >
-      <summary>
-        <b>Preview</b>
-      </summary>
-      <div
-        ref="el"
-        class="mcr-content-preview-image"
-      />
-    </details>
+      <img :src="data.imageSrc">
+    </div>
   </div>
 </template>
 <script setup>
 import {
-    ref, inject, watch, shallowReactive, onMounted
+    inject, watch, shallowReactive
 } from 'vue';
 
-import SummaryList from './summary-list.vue';
-import Util from '../utils/util';
+// import Util from '../utils/util.js';
 
 const state = inject('state');
 
-const el = ref(null);
-let $el;
-
 const data = shallowReactive({
-    preview: false,
-    list: []
+    resourceType: '',
+    imageSrc: ''
 });
 
 const update = (entry) => {
@@ -42,22 +27,14 @@ const update = (entry) => {
 
     const content = entry.response.content;
 
-    console.log(content);
+    // console.log(content);
 
-    data.list = [{
-        name: 'Resource Type',
-        value: `${content.mimeType} (${entry.resourceType})`
-    }, {
-        name: 'Resource Size',
-        value: `${Util.NF(Math.max(content.size, 0))} Bytes`
-    }];
+    const resourceType = entry.resourceType;
+    data.resourceType = resourceType;
 
-    data.preview = false;
-
-    if (entry.resourceType === 'image') {
-        console.log(content.encoding);
-        $el.innerHTML = `<img src="data:${content.mimeType};base64,${content.text}" />`;
-        data.preview = true;
+    if (resourceType === 'image') {
+        // console.log(content.encoding);
+        data.imageSrc = `data:${content.mimeType};base64,${content.text}`;
     }
 
 
@@ -69,9 +46,6 @@ watch(() => state.entry, (v) => {
     }
 });
 
-onMounted(() => {
-    $el = el.value;
-});
 </script>
 <style lang="scss">
 .mcr-content {
@@ -87,9 +61,6 @@ onMounted(() => {
 }
 
 .mcr-content-preview-image {
-    margin-top: 5px;
-    margin-left: 15px;
-
     img {
         display: block;
         border: 1px solid #f5f5f5;

@@ -38,6 +38,7 @@ const update = (entry) => {
     // console.log(entry);
 
     const { response } = entry;
+    const content = response.content;
 
     // console.log('response', response);
 
@@ -52,9 +53,16 @@ const update = (entry) => {
         name: 'HTTP Version',
         value: response.httpVersion
     }, {
+        name: 'Resource Type',
+        value: `${content.mimeType} (${entry.resourceType})`
+    }, {
+        name: 'Resource Size',
+        value: `${Util.NF(Math.max(content.size, 0))} Bytes`
+    }, {
         name: 'Transfer Size',
         value: Util.getTransferSize(response)
     }];
+
 
     if (response.comment) {
         data.list.push({
