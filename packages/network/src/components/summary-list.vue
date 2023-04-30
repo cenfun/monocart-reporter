@@ -16,6 +16,7 @@
           v-for="(item, i) in props.list"
           :key="i"
           class="mcr-summary-item"
+          :style="'padding-left:'+item.padding||0"
         >
           <span class="mcr-summary-name">
             {{ item.name }}:

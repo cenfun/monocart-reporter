@@ -33,7 +33,7 @@
 </template>
 <script setup>
 import {
-    shallowReactive, onMounted, reactive, provide
+    shallowReactive, onMounted, reactive, provide, createApp
 } from 'vue';
 import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
@@ -41,6 +41,7 @@ import { components, generateTooltips } from 'vine-ui';
 import Util from './utils/util.js';
 
 import Flyover from './components/flyover.vue';
+import Waterfall from './components/waterfall.vue';
 
 const {
     VuiFlex,
@@ -118,8 +119,6 @@ const hideTooltip = () => {
 };
 
 const showTooltip = (elem, text, html) => {
-
-    console.log('show tooltip');
 
     if (Util.isTouchDevice()) {
         return;
@@ -453,14 +452,8 @@ const getColumns = () => {
         width: 300,
         formatter: 'waterfall'
     }, {
-        id: 'removeAddress',
-        name: 'Address',
-        width: 150,
-        align: 'right'
-    }, {
         id: 'protocol',
         name: 'Protocol',
-        align: 'center',
         init: (entry) => {
             let protocol = entry.response.httpVersion.toLowerCase();
             if (protocol === 'http/2.0') {
@@ -490,6 +483,18 @@ const getColumns = () => {
             return entry.request.url;
         }
     }, {
+        id: 'removeAddress',
+        name: 'Address',
+        width: 150,
+        align: 'right'
+    }, {
+        id: 'connection',
+        name: 'Connection',
+        with: 90,
+        init: (entry) => {
+            return entry.connection || '';
+        }
+    }, {
         id: 'comment',
         name: 'Comment',
         width: 200,
@@ -506,22 +511,26 @@ const getGridData = () => {
 
     const pages = state.reportData.log.pages;
     pages.forEach((page) => {
-        page.startedDateTime = new Date(page.startedDateTime).getTime();
+        page.timestampStart = new Date(page.startedDateTime).getTime();
     });
-    pages.sort((a, b) => a.startedDateTime - b.startedDateTime);
+    pages.sort((a, b) => a.timestampStart - b.timestampStart);
 
     const pageMap = {};
-    const rows = pages.map((page) => {
+    const rows = pages.map((page, i) => {
         const emptyRow = {};
         columns.forEach((column) => {
             emptyRow[column.id] = '';
         });
+
         const pageRow = {
             ... emptyRow,
             id: page.id,
             name: page.title,
             type: 'page',
-            waterfall: page.startedDateTime,
+            waterfall: i,
+            timestampStart: page.timestampStart,
+            timestampEnd: page.timestampStart,
+            pageTimings: page.pageTimings,
             comment: page.comment,
             subs: []
         };
@@ -538,22 +547,25 @@ const getGridData = () => {
         const id = Util.uid();
         entry.id = id;
         entryMap[id] = entry;
-        entry.startedDateTime = new Date(entry.startedDateTime).getTime();
+        entry.timestampStart = new Date(entry.startedDateTime).getTime();
         entry.url = getUrl(entry.request.url);
         entry.statusType = getStatusType(entry.response.status);
         entry.removeAddress = getRemoveAddress(entry);
     });
     state.entryMap = entryMap;
 
-    entries.sort((a, b) => a.startedDateTime - b.startedDateTime);
+    entries.sort((a, b) => a.timestampStart - b.timestampStart);
 
     entries.forEach((entry, i) => {
 
         const row = {
             id: entry.id,
+            pageref: entry.pageref,
 
             // for sort
-            waterfall: entry.startedDateTime,
+            waterfall: i,
+            timestampStart: entry.timestampStart,
+            timings: entry.timings,
 
             statusType: entry.statusType,
             removeAddress: entry.removeAddress
@@ -569,9 +581,8 @@ const getGridData = () => {
 
         const page = pageMap[entry.pageref];
         if (page) {
+            page.timestampEnd = Math.max(page.timestampEnd, row.timestampStart + row.time);
             page.subs.push(row);
-        } else {
-            rows.push(row);
         }
 
     });
@@ -618,6 +629,32 @@ const initGrid = () => {
                 return Util.TF(v, ' ');
             }
             return v;
+        },
+        waterfall: (v, rowItem) => {
+            const props = {};
+            let currentPage;
+            if (rowItem.type === 'page') {
+                currentPage = rowItem;
+            } else {
+                props.timings = {
+                    ... rowItem.timings,
+                    timestampStart: rowItem.timestampStart
+                };
+                currentPage = state.pageMap[rowItem.pageref];
+            }
+
+            if (currentPage) {
+                props.pageTimings = {
+                    ... currentPage.pageTimings,
+                    timestampStart: currentPage.timestampStart,
+                    timestampEnd: currentPage.timestampEnd
+                };
+            }
+
+            const div = document.createElement('div');
+            const app = createApp(Waterfall, props);
+            const vm = app.mount(div);
+            return vm.$el;
         }
     });
     grid.setOption(options);

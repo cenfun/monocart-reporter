@@ -36,7 +36,7 @@
         <Request />
         <Response />
         <Content />
-        <Timing />
+        <Timing :entry="state.entry" />
       </template>
     </VuiTab>
     <VuiLoading

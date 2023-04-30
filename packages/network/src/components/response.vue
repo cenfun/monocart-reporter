@@ -10,6 +10,11 @@
       :list="data.headers"
     />
 
+    <SummaryList
+      title="Cache"
+      :list="data.cache"
+    />
+
     <SummaryTable
       title="Response Cookies"
       :list="data.cookies"
@@ -31,7 +36,8 @@ const state = inject('state');
 const data = shallowReactive({
     list: [],
     headers: [],
-    cookies: []
+    cookies: [],
+    cache: []
 });
 
 const update = (entry) => {
@@ -75,8 +81,6 @@ const update = (entry) => {
         });
     }
 
-    console.log(entry);
-
     if (response.comment) {
         data.list.push({
             name: 'comment',
@@ -86,6 +90,27 @@ const update = (entry) => {
 
     data.headers = response.headers;
     data.cookies = response.cookies;
+
+    data.cache = [];
+
+    if (entry.cache) {
+        Object.keys(entry.cache).forEach((key) => {
+            const val = entry.cache[key];
+            if (val) {
+                data.cache.push({
+                    name: key,
+                    value: ''
+                });
+                Object.keys(val).forEach((k) => {
+                    data.cache.push({
+                        name: k,
+                        value: val[k],
+                        padding: '15px'
+                    });
+                });
+            }
+        });
+    }
 };
 
 watch(() => state.entry, (v) => {
