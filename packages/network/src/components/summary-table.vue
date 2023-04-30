@@ -30,9 +30,8 @@
               v-for="(column, c) in data.columns"
               :key="c"
               :class="'mcr-summary-table-'+column"
-            >
-              {{ item[column] }}
-            </td>
+              v-html="item[column]"
+            />
           </tr>
         </table>
       </div>

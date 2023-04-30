@@ -20,9 +20,10 @@
           <span class="mcr-summary-name">
             {{ item.name }}:
           </span>
-          <span class="mcr-summary-value">
-            {{ item.value }}
-          </span>
+          <span
+            class="mcr-summary-value"
+            v-html="item.value"
+          />
         </div>
         <slot />
       </VuiFlex>

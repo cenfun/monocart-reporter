@@ -27,6 +27,7 @@ import { createEditor } from '../utils/editor.js';
 
 // import Util from '../utils/util.js';
 import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
+import Util from '../utils/util.js';
 
 const state = inject('state');
 
@@ -86,6 +87,9 @@ const showEditor = async (content, type) => {
     state.loading = true;
     data.previewType = 'editor';
 
+    // make sure loading is show up
+    await Util.delay(100);
+
     const textFormatted = await getTextFormatted(content, type);
 
     // console.log(textFormatted);
@@ -107,6 +111,9 @@ const update = (entry) => {
 
     // console.log(content);
     data.previewType = 'other';
+    if (!content.text) {
+        return;
+    }
 
     const resourceType = entry.resourceType;
     if (resourceType === 'image') {
@@ -116,23 +123,9 @@ const update = (entry) => {
         return;
     }
 
-    if (resourceType === 'script') {
-        showEditor(content, 'js');
-        return;
-    }
-
-    if (resourceType === 'json') {
-        showEditor(content, 'json');
-        return;
-    }
-
-    if (resourceType === 'html') {
-        showEditor(content, 'html');
-        return;
-    }
-
-    if (resourceType === 'css') {
-        showEditor(content, 'css');
+    const formattedTypes = ['js', 'css', 'html', 'json'];
+    if (formattedTypes.includes(resourceType)) {
+        showEditor(content, resourceType);
         return;
     }
 

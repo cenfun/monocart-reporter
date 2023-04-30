@@ -43,12 +43,17 @@ const update = (entry) => {
     // console.log('response', response);
 
     // http://www.softwareishard.com/blog/har-12-spec/
+
+    const statusText = response.statusText || (entry.statusType === 'ok' ? 'OK' : '');
+    const failureText = response._failureText ? ` (${response._failureText})` : '';
+    const statusStr = `<span class="mcr-status-${entry.statusType}">${response.status} ${statusText}${failureText}</span>`;
+
     data.list = [{
-        name: 'Status Code',
-        value: response.status
+        name: 'Status',
+        value: statusStr
     }, {
-        name: 'Status Text',
-        value: response.statusText
+        name: 'Remote Address',
+        value: entry.removeAddress
     }, {
         name: 'HTTP Version',
         value: response.httpVersion
@@ -63,6 +68,14 @@ const update = (entry) => {
         value: Util.getTransferSize(response)
     }];
 
+    if (entry.statusType === 'redirect' && Util.hasOwn(response, 'redirectURL')) {
+        data.list.push({
+            name: 'redirectURL',
+            value: response.redirectURL
+        });
+    }
+
+    console.log(response);
 
     if (response.comment) {
         data.list.push({

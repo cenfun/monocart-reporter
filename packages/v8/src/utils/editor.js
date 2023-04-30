@@ -19,6 +19,8 @@ import {
     foldGutter, foldKeymap
 } from '@codemirror/language';
 
+import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
+
 import { javascript } from '@codemirror/lang-javascript';
 import { css } from '@codemirror/lang-css';
 
@@ -54,7 +56,9 @@ export const createEditor = (container, report) => {
         rectangularSelection(),
         crosshairCursor(),
         highlightActiveLine(),
+        highlightSelectionMatches(),
         keymap.of([
+            ... searchKeymap,
             ... foldKeymap
         ])
     ];

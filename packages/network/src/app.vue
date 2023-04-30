@@ -58,7 +58,7 @@ const state = shallowReactive({
 
     // flyover detail
     flyoverVisible: false,
-    flyoverWidth: '80%',
+    flyoverWidth: '61.8%',
     flyoverTitle: '',
     flyoverComponent: '',
     flyoverData: null,
@@ -155,7 +155,7 @@ const isNodeTruncated = (node) => {
 const initFlyoverSize = () => {
     state.windowWidth = window.innerWidth;
 
-    let flyoverWidth = '80%';
+    let flyoverWidth = '61.8%';
     if (state.windowWidth < 600) {
         flyoverWidth = '100%';
     }
@@ -239,6 +239,22 @@ const resourceFromMimeType = (mimeType) => {
         return 'css';
     }
 
+    if (mimeType.startsWith('text/html')) {
+        return 'html';
+    }
+
+    if (mimeType.startsWith('text/javascript')) {
+        return 'js';
+    }
+
+    if (mimeType.startsWith('application/javascript')) {
+        return 'js';
+    }
+
+    if (mimeType.startsWith('application/json')) {
+        return 'json';
+    }
+
     if (mimeType.includes('font')) {
         return 'font';
     }
@@ -250,11 +266,11 @@ const resourceFromMimeType = (mimeType) => {
     }
 
     if (mainType === 'audio') {
-        return 'audio';
+        return 'media';
     }
 
     if (mainType === 'video') {
-        return 'video';
+        return 'media';
     }
 
     if (!subType) {
@@ -266,7 +282,7 @@ const resourceFromMimeType = (mimeType) => {
     }
 
     if (subType.includes('script')) {
-        return 'script';
+        return 'js';
     }
 
     if (subType.includes('html')) {
@@ -281,8 +297,8 @@ const resourceFromMimeType = (mimeType) => {
 };
 
 const resourceTypeByExtension = new Map([
-    ['js', 'script'],
-    ['mjs', 'script'],
+    ['js', 'js'],
+    ['mjs', 'js'],
 
     ['css', 'css'],
     ['xsl', 'css'],
@@ -300,7 +316,7 @@ const resourceTypeByExtension = new Map([
     ['tif', 'image'],
     ['tiff', 'image'],
 
-    ['webmanifest', 'manifest'],
+    ['webmanifest', 'json'],
 
     ['webp', 'media'],
 
@@ -346,7 +362,13 @@ const getResourceType = (entry) => {
     return 'other';
 };
 
-const basename = (url) => {
+const getRemoveAddress = (entry) => {
+    const port = entry.url.port || '80';
+    return `${entry.serverIPAddress || ''}:${port}`;
+};
+
+const getEntryName = (entry) => {
+    const { url, request } = entry;
     // console.log(url);
     const pathList = url.pathname.split('/');
     if (url.search) {
@@ -354,11 +376,23 @@ const basename = (url) => {
     }
     const list = [url.host].concat(pathList).filter((it) => it);
     // console.log(list);
-    return list.pop() || url.toString();
+    const basename = list.pop() || url.toString();
+
+    return `${request.method} ${basename}`;
 };
 
-const hasErrorStatusCode = (statusCode) => {
-    return statusCode >= 400;
+const getStatusType = (statusCode) => {
+    // 4xx client and 5xx server error
+    if (statusCode >= 400) {
+        return 'error';
+    }
+    if (statusCode >= 300) {
+        return 'redirect';
+    }
+    if (statusCode >= 200) {
+        return 'ok';
+    }
+    return 'other';
 };
 
 const getColumns = () => {
@@ -366,62 +400,26 @@ const getColumns = () => {
         id: 'name',
         name: 'Name',
         classMap: 'mcr-column-name',
+        width: 300,
         init: (entry) => {
-            return basename(entry.url);
-        }
-    }, {
-        id: 'path',
-        name: 'Path',
-        width: 120,
-        init: (entry) => {
-            return entry.url.pathname;
-        }
-    }, {
-        id: 'url',
-        name: 'Url',
-        width: 120,
-        invisible: true,
-        init: (entry) => {
-            return entry.request.url;
-        }
-    }, {
-        id: 'domain',
-        name: 'Domain',
-        // invisible: true,
-        init: (entry) => {
-            return entry.url.hostname;
-        }
-    }, {
-        id: 'method',
-        name: 'Method',
-        init: (entry) => {
-            return entry.request.method;
+            return getEntryName(entry);
         }
     }, {
         id: 'status',
         name: 'Status',
+        width: 60,
+        align: 'center',
         init: (entry) => {
             return entry.response.status;
         },
-        formatter: (v) => {
-            if (hasErrorStatusCode(v)) {
-                return `<span class="mcr-column-failed">${v}</span>`;
-            }
-            return v;
-        }
-    }, {
-        id: 'protocol',
-        name: 'Protocol',
-        init: (entry) => {
-            let protocol = entry.response.httpVersion.toLowerCase();
-            if (protocol === 'http/2.0') {
-                protocol = 'h2';
-            }
-            return protocol.replace(/^http\/2\.0?\+quic/, 'http/2+quic');
+        formatter: (v, rowItem) => {
+            return `<span class="mcr-status-${rowItem.statusType}">${v}</span>`;
         }
     }, {
         id: 'resourceType',
         name: 'Type',
+        width: 60,
+        align: 'center',
         init: (entry) => {
             const resourceType = getResourceType(entry);
             entry.resourceType = resourceType;
@@ -447,18 +445,47 @@ const getColumns = () => {
             return entry.time;
         }
     }, {
-        id: 'removeAddress',
-        name: 'Address',
-        align: 'right',
-        init: (entry) => {
-            const port = entry.url.port || '80';
-            return `${entry.serverIPAddress || ''}:${port}`;
-        }
-    }, {
         id: 'waterfall',
         name: 'Waterfall',
-        width: 200,
+        width: 300,
         formatter: 'waterfall'
+    }, {
+        id: 'removeAddress',
+        name: 'Address',
+        width: 150,
+        align: 'right'
+    }, {
+        id: 'protocol',
+        name: 'Protocol',
+        align: 'center',
+        init: (entry) => {
+            let protocol = entry.response.httpVersion.toLowerCase();
+            if (protocol === 'http/2.0') {
+                protocol = 'h2';
+            }
+            return protocol.replace(/^http\/2\.0?\+quic/, 'http/2+quic');
+        }
+    }, {
+        id: 'domain',
+        name: 'Domain',
+        width: 150,
+        init: (entry) => {
+            return entry.url.hostname;
+        }
+    }, {
+        id: 'path',
+        name: 'Path',
+        width: 150,
+        init: (entry) => {
+            return entry.url.pathname;
+        }
+    }, {
+        id: 'url',
+        name: 'Url',
+        width: 300,
+        init: (entry) => {
+            return entry.request.url;
+        }
     }];
 
     return columns;
@@ -473,6 +500,8 @@ const getGridData = () => {
         entryMap[id] = entry;
         entry.startedDateTime = new Date(entry.startedDateTime).getTime();
         entry.url = getUrl(entry.request.url);
+        entry.statusType = getStatusType(entry.response.status);
+        entry.removeAddress = getRemoveAddress(entry);
     });
     state.entryMap = entryMap;
 
@@ -483,8 +512,12 @@ const getGridData = () => {
 
         const row = {
             id: entry.id,
+
             // for sort
-            waterfall: entry.startedDateTime
+            waterfall: entry.startedDateTime,
+
+            statusType: entry.statusType,
+            removeAddress: entry.removeAddress
         };
 
         columns.forEach((column) => {
@@ -493,9 +526,7 @@ const getGridData = () => {
             }
         });
 
-        if (hasErrorStatusCode(row.status)) {
-            row.classMap = 'mcr-row-error';
-        }
+        row.classMap = `mcr-row-status-${entry.statusType}`;
 
         return row;
     });
@@ -576,12 +607,10 @@ html {
 
 body {
     --font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
-    --bg-failed: #fff0ef;
-    --bg-flaky: #fcf7de;
-    --color-passed: green;
-    --color-failed: #d00;
-    --color-flaky: orange;
-    --color-skipped: gray;
+    --bg-error: #fff0ef;
+    --color-ok: green;
+    --color-error: #d00;
+    --color-redirect: orange;
 
     width: 100%;
     height: 100%;
@@ -661,18 +690,29 @@ icon
     }
 }
 
+.mcr-status-error {
+    color: var(--color-error);
+}
+
+.mcr-status-redirect {
+    color: var(--color-redirect);
+}
+
+.mcr-status-ok {
+    color: var(--color-ok);
+}
+
 .mcr-network-grid {
     .mcr-column-name {
-        text-decoration: underline;
         cursor: pointer;
     }
 
-    .mcr-column-failed {
-        color: var(--color-failed);
+    .mcr-column-name:hover {
+        text-decoration: underline;
     }
 
-    .mcr-row-error {
-        background-color: var(--bg-failed);
+    .mcr-row-status-error {
+        background-color: var(--bg-error);
     }
 }
 
