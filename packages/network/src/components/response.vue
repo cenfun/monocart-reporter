@@ -68,14 +68,14 @@ const update = (entry) => {
         value: Util.getTransferSize(response)
     }];
 
-    if (entry.statusType === 'redirect' && Util.hasOwn(response, 'redirectURL')) {
+    if (response.redirectURL) {
         data.list.push({
             name: 'redirectURL',
             value: response.redirectURL
         });
     }
 
-    console.log(response);
+    console.log(entry);
 
     if (response.comment) {
         data.list.push({

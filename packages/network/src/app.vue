@@ -111,15 +111,16 @@ const hideTooltip = () => {
         return;
     }
 
-    if (state.tooltip) {
-        state.tooltip.visible = false;
-        state.tooltip.text = '';
-        state.tooltip.html = false;
-        state.tooltip.classMap = '';
-    }
+    tooltip.visible = false;
+    tooltip.text = '';
+    tooltip.html = false;
+    tooltip.classMap = '';
 };
 
 const showTooltip = (elem, text, html) => {
+
+    console.log('show tooltip');
+
     if (Util.isTouchDevice()) {
         return;
     }
@@ -129,13 +130,11 @@ const showTooltip = (elem, text, html) => {
     if (!text) {
         return;
     }
-    if (state.tooltip) {
-        state.tooltip.target = elem;
-        state.tooltip.text = text;
-        state.tooltip.html = html;
-        state.tooltip.classMap = 'mcr-searchable';
-        state.tooltip.visible = true;
-    }
+    tooltip.target = elem;
+    tooltip.text = text;
+    tooltip.html = html;
+    tooltip.classMap = 'mcr-searchable';
+    tooltip.visible = true;
 
 };
 
@@ -194,6 +193,10 @@ const bindGridEvents = (grid) => {
         } = d;
 
         if (!cellNode) {
+            return;
+        }
+
+        if (rowItem.type === 'page') {
             return;
         }
 
@@ -486,12 +489,49 @@ const getColumns = () => {
         init: (entry) => {
             return entry.request.url;
         }
+    }, {
+        id: 'comment',
+        name: 'Comment',
+        width: 200,
+        init: (entry) => {
+            return entry.comment || entry.request.comment || entry.response.comment;
+        }
     }];
 
     return columns;
 };
 
 const getGridData = () => {
+    const columns = getColumns();
+
+    const pages = state.reportData.log.pages;
+    pages.forEach((page) => {
+        page.startedDateTime = new Date(page.startedDateTime).getTime();
+    });
+    pages.sort((a, b) => a.startedDateTime - b.startedDateTime);
+
+    const pageMap = {};
+    const rows = pages.map((page) => {
+        const emptyRow = {};
+        columns.forEach((column) => {
+            emptyRow[column.id] = '';
+        });
+        const pageRow = {
+            ... emptyRow,
+            id: page.id,
+            name: page.title,
+            type: 'page',
+            waterfall: page.startedDateTime,
+            comment: page.comment,
+            subs: []
+        };
+
+        pageMap[pageRow.id] = pageRow;
+
+        return pageRow;
+    });
+    state.pageMap = pageMap;
+
     const entries = state.reportData.log.entries;
     const entryMap = {};
     entries.forEach((entry) => {
@@ -507,8 +547,7 @@ const getGridData = () => {
 
     entries.sort((a, b) => a.startedDateTime - b.startedDateTime);
 
-    const columns = getColumns();
-    const rows = entries.map((entry, i) => {
+    entries.forEach((entry, i) => {
 
         const row = {
             id: entry.id,
@@ -528,7 +567,13 @@ const getGridData = () => {
 
         row.classMap = `mcr-row-status-${entry.statusType}`;
 
-        return row;
+        const page = pageMap[entry.pageref];
+        if (page) {
+            page.subs.push(row);
+        } else {
+            rows.push(row);
+        }
+
     });
 
     const options = {};
@@ -551,16 +596,28 @@ const initGrid = () => {
         collapseAllVisible: true,
         selectMultiple: false,
         rowNumberVisible: true,
+        frozenColumn: 0,
         columnProps: {
             maxWidth: 2000
         }
     };
+    // no frozen in mini size
+    if (state.windowWidth < 800) {
+        options.frozenColumn = -1;
+    }
+
     grid.setFormatter({
         bytes: (v) => {
-            return Util.BF(v, 1, 1024, ' ');
+            if (typeof v === 'number') {
+                return Util.BF(v, 1, 1024, ' ');
+            }
+            return v;
         },
         time: (v) => {
-            return Util.TF(v, ' ');
+            if (typeof v === 'number') {
+                return Util.TF(v, ' ');
+            }
+            return v;
         }
     });
     grid.setOption(options);
@@ -703,12 +760,14 @@ icon
 }
 
 .mcr-network-grid {
-    .mcr-column-name {
-        cursor: pointer;
-    }
+    .tg-row:not(.tg-page) {
+        .mcr-column-name {
+            cursor: pointer;
+        }
 
-    .mcr-column-name:hover {
-        text-decoration: underline;
+        .mcr-column-name:hover {
+            text-decoration: underline;
+        }
     }
 
     .mcr-row-status-error {
