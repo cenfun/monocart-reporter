@@ -29,11 +29,20 @@
       :text="tooltip.text"
       :html="tooltip.html"
     />
+
+    <VuiPopover
+      v-model="popover.visible"
+      :target="popover.target"
+      width="300px"
+      class="mcr-popover-timing"
+    >
+      <Timing :entry="popover.entry" />
+    </VuiPopover>
   </div>
 </template>
 <script setup>
 import {
-    shallowReactive, onMounted, reactive, provide, createApp
+    shallowReactive, onMounted, provide, createApp
 } from 'vue';
 import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
@@ -42,11 +51,12 @@ import Util from './utils/util.js';
 
 import Flyover from './components/flyover.vue';
 import Waterfall from './components/waterfall.vue';
+import Timing from './components/timing.vue';
 
 const {
     VuiFlex,
-    VuiTooltip
-
+    VuiTooltip,
+    VuiPopover
 } = components;
 
 // =================================================================================
@@ -64,21 +74,23 @@ const state = shallowReactive({
     flyoverComponent: '',
     flyoverData: null,
 
-    loading: false,
-
-    grid: null
+    loading: false
 
 });
 
 provide('state', state);
 
-const tooltip = reactive({
+const tooltip = shallowReactive({
     visible: false,
     target: null,
     text: '',
     html: false
 });
 
+const popover = shallowReactive({
+    visible: false,
+    target: null
+});
 
 // =================================================================================
 
@@ -150,6 +162,18 @@ const isNodeTruncated = (node) => {
 
 // =================================================================================
 
+const showPopover = (rowItem, target) => {
+    popover.target = target;
+    popover.entry = state.entryMap[rowItem.id];
+    popover.visible = true;
+};
+
+const hidePopover = () => {
+    popover.visible = false;
+};
+
+// =================================================================================
+
 const initFlyoverSize = () => {
     state.windowWidth = window.innerWidth;
 
@@ -176,13 +200,24 @@ const showFlyover = (rowItem) => {
 const bindGridEvents = (grid) => {
 
     grid.bind('onCellMouseEnter', (e, d) => {
-        const cellNode = d.cellNode;
+        const {
+            cellNode, rowItem, columnItem
+        } = d;
+        if (!cellNode) {
+            return;
+        }
+        if (rowItem.type !== 'page' && columnItem.id === 'waterfall') {
+            showPopover(rowItem, d.e.target);
+            return;
+        }
+
         if (isNodeTruncated(cellNode)) {
             const text = cellNode.innerText;
             showTooltip(cellNode, text);
         }
     }).bind('onCellMouseLeave', (e, d) => {
         hideTooltip();
+        hidePopover();
     });
 
     grid.bind('onClick', (e, d) => {
@@ -810,6 +845,10 @@ icon
     .mcr-row-status-error {
         background-color: var(--bg-error);
     }
+}
+
+.mcr-popover-timing {
+    pointer-events: none;
 }
 
 </style>

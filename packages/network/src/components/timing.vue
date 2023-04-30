@@ -12,7 +12,7 @@
     >
       <div class="mcr-timing-legend mcr-timing-legend-start" />
       <div>{{ Util.TF(data.durationStart," ") }}</div>
-      <div>Request start time since the beginning</div>
+      <div>Request start time</div>
     </VuiFlex>
 
     <VuiFlex
