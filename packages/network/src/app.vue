@@ -534,7 +534,7 @@ const getColumns = () => {
         name: 'Comment',
         width: 200,
         init: (entry) => {
-            return entry.comment || entry.request.comment || entry.response.comment;
+            return entry.comment || entry.request.comment || entry.response.comment || '';
         }
     }];
 
@@ -844,6 +844,10 @@ icon
 
     .mcr-row-status-error {
         background-color: var(--bg-error);
+
+        .mcr-waterfall {
+            background-color: var(--bg-error);
+        }
     }
 }
 
