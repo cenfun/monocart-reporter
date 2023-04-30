@@ -7,6 +7,42 @@ const Util = {
 
     ... Share,
 
+    pageTimings: [{
+        key: 'onContentLoad',
+        name: 'DOM Content Loaded',
+        color: '#1a1aa6'
+    }, {
+        key: 'onLoad',
+        name: 'Page Loaded',
+        color: '#c80000'
+    }],
+
+    timings: [{
+        key: 'blocked',
+        name: 'Blocking',
+        color: '#858585'
+    }, {
+        key: 'dns',
+        name: 'DNS Lookup',
+        color: '#009688'
+    }, {
+        key: 'connect',
+        name: 'Connecting',
+        color: '#b52dcd'
+    }, {
+        key: 'send',
+        name: 'Sending',
+        color: '#74979a'
+    }, {
+        key: 'wait',
+        name: 'Waiting',
+        color: '#00a846'
+    }, {
+        key: 'receive',
+        name: 'Receiving',
+        color: '#0299de'
+    }],
+
     decompress,
 
     isTouchDevice: function() {

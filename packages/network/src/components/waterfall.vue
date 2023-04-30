@@ -39,26 +39,19 @@ const update = (pageTimings, timings) => {
         return;
     }
 
-    const {
-        timestampStart, timestampEnd,
-        onContentLoad, onLoad
-    } = pageTimings;
+    const { timestampStart, timestampEnd } = pageTimings;
 
     const duration = timestampEnd - timestampStart;
 
     data.lines = [];
-    data.lines.push({
-        style: {
-            left: Util.PF(onContentLoad, duration),
-            background: '#1a1aa6'
-        }
-    });
 
-    data.lines.push({
-        style: {
-            left: Util.PF(onLoad, duration),
-            background: '#c80000'
-        }
+    Util.pageTimings.forEach((item) => {
+        data.lines.push({
+            style: {
+                left: Util.PF(pageTimings[item.key], duration),
+                background: item.color
+            }
+        });
     });
 
     data.rects = [];
@@ -67,34 +60,16 @@ const update = (pageTimings, timings) => {
     }
 
     const startDuration = timings.timestampStart - timestampStart;
-    const items = [{
-        key: 'blocked',
-        background: '#858585'
-    }, {
-        key: 'dns',
-        background: '#009688'
-    }, {
-        key: 'connect',
-        background: '#b52dcd'
-    }, {
-        key: 'send',
-        background: '#74979a'
-    }, {
-        key: 'wait',
-        background: '#00a846'
-    }, {
-        key: 'receive',
-        background: '#0299de'
-    }];
+
     let pos = 0;
-    items.forEach((item) => {
+    Util.timings.forEach((item) => {
         const v = timings[item.key];
         if (v && v > 0) {
             data.rects.push({
                 style: {
                     left: Util.PF(startDuration + pos, duration),
                     width: Util.PF(v, duration),
-                    background: item.background
+                    background: item.color
                 }
             });
             pos += v;
@@ -124,7 +99,7 @@ watchEffect(() => {
 .mcr-waterfall-rect {
     position: absolute;
     top: 50%;
-    height: 10px;
+    height: 50%;
     transform: translateY(-50%);
 }
 </style>
