@@ -113,7 +113,7 @@ const update = (entry) => {
         const v = timings[item.key];
         data.rects.push({
             name: item.name,
-            value: v,
+            value: Math.max(v, 0),
             style: {
                 background: item.color
             }
@@ -126,7 +126,7 @@ const update = (entry) => {
         const v = pageTimings[item.key];
         data.lines.push({
             name: item.name,
-            value: v,
+            value: Math.max(v, 0),
             style: {
                 background: item.color
             }

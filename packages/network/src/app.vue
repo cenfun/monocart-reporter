@@ -564,7 +564,7 @@ const getGridData = () => {
             type: 'page',
             waterfall: i,
             timestampStart: page.timestampStart,
-            timestampEnd: page.timestampStart,
+            timestampEnd: page.timestampStart + page.pageTimings.onLoad,
             pageTimings: page.pageTimings,
             comment: page.comment,
             subs: []
