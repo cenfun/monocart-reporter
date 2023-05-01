@@ -4,15 +4,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const copyFormatter = () => {
-    const workerFile = 'monocart-formatter.js';
-    fs.copyFileSync(
-        path.resolve(`../monocart-components/packages/formatter/dist/${workerFile}`),
-        path.resolve(`.temp/${workerFile}`)
-    );
-    console.log(`formatter file copied: ${workerFile}`);
-};
-
 const beforeApp = (item, Util) => {
 
     const EC = require('eight-colors');
@@ -137,41 +128,69 @@ module.exports = {
             }
 
             if (item.name === 'v8') {
-                copyFormatter();
                 return beforeV8(item, Util);
             }
 
             if (item.name === 'network') {
-                copyFormatter();
                 return beforeNetwork(item, Util);
             }
 
             return 0;
         },
 
-        after: (item, Util) => {
-
-            if (!item.production) {
-                return 0;
-            }
+        afterAll: (results) => {
 
             const EC = require('eight-colors');
-            const filename = `${item.fullName}.js`;
-            // copy dist file to lib
-            const fromJs = path.resolve(item.buildPath, filename);
-            if (!fs.existsSync(fromJs)) {
-                EC.logRed(`ERROR: Not found dist: ${fromJs}`);
-                return 1;
-            }
+
             const toPath = path.resolve(__dirname, '../lib/runtime');
             if (!fs.existsSync(toPath)) {
                 fs.mkdirSync(toPath);
             }
-            const toJs = path.resolve(toPath, filename);
-            // console.log(fromJs, toJs);
-            fs.cpSync(fromJs, toJs);
 
-            Util.logGreen(`runtime file copied: ${filename}`);
+            const moduleFiles = {};
+
+            results.jobList.forEach((item) => {
+                if (!item.production) {
+                    return;
+                }
+
+                Object.assign(moduleFiles, item.dependencies.moduleFiles);
+
+                const filename = `${item.fullName}.js`;
+                // copy dist file to lib
+                const fromJs = path.resolve(item.buildPath, filename);
+                if (!fs.existsSync(fromJs)) {
+                    EC.logRed(`ERROR: Not found dist: ${fromJs}`);
+                    return 1;
+                }
+
+                const toJs = path.resolve(toPath, filename);
+                // console.log(fromJs, toJs);
+                fs.cpSync(fromJs, toJs);
+
+                EC.logGreen(`runtime file copied: ${filename}`);
+
+            });
+
+            // copy common components
+            const list = [];
+            Object.values(moduleFiles).forEach((ls) => {
+                ls.forEach((f) => {
+                    list.push(f);
+                });
+            });
+            list.forEach((fp) => {
+                const filename = path.basename(fp);
+                const fromJs = path.resolve(fp);
+                if (!fs.existsSync(fromJs)) {
+                    EC.logRed(`ERROR: Not found dist: ${fromJs}`);
+                    return 1;
+                }
+                const toJs = path.resolve(toPath, filename);
+                // console.log(fromJs, toJs);
+                fs.cpSync(fromJs, toJs);
+                EC.logGreen(`runtime file copied: ${filename}`);
+            });
 
             return 0;
         }
