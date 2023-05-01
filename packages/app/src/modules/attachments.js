@@ -94,14 +94,24 @@ const getTrace = (path, name) => {
     const currentProtocol = `current protocol is <code style="color:${color}">${protocol}</code>`;
 
     const showReport = 'try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server, please keep attachments and reports under the same directory.';
-    const readme = `The Trace Viewer requires that the trace file must be loaded over the http:// or https:// protocols (${currentProtocol})  
+    const readme = `The ${traceViewer} requires that the ${traceFile} file must be loaded over the http:// or https:// protocols (${currentProtocol})  
             without <a href="https://developer.mozilla.org/en-US/docs/Glossary/CORS" target="_blank">CORS</a> issue,
             ${showReport}
         `;
 
     const ls = [];
-    ls.push(`<li><a href="${viewerUrl}" target="_blank">View trace online</a> <span class="mcr-readme">${readme}</span></li>`);
-    ls.push(`<li>or download the ${traceFile} file and load it on the page ${traceViewer}</li>`);
+    ls.push('<div class="mcr-trace-details">');
+    ls.push(`<a href="${viewerUrl}" target="_blank">View trace online</a>`);
+    ls.push('<details>');
+    ls.push('<summary>Details</summary>');
+
+    ls.push('<dl>');
+    ls.push(`<dd>${readme}</dd>`);
+    ls.push(`<dd>or download the ${traceFile} file and load it to the page ${traceViewer} manually.</dd>`);
+    ls.push('</dl>');
+
+    ls.push('</details>');
+    ls.push('</div">');
 
     const body = ls.join('');
     return getLink(path, name, 'trace', body);
