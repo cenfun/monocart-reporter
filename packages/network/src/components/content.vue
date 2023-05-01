@@ -23,7 +23,7 @@ import {
     inject, watch, shallowReactive
 } from 'vue';
 
-import { createEditor } from '../utils/editor.js';
+import { createCodeViewer } from 'monocart-code-viewer';
 
 import { format } from 'monocart-formatter';
 import Util from '../utils/util.js';
@@ -35,8 +35,7 @@ const data = shallowReactive({
     imageSrc: ''
 });
 
-let editor;
-
+let codeViewer;
 const getTextFormatted = async (content, type) => {
     if (content.textFormatted) {
         return content.textFormatted;
@@ -65,11 +64,15 @@ const showEditor = async (content, type) => {
 
     // console.log(textFormatted);
 
-    if (editor) {
-        editor.showContent(textFormatted);
+    if (codeViewer) {
+        codeViewer.update({
+            content: textFormatted
+        });
     } else {
         const container = document.querySelector('.mcr-content-editor');
-        editor = createEditor(container, textFormatted);
+        codeViewer = createCodeViewer(container, {
+            content: textFormatted
+        });
     }
 
     state.loading = false;
