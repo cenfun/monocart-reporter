@@ -990,14 +990,25 @@ icon
         border-radius: 6px;
         background-color: rgb(175 184 193 / 20%);
     }
+}
 
-    a:link,
-    a:visited {
-        color: #666;
-    }
+.mcr-item {
+    position: relative;
+    display: inline-block;
+    min-height: 20px;
+    margin: 0;
+    padding-left: 15px;
+    line-height: 20px;
 
-    a:hover {
-        color: #333;
+    &::before {
+        position: absolute;
+        top: 8px;
+        left: 2px;
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: #333;
     }
 }
 

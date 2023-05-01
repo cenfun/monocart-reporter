@@ -61,7 +61,7 @@ const getLink = (path, name, type = 'link', body = '') => {
         body = `<div class="mcr-attachment-body">${body}</div>`;
     }
     return `<div class="mcr-detail-attachment mcr-attachment-${type}">
-                <div class="mcr-attachment-head"><a href="${path}" target="_blank">${name}</a></div>
+                <div class="mcr-attachment-head"><a href="${path}" target="_blank" class="mcr-item">${name}</a></div>
                 ${body}
             </div>`;
 };
@@ -105,9 +105,9 @@ const getTrace = (path, name) => {
     ls.push('<details>');
     ls.push('<summary>Details</summary>');
 
-    ls.push('<dl>');
-    ls.push(`<dd>${readme}</dd>`);
-    ls.push(`<dd>or download the ${traceFile} file and load it to the page ${traceViewer} manually.</dd>`);
+    ls.push('<dl class="mcr-readme">');
+    ls.push(`<dd class="mcr-item">${readme}</dd>`);
+    ls.push(`<dd class="mcr-item">or download the ${traceFile} file and load it to the page ${traceViewer} manually.</dd>`);
     ls.push('</dl>');
 
     ls.push('</details>');

@@ -799,31 +799,13 @@ onActivated(() => {
                     user-select: none;
                 }
 
-                code {
-                    padding: 0 5px;
-                    background-color: #f8f8f8;
-                }
-
                 dl {
                     margin-top: 5px;
                     margin-left: 15px;
                 }
 
                 dd {
-                    position: relative;
                     margin: 0;
-                    padding-left: 15px;
-                    line-height: 20px;
-                }
-
-                dd::before {
-                    position: absolute;
-                    top: 9px;
-                    left: 3px;
-                    content: "";
-                    width: 3px;
-                    height: 3px;
-                    background-color: #333;
                 }
             }
         }
