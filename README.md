@@ -793,5 +793,14 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
     - `packages/v8` V8 HTML report UI
     - `packages/vendor` Third-party libs
 
+
+## Contributing
+```sh
+npm install starfall-cli -g
+npm install
+npm run test
+npm run build
+npm run dev
+```
 ## CHANGELOG
 - [CHANGELOG.md](CHANGELOG.md)
