@@ -795,6 +795,7 @@ onActivated(() => {
             details {
                 summary {
                     margin-left: 15px;
+                    color: #666;
                     cursor: pointer;
                     user-select: none;
                 }

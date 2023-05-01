@@ -103,7 +103,7 @@ const getTrace = (path, name) => {
     ls.push('<div class="mcr-trace-details">');
     ls.push(`<a href="${viewerUrl}" target="_blank">View trace online</a>`);
     ls.push('<details>');
-    ls.push('<summary>Details</summary>');
+    ls.push('<summary>NOTE</summary>');
 
     ls.push('<dl class="mcr-readme">');
     ls.push(`<dd class="mcr-item">${readme}</dd>`);
