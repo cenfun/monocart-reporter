@@ -4,6 +4,15 @@
 const fs = require('fs');
 const path = require('path');
 
+const copyFormatter = () => {
+    const workerFile = 'devtools-formatter.js';
+    fs.copyFileSync(
+        path.resolve(`../devtools-packages/packages/formatter/dist/${workerFile}`),
+        path.resolve(`.temp/${workerFile}`)
+    );
+    console.log(`formatter file copied: ${workerFile}`);
+};
+
 const beforeApp = (item, Util) => {
 
     const EC = require('eight-colors');
@@ -82,15 +91,6 @@ const beforeV8 = (item, Util) => {
         item.dependencies.files.unshift(jsPath);
     }
 
-    // copy format dataurl
-    const workerFile = 'devtools-formatter-dataurl.js';
-    fs.copyFileSync(
-        path.resolve(`../devtools-packages/packages/formatter-dataurl/dist/${workerFile}`),
-        path.resolve(`.temp/${workerFile}`)
-    );
-
-    Util.logGreen(`formatter dataurl file copied: ${workerFile}`);
-
     return 0;
 };
 
@@ -137,10 +137,12 @@ module.exports = {
             }
 
             if (item.name === 'v8') {
+                copyFormatter();
                 return beforeV8(item, Util);
             }
 
             if (item.name === 'network') {
+                copyFormatter();
                 return beforeNetwork(item, Util);
             }
 

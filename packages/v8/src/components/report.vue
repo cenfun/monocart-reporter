@@ -57,9 +57,8 @@ import { components } from 'vine-ui';
 import Util from '../utils/util.js';
 
 import { createEditor } from '../utils/editor.js';
-import FormatterMapping from '../utils/mapping.js';
 
-import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
+import { format, Mapping } from 'devtools-formatter';
 
 const { VuiFlex, VuiLoading } = components;
 
@@ -71,34 +70,6 @@ const summary = shallowReactive({
 const el = ref(null);
 let $el;
 let editor;
-let workerUrl;
-
-const format = (type, text) => {
-    if (!workerUrl) {
-        workerUrl = new URL(formatterDataUrl());
-    }
-
-    return new Promise((resolve) => {
-        const worker = new Worker(workerUrl);
-        worker.onmessage = (e) => {
-            if (e.data === 'workerReady') {
-                worker.postMessage({
-                    type,
-                    text
-                });
-                return;
-            }
-            resolve(e.data);
-            worker.terminate();
-        };
-        worker.onerror = (e) => {
-            console.error(e);
-            resolve();
-            worker.terminate();
-        };
-
-    });
-};
 
 const oneLineHandler = (sLoc, eLoc, gutterMap, bgMap) => {
     if (sLoc.column === 0 && eLoc.column === eLoc.last) {
@@ -139,7 +110,7 @@ const multipleLineHandler = (sLoc, eLoc, gutterMap, bgMap, formattedMapping) => 
         } else {
 
             // check if all \s
-            const s = formattedMapping.getSlice(eLoc.offset, eLoc.offset + eLoc.column);
+            const s = formattedMapping.getFormattedSlice(eLoc.offset, eLoc.offset + eLoc.column);
             if ((/[^\s]/).test(s)) {
                 gutterMap.set(eLoc.line, 'partial');
                 bgMap.set(eLoc.line, {
@@ -153,8 +124,8 @@ const multipleLineHandler = (sLoc, eLoc, gutterMap, bgMap, formattedMapping) => 
 };
 
 const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
-    const sLoc = formattedMapping.originalToFormattedLocation(start);
-    const eLoc = formattedMapping.originalToFormattedLocation(end);
+    const sLoc = formattedMapping.originalToFormatted(start);
+    const eLoc = formattedMapping.originalToFormatted(end);
 
     // console.log('start', start, sLoc);
     // console.log('end', end, eLoc);
@@ -202,7 +173,7 @@ const cssCoveredToUncovered = (ranges, contentLength) => {
 
 const getCoverage = (item, text, content, mapping) => {
 
-    const formattedMapping = new FormatterMapping(content, mapping);
+    const formattedMapping = new Mapping(content, mapping);
 
     // css, text, ranges: [ {start, end} ]
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
@@ -236,7 +207,7 @@ const getCoverage = (item, text, content, mapping) => {
         if (count === 0) {
             rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
         } else if (count > 1) {
-            const sLoc = formattedMapping.originalToFormattedLocation(startOffset);
+            const sLoc = formattedMapping.originalToFormatted(startOffset);
             countMap.set(sLoc.line, count);
         }
     });
@@ -255,8 +226,9 @@ const getReport = async (item) => {
     }
 
     const text = item.source || item.text;
-    const res = await format(item.type, text);
-    if (!res) {
+    const res = await format(text, item.type);
+    if (res.error) {
+        console.log(res.error.message);
         return;
     }
 

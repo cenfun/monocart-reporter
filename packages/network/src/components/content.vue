@@ -25,8 +25,7 @@ import {
 
 import { createEditor } from '../utils/editor.js';
 
-// import Util from '../utils/util.js';
-import formatterDataUrl from '../../../../.temp/devtools-formatter-dataurl.js';
+import { format } from 'devtools-formatter';
 import Util from '../utils/util.js';
 
 const state = inject('state');
@@ -37,34 +36,6 @@ const data = shallowReactive({
 });
 
 let editor;
-let workerUrl;
-
-const format = (type, text) => {
-    if (!workerUrl) {
-        workerUrl = new URL(formatterDataUrl());
-    }
-
-    return new Promise((resolve) => {
-        const worker = new Worker(workerUrl);
-        worker.onmessage = (e) => {
-            if (e.data === 'workerReady') {
-                worker.postMessage({
-                    type,
-                    text
-                });
-                return;
-            }
-            resolve(e.data);
-            worker.terminate();
-        };
-        worker.onerror = (e) => {
-            console.error(e);
-            resolve();
-            worker.terminate();
-        };
-
-    });
-};
 
 const getTextFormatted = async (content, type) => {
     if (content.textFormatted) {
@@ -72,7 +43,7 @@ const getTextFormatted = async (content, type) => {
     }
 
     if (type) {
-        const resFormatted = await format(type, content.text);
+        const resFormatted = await format(content.text, type);
         if (resFormatted) {
             content.textFormatted = resFormatted.content;
             return resFormatted.content;
