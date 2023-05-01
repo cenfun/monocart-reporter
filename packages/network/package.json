@@ -7,7 +7,7 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "devtools-formatter": "1.0.0"
+        "monocart-formatter": "1.0.0"
     },
     "devDependencies": {}
 }

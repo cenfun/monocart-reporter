@@ -5,9 +5,9 @@ const fs = require('fs');
 const path = require('path');
 
 const copyFormatter = () => {
-    const workerFile = 'devtools-formatter.js';
+    const workerFile = 'monocart-formatter.js';
     fs.copyFileSync(
-        path.resolve(`../devtools-packages/packages/formatter/dist/${workerFile}`),
+        path.resolve(`../monocart-components/packages/formatter/dist/${workerFile}`),
         path.resolve(`.temp/${workerFile}`)
     );
     console.log(`formatter file copied: ${workerFile}`);

@@ -25,7 +25,7 @@ import {
 
 import { createEditor } from '../utils/editor.js';
 
-import { format } from 'devtools-formatter';
+import { format } from 'monocart-formatter';
 import Util from '../utils/util.js';
 
 const state = inject('state');

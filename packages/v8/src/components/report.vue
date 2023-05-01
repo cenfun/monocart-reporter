@@ -58,7 +58,7 @@ import Util from '../utils/util.js';
 
 import { createEditor } from '../utils/editor.js';
 
-import { format, Mapping } from 'devtools-formatter';
+import { format, Mapping } from 'monocart-formatter';
 
 const { VuiFlex, VuiLoading } = components;
 
