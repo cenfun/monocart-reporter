@@ -56,7 +56,7 @@ import { components } from 'vine-ui';
 
 import Util from '../utils/util.js';
 
-import { createEditor } from '../utils/editor.js';
+import { createCodeViewer } from 'monocart-code-viewer';
 
 import { format, Mapping } from 'monocart-formatter';
 
@@ -69,13 +69,13 @@ const summary = shallowReactive({
 
 const el = ref(null);
 let $el;
-let editor;
+let codeViewer;
 
-const oneLineHandler = (sLoc, eLoc, gutterMap, bgMap) => {
+const oneLineHandler = (sLoc, eLoc, lineMap, bgMap) => {
     if (sLoc.column === 0 && eLoc.column === eLoc.last) {
-        gutterMap.set(sLoc.line, 'uncovered');
+        lineMap.set(sLoc.line, 'uncovered');
     } else {
-        gutterMap.set(sLoc.line, 'partial');
+        lineMap.set(sLoc.line, 'partial');
         bgMap.set(sLoc.line, {
             start: sLoc.column,
             end: eLoc.column
@@ -83,14 +83,14 @@ const oneLineHandler = (sLoc, eLoc, gutterMap, bgMap) => {
     }
 };
 
-const multipleLineHandler = (sLoc, eLoc, gutterMap, bgMap, formattedMapping) => {
+const multipleLineHandler = (sLoc, eLoc, lineMap, bgMap, formattedMapping) => {
 
     if (sLoc.column < sLoc.last) {
 
         if (sLoc.column === 0) {
-            gutterMap.set(sLoc.line, 'uncovered');
+            lineMap.set(sLoc.line, 'uncovered');
         } else {
-            gutterMap.set(sLoc.line, 'partial');
+            lineMap.set(sLoc.line, 'partial');
             bgMap.set(sLoc.line, {
                 start: sLoc.column,
                 end: sLoc.last
@@ -100,19 +100,19 @@ const multipleLineHandler = (sLoc, eLoc, gutterMap, bgMap, formattedMapping) => 
     }
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
-        gutterMap.set(i, 'uncovered');
+        lineMap.set(i, 'uncovered');
     }
 
     if (eLoc.column > 0) {
 
         if (eLoc.column === eLoc.last) {
-            gutterMap.set(eLoc.line, 'uncovered');
+            lineMap.set(eLoc.line, 'uncovered');
         } else {
 
             // check if all \s
             const s = formattedMapping.getFormattedSlice(eLoc.offset, eLoc.offset + eLoc.column);
             if ((/[^\s]/).test(s)) {
-                gutterMap.set(eLoc.line, 'partial');
+                lineMap.set(eLoc.line, 'partial');
                 bgMap.set(eLoc.line, {
                     start: 0,
                     end: eLoc.column
@@ -130,21 +130,28 @@ const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
     // console.log('start', start, sLoc);
     // console.log('end', end, eLoc);
 
-    const { gutterMap, bgMap } = coverage;
+    const { lineMap, bgMap } = coverage;
 
 
     if (eLoc.line === sLoc.line) {
-        oneLineHandler(sLoc, eLoc, gutterMap, bgMap);
+        oneLineHandler(sLoc, eLoc, lineMap, bgMap);
         return;
     }
 
-    multipleLineHandler(sLoc, eLoc, gutterMap, bgMap, formattedMapping);
+    multipleLineHandler(sLoc, eLoc, lineMap, bgMap, formattedMapping);
 
 };
 
 const cssCoveredToUncovered = (ranges, contentLength) => {
     const uncoveredRanges = [];
     if (!ranges || !ranges.length) {
+
+        // nothing covered
+        uncoveredRanges.push({
+            start: 0,
+            end: contentLength
+        });
+
         return uncoveredRanges;
     }
 
@@ -179,7 +186,7 @@ const getCoverage = (item, text, content, mapping) => {
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
     if (item.type === 'css') {
         const coverage = {
-            gutterMap: new Map(),
+            lineMap: new Map(),
             bgMap: new Map()
         };
         const ranges = cssCoveredToUncovered(item.ranges, text.length);
@@ -194,7 +201,7 @@ const getCoverage = (item, text, content, mapping) => {
 
     const countMap = new Map();
     const coverage = {
-        gutterMap: new Map(),
+        lineMap: new Map(),
         bgMap: new Map(),
         countMap
     };
@@ -259,10 +266,10 @@ const showReport = async () => {
         return;
     }
 
-    if (editor) {
-        editor.showContent(report);
+    if (codeViewer) {
+        codeViewer.update(report);
     } else {
-        editor = createEditor($el, report);
+        codeViewer = createCodeViewer($el, report);
     }
 
     state.loading = false;
@@ -339,24 +346,24 @@ onMounted(() => {
     }
 }
 
-.mcr-coverage-gutter {
+.cm-coverage-line {
     width: 5px;
 
-    .mcr-line-covered {
+    .cm-line-covered {
         background-color: green;
     }
 
-    .mcr-line-partial {
+    .cm-line-partial {
         background-color: orange;
     }
 
-    .mcr-line-uncovered {
+    .cm-line-uncovered {
         background-color: red;
     }
 }
 
-.mcr-count-gutter {
-    .mcr-line-count {
+.cm-coverage-count {
+    .cm-line-count {
         padding: 0 3px;
         font-size: 12px;
         font-family: var(--font-monospace);
@@ -365,11 +372,11 @@ onMounted(() => {
     }
 }
 
-.mcr-bg-covered {
+.cm-bg-covered {
     background: #e6f5d0;
 }
 
-.mcr-bg-uncovered {
+.cm-bg-uncovered {
     background: #fce1e5;
 }
 
