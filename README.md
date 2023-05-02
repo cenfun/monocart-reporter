@@ -24,6 +24,7 @@
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
 * [Attach Code Coverage Report](#attach-code-coverage-report)
+* [Attach Network Report](#attach-network-report)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd hook](#onend-hook)
     - [Send Email](#send-email)
@@ -630,6 +631,51 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | CSS coverage | ❌ | ✅ | ❌ |
 | Minified code | N/A | ✅ | ❌ |
 | Code formatting | N/A | ✅ | ❌ |
+
+## Attach Network Report
+Using `MonocartReporter.attachNetworkReport(har, testInfo)` API to generate network report during the test. Arguments:
+- `har` HAR path (String) or HAR file buffer (Buffer). see [HAR 1.2 Spec](http://www.softwareishard.com/blog/har-12-spec/)
+- `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
+
+ (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js))
+
+```js
+const fs = require('fs');
+const path = require('path');
+const { test } = require('@playwright/test');
+const { attachNetworkReport } = require('monocart-reporter');
+let context;
+test.describe('attach network report 1', () => {
+
+    const harPath = path.resolve('.temp/network-report1.har');
+    if (fs.existsSync(harPath)) {
+        // remove previous
+        fs.rmSync(harPath);
+    }
+
+    test('first, open page', async ({ browser }) => {
+        context = await browser.newContext({
+            recordHar: {
+                path: harPath
+            }
+        });
+        const page = await context.newPage();
+        await page.goto('http://playwright.dev/', {
+            waitUntil: 'networkidle'
+        });
+    });
+
+    test('next, run test cases', async () => {
+        
+    });
+
+    test('finally, attach HAR', async () => {
+        // Close context to ensure HAR is saved to disk.
+        await context.close();
+        await attachNetworkReport(harPath, test.info());
+    });
+});
+```
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
