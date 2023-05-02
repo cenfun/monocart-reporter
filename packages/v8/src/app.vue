@@ -31,6 +31,12 @@
       :text="tooltip.text"
       :html="tooltip.html"
     />
+
+    <VuiLoading
+      :visible="state.initializing"
+      size="l"
+      center
+    />
   </div>
 </template>
 <script setup>
@@ -47,8 +53,8 @@ import Report from './components/report.vue';
 
 const {
     VuiFlex,
-    VuiTooltip
-
+    VuiTooltip,
+    VuiLoading
 } = components;
 
 // =================================================================================
@@ -66,7 +72,10 @@ const state = shallowReactive({
     flyoverComponent: '',
     flyoverData: null,
 
-    grid: null
+    grid: null,
+
+    loading: false,
+    initializing: true
 
 });
 
@@ -377,8 +386,8 @@ const initGrid = () => {
 };
 
 // =================================================================================
-
-onMounted(() => {
+const init = async () => {
+    await Util.delay(10);
     const reportData = JSON.parse(Util.decompress(window.reportData));
     console.log(reportData);
 
@@ -391,6 +400,13 @@ onMounted(() => {
     initFlyoverSize();
 
     initGrid();
+
+    state.initializing = false;
+};
+
+
+onMounted(() => {
+    init();
 
 });
 

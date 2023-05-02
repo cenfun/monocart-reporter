@@ -58,7 +58,7 @@ const showEditor = async (content, type) => {
     data.previewType = 'editor';
 
     // make sure loading is show up
-    await Util.delay(100);
+    await Util.delay(10);
 
     const textFormatted = await getTextFormatted(content, type);
 

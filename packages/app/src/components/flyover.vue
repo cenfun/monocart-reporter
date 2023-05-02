@@ -34,6 +34,10 @@
         </KeepAlive>
       </div>
     </div>
+    <VuiLoading
+      center
+      :visible="state.loading"
+    />
   </VuiFlyover>
 </template>
 
@@ -46,7 +50,9 @@ import IconLabel from './icon-label.vue';
 import Detail from './detail.vue';
 import Report from './report.vue';
 
-const { VuiFlex, VuiFlyover } = components;
+const {
+    VuiFlex, VuiFlyover, VuiLoading
+} = components;
 
 const flyoverComponents = {
     detail: Detail,

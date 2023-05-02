@@ -58,7 +58,6 @@ import Util from './utils/util.js';
 import Flyover from './components/flyover.vue';
 import Waterfall from './components/waterfall.vue';
 import Timing from './components/timing.vue';
-import { delay } from '../../../lib/utils/share';
 
 const {
     VuiFlex,
@@ -709,7 +708,7 @@ const initGrid = () => {
 // =================================================================================
 
 const init = async () => {
-    await delay(10);
+    await Util.delay(10);
     const reportData = JSON.parse(Util.decompress(window.reportData));
     console.log(reportData);
 

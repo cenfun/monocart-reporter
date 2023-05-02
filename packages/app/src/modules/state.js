@@ -29,7 +29,10 @@ const state = shallowReactive({
 
     // grid data
     gridDataMap: {},
-    grid: null
+    grid: null,
+
+    loading: false,
+    initializing: true
 
 });
 

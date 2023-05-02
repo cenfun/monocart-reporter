@@ -227,6 +227,12 @@
         </div>
       </VuiFlex>
     </VuiDialog>
+
+    <VuiLoading
+      :visible="state.initializing"
+      size="l"
+      center
+    />
   </div>
 </template>
 <script setup>
@@ -255,7 +261,8 @@ const {
     VuiTooltip,
     VuiCheckbox,
     VuiButton,
-    VuiDialog
+    VuiDialog,
+    VuiLoading
 } = components;
 
 // =================================================================================
@@ -534,8 +541,8 @@ const onExportClick = () => {
 };
 
 // =================================================================================
-
-onMounted(() => {
+const init = async () => {
+    await Util.delay(10);
     const reportData = JSON.parse(Util.decompress(window.reportData));
     console.log(reportData);
 
@@ -570,6 +577,11 @@ onMounted(() => {
 
     initTooltip();
 
+    state.initializing = false;
+};
+
+onMounted(() => {
+    init();
 });
 
 const updateGridAsync = debounce(updateGrid, 200);
