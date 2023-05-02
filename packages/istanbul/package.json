@@ -1,6 +1,6 @@
 {
     "name": "monocart-istanbul",
-    "version": "1.6.16",
+    "version": "1.6.17",
     "private": true,
     "main": "dist/monocart-istanbul.js",
     "files": [
