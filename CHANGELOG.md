@@ -1,3 +1,7 @@
+* 1.6.17
+  - added network HTML report
+  - optimized v8 HTML report
+
 * 1.6.16
   - added v8 HTML report
 
