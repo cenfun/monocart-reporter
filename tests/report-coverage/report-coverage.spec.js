@@ -21,12 +21,11 @@ test.describe('take Istanbul coverage report', () => {
     test('finally, take coverage', async () => {
         // take Istanbul coverage
         const coverageData = await page.evaluate(() => window.__coverage__);
+        await page.close();
         expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
         // coverage report
         const report = await attachCoverageReport(coverageData, test.info());
         console.log(report.summary);
-
-        await page.close();
     });
 });
 
@@ -44,6 +43,7 @@ test.describe('take V8 js to Istanbul coverage report', () => {
 
     test('finally, take coverage', async () => {
         const jsCoverageList = await page.coverage.stopJSCoverage();
+        await page.close();
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
             toIstanbul: true
         });
@@ -76,6 +76,7 @@ test.describe('take V8 anonymous js to Istanbul coverage report', () => {
 
     test('finally, take coverage', async () => {
         const jsCoverageList = await page.coverage.stopJSCoverage();
+        await page.close();
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
             toIstanbul: true
         });
@@ -106,6 +107,7 @@ test.describe('take V8 anonymous js coverage report', () => {
 
     test('finally, take coverage', async () => {
         const jsCoverageList = await page.coverage.stopJSCoverage();
+        await page.close();
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
             inline: true
         });
@@ -135,7 +137,7 @@ test.describe('take V8 js and css coverage report', () => {
             page.coverage.stopJSCoverage(),
             page.coverage.stopCSSCoverage()
         ]);
-
+        await page.close();
         const coverageList = [... jsCoverage, ... cssCoverage];
         // filter file list
         // coverageList = coverageList.filter((item) => {
