@@ -1,0 +1,123 @@
+{
+    "version": "1.2",
+    "creator": {
+        "name": "Playwright",
+        "version": "1.33.0"
+    },
+    "browser": {
+        "name": "chromium",
+        "version": "113.0.5672.53"
+    },
+    "pages": [
+        {
+            "startedDateTime": "2023-05-02T15:28:42.788Z",
+            "id": "page@bd387708f26d4f7278a053f1bf77f3f5",
+            "title": "coverage page",
+            "pageTimings": {
+                "onContentLoad": 48,
+                "onLoad": 50
+            }
+        }
+    ],
+    "summary": {
+        "requests": 8,
+        "size": 913794,
+        "status": {
+            "200": 8
+        },
+        "methods": {
+            "GET": 8
+        },
+        "waterfalls": {
+            "page@bd387708f26d4f7278a053f1bf77f3f5": {
+                "timestampStart": 1683041322788,
+                "start": 0,
+                "time": 50,
+                "onContentLoad": 48,
+                "onLoad": 50,
+                "entries": [
+                    {
+                        "start": 12,
+                        "time": 5.708,
+                        "dns": 0.007,
+                        "connect": 1.143,
+                        "ssl": 2.463,
+                        "send": 0,
+                        "wait": 0.869,
+                        "receive": 1.226
+                    },
+                    {
+                        "start": 24,
+                        "time": 2.855,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 1.254,
+                        "receive": 1.601
+                    },
+                    {
+                        "start": 25,
+                        "time": 4.691,
+                        "dns": 0.004,
+                        "connect": 0.298,
+                        "ssl": 1.397,
+                        "send": 0,
+                        "wait": 1.801,
+                        "receive": 1.191
+                    },
+                    {
+                        "start": 25,
+                        "time": 4.774,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 1.612,
+                        "receive": 3.162
+                    },
+                    {
+                        "start": 25,
+                        "time": 10.143,
+                        "dns": 0,
+                        "connect": 1.238,
+                        "ssl": 3.489,
+                        "send": 0,
+                        "wait": 2.102,
+                        "receive": 3.314
+                    },
+                    {
+                        "start": 26,
+                        "time": 8.286,
+                        "dns": 0,
+                        "connect": 0.857,
+                        "ssl": 2.937,
+                        "send": 0,
+                        "wait": 2.61,
+                        "receive": 1.882
+                    },
+                    {
+                        "start": 26,
+                        "time": 8.547,
+                        "dns": 0,
+                        "connect": 0.419,
+                        "ssl": 2.831,
+                        "send": 0,
+                        "wait": 3.265,
+                        "receive": 2.032
+                    },
+                    {
+                        "start": 26,
+                        "time": 6.561999999999999,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 3.751,
+                        "receive": 2.811
+                    }
+                ]
+            }
+        }
+    }
+}

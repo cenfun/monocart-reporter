@@ -1,0 +1,38 @@
+{
+    "type": "v8",
+    "summary": {
+        "total": 7982,
+        "covered": 2926,
+        "pct": 36.66,
+        "status": "low"
+    },
+    "files": [
+        {
+            "name": "anonymous.js",
+            "type": "js",
+            "url": "",
+            "total": 7687,
+            "covered": 2631,
+            "pct": 34.23,
+            "status": "low"
+        },
+        {
+            "name": "anonymous-1.js",
+            "type": "js",
+            "url": "",
+            "total": 61,
+            "covered": 61,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "anonymous-2.js",
+            "type": "js",
+            "url": "",
+            "total": 234,
+            "covered": 234,
+            "pct": 100,
+            "status": "high"
+        }
+    ]
+}

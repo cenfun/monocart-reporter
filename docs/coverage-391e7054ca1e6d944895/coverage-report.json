@@ -1,0 +1,135 @@
+{
+    "type": "istanbul",
+    "summary": {
+        "lines": {
+            "total": 243,
+            "covered": 100,
+            "skipped": 0,
+            "pct": 41.15,
+            "status": "low"
+        },
+        "statements": {
+            "total": 243,
+            "covered": 100,
+            "skipped": 0,
+            "pct": 41.15,
+            "status": "low"
+        },
+        "functions": {
+            "total": 17,
+            "covered": 10,
+            "skipped": 0,
+            "pct": 58.82,
+            "status": "medium"
+        },
+        "branches": {
+            "total": 37,
+            "covered": 20,
+            "skipped": 0,
+            "pct": 54.05,
+            "status": "medium"
+        },
+        "branchesTrue": {
+            "total": 0,
+            "covered": 0,
+            "skipped": 0,
+            "pct": "Unknown",
+            "status": "unknown"
+        }
+    },
+    "files": [
+        {
+            "lines": {
+                "total": 1,
+                "covered": 1,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "functions": {
+                "total": 0,
+                "covered": 0,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "statements": {
+                "total": 1,
+                "covered": 1,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "branches": {
+                "total": 2,
+                "covered": 2,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "name": "anonymous-1.js"
+        },
+        {
+            "lines": {
+                "total": 10,
+                "covered": 10,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "functions": {
+                "total": 0,
+                "covered": 0,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "statements": {
+                "total": 10,
+                "covered": 10,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "branches": {
+                "total": 2,
+                "covered": 2,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "name": "anonymous-2.js"
+        },
+        {
+            "lines": {
+                "total": 232,
+                "covered": 89,
+                "skipped": 0,
+                "pct": 38.36,
+                "status": "low"
+            },
+            "functions": {
+                "total": 17,
+                "covered": 10,
+                "skipped": 0,
+                "pct": 58.82,
+                "status": "medium"
+            },
+            "statements": {
+                "total": 232,
+                "covered": 89,
+                "skipped": 0,
+                "pct": 38.36,
+                "status": "low"
+            },
+            "branches": {
+                "total": 33,
+                "covered": 16,
+                "skipped": 0,
+                "pct": 48.48,
+                "status": "low"
+            },
+            "name": "anonymous.js"
+        }
+    ]
+}

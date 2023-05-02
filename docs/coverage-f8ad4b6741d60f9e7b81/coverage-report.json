@@ -1,0 +1,83 @@
+{
+    "type": "v8",
+    "summary": {
+        "total": 906362,
+        "covered": 6758,
+        "pct": 0.75,
+        "status": "low"
+    },
+    "files": [
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "http://localhost:8090/demo/",
+            "total": 32,
+            "covered": 32,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "demo.js",
+            "type": "js",
+            "url": "http://localhost:8090/demo/demo.js",
+            "total": 350,
+            "covered": 16,
+            "pct": 4.57,
+            "status": "low"
+        },
+        {
+            "name": "demo.js",
+            "type": "js",
+            "url": "http://localhost:8090/demo/js/demo.js",
+            "total": 350,
+            "covered": 298,
+            "pct": 85.14,
+            "status": "high"
+        },
+        {
+            "name": "main.c781fedc.js",
+            "type": "js",
+            "url": "http://localhost:8090/playwright.dev/assets/js/main.c781fedc.js",
+            "total": 471042,
+            "covered": 734,
+            "pct": 0.16,
+            "status": "low"
+        },
+        {
+            "name": "style.css",
+            "type": "css",
+            "url": "http://localhost:8090/demo/css/style.css",
+            "total": 179,
+            "covered": 59,
+            "pct": 32.96,
+            "status": "low"
+        },
+        {
+            "name": "style.css",
+            "type": "css",
+            "url": "http://localhost:8090/demo/style.css",
+            "total": 189,
+            "covered": 106,
+            "pct": 56.08,
+            "status": "medium"
+        },
+        {
+            "name": "bootstrap.min.css",
+            "type": "css",
+            "url": "http://localhost:8090/demo/css/bootstrap.min.css",
+            "total": 195495,
+            "covered": 2535,
+            "pct": 1.3,
+            "status": "low"
+        },
+        {
+            "name": "bootstrap.css",
+            "type": "css",
+            "url": "http://localhost:8090/demo/css/bootstrap.css",
+            "total": 238725,
+            "covered": 2978,
+            "pct": 1.25,
+            "status": "low"
+        }
+    ]
+}
