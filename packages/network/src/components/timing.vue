@@ -11,7 +11,7 @@
       padding="5px"
     >
       <div class="mcr-timing-legend mcr-timing-legend-start" />
-      <div>{{ Util.TF(data.durationStart," ") }}</div>
+      <div>{{ Util.TSF(data.durationStart) }}</div>
       <div>Request start time</div>
     </VuiFlex>
 
@@ -26,7 +26,7 @@
         class="mcr-timing-legend"
         :style="item.style"
       />
-      <div>{{ Util.TF(item.value," ") }}</div>
+      <div>{{ Util.TSF(item.value) }}</div>
       <div>{{ item.name }}</div>
     </VuiFlex>
 
@@ -41,7 +41,7 @@
         class="mcr-timing-legend"
         :style="item.style"
       />
-      <div>{{ Util.TF(item.value," ") }}</div>
+      <div>{{ Util.TSF(item.value) }}</div>
       <div>{{ item.name }}</div>
     </VuiFlex>
   </div>

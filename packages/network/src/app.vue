@@ -663,13 +663,13 @@ const initGrid = () => {
     grid.setFormatter({
         bytes: (v) => {
             if (typeof v === 'number') {
-                return Util.BF(v, 1, 1024, ' ');
+                return Util.BSF(v, 1);
             }
             return v;
         },
         time: (v) => {
             if (typeof v === 'number') {
-                return Util.TF(v, ' ');
+                return Util.TSF(v);
             }
             return v;
         },
