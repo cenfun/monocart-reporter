@@ -63,17 +63,19 @@ test.describe('attach network report 2', () => {
             }
         });
         const page = await context.newPage();
-        await page.goto('http://music.163.com', {
+        await page.goto('http://playwright.dev/', {
             waitUntil: 'networkidle'
         });
 
-        const toplist = page.locator('[data-module="toplist"]');
-        await toplist.click();
+        const link1 = page.locator('[href="/docs/intro"]', {
+            hasText: 'Docs'
+        });
+        await link1.click();
 
         await delay(500);
 
-        const bilog = page.locator('.m-creator-center');
-        await bilog.click();
+        const link2 = page.locator('[href="/docs/test-reporters"]');
+        await link2.click();
 
         await delay(500);
 

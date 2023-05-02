@@ -46,12 +46,15 @@ const update = (pageTimings, timings) => {
     data.lines = [];
 
     Util.pageTimings.forEach((item) => {
-        data.lines.push({
-            style: {
-                left: Util.PF(pageTimings[item.key], duration),
-                background: item.color
-            }
-        });
+        const v = pageTimings[item.key];
+        if (v > 0) {
+            data.lines.push({
+                style: {
+                    left: Util.PF(v, duration),
+                    background: item.color
+                }
+            });
+        }
     });
 
     data.rects = [];
