@@ -94,13 +94,14 @@ const update = (entry) => {
         // console.log(content.encoding);
         // svg
         let text = content.text;
-        let base64 = 'base64,';
+        let base64 = 'base64';
         if (text.includes('<')) {
-            base64 = 'charset=utf8,';
+            base64 = 'charset=utf8';
             text = encodeURIComponent(text);
         }
 
-        data.imageSrc = `data:${content.mimeType};${base64}${text}`;
+        // data:[<mediatype>][;base64],<data>
+        data.imageSrc = `data:${content.mimeType};${base64},${text}`;
         data.previewType = 'image';
         return;
     }
@@ -111,7 +112,7 @@ const update = (entry) => {
         return;
     }
 
-    if (resourceType === 'text' && content.text) {
+    if (resourceType === 'text') {
         showEditor(content);
     }
 
