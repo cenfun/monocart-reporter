@@ -92,7 +92,15 @@ const update = (entry) => {
     const resourceType = entry.resourceType;
     if (resourceType === 'image') {
         // console.log(content.encoding);
-        data.imageSrc = `data:${content.mimeType};base64,${content.text}`;
+        // svg
+        let text = content.text;
+        let base64 = 'base64,';
+        if (text.includes('<')) {
+            base64 = 'charset=utf8,';
+            text = encodeURIComponent(text);
+        }
+
+        data.imageSrc = `data:${content.mimeType};${base64}${text}`;
         data.previewType = 'image';
         return;
     }
