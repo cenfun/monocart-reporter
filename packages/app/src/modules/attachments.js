@@ -259,26 +259,36 @@ const getNetworkBody = (report) => {
         return '';
     }
 
-    const summary = report.summary;
+    const {
+        summary, pages, browser, creator
+    } = report;
 
     const list = [];
 
-    report.pages.forEach((page) => {
+    pages.forEach((page, i) => {
         const { onContentLoad, onLoad } = page.pageTimings;
         let title = page.title;
         if (title.length > 30) {
             title = `${title.slice(0, 30)}...`;
         }
-        list.push('<div>');
-        list.push(`<b>Page</b> <span>${title}</span>`);
-        list.push(` <span style="color:#1A1AA6;"> DOMContendLoaded ${Util.TF(onContentLoad)} </span>`);
+        let number = '';
+        if (pages.length > 1) {
+            number = ` ${i + 1}`;
+        }
+        list.push('<div class="mcr-network-group">');
+        list.push(`<b>Page${number}</b> <span>${title}</span>`);
+        list.push(` <span style="color:#1A1AA6;"> ContendLoaded ${Util.TF(onContentLoad)} </span>`);
         list.push(` <span style="color:#C80000;"> Load ${Util.TF(onLoad)} </span>`);
         list.push('</div>');
     });
 
+    list.push('<div class="mcr-network-group">');
     list.push(`<div><b>Requests</b> <span class="mcr-num">${summary.requests}</span></div>`);
     list.push(`<div><b>Transferred</b> ${Util.BF(summary.size)}</div>`);
+    list.push('</div>');
 
+    list.push('<div class="mcr-network-group">');
+    list.push('<div><b>Status</b></div>');
     Object.keys(summary.status).forEach((k) => {
         let s = `${k}`;
         if (s.startsWith('2')) {
@@ -286,16 +296,21 @@ const getNetworkBody = (report) => {
         } else if (s.startsWith('4')) {
             s = `<span style="color:red;">${s}</span>`;
         }
-        list.push(`<div><b>Status</b> ${s} <span class="mcr-num">${summary.status[k]}</span></div>`);
+        list.push(`<div>${s} <span class="mcr-num">${summary.status[k]}</span></div>`);
     });
+    list.push('</div>');
 
+    list.push('<div class="mcr-network-group">');
+    list.push('<div><b>Method</b></div>');
     Object.keys(summary.methods).forEach((k) => {
-        list.push(`<div><b>Method</b> ${k} <span class="mcr-num">${summary.methods[k]}</span></div>`);
+        list.push(`<div>${k} <span class="mcr-num">${summary.methods[k]}</span></div>`);
     });
+    list.push('</div>');
 
-
-    list.push(`<div><b>Browser</b> ${report.browser.name} v${report.browser.version}</div>`);
-    list.push(`<div><b>Creator</b> ${report.creator.name} v${report.creator.version}</div>`);
+    list.push('<div class="mcr-network-group">');
+    list.push(`<div><b>Browser</b> ${browser.name} v${browser.version}</div>`);
+    list.push(`<div><b>Creator</b> ${creator.name} v${creator.version}</div>`);
+    list.push('</div>');
 
     const body = list.join('');
 
