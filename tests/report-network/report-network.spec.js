@@ -66,17 +66,17 @@ test.describe('attach network report 2', () => {
         await page.goto('http://playwright.dev/', {
             waitUntil: 'networkidle'
         });
+        await delay(500);
 
         const link1 = page.locator('[href="/docs/intro"]', {
             hasText: 'Docs'
         });
         await link1.click();
-
         await delay(500);
 
-        const link2 = page.locator('[href="/docs/test-reporters"]');
-        await link2.click();
-
+        await page.goto('http://playwright.dev/docs/test-reporters', {
+            waitUntil: 'networkidle'
+        });
         await delay(500);
 
     });

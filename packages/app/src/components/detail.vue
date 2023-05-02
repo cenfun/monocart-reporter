@@ -113,7 +113,7 @@
           </div>
 
           <VuiSwitch
-            v-if="item.data.stepSubs"
+            v-if="item.data.stepSubs&&!item.data.collapsed"
             v-model="item.data.stepCollapsed"
             :disabled="data.stepCollapsedDisabled"
             :label-clickable="true"
@@ -124,7 +124,7 @@
           </VuiSwitch>
 
           <VuiSwitch
-            v-if="item.data.stepFailed"
+            v-if="item.data.stepFailed&&!item.data.collapsed"
             v-model="item.data.stepFailedOnly"
             :label-clickable="true"
             label-position="right"
