@@ -41,11 +41,11 @@ test('test home page', async ({ page, context }, testInfo) => {
 
     console.log('snapshotDir', testInfo.snapshotDir);
     const snapshotPath = testInfo.snapshotPath('screenshot.png');
-    console.log('snapshotPath', snapshotPath);
+    console.log('snapshotPath(screenshot.png)', snapshotPath);
 
     console.log('outputDir', testInfo.outputDir);
     const outputPath = testInfo.outputPath('screenshot.png');
-    console.log('outputPath', outputPath);
+    console.log('outputPath(screenshot.png)', outputPath);
 
     const screenshot = await page.screenshot();
     await testInfo.attach('screenshot', {

@@ -24,7 +24,7 @@ test.describe('take Istanbul coverage report', () => {
         expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
         // coverage report
         const report = await attachCoverageReport(coverageData, test.info());
-        console.log(report.lines);
+        console.log(report.summary);
 
         await page.close();
     });
@@ -107,7 +107,7 @@ test.describe('take V8 anonymous js coverage report', () => {
     test('finally, take coverage', async () => {
         const jsCoverageList = await page.coverage.stopJSCoverage();
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
-            inline: false
+            inline: true
         });
         console.log(report.summary);
     });
@@ -143,9 +143,7 @@ test.describe('take V8 js and css coverage report', () => {
         //         return true;
         //     }
         // });
-        const report = await attachCoverageReport(coverageList, test.info(), {
-            inline: false
-        });
+        const report = await attachCoverageReport(coverageList, test.info());
         console.log(report.summary);
     });
 
