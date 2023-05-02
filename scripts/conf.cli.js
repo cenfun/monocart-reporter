@@ -89,9 +89,11 @@ const beforeNetwork = (item, Util) => {
 
     const EC = require('eight-colors');
 
-    const compress = require('lz-utils/lib/compress.js');
-    const harData = fs.readFileSync(path.resolve(__dirname, '../.temp/har/music.163.com.har'));
-    const reportDataStr = `window.reportData = "${compress(harData.toString('utf-8'))}";`;
+    // const compress = require('lz-utils/lib/compress.js');
+    // const harData = fs.readFileSync(path.resolve(__dirname, '../.temp/har/music.163.com.har'));
+    // const reportDataStr = `window.reportData = "${compress(harData.toString('utf-8'))}";`;
+
+    const reportDataStr = fs.readFileSync(path.resolve(__dirname, '../.temp/network-data.js'));
 
     const dataFile = 'network-data.js';
     const jsPath = path.resolve(item.buildPath, dataFile);

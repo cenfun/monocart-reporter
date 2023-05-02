@@ -66,6 +66,17 @@ test.describe('attach network report 2', () => {
         await page.goto('http://music.163.com', {
             waitUntil: 'networkidle'
         });
+
+        const toplist = page.locator('[data-module="toplist"]');
+        await toplist.click();
+
+        await delay(500);
+
+        const bilog = page.locator('.m-creator-center');
+        await bilog.click();
+
+        await delay(500);
+
     });
 
     test('next, run test cases', async () => {

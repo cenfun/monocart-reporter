@@ -38,6 +38,12 @@
     >
       <Timing :entry="popover.entry" />
     </VuiPopover>
+
+    <VuiLoading
+      :visible="state.initializing"
+      size="l"
+      center
+    />
   </div>
 </template>
 <script setup>
@@ -52,11 +58,13 @@ import Util from './utils/util.js';
 import Flyover from './components/flyover.vue';
 import Waterfall from './components/waterfall.vue';
 import Timing from './components/timing.vue';
+import { delay } from '../../../lib/utils/share';
 
 const {
     VuiFlex,
     VuiTooltip,
-    VuiPopover
+    VuiPopover,
+    VuiLoading
 } = components;
 
 // =================================================================================
@@ -74,7 +82,8 @@ const state = shallowReactive({
     flyoverComponent: '',
     flyoverData: null,
 
-    loading: false
+    loading: false,
+    initializing: true
 
 });
 
@@ -699,7 +708,8 @@ const initGrid = () => {
 
 // =================================================================================
 
-onMounted(() => {
+const init = async () => {
+    await delay(10);
     const reportData = JSON.parse(Util.decompress(window.reportData));
     console.log(reportData);
 
@@ -713,6 +723,11 @@ onMounted(() => {
 
     initGrid();
 
+    state.initializing = false;
+};
+
+onMounted(() => {
+    init();
 });
 
 window.addEventListener('resize', () => {
@@ -771,6 +786,7 @@ a:not([href], [class]):hover {
 }
 
 .mcr {
+    position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
