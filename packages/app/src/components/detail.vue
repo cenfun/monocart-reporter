@@ -118,7 +118,7 @@
             :disabled="data.stepCollapsedDisabled"
             :label-clickable="true"
             label-position="right"
-            @click="onStepCollapsedClick(item.data)"
+            @change="onStepCollapsedClick(item.data)"
           >
             Collapse All
           </VuiSwitch>
@@ -128,7 +128,7 @@
             v-model="item.data.stepFailedOnly"
             :label-clickable="true"
             label-position="right"
-            @click="onStepFailedClick(item.data)"
+            @change="onStepFailedClick(item.data)"
           >
             Only Failed
           </VuiSwitch>
@@ -312,8 +312,8 @@ const getAnnotations = (item, column) => {
         return {
             icon: 'annotation',
             content: `<div class="mcr-annotation-list">
-                    <div class="mcr-annotation-item">${markdownFormatter(annotations, true)}</div>
-                </div>`
+                        <div class="mcr-annotation-item">${markdownFormatter(annotations, true)}</div>
+                    </div>`
         };
     }
 

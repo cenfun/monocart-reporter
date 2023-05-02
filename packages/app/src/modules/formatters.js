@@ -95,14 +95,20 @@ marked.setOptions({
     renderer: renderer
 });
 
+const markedOptions = {
+    langPrefix: '',
+    mangle: false,
+    headerIds: false
+};
+
 const markdownFormatter = (str, inline) => {
     if (typeof str !== 'string') {
         return str;
     }
     if (inline) {
-        return marked.parseInline(str);
+        return marked.parseInline(str, markedOptions);
     }
-    return `<div class="markdown-body">${marked.parse(str)}</div>`;
+    return `<div class="markdown-body">${marked.parse(str, markedOptions)}</div>`;
 };
 
 // ===========================================================================
