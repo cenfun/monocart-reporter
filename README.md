@@ -526,7 +526,7 @@ module.exports = {
 ```
 
 ## Attach Code Coverage Report
-Using `MonocartReporter.attachCoverageReport(data, testInfo, options)` API to generate coverage report during the test. Arguments:
+Using `attachCoverageReport(data, testInfo, options)` API to generate coverage report during the test. Arguments:
 - `data` There are 2 supported data inputs `Istanbul` (Object) or `V8` (Array)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 - `options` (Object)
@@ -626,20 +626,21 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | :--------------| :------ | :------ | :----------------------  |
 | Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
 | Options  | `watermarks: {}`  | `watermarks: [50, 80]` | `toIstanbul: true, watermarks: {}` |
-| Output report | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-Istanbul-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-V8-js-and-css-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/report-coverage-report-coverage-take-V8-js-to-Istanbul-coverage-report-finally-take-coverage-Desktop-Chromium/coverage/index.html) |
+| Output report | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-4ffdff9b89e7b58476cf/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/coverage-f8ad4b6741d60f9e7b81/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-391e7054ca1e6d944895/index.html) |
 | Indicators | Covered Lines, Branches, Statements and Functions, Execution Counts | Covered Bytes, Execution Counts | Covered Lines, Branches, Statements and Functions, Execution Counts |
 | CSS coverage | ❌ | ✅ | ❌ |
 | Minified code | N/A | ✅ | ❌ |
 | Code formatting | N/A | ✅ | ❌ |
 
 ## Attach Network Report
-Using `MonocartReporter.attachNetworkReport(har, testInfo)` API to generate network report during the test. Arguments:
+Using `attachNetworkReport(har, testInfo)` API to generate network report during the test. Arguments:
 - `har` HAR path (String) or HAR file buffer (Buffer). see [HAR 1.2 Spec](http://www.softwareishard.com/blog/har-12-spec/)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 
- (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js))
+ (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js) preview [report](https://cenfun.github.io/monocart-reporter/network-1a18723ee59b36867898/index.html))
 
 ```js
+// CommonJS
 const fs = require('fs');
 const path = require('path');
 const { test } = require('@playwright/test');
@@ -684,10 +685,10 @@ npx playwright test --shard=1/3
 npx playwright test --shard=2/3
 npx playwright test --shard=3/3
 ```
-There are 3 reports will be generated. Using `MonocartReporter.merge()` API to merge all reports into one.
+There are 3 reports will be generated. Using `merge(reportDataList, options)` API to merge all reports into one.
 > Note: one more suite level "shard" will be added, its title will be the machine hostname, and the summary will be restated. You may need to transfer the attachments by yourself and update the path of the attachments with `attachmentPath` API.
 ```js
-import MonocartReporter from 'monocart-reporter';
+import { merge } from 'monocart-reporter';
 
 const reportDataList = [
     // json file path
@@ -697,7 +698,7 @@ const reportDataList = [
     JSON.parse(fs.readFileSync(path.resolve('path-to/shard3/index.json')))
 ];
 
-await MonocartReporter.merge(reportDataList, {
+await merge(reportDataList, {
     name: 'My Merged Report',
     outputFile: 'merged-report/index.html',
     attachmentPath: (currentPath, extras) => {
@@ -835,6 +836,7 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
  - Packages
     - `packages/app` Monocart report UI
     - `packages/istanbul` Istanbul report libs
+    - `packages/network` Network HAR report libs
     - `packages/show-report` Monocart show-report CLI libs
     - `packages/v8` V8 HTML report UI
     - `packages/vendor` Third-party libs
