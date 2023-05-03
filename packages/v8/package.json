@@ -1,6 +1,6 @@
 {
     "name": "monocart-v8",
-    "version": "1.6.17",
+    "version": "1.6.18",
     "private": true,
     "main": "dist/monocart-v8.js",
     "files": [
