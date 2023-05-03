@@ -7,7 +7,7 @@ const path = require('path');
 const beforeApp = (item, Util) => {
 
     const EC = require('eight-colors');
-    const compress = require('lz-utils/lib/compress.js');
+    const { compress } = require('lz-utils');
     const { forEach, formatPath } = require('../lib/utils/util.js');
 
     // generate reportData for demo
@@ -89,7 +89,7 @@ const beforeNetwork = (item, Util) => {
 
     const EC = require('eight-colors');
 
-    // const compress = require('lz-utils/lib/compress.js');
+    // const { compress } = require('lz-utils');
     // const harData = fs.readFileSync(path.resolve(__dirname, '../.temp/har/music.163.com.har'));
     // const reportDataStr = `window.reportData = "${compress(harData.toString('utf-8'))}";`;
 

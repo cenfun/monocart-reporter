@@ -1,6 +1,6 @@
 import { Util as GridUtil } from 'turbogrid';
 import { saveAs } from 'file-saver';
-import decompress from 'lz-utils/lib/decompress.js';
+import { decompress } from 'lz-utils';
 import Share from '../../../../lib/platform/share.js';
 
 const Util = {
