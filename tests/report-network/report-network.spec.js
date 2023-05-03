@@ -63,18 +63,7 @@ test.describe('attach network report 2', () => {
             }
         });
         const page = await context.newPage();
-        await page.goto('http://playwright.dev/', {
-            waitUntil: 'networkidle'
-        });
-        await delay(500);
-
-        const link1 = page.locator('[href="/docs/intro"]', {
-            hasText: 'Docs'
-        });
-        await link1.click();
-        await delay(500);
-
-        await page.goto('http://playwright.dev/docs/test-reporters', {
+        await page.goto('http://localhost:8090/playwright.dev/', {
             waitUntil: 'networkidle'
         });
         await delay(500);

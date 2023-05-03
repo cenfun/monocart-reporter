@@ -37,6 +37,11 @@
             class="mcr-detail-title"
             v-html="tagFormatter(item.data)"
           />
+
+          <span
+            v-if="item.data.count"
+            class="mcr-num"
+          >{{ item.data.count }}</span>
         </VuiFlex>
 
         <VuiFlex
@@ -498,6 +503,64 @@ const initSteps = (list, steps, parent) => {
     });
 };
 
+const mergeSteps = (stepList, list) => {
+
+    // no need merge if list length < complexity 8
+    if (stepList.length < 8) {
+        stepList.forEach((step) => {
+            list.push(step);
+        });
+        return;
+    }
+
+    const diffProps = (step, lastStep, props) => {
+        for (const k of props) {
+            if (step[k] !== lastStep[k]) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const canMerge = (step, lastStep) => {
+
+        // stepType: category
+        // location is string now
+        if (diffProps(step, lastStep, ['title', 'stepType', 'tg_level', 'location'])) {
+            return false;
+        }
+
+        if (step.subs || step.errors) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const endStep = stepList.reduce((lastStep, step) => {
+        if (canMerge(step, lastStep)) {
+            if (lastStep.count) {
+                lastStep.duration += step.duration;
+                lastStep.count += 1;
+                return lastStep;
+            }
+            const mergedStep = {
+                ... lastStep,
+                duration: lastStep.duration + step.duration,
+                count: 2
+            };
+            // console.log(mergedStep);
+            return mergedStep;
+        }
+
+        list.push(lastStep);
+        return step;
+    });
+
+    list.push(endStep);
+
+};
+
 const initDataList = () => {
 
     const caseItem = state.detailMap[data.caseId];
@@ -519,7 +582,9 @@ const initDataList = () => {
     data.stepSubs = false;
     // collect steps with collapsed
     if (!caseItem.collapsed) {
-        initSteps(list, caseItem.subs);
+        const stepList = [];
+        initSteps(stepList, caseItem.subs);
+        mergeSteps(stepList, list);
     }
 
     if (data.stepFailedOnly) {
