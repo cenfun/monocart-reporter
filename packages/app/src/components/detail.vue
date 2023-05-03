@@ -40,7 +40,7 @@
 
           <span
             v-if="item.data.count"
-            class="mcr-num"
+            class="mcr-num mcr-merged-steps"
           >{{ item.data.count }}</span>
         </VuiFlex>
 
@@ -715,6 +715,19 @@ onActivated(() => {
     &.mcr-step-retry,
     &.mcr-case-flaky {
         border-left-color: var(--color-flaky);
+    }
+
+    .mcr-merged-steps {
+        position: relative;
+        padding-left: 15px;
+
+        &::before {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            content: "x";
+            color: #fff;
+        }
     }
 }
 
