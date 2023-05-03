@@ -109,7 +109,7 @@ test.describe('take V8 anonymous js coverage report', () => {
         const jsCoverageList = await page.coverage.stopJSCoverage();
         await page.close();
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
-            inline: true
+            // inline: true
         });
         console.log(report.summary);
     });

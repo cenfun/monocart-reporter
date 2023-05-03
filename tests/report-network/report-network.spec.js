@@ -40,7 +40,7 @@ test.describe('attach network report 1', () => {
         await context.close();
 
         await attachNetworkReport(harPath, test.info(), {
-            inline: true
+            //  inline: true
         });
 
     });

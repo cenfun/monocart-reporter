@@ -51,7 +51,7 @@ npm i -D monocart-reporter
 ```
 
 ## Playwright Config
-> Note: we use `CommonJS` by default, please [move to ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c#how-can-i-move-my-commonjs-project-to-esm) according to your needs.
+> Note: Most examples use `CommonJS` by default, please [move to ESM](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c#how-can-i-move-my-commonjs-project-to-esm) according to your needs.
 ```js
 // playwright.config.js
 module.exports = {
