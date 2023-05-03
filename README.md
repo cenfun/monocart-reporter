@@ -8,6 +8,10 @@
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
 * Shows Test Report in A `Tree Grid`
+    - Console Logs in Order (log/error/warn/debug/info)
+    - Timeline Workers Graph
+    - Monitor CPU and Memory Usage
+    - Export Data (json)
 * [Output](#output) HTML file and JSON file
 * [Custom Columns](#custom-columns) (extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
@@ -16,10 +20,6 @@
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
 * [Custom Annotations](https://playwright.dev/docs/test-annotations#custom-annotations) with Markdown Support
-* Console Logs in Order (log/error/warn/debug/info)
-* Timeline Workers Graph
-* Monitor CPU and Memory Usage
-* Export Data (json)
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
@@ -35,7 +35,7 @@
     - [Discord Integration](#discord-integration)
     - [Teams Integration](#teams-integration)
     - [Dingtalk/Weixin/Feishu Integration](#dingtalkweixinfeishu-integration)
-
+* [Contributing](#contributing)
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
