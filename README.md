@@ -392,22 +392,19 @@ module.exports = {
             name: "My Test Report",
             outputFile: './test-results/report.html',
             visitor: (data, metadata, collect) => {
-                // remove secrets and sensitive data from reporter
-                if (data.type === 'step') {
-
-                    // step title before:
-                    // locator.type(input[type=password], mysecretpassword)
-                    // apiRequestContext.get(https://api.npmjs.org/?token=myapitoken)
-
-                    const mySecrets = [process.env.LOGIN_PASSWORD, process.env.API_TOKEN];
-                    mySecrets.forEach((secret) => {
-                        data.title = data.title.replace(secret, '***');
-                    });
-
-                    // step title after:
-                    // locator.type(input[type=password], ***)
-                    // apiRequestContext.get(https://api.npmjs.org/?token=***)
-                }
+                const mySecrets = [process.env.PASSWORD, process.env.TOKEN];
+                mySecrets.forEach((secret) => {
+                    // remove from title
+                    data.title = data.title.replace(secret, '***');
+                    // remove from logs
+                    if (data.logs) {
+                        data.logs = data.logs.map((item) => item.replace(secret, '***'));
+                    }
+                    // remove from errors
+                    if (data.errors) {
+                        data.errors = data.errors.map((item) => item.replace(secret, '***'));
+                    }
+                });
             }
         }]
     ]
