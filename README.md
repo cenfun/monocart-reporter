@@ -835,7 +835,6 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
     - `packages/app` Monocart report UI
     - `packages/istanbul` Istanbul report libs
     - `packages/network` Network HAR report libs
-    - `packages/show-report` Monocart show-report CLI libs
     - `packages/v8` V8 HTML report UI
     - `packages/vendor` Third-party libs
 
