@@ -39,9 +39,7 @@ const update = (pageTimings, timings) => {
         return;
     }
 
-    const { timestampStart, timestampEnd } = pageTimings;
-
-    const duration = timestampEnd - timestampStart;
+    const { timestampStart, time } = pageTimings;
 
     data.lines = [];
 
@@ -50,7 +48,7 @@ const update = (pageTimings, timings) => {
         if (v > 0) {
             data.lines.push({
                 style: {
-                    left: Util.PF(v, duration),
+                    left: Util.PF(v, time),
                     background: item.color
                 }
             });
@@ -70,8 +68,8 @@ const update = (pageTimings, timings) => {
         if (v && v > 0) {
             data.rects.push({
                 style: {
-                    left: Util.PF(startDuration + pos, duration),
-                    width: Util.PF(v, duration),
+                    left: Util.PF(startDuration + pos, time),
+                    width: Util.PF(v, time),
                     background: item.color
                 }
             });

@@ -10,9 +10,8 @@
       gap="10px"
       padding="5px"
     >
-      <div class="mcr-timing-legend mcr-timing-legend-start" />
+      <div>Request started at</div>
       <div>{{ Util.TSF(data.durationStart) }}</div>
-      <div>Request start time</div>
     </VuiFlex>
 
     <VuiFlex
@@ -20,14 +19,21 @@
       :key="i"
       gap="10px"
       padding="5px"
-      class="mcr-timing-rect"
     >
       <div
         class="mcr-timing-legend"
         :style="item.style"
       />
-      <div>{{ Util.TSF(item.value) }}</div>
       <div>{{ item.name }}</div>
+      <div>{{ Util.TSF(item.value) }}</div>
+    </VuiFlex>
+
+    <VuiFlex
+      gap="10px"
+      padding="5px"
+    >
+      <div>Request time</div>
+      <div>{{ Util.TSF(data.time) }}</div>
     </VuiFlex>
 
     <VuiFlex
@@ -41,8 +47,8 @@
         class="mcr-timing-legend"
         :style="item.style"
       />
-      <div>{{ Util.TSF(item.value) }}</div>
       <div>{{ item.name }}</div>
+      <div>{{ Util.TSF(item.value) }}</div>
     </VuiFlex>
   </div>
 </template>
@@ -86,7 +92,9 @@ const update = (entry) => {
     } else {
         timings = {
             ... entry.timings,
-            timestampStart: entry.timestampStart
+            timestampStart: entry.timestampStart,
+            start: entry.start,
+            time: entry.time
         };
         currentPage = state.pageMap[entry.pageref];
     }
@@ -95,12 +103,14 @@ const update = (entry) => {
         pageTimings = {
             ... currentPage.pageTimings,
             timestampStart: currentPage.timestampStart,
-            timestampEnd: currentPage.timestampEnd
+            start: currentPage.start,
+            time: currentPage.time
         };
     }
 
     data.pageTimings = pageTimings;
     data.timings = timings;
+    data.time = entry.time;
 
     if (!timings || !pageTimings) {
         return;
@@ -124,13 +134,15 @@ const update = (entry) => {
     data.lines = [];
     Util.pageTimings.forEach((item) => {
         const v = pageTimings[item.key];
-        data.lines.push({
-            name: item.name,
-            value: Math.max(v, 0),
-            style: {
-                background: item.color
-            }
-        });
+        if (v > 0) {
+            data.lines.push({
+                name: item.name,
+                value: Math.max(v, 0),
+                style: {
+                    background: item.color
+                }
+            });
+        }
     });
 
 
@@ -150,17 +162,9 @@ watchEffect(() => {
     height: 32px;
 }
 
-.mcr-timing-rect {
-    margin-left: 20px;
-}
-
 .mcr-timing-legend {
     width: 10px;
     height: 10px;
 }
 
-.mcr-timing-legend-start {
-    border: 1px solid #eee;
-    background-color: #f8f8f8;
-}
 </style>

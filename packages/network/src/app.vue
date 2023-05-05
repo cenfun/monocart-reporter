@@ -565,15 +565,19 @@ const getGridData = () => {
             emptyRow[column.id] = '';
         });
 
+        const pageTimings = page.pageTimings;
+        const time = Math.max(pageTimings.onContentLoad, pageTimings.onLoad) || 0;
+
         const pageRow = {
             ... emptyRow,
             id: page.id,
             name: page.title,
             type: 'page',
             waterfall: i,
+            pageTimings,
             timestampStart: page.timestampStart,
-            timestampEnd: page.timestampStart + page.pageTimings.onLoad,
-            pageTimings: page.pageTimings,
+            start: 0,
+            time,
             comment: page.comment,
             subs: []
         };
@@ -608,6 +612,8 @@ const getGridData = () => {
             // for sort
             waterfall: i,
             timestampStart: entry.timestampStart,
+            start: 0,
+            time: Math.max(entry.time, 0),
             timings: entry.timings,
 
             statusType: entry.statusType,
@@ -624,7 +630,8 @@ const getGridData = () => {
 
         const page = pageMap[entry.pageref];
         if (page) {
-            page.timestampEnd = Math.max(page.timestampEnd, row.timestampStart + row.time);
+            row.start = entry.timestampStart - page.timestampStart;
+            page.time = Math.max(page.time, row.start + row.time);
             page.subs.push(row);
         }
 
@@ -681,7 +688,9 @@ const initGrid = () => {
             } else {
                 props.timings = {
                     ... rowItem.timings,
-                    timestampStart: rowItem.timestampStart
+                    timestampStart: rowItem.timestampStart,
+                    start: rowItem.start,
+                    time: rowItem.time
                 };
                 currentPage = state.pageMap[rowItem.pageref];
             }
@@ -690,7 +699,8 @@ const initGrid = () => {
                 props.pageTimings = {
                     ... currentPage.pageTimings,
                     timestampStart: currentPage.timestampStart,
-                    timestampEnd: currentPage.timestampEnd
+                    start: currentPage.start,
+                    time: currentPage.time
                 };
             }
 
