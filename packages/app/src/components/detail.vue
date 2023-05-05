@@ -530,6 +530,10 @@ const mergeSteps = (stepList, list) => {
             return false;
         }
 
+        if (lastStep.subs || lastStep.errors) {
+            return false;
+        }
+
         if (step.subs || step.errors) {
             return false;
         }
