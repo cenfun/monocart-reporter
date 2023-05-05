@@ -263,6 +263,10 @@ const getNetworkBody = (report) => {
         summary, pages, browser, creator
     } = report;
 
+    if (!Util.isList(pages)) {
+        return '';
+    }
+
     const list = [];
 
     pages.forEach((page, i) => {
@@ -288,7 +292,6 @@ const getNetworkBody = (report) => {
         list.push(`<div>Duration ${Util.TF(waterfall.time)}</div>`);
 
         list.push('</div>');
-
 
         const waterfallChart = generateWaterfallChart(waterfall);
         list.push('<div class="mcr-network-group">');
@@ -321,10 +324,16 @@ const getNetworkBody = (report) => {
     });
     list.push('</div>');
 
+
     list.push('<div class="mcr-network-group">');
-    list.push(`<div><b>Browser</b> ${browser.name} v${browser.version}</div>`);
-    list.push(`<div><b>Creator</b> ${creator.name} v${creator.version}</div>`);
+    if (browser) {
+        list.push(`<div><b>Browser</b> ${browser.name} v${browser.version}</div>`);
+    }
+    if (creator) {
+        list.push(`<div><b>Creator</b> ${creator.name} v${creator.version}</div>`);
+    }
     list.push('</div>');
+
 
     const body = list.join('');
 
