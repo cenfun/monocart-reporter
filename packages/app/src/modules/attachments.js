@@ -133,8 +133,6 @@ const getAuditBody = (report) => {
         return '';
     }
 
-    console.log(report);
-
     const ls = [];
     ls.push('<table>');
 
@@ -151,10 +149,10 @@ const getAuditBody = (report) => {
         ls.push(`<td class="mcr-column-description">${markdownFormatter(item.description, true)}</td>`);
         ls.push('</tr>');
 
-        if (item.subs) {
-            item.subs.forEach((sub) => {
+        if (item.metrics) {
+            item.metrics.forEach((sub) => {
                 ls.push('<tr>');
-                ls.push(`<td class="mcr-column-left mcr-column-sub"><span class="mcr-item">${sub.name}</span></td>`);
+                ls.push(`<td class="mcr-column-left mcr-column-sub">${sub.name}</td>`);
                 ls.push(`<td class="mcr-${sub.status}">${Util.PNF(sub.score)}</td>`);
                 ls.push(`<td>${sub.value}</td>`);
                 ls.push(`<td class="mcr-column-description">${markdownFormatter(sub.description, true)}</td>`);

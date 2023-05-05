@@ -1,3 +1,7 @@
+
+* 1.6.19
+  - added API attachAuditReport
+
 * 1.6.18
   - fixed step issue (dedupe steps)
 

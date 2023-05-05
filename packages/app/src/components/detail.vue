@@ -902,7 +902,7 @@ onActivated(() => {
         }
 
         .mcr-column-sub {
-            padding-left: 15px;
+            padding-left: 20px;
         }
 
         .mcr-column-description {
