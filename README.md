@@ -7,7 +7,7 @@
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
-* Shows Test Report in A `Tree Grid`
+    - Shows Test Report in A `Tree Grid`
     - Console Logs in Order (log/error/warn/debug/info)
     - Custom Annotations with Markdown 
     - Timeline Workers Graph
