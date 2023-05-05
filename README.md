@@ -634,7 +634,7 @@ Using `attachNetworkReport(har, testInfo)` API to generate network report during
 - `har` HAR path (String) or HAR file buffer (Buffer). see [HAR 1.2 Spec](http://www.softwareishard.com/blog/har-12-spec/)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 
- (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js) preview [report](https://cenfun.github.io/monocart-reporter/network-1a18723ee59b36867898/index.html))
+ Generate HAR with `recordHar` option in browser.newContext() (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js) preview [report](https://cenfun.github.io/monocart-reporter/network-1a18723ee59b36867898/index.html))
 
 ```js
 // CommonJS
@@ -658,9 +658,7 @@ test.describe('attach network report 1', () => {
             }
         });
         const page = await context.newPage();
-        await page.goto('http://playwright.dev/', {
-            waitUntil: 'networkidle'
-        });
+        await page.goto('https://github.com/cenfun/monocart-reporter');
     });
 
     test('next, run test cases', async () => {
@@ -672,6 +670,35 @@ test.describe('attach network report 1', () => {
         await context.close();
         await attachNetworkReport(harPath, test.info());
     });
+});
+```
+Generate har with [playwright-har](https://github.com/janzaremski/playwright-har)
+```js
+import { test } from '@playwright/test';
+import { attachNetworkReport } from 'monocart-reporter';
+import { PlaywrightHar } from 'playwright-har';
+
+const harPath = path.resolve('.temp/network-report2.har');
+if (fs.existsSync(harPath)) {
+    // remove previous
+    fs.rmSync(harPath);
+}
+
+test('first, open page', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    playwrightHar = new PlaywrightHar(page);
+    await playwrightHar.start();
+    await page.goto('https://github.com/cenfun/monocart-reporter');
+});
+
+test('next, run test cases', async () => {
+    
+});
+
+test('finally, attach HAR', async () => {
+    await playwrightHar.stop(harPath);
+    await attachNetworkReport(harPath, test.info());
 });
 ```
 
