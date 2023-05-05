@@ -842,6 +842,7 @@ onActivated(() => {
     }
 
     .mcr-attachment-body {
+        padding: 10px;
         border: 1px solid #eee;
 
         img,
@@ -849,74 +850,6 @@ onActivated(() => {
             display: block;
             max-height: 350px;
         }
-    }
-}
-
-.mcr-attachment-image {
-    a {
-        display: block;
-    }
-}
-
-.mcr-attachment-trace {
-    .mcr-attachment-body {
-        padding: 5px;
-    }
-
-    .mcr-trace-details {
-        display: flex;
-        flex-direction: row;
-
-        > a {
-            white-space: nowrap;
-        }
-
-        details {
-            summary {
-                margin-left: 15px;
-                color: #666;
-                cursor: pointer;
-                user-select: none;
-            }
-
-            dl {
-                margin-top: 5px;
-                margin-left: 15px;
-            }
-
-            dd {
-                margin: 0;
-            }
-        }
-    }
-}
-
-.mcr-attachment-coverage {
-    .mcr-attachment-body {
-        border: 1px solid #ddd;
-        overflow-x: auto;
-    }
-
-    .mcr-low {
-        background: #fce1e5;
-    }
-
-    .mcr-medium {
-        background: #fff4c2;
-    }
-
-    .mcr-high {
-        background: rgb(230 245 208);
-    }
-
-    .mcr-head {
-        background-color: #f8f8f8;
-    }
-
-    .mcr-column-file {
-        min-width: 100px;
-        text-align: left;
-        word-break: break-all;
     }
 
     table {
@@ -955,13 +888,100 @@ onActivated(() => {
             padding: 5px 8px;
             text-align: right;
         }
+
+        .mcr-column-filename {
+            min-width: 100px;
+            text-align: left;
+            word-break: break-all;
+        }
+
+        .mcr-column-left {
+            min-width: 100px;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        .mcr-column-sub {
+            padding-left: 15px;
+        }
+
+        .mcr-column-description {
+            color: #666;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .mcr-low {
+            background: #fce1e5;
+        }
+
+        .mcr-medium {
+            background: #fff4c2;
+        }
+
+        .mcr-high {
+            background: rgb(230 245 208);
+        }
+
+        .mcr-head {
+            background-color: #f8f8f8;
+        }
+    }
+}
+
+.mcr-attachment-image {
+    a {
+        display: block;
+    }
+}
+
+.mcr-attachment-trace {
+    .mcr-trace-details {
+        display: flex;
+        flex-direction: row;
+
+        > a {
+            white-space: nowrap;
+        }
+
+        details {
+            summary {
+                margin-left: 15px;
+                color: #666;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            dl {
+                margin-top: 5px;
+                margin-left: 15px;
+            }
+
+            dd {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.mcr-attachment-audit {
+    .mcr-attachment-body {
+        padding: 0;
+        border: 1px solid #ddd;
+        overflow-x: auto;
+    }
+}
+
+.mcr-attachment-coverage {
+    .mcr-attachment-body {
+        padding: 0;
+        border: 1px solid #ddd;
+        overflow-x: auto;
     }
 }
 
 .mcr-attachment-network {
     .mcr-attachment-body {
-        padding: 10px;
-
         .mcr-network-group {
             display: flex;
             flex-flow: row wrap;
@@ -977,27 +997,27 @@ onActivated(() => {
             height: 30px;
         }
     }
-}
 
-.mcr-waterfall {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: #f8f8f8;
-}
+    .mcr-waterfall {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: #f8f8f8;
+    }
 
-.mcr-waterfall-line {
-    position: absolute;
-    top: 0;
-    width: 1px;
-    height: 100%;
-}
+    .mcr-waterfall-line {
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 100%;
+    }
 
-.mcr-waterfall-rect {
-    position: absolute;
-    top: 50%;
-    height: 50%;
-    transform: translateY(-50%);
+    .mcr-waterfall-rect {
+        position: absolute;
+        top: 50%;
+        height: 50%;
+        transform: translateY(-50%);
+    }
 }
 
 </style>

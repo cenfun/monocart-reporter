@@ -69,6 +69,7 @@
         "istanbul-lib-coverage": "^3.2.0",
         "istanbul-lib-report": "^3.0.0",
         "jira-client": "^8.2.2",
+        "lighthouse": "^10.2.0",
         "marked": "^5.0.0",
         "nodemailer": "^6.9.1",
         "playwright": "^1.33.0",

@@ -1,5 +1,6 @@
 import Util from '../utils/util.js';
 import generateWaterfallChart from './waterfall.js';
+import { markdownFormatter } from './formatters.js';
 
 export const getAttachment = (item) => {
     // console.log(attachment);
@@ -28,6 +29,14 @@ export const getAttachment = (item) => {
         },
         handler: () => {
             return getTrace(path, name);
+        }
+    }, {
+        condition: () => {
+            const definition = Util.attachments.audit;
+            return name === definition.name && contentType === definition.contentType;
+        },
+        handler: () => {
+            return getAudit(path, name, item.report);
         }
     }, {
         condition: () => {
@@ -119,6 +128,53 @@ const getTrace = (path, name) => {
 
 // ================================================================================================
 
+const getAuditBody = (report) => {
+    if (!report || !report.categories) {
+        return '';
+    }
+
+    console.log(report);
+
+    const ls = [];
+    ls.push('<table>');
+
+    ls.push('<tr class="mcr-head">');
+    ls.push('<td class="mcr-column-left">Name</td><td>Score</td><td></td><td></td>');
+    ls.push('</tr>');
+
+    report.categories.forEach((item, i) => {
+
+        ls.push('<tr>');
+        ls.push(`<td class="mcr-column-left"><b>${item.name}</b></td>`);
+        ls.push(`<td class="mcr-${item.status}">${Util.PNF(item.score)}</td>`);
+        ls.push(`<td>${item.value}</td>`);
+        ls.push(`<td class="mcr-column-description">${markdownFormatter(item.description, true)}</td>`);
+        ls.push('</tr>');
+
+        if (item.subs) {
+            item.subs.forEach((sub) => {
+                ls.push('<tr>');
+                ls.push(`<td class="mcr-column-left mcr-column-sub"><span class="mcr-item">${sub.name}</span></td>`);
+                ls.push(`<td class="mcr-${sub.status}">${Util.PNF(sub.score)}</td>`);
+                ls.push(`<td>${sub.value}</td>`);
+                ls.push(`<td class="mcr-column-description">${markdownFormatter(sub.description, true)}</td>`);
+                ls.push('</tr>');
+            });
+        }
+
+    });
+
+    ls.push('</table>');
+    return ls.join('');
+};
+
+const getAudit = (path, name, report) => {
+    const body = getAuditBody(report);
+    return getLink(path, name, 'audit', body);
+};
+
+// ================================================================================================
+
 const getIstanbulSummary = (report) => {
     const files = report.files;
     const map = {
@@ -146,7 +202,7 @@ const getIstanbulSummary = (report) => {
     const ls = [];
     ls.push('<table>');
 
-    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-file">File</td>');
+    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-filename">File</td>');
     Object.keys(map).forEach((k) => {
         ls.push(`<td colspan="2">${map[k]}</td>`);
     });
@@ -164,7 +220,7 @@ const getIstanbulSummary = (report) => {
         } else {
             ls.push(`<td>${i + 1}</td>`);
         }
-        ls.push(`<td class="mcr-column-file">${item.name}</td>`);
+        ls.push(`<td class="mcr-column-filename">${item.name}</td>`);
 
         Object.keys(map).forEach((k) => {
             const d = item[k] || {};
@@ -203,7 +259,7 @@ const getV8Summary = (report) => {
     const ls = [];
     ls.push('<table>');
 
-    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-file">File</td>');
+    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-filename">File</td>');
     ls.push('<td>Coverage</td><td>Type</td><td>Total Bytes</td><td>Used Bytes</td><td>Unused Bytes</td>');
     ls.push('</tr>');
 
@@ -219,7 +275,7 @@ const getV8Summary = (report) => {
         } else {
             ls.push(`<td>${i + 1}</td>`);
         }
-        ls.push(`<td class="mcr-column-file">${item.name}</td>`);
+        ls.push(`<td class="mcr-column-filename">${item.name}</td>`);
 
         // low, medium, high, unknown
         ls.push(`<td class="mcr-${item.status}">${Util.PF(item.pct, 100, 2)}</td>`);
