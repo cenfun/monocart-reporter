@@ -558,6 +558,7 @@ test('attach lighthouse audit report', async () => {
 });
 
 ```
+Preview [Audit HTML Report](https://cenfun.github.io/monocart-reporter/audit-78a0a1cc4420ee9da113/index.html)
 
 ## Attach Code Coverage Report
 Attach a code coverage report with API `attachCoverageReport(data, testInfo, options)`. Arguments:
@@ -709,7 +710,7 @@ test.describe('attach network report 1', () => {
     });
 });
 ```
-Generate har with [playwright-har](https://github.com/janzaremski/playwright-har)
+Generate HAR with [playwright-har](https://github.com/janzaremski/playwright-har)
 ```js
 import { test } from '@playwright/test';
 import { attachNetworkReport } from 'monocart-reporter';
@@ -738,6 +739,7 @@ test('finally, attach HAR', async () => {
     await attachNetworkReport(harPath, test.info());
 });
 ```
+Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network-1a18723ee59b36867898/index.html)
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
