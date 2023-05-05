@@ -16,6 +16,9 @@ const beforeApp = (item, Util) => {
     // coverage
     // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
 
+    // network
+    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/network/index.json');
+
     // merge
     // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/merged/index.json');
 
