@@ -9,21 +9,29 @@
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
 * Shows Test Report in A `Tree Grid`
     - Console Logs in Order (log/error/warn/debug/info)
+    - Custom Annotations with Markdown 
     - Timeline Workers Graph
     - Monitor CPU and Memory Usage
     - Export Data (json)
+* [Preview](#preview)
+* [Install](#install)
+* [Playwright Config](#playwright-config)
+* [Examples](#examples)
 * [Output](#output) HTML file and JSON file
+* [Viewing Trace Online](#viewing-trace-online)
+* [Reporter Options](#reporter-options)
 * [Custom Columns](#custom-columns) (extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
     - [Searchable Fields](#searchable-fields)
 * [Data Collection Visitor](#data-collection-visitor) (extra data collection for suite/case/step)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
-* [Custom Annotations](https://playwright.dev/docs/test-annotations#custom-annotations) with Markdown Support
+Support
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
 * [Attach Code Coverage Report](#attach-code-coverage-report)
+    - [Compare Istanbul, V8 and V8 to Istanbul](#compare-istanbul-v8-and-v8-to-istanbul)
 * [Attach Network Report](#attach-network-report)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd hook](#onend-hook)
@@ -36,6 +44,7 @@
     - [Teams Integration](#teams-integration)
     - [Dingtalk/Weixin/Feishu Integration](#dingtalkweixinfeishu-integration)
 * [Contributing](#contributing)
+* [Changelog](#changelog)
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
