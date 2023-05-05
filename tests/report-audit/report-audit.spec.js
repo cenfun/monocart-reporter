@@ -6,13 +6,11 @@ const { attachAuditReport } = require('monocart-reporter');
 const lighthouse = require('lighthouse/core/index.cjs');
 
 test('attach lighthouse audit report', async () => {
-
     const port = 9222;
     const browser = await chromium.launch({
         args: [`--remote-debugging-port=${port}`]
         // headless: false
     });
-
     // https://github.com/GoogleChrome/lighthouse/tree/main/docs
     const options = {
         // logLevel: 'info',
@@ -20,12 +18,8 @@ test('attach lighthouse audit report', async () => {
         output: 'html',
         port
     };
-
     const url = 'http://localhost:8090/demo/';
     const runnerResult = await lighthouse(url, options);
-
     await browser.close();
-
     await attachAuditReport(runnerResult, test.info());
-
 });

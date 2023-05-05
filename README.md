@@ -30,6 +30,7 @@ Support
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
+* [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
 * [Attach Code Coverage Report](#attach-code-coverage-report)
     - [Compare Istanbul, V8 and V8 to Istanbul](#compare-istanbul-v8-and-v8-to-istanbul)
 * [Attach Network Report](#attach-network-report)
@@ -531,9 +532,36 @@ module.exports = {
 };
 ```
 
+## Attach Lighthouse Audit Report
+Attach an audit report with API `attachAuditReport(runnerResult, testInfo)`. Arguments:
+- `runnerResult` lighthouse result. see [lighthouse](https://github.com/GoogleChrome/lighthouse/tree/main/docs)
+- `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
+```js
+const { test, chromium } = require('@playwright/test');
+const { attachAuditReport } = require('monocart-reporter');
+const lighthouse = require('lighthouse/core/index.cjs');
+test('attach lighthouse audit report', async () => {
+    const port = 9222;
+    const browser = await chromium.launch({
+        args: [`--remote-debugging-port=${port}`]
+    });
+    const options = {
+        // logLevel: 'info',
+        // onlyCategories: ['performance', 'best-practices', 'seo'],
+        output: 'html',
+        port
+    };
+    const url = 'https://github.com/cenfun/monocart-reporter';
+    const runnerResult = await lighthouse(url, options);
+    await browser.close();
+    await attachAuditReport(runnerResult, test.info());
+});
+
+```
+
 ## Attach Code Coverage Report
-Using `attachCoverageReport(data, testInfo, options)` API to generate coverage report during the test. Arguments:
-- `data` There are 2 supported data inputs `Istanbul` (Object) or `V8` (Array)
+Attach a code coverage report with API `attachCoverageReport(data, testInfo, options)`. Arguments:
+- `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 - `options` (Object)
     - `watermarks` By default, watermarks of Istanbul see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) (Object), watermarks of V8 is `[50, 80]` (Array)
@@ -639,7 +667,7 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | Code formatting | N/A | ✅ | ❌ |
 
 ## Attach Network Report
-Using `attachNetworkReport(har, testInfo)` API to generate network report during the test. Arguments:
+Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments:
 - `har` HAR path (String) or HAR file buffer (Buffer). see [HAR 1.2 Spec](http://www.softwareishard.com/blog/har-12-spec/)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 
