@@ -43,7 +43,7 @@ class HomePage {
         console.log(`goto: ${url}`);
 
         /**
-         * override title
+         * rewrite title
          * @title Open my home page and delay 1s
          */
         await mockPageGoto(this.page, url);
@@ -53,7 +53,7 @@ class HomePage {
         // console.log(`addInitScript: ${this.metadata.clientPath}`);
 
         /**
-         * override title
+         * rewrite title
          * @title Add Init Script
          */
         // await this.page.addInitScript({

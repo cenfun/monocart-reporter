@@ -8,7 +8,7 @@ const { delay } = require('../common/util.js');
 const HomePage = require('./home-page.js');
 
 /**
- * override "beforeAll hook" title to
+ * rewrite "beforeAll hook" title to
  * @title do something before all
  */
 test.beforeAll(({ browserName }, workerInfo) => {
@@ -17,7 +17,7 @@ test.beforeAll(({ browserName }, workerInfo) => {
 });
 
 /**
- * override "beforeEach hook" title to
+ * rewrite "beforeEach hook" title to
  * @title do something before each
  */
 test.beforeEach(() => {

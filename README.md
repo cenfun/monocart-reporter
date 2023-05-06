@@ -83,7 +83,7 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 ## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
-> Note: test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
+> Note: Test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
 ```js
 // playwright.config.js
 // attachments outputDir and report outputFile used same folder
@@ -208,7 +208,7 @@ module.exports = {
 };
 ```
 ### Custom Formatter
-> Note: the `formatter` function will be serialized into string via JSON, so closures, contexts, etc. will not work!
+> Note: The `formatter` function will be serialized into string via JSON, so closures, contexts, etc. will not work!
 ```js
 // playwright.config.js
 module.exports = {
@@ -265,7 +265,7 @@ module.exports = {
 
 ## Custom Data Visitor
 The `visitor` function will be executed for each row item (suite, case and step). Arguments:
-- `data` data item (suite/case/step) for reporter, you can override some of its properties or add more
+- `data` data item (suite/case/step) for reporter, you can rewrite some of its properties or add more
 - `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
 - `collect` see [collect data from comments](#collect-data-from-comments)
 
@@ -363,7 +363,9 @@ module.exports = {
 };
 ```
 - Then, add comments to your tests
-> Each comment item must start with `@` which is similar to [JSDoc](https://jsdoc.app/).
+> Note: Each comment item must start with `@` which is similar to [JSDoc](https://jsdoc.app/).
+
+For example, we want to add `owner` and `jira` or others for the cases, steps, and suites, or rewrite the step `title`
 ```js
 /**
  * for case
@@ -386,20 +388,10 @@ test('case description', () => {
 
 ```
 ```js
-/**
- * for describe
- * @owner Mark
- * @jira MCR-16900
- */
-test.describe('suite title', () => {
-
-});
-```
-```js
 test('case title', ({ browserName }, testInfo) => {
 
     /**
-     * override assert step title "expect.toBe" to
+     * rewrite assert step title "expect.toBe" to
      * @title my custom assert step title
      * @annotations important
      */
@@ -413,7 +405,7 @@ test('case title', ({ browserName }, testInfo) => {
 });
 
 /**
- * override "beforeAll hook" title to
+ * rewrite "beforeAll hook" title to
  * @title do something before all
  */
 test.beforeAll(() => { 
@@ -421,7 +413,7 @@ test.beforeAll(() => {
 });
 
 /**
- * override "beforeEach hook" title to
+ * rewrite "beforeEach hook" title to
  * @title do something before each
  */
 test.beforeEach(() => { 
@@ -430,21 +422,31 @@ test.beforeEach(() => {
 ```
 ```js
 /**
- * for file (comment in the first line)
+ * for describe
+ * @owner Mark
+ * @jira MCR-16900
+ */
+test.describe('suite title', () => {
+
+});
+```
+```js
+/**
+ * for file (comment file in the first line)
  * @owner FO
  */
 const { test, expect } = require('@playwright/test');
 ```
 ```js
-// Project (Can't use comments but use project `metadata`)
+// for project (Can't use comments but use project level `metadata`)
 // playwright.config.js
 module.exports = {
     projects: [{
-            name: 'Desktop Chromium',
-            metadata: {
-                owner: 'PO'
-            }
-        }]
+        name: 'Desktop Chromium',
+        metadata: {
+            owner: 'PO'
+        }
+    }]
 };  
 ```
 
@@ -546,7 +548,7 @@ export default async (config) => {
 ```
 
 ## Trend Chart
-> Note: the trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting historical trend data from previous report data before test every time.
+> Note: The trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting historical trend data from previous report data before test every time.
 - If a report is generated in the same place every time, you can simply connect the data with the report JSON path (the data is not 100% safe if there is any runtime error, the previous output dir will be empty by Playwright but the reporter processing not finish)
 ```js
 // playwright.config.js
@@ -805,7 +807,7 @@ npx playwright test --shard=2/3
 npx playwright test --shard=3/3
 ```
 There are 3 reports will be generated. Using `merge(reportDataList, options)` API to merge all reports into one.
-> Note: one more suite level "shard" will be added, its title will be the machine hostname, and the summary will be restated. You may need to transfer the attachments by yourself and update the path of the attachments with `attachmentPath` API.
+> Note: One more suite level "shard" will be added, its title will be the machine hostname, and the summary will be restated. You may need to transfer the attachments by yourself and update the path of the attachments with `attachmentPath` API.
 ```js
 import { merge } from 'monocart-reporter';
 

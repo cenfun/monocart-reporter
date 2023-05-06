@@ -182,7 +182,7 @@ test.describe('suite group 1 @beta', () => {
     test('@smoke case info', () => {
 
         /**
-         * override assert step title "expect.toBe" to
+         * rewrite assert step title "expect.toBe" to
          * @title my custom assert step title
          * @annotations important
          */
