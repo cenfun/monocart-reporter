@@ -1,6 +1,6 @@
 module.exports = {
 
-    globalSetup: require.resolve('./common/global-setup.js'),
+    globalSetup: './common/global-setup.js',
 
     use: {
         // test attachments
@@ -18,9 +18,7 @@ module.exports = {
         executor: 'Mono',
 
         // test home page object model
-        url: 'https://www.npmjs.org/package/monocart-reporter',
-        // test addInitScript
-        clientPath: 'tests/common/client.js'
+        url: 'https://www.npmjs.org/package/monocart-reporter'
     },
 
     // test flaky case

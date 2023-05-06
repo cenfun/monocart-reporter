@@ -453,7 +453,7 @@ module.exports = {
 ```
 
 ### Remove Secrets and Sensitive Data from Report
-> The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the step title with the string replacement in `visitor` function.
+> The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the report data with the string replacement in `visitor` function.
 ```js
 // playwright.config.js
 module.exports = {
@@ -524,9 +524,7 @@ module.exports = {
         executor: 'Mono',
         
         // test home page object model
-        url: 'https://www.npmjs.org/package/monocart-reporter',
-        // test addInitScript
-        clientPath: 'tests/common/client.js'
+        url: 'https://www.npmjs.org/package/monocart-reporter'
     },
      reporter: [
         ['monocart-reporter', {  

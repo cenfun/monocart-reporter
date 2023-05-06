@@ -1,6 +1,6 @@
-import { chromium } from '@playwright/test';
+const { chromium } = require('@playwright/test');
 const dotenv = require('dotenv');
-export default async (config) => {
+module.exports = async (config) => {
 
     // https://github.com/motdotla/dotenv
     dotenv.config();
