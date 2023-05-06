@@ -20,12 +20,14 @@
 * [Output](#output) HTML and JSON
 * [View Trace Online](#view-trace-online)
 * [Reporter Options](#reporter-options)
-* [Custom Columns](#custom-columns) (extra properties for suite/case/step)
+* [Custom Columns](#custom-columns) (Extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
     - [Searchable Fields](#searchable-fields)
-* [Data Collection Visitor](#data-collection-visitor) (extra data collection for suite/case/step)
-    - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
-    - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
+* [Custom Data Visitor](#custom-data-visitor) (Extra data collection for suite/case/step)
+    - [Collect Data from Title](#collect-data-from-title)
+    - [Collect Data from Annotations](#collect-data-from-annotations)
+    - [Collect Data from Comments](#collect-data-from-comments) (Recommended)
+    - [Remove Secrets and Sensitive Data from Report](#remove-secrets-and-sensitive-data-from-report)
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
@@ -261,14 +263,73 @@ module.exports = {
 };
 ```
 
-## Data Collection Visitor
+## Custom Data Visitor
 The `visitor` function will be executed for each row item (suite, case and step). Arguments:
 - `data` data item (suite/case/step) for reporter, you can override some of its properties or add more
 - `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
-- `collect` only one self collection for now: `collect.comments(parserOptions)` and parser options following:
-    - empty for normal CommonJs syntax by default
-    - `{ sourceType: 'module', plugins: ['typescript'] }` for typescript syntax
-    - more [https://babeljs.io/docs/babel-parser](https://babeljs.io/docs/babel-parser)
+- `collect` see [collect data from comments](#collect-data-from-comments)
+
+### Collect Data from Title
+For example, we want to parse out the jira key from the title:
+```js
+test('[MCR-123] collect data from title', () => {
+
+});
+```
+You can simply use regular expressions to parse and get jira key:
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            visitor: (data, metadata, collect) => {
+                // [MCR-123] collect data from title
+                const matchResult = metadata.title.match(/\[(.+)\]/);
+                if (matchResult && matchResult[1]) {
+                    data.jira = matchResult[1];
+                }
+            }
+        }]
+    ]
+};
+```
+
+### Collect Data from Annotations
+It should be easier than getting from title:
+```js
+test('collect data from annotations', () => {
+    test.info().annotations.push({
+        type: "jira",
+        description: "MCR-123"
+    })
+});
+```
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            visitor: (data, metadata, collect) => {
+                // collect data from annotations
+                if (metadata.annotations) {
+                    const jiraItem = metadata.annotations.find((item) => item.type === 'jira');
+                    if (jiraItem) {
+                        data.jira = jiraItem.description;
+                    }
+                }
+            }
+        }]
+    ]
+};
+```
+
+### Collect Data from Comments
+> The code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. 
+- First, add the collection of comments in the visitor
 ```js
 // playwright.config.js
 module.exports = {
@@ -278,30 +339,34 @@ module.exports = {
             outputFile: './test-results/report.html',
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
+                
                 // auto collect data from comments
                 const parserOptions = {
                     // Indicate the mode the code should be parsed in.
                     // Can be one of "script", "module", or "unambiguous". Defaults to "script".
                     // sourceType: 'module',
 
-                    // enable typescript syntax. more https://babeljs.io/docs/babel-parser
+                    // enable typescript syntax.
                     // plugins: ['typescript']
+
+                    // more https://babeljs.io/docs/babel-parser
                 };
                 const comments = collect.comments(parserOptions);
                 if (comments) {
+                    // Append all collected comments data to report data
                     Object.assign(data, comments);
                 }
+
             }
         }]
     ]
 };
 ```
-### Adding Comments to Your Tests
-> Compared with importing external library, code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. Each comment info starts with `@` which is similar to JSDoc.
-* Case
+- Then, add comments to your tests
+> Each comment item must start with `@` which is similar to [JSDoc](https://jsdoc.app/).
 ```js
 /**
- * add extra information for case
+ * for case
  * @owner Kevin
  * @jira MCR-16888
  */
@@ -320,10 +385,9 @@ test('case description', () => {
 });
 
 ```
-* Describe
 ```js
 /**
- * add extra information for describe
+ * for describe
  * @owner Mark
  * @jira MCR-16900
  */
@@ -331,7 +395,6 @@ test.describe('suite title', () => {
 
 });
 ```
-* Step
 ```js
 test('case title', ({ browserName }, testInfo) => {
 
@@ -348,9 +411,7 @@ test('case title', ({ browserName }, testInfo) => {
     });
 
 });
-```
-* Hooks
-```js
+
 /**
  * override "beforeAll hook" title to
  * @title do something before all
@@ -367,29 +428,27 @@ test.beforeEach(() => {
     
 });
 ```
-* File
 ```js
 /**
- * add extra information for file in the first line 
+ * for file (comment in the first line)
  * @owner FO
  */
 const { test, expect } = require('@playwright/test');
 ```
-* Project (Can't use comments but use project `metadata`)
 ```js
+// Project (Can't use comments but use project `metadata`)
 // playwright.config.js
 module.exports = {
-    projects: [
-        {
+    projects: [{
             name: 'Desktop Chromium',
             metadata: {
                 owner: 'PO'
             }
-        }
-    ]
+        }]
 };  
 ```
-### Removing Secrets and Sensitive Data from Report
+
+### Remove Secrets and Sensitive Data from Report
 > The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the step title with the string replacement in `visitor` function.
 ```js
 // playwright.config.js
