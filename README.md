@@ -18,7 +18,7 @@
 * [Playwright Config](#playwright-config)
 * [Examples](#examples)
 * [Output](#output) HTML and JSON
-* [Viewing Trace Online](#viewing-trace-online)
+* [View Trace Online](#view-trace-online)
 * [Reporter Options](#reporter-options)
 * [Custom Columns](#custom-columns) (extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
@@ -76,10 +76,8 @@ module.exports = {
 Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.dev/docs/test-reporters)
 
 ## Examples
-- [tests/playwright.config.js](/tests/playwright.config.js)
-- [tests/example/example.spec.js](/tests/example/example.spec.js)
-- [tests/home-page/home-page.spec.js](/tests/home-page/home-page.spec.js)
-
+- [tests](/tests/)
+- [more](https://github.com/cenfun/monocart-reporter-test) 
 ## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
@@ -104,7 +102,7 @@ module.exports = {
 - path-to/your-filename.json  
 Separated metadata file (Already included in the above HTML and compressed, it can be deleted). Can be used for debugging or custom data collection.
 
-## Viewing Trace Online 
+## View Trace Online 
 > The [Trace Viewer](https://trace.playwright.dev/) requires that the trace file must be loaded over the http:// or https:// protocols without [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS) issue, try following start a local web server:
 ```sh
 npx monocart show-report <your-outputFile-path>
