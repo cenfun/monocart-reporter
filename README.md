@@ -17,7 +17,7 @@
 * [Install](#install)
 * [Playwright Config](#playwright-config)
 * [Examples](#examples)
-* [Output](#output) HTML file and JSON file
+* [Output](#output) HTML and JSON
 * [Viewing Trace Online](#viewing-trace-online)
 * [Reporter Options](#reporter-options)
 * [Custom Columns](#custom-columns) (extra properties for suite/case/step)
@@ -26,7 +26,6 @@
 * [Data Collection Visitor](#data-collection-visitor) (extra data collection for suite/case/step)
     - [Adding Comments to Your Tests](#adding-comments-to-your-tests)
     - [Removing Secrets and Sensitive Data from Report](#removing-secrets-and-sensitive-data-from-report)
-Support
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
