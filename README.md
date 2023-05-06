@@ -317,7 +317,7 @@ module.exports = {
                 // collect data from annotations
                 if (metadata.annotations) {
                     const jiraItem = metadata.annotations.find((item) => item.type === 'jira');
-                    if (jiraItem) {
+                    if (jiraItem && jiraItem.description) {
                         data.jira = jiraItem.description;
                     }
                 }

@@ -27,7 +27,7 @@ module.exports = async (reportData, capability) => {
         width: 860,
         height: 1060
     });
-    await page.goto("file://" + path.resolve(htmlPath));
+    await page.goto(`file://${path.resolve(htmlPath)}`);
     await page.evaluate(() => {
         location.hash = 'page=report';
         window.postMessage({
