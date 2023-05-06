@@ -79,7 +79,7 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 
 ## Examples
 - [tests](/tests/)
-- [more](https://github.com/cenfun/monocart-reporter-test) 
+- [more](https://github.com/cenfun/monocart-reporter-test/tree/main/tests) 
 ## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
@@ -121,7 +121,7 @@ npx monocart show-report <your-outputFile-path>
 
     // attachment path handler
     attachmentPath: null,
-    // attachmentPath: (currentPath, extras) => `https://cenfun.github.io/monocart-reporter/${currentPath}`,
+    // attachmentPath: (currentPath, extras) => `https://another-path/${currentPath}`,
 
     // trend data handler
     trend: null,
@@ -297,7 +297,7 @@ module.exports = {
 ```
 
 ### Collect Data from Annotations
-It should be easier than getting from title:
+It should be easier than getting from title. see [custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) via `test.info().annotations`
 ```js
 test('collect data from annotations', () => {
     test.info().annotations.push({
@@ -329,7 +329,8 @@ module.exports = {
 
 ### Collect Data from Comments
 > The code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. 
-- First, add the collection of comments in the visitor
+- First, add the collection of comments in the visitor. 
+> Note: If there are any parsing error messages in red lines, try other parser options like `sourceType: 'module'` or `plugins: ['typescript']` according to your situation.
 ```js
 // playwright.config.js
 module.exports = {
@@ -362,6 +363,7 @@ module.exports = {
     ]
 };
 ```
+
 - Then, add comments to your tests
 > Note: Each comment item must start with `@` which is similar to [JSDoc](https://jsdoc.app/).
 
