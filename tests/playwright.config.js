@@ -206,7 +206,7 @@ module.exports = {
 
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
-                // auto collect data from comments
+                // auto collect data from the comments
                 const parserOptions = {
                     // Indicate the mode the code should be parsed in.
                     // Can be one of "script", "module", or "unambiguous". Defaults to "script".
@@ -223,7 +223,7 @@ module.exports = {
                     Object.assign(data, comments);
                 }
 
-                // remove secrets and sensitive data from report
+                // remove secrets and sensitive data
                 if (data.type === 'step') {
 
                     // step title before:

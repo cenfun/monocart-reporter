@@ -24,10 +24,10 @@
     - [Custom Formatter](#custom-formatter)
     - [Searchable Fields](#searchable-fields)
 * [Custom Data Visitor](#custom-data-visitor) (Extra data collection for suite/case/step)
-    - [Collect Data from Title](#collect-data-from-title)
-    - [Collect Data from Annotations](#collect-data-from-annotations)
-    - [Collect Data from Comments](#collect-data-from-comments) (Recommended)
-    - [Remove Secrets and Sensitive Data from Report](#remove-secrets-and-sensitive-data-from-report)
+    - [Collect Data from the Title](#collect-data-from-the-title)
+    - [Collect Data from the Annotations](#collect-data-from-the-annotations)
+    - [Collect Data from the Comments](#collect-data-from-the-comments) (Recommended)
+    - [Remove Secrets and Sensitive Data](#remove-secrets-and-sensitive-data)
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
@@ -267,12 +267,12 @@ module.exports = {
 The `visitor` function will be executed for each row item (suite, case and step). Arguments:
 - `data` data item (suite/case/step) for reporter, you can rewrite some of its properties or add more
 - `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
-- `collect` see [collect data from comments](#collect-data-from-comments)
+- `collect` see [collect data from the comments](#collect-data-from-the-comments)
 
-### Collect Data from Title
+### Collect Data from the Title
 For example, we want to parse out the jira key from the title:
 ```js
-test('[MCR-123] collect data from title', () => {
+test('[MCR-123] collect data from the title', () => {
 
 });
 ```
@@ -285,7 +285,7 @@ module.exports = {
             name: "My Test Report",
             outputFile: './test-results/report.html',
             visitor: (data, metadata, collect) => {
-                // [MCR-123] collect data from title
+                // [MCR-123] collect data from the title
                 const matchResult = metadata.title.match(/\[(.+)\]/);
                 if (matchResult && matchResult[1]) {
                     data.jira = matchResult[1];
@@ -296,10 +296,10 @@ module.exports = {
 };
 ```
 
-### Collect Data from Annotations
+### Collect Data from the Annotations
 It should be easier than getting from title. see [custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) via `test.info().annotations`
 ```js
-test('collect data from annotations', () => {
+test('collect data from the annotations', () => {
     test.info().annotations.push({
         type: "jira",
         description: "MCR-123"
@@ -314,7 +314,7 @@ module.exports = {
             name: "My Test Report",
             outputFile: './test-results/report.html',
             visitor: (data, metadata, collect) => {
-                // collect data from annotations
+                // collect data from the annotations
                 if (metadata.annotations) {
                     const jiraItem = metadata.annotations.find((item) => item.type === 'jira');
                     if (jiraItem && jiraItem.description) {
@@ -327,7 +327,7 @@ module.exports = {
 };
 ```
 
-### Collect Data from Comments
+### Collect Data from the Comments
 > The code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. 
 - First, add the collection of comments in the visitor. 
 > Note: If there are any parsing error messages in red lines, try other parser options like `sourceType: 'module'` or `plugins: ['typescript']` according to your situation.
@@ -341,7 +341,7 @@ module.exports = {
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
                 
-                // auto collect data from comments
+                // auto collect data from the comments
                 const parserOptions = {
                     // Indicate the mode the code should be parsed in.
                     // Can be one of "script", "module", or "unambiguous". Defaults to "script".
@@ -452,7 +452,7 @@ module.exports = {
 };  
 ```
 
-### Remove Secrets and Sensitive Data from Report
+### Remove Secrets and Sensitive Data
 > The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the report data with the string replacement in `visitor` function.
 ```js
 // playwright.config.js
