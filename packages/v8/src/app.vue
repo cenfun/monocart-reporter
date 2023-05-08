@@ -45,6 +45,7 @@ import {
 } from 'vue';
 import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
+import inflate from 'lz-utils/inflate';
 
 import Util from './utils/util.js';
 
@@ -387,8 +388,8 @@ const initGrid = () => {
 
 // =================================================================================
 const init = async () => {
-    await Util.delay(10);
-    const reportData = JSON.parse(Util.decompress(window.reportData));
+    const reportStr = await inflate(window.reportData);
+    const reportData = JSON.parse(reportStr);
     console.log(reportData);
 
     // for export all data JSON able

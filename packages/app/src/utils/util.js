@@ -1,14 +1,11 @@
 import { Util as GridUtil } from 'turbogrid';
 import { saveAs } from 'file-saver';
-import { decompress } from 'lz-utils';
 import Share from '../../../../lib/platform/share.js';
 
 const Util = {
     ... GridUtil,
 
     ... Share,
-
-    decompress,
 
     findBetween: function(list, callback) {
         const end = list.length - 1;

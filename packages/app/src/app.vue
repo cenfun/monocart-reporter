@@ -241,6 +241,7 @@ import {
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import { debounce, microtask } from 'async-tick';
+import inflate from 'lz-utils/inflate';
 
 import Util from './utils/util.js';
 import {
@@ -542,8 +543,8 @@ const onExportClick = () => {
 
 // =================================================================================
 const init = async () => {
-    await Util.delay(10);
-    const reportData = JSON.parse(Util.decompress(window.reportData));
+    const reportStr = await inflate(window.reportData);
+    const reportData = JSON.parse(reportStr);
     console.log(reportData);
 
     initData(reportData);

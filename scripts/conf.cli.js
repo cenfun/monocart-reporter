@@ -7,7 +7,7 @@ const path = require('path');
 const beforeApp = (item, Util) => {
 
     const EC = require('eight-colors');
-    const { compress } = require('lz-utils');
+    const { deflateSync } = require('lz-utils');
     const { forEach, formatPath } = require('../lib/utils/util.js');
 
     // generate reportData for demo
@@ -54,7 +54,7 @@ const beforeApp = (item, Util) => {
         });
     }
 
-    const reportDataStr = compress(JSON.stringify(reportData));
+    const reportDataStr = deflateSync(JSON.stringify(reportData));
     const jsContent = `window.reportData = '${reportDataStr}';`;
 
     const jsPath = path.resolve(item.buildPath, 'report-data.js');
@@ -92,9 +92,9 @@ const beforeNetwork = (item, Util) => {
 
     const EC = require('eight-colors');
 
-    // const { compress } = require('lz-utils');
+    // const { deflateSync } = require('lz-utils');
     // const harData = fs.readFileSync(path.resolve(__dirname, '../.temp/har/music.163.com.har'));
-    // const reportDataStr = `window.reportData = "${compress(harData.toString('utf-8'))}";`;
+    // const reportDataStr = `window.reportData = "${deflateSync(harData.toString('utf-8'))}";`;
 
     const reportDataStr = fs.readFileSync(path.resolve(__dirname, '../.temp/network-data.js'));
 
