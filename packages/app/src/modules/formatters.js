@@ -96,7 +96,6 @@ marked.setOptions({
 });
 
 const markedOptions = {
-    langPrefix: '',
     mangle: false,
     headerIds: false
 };
