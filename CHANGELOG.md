@@ -1,4 +1,8 @@
 
+* 1.6.20
+  - fixed deduplication for steps
+  - optimized libs size
+
 * 1.6.19
   - added API attachAuditReport
 
