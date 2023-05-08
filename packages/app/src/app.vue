@@ -993,6 +993,19 @@ icon
     background: #7e939c;
 }
 
+.mcr-count {
+    position: relative;
+    padding-left: 15px;
+
+    &::before {
+        position: absolute;
+        top: 0;
+        left: 6px;
+        content: "x";
+        color: #fff;
+    }
+}
+
 .mcr-readme {
     code {
         margin: 0;

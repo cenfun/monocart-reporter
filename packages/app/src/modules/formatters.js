@@ -187,6 +187,9 @@ const formatters = {
             formattedValue = `${formattedValue} <div class="tg-cell-hover-icon mcr-flyover-icon">
                 <div class="mcr-icon mcr-icon-open" />
             </div>`;
+        } else if (rowItem.type === 'step' && rowItem.count) {
+            // add count number for step
+            formattedValue = `${formattedValue} <span class="mcr-num mcr-count">${Util.NF(rowItem.count)}</span>`;
         }
         return defaultFormatter(formattedValue, rowItem, columnItem, cellNode);
     },
