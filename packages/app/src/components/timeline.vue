@@ -205,13 +205,16 @@
               <b>Memory</b> {{ pd.tick.mem.used }} ({{ pd.tick.mem.percent }}%)
             </IconLabel>
           </VuiFlex>
-          <IconLabel
-            icon="calendar"
-            :button="false"
-          >
-            {{ new Date(pd.tick.timestamp).toLocaleString() }}
-          </IconLabel>
         </template>
+
+        <IconLabel
+          icon="time"
+          :button="false"
+        >
+          Started
+          <span class="mcr-num">{{ Util.TF(chart.currentTimeStarted) }}</span>
+          {{ new Date(chart.currentTimestamp).toLocaleString() }}
+        </IconLabel>
       </VuiFlex>
     </VuiPopover>
   </div>
@@ -239,7 +242,8 @@ const chart = shallowReactive({
     innerWidth: 1000 - 90 - 5,
     // dynamic
     height: 0,
-    gap: 10
+    gap: 10,
+    maxTime: 1
 
 });
 
@@ -291,6 +295,9 @@ const onMouseMoveSync = (e) => {
 
     const per = (vx - left) / innerWidth;
     const timestamp = Math.round(per * duration) + time_start;
+
+    chart.currentTimestamp = timestamp;
+    chart.currentTimeStarted = timestamp - time_start;
 
     const results = findResults(timestamp);
     const tick = findTick(timestamp);
@@ -494,32 +501,34 @@ const gridHandler = (width, height) => {
     const system = state.system;
     const time_start = system.timestampStart;
     const time_end = system.timestampEnd;
-    const max = time_end - time_start;
+    const maxTime = time_end - time_start;
+    // console.log('maxTime', maxTime);
+    chart.maxTime = maxTime;
+
     const maxColumns = 10;
-    const timeTicks = niceTicks(0, max, maxColumns);
+    const timeTicks = niceTicks(0, maxTime, maxColumns);
     const axisTicks = timeTicks.map((it, i, list) => {
-        if (it < max) {
+        if (it < maxTime) {
             return {
                 value: it,
-                x: pxFixed(it / max * width),
+                x: pxFixed(it / maxTime * width),
                 anchor: 'middle',
                 label: it ? Util.TF(it) : '0'
             };
         }
 
         // max  1000 - left / 10
-        const tw = (max - list[i - 1]) * (chart.width - chart.left) / max;
+        const tw = (maxTime - list[i - 1]) * (chart.width - chart.left) / maxTime;
         // min width 50px
-        const label = tw > 50 ? Util.TF(max) : '';
+        const label = tw > 50 ? Util.TF(maxTime) : '';
 
         return {
             isMax: true,
-            value: max,
+            value: maxTime,
             x: pxFixed(width),
             anchor: 'end',
             label
         };
-
     });
 
     // console.log(axisTicks);
