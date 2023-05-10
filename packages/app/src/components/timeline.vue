@@ -20,6 +20,7 @@
         <g
           pointer-events="none"
           font-family="Verdana,Helvetica,sans-serif"
+          font-size="12px"
         >
 
           <g
@@ -236,10 +237,8 @@ const { VuiFlex, VuiPopover } = components;
 
 const chart = shallowReactive({
     padding: 5,
-    left: 90,
+    left: 80,
     width: 1000,
-    // width - left - padding
-    innerWidth: 1000 - 90 - 5,
     // dynamic
     height: 0,
     gap: 10
@@ -382,6 +381,9 @@ watch(() => pd.target, () => {
 // =========================================================================================
 
 const workerListHandler = () => {
+
+    // width - left - padding
+    chart.innerWidth = chart.width - chart.left - chart.padding;
 
     const system = state.system;
     const summary = state.summary;
@@ -527,9 +529,9 @@ const gridHandler = (width, height) => {
         // max 1000 - left / 10
         const tw = (maxTime - lastItem.value) * (chart.width - chart.left) / maxTime;
         // min width 50px
-        const label = tw > 50 ? Util.TF(maxTime) : '';
-        maxItem.label = label;
+        maxItem.label = tw > 50 ? Util.TF(maxTime) : '';
 
+        // last not max
         if (tw < 10) {
             lastItem.anchor = 'end';
         }

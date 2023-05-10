@@ -13,6 +13,9 @@ const beforeApp = (item, Util) => {
     // generate reportData for demo
     const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
 
+    // typescript
+    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/typescript/index.json');
+
     // coverage
     // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
 
