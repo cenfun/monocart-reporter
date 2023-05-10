@@ -107,7 +107,10 @@
 
           </g>
 
-          <g v-if="chart.axis">
+          <g
+            v-if="chart.axis"
+            class="mcr-timeline-axis"
+          >
             <g :transform="translate(chart.axis.x,chart.axis.y)">
               <path
                 :d="chart.axis.d"
@@ -492,6 +495,36 @@ const workerListHandler = () => {
     chart.height = barY;
 };
 
+const labelFixHandler = microtask((lastItem, maxItem) => {
+    const $chart = document.querySelector('.mcr-timeline-chart');
+    if (!$chart) {
+        return;
+    }
+
+    const [$last, $max] = Array.from($chart.querySelectorAll('.mcr-timeline-axis text')).slice(-2);
+    if (!$last || !$max) {
+        return;
+    }
+
+    const chartBR = $chart.getBoundingClientRect();
+    const chartEnd = chartBR.x + chartBR.width;
+
+    const lastBR = $last.getBoundingClientRect();
+    const lastEnd = lastBR.x + lastBR.width;
+
+    if (lastEnd >= chartEnd) {
+        $last.setAttribute('anchor', 'end');
+        $max.innerHTML = '';
+        return;
+    }
+
+    const maxBR = $max.getBoundingClientRect();
+    const maxStart = maxBR.x - 10;
+    if (lastEnd > maxStart) {
+        $max.innerHTML = '';
+    }
+});
+
 const gridHandler = (width, height) => {
 
     // width is innerWidth
@@ -522,19 +555,14 @@ const gridHandler = (width, height) => {
     maxItem.anchor = 'end';
 
     if (maxItem.value > maxTime) {
-        maxItem.x = pxFixed(width);
+        // override max value and label
         maxItem.value = maxTime;
+        maxItem.x = pxFixed(width);
+        maxItem.label = Util.TF(maxTime);
 
+        // label fixing
         const lastItem = axisTicks[axisTicks.length - 2];
-        // max 1000 - left / 10
-        const tw = (maxTime - lastItem.value) * (chart.width - chart.left) / maxTime;
-        // min width 50px
-        maxItem.label = tw > 50 ? Util.TF(maxTime) : '';
-
-        // last not max
-        if (tw < 10) {
-            lastItem.anchor = 'end';
-        }
+        labelFixHandler(lastItem, maxItem);
     }
 
     // console.log(axisTicks);
