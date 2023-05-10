@@ -1,4 +1,7 @@
 
+* 1.6.21
+  - fixed timeline chart
+
 * 1.6.20
   - fixed deduplication for steps
   - optimized libs size

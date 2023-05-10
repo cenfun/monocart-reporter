@@ -242,8 +242,7 @@ const chart = shallowReactive({
     innerWidth: 1000 - 90 - 5,
     // dynamic
     height: 0,
-    gap: 10,
-    maxTime: 1
+    gap: 10
 
 });
 
@@ -503,7 +502,6 @@ const gridHandler = (width, height) => {
     const time_end = system.timestampEnd;
     const maxTime = time_end - time_start;
     // console.log('maxTime', maxTime);
-    chart.maxTime = maxTime;
 
     const maxColumns = 10;
     const timeTicks = niceTicks(0, maxTime, maxColumns);
