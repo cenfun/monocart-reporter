@@ -505,29 +505,35 @@ const gridHandler = (width, height) => {
 
     const maxColumns = 10;
     const timeTicks = niceTicks(0, maxTime, maxColumns);
-    const axisTicks = timeTicks.map((it, i, list) => {
-        if (it < maxTime) {
-            return {
-                value: it,
-                x: pxFixed(it / maxTime * width),
-                anchor: 'middle',
-                label: it ? Util.TF(it) : '0'
-            };
-        }
-
-        // max  1000 - left / 10
-        const tw = (maxTime - list[i - 1]) * (chart.width - chart.left) / maxTime;
-        // min width 50px
-        const label = tw > 50 ? Util.TF(maxTime) : '';
-
+    const axisTicks = timeTicks.map((it) => {
         return {
-            isMax: true,
-            value: maxTime,
-            x: pxFixed(width),
-            anchor: 'end',
-            label
+            value: it,
+            x: pxFixed(it / maxTime * width),
+            anchor: 'middle',
+            label: it ? Util.TF(it) : '0'
         };
     });
+
+    // last and max
+    const maxItem = axisTicks[axisTicks.length - 1];
+    maxItem.isMax = true;
+    maxItem.anchor = 'end';
+
+    if (maxItem.value > maxTime) {
+        maxItem.x = pxFixed(width);
+        maxItem.value = maxTime;
+
+        const lastItem = axisTicks[axisTicks.length - 2];
+        // max 1000 - left / 10
+        const tw = (maxTime - lastItem.value) * (chart.width - chart.left) / maxTime;
+        // min width 50px
+        const label = tw > 50 ? Util.TF(maxTime) : '';
+        maxItem.label = label;
+
+        if (tw < 10) {
+            lastItem.anchor = 'end';
+        }
+    }
 
     // console.log(axisTicks);
 
