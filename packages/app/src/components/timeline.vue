@@ -123,7 +123,7 @@
                 :y="item.y"
                 :text-anchor="item.anchor"
                 :fill="item.color"
-                alignment-baseline="middle"
+                alignment-baseline="baseline"
               >{{ item.label }}</text>
             </g>
           </g>
@@ -314,11 +314,8 @@ const onMouseMoveSync = (e) => {
     const point = Util.point;
     const pxFixed = Util.pxFixed;
 
-    const padding = chart.padding;
-    const height = chart.axisY - padding;
-
     chart.focus = {
-        d: `M${point(pxFixed(vx), padding)}v${height}`,
+        d: `M${point(pxFixed(vx), 0)}v${chart.height}`,
         color: '#ccc'
     };
 
@@ -327,7 +324,7 @@ const onMouseMoveSync = (e) => {
         left: rect.x + offsetX,
         top: rect.y,
         width: 0,
-        height: rect.height - padding
+        height: rect.height
     };
     pd.visible = true;
 
@@ -695,7 +692,7 @@ const axisHandler = () => {
     const left = chart.left;
     const padding = chart.padding;
     const width = chart.width - padding * 2;
-    const height = 26;
+    const height = 18;
 
     const x = padding;
     const y = chart.height;
@@ -718,7 +715,7 @@ const axisHandler = () => {
     chart.labels = axisTicks.map((item) => {
         return {
             x: labelX + item.x,
-            y: height * 0.5,
+            y: height,
             color: '#666',
             anchor: item.anchor,
             label: item.label
