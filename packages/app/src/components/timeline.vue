@@ -512,7 +512,7 @@ const labelFixHandler = microtask((lastItem, maxItem) => {
     const lastEnd = lastBR.x + lastBR.width;
 
     if (lastEnd >= chartEnd) {
-        $last.setAttribute('anchor', 'end');
+        $last.setAttribute('text-anchor', 'end');
         $max.innerHTML = '';
         return;
     }
