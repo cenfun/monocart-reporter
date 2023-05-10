@@ -211,14 +211,16 @@
           </VuiFlex>
         </template>
 
-        <IconLabel
-          icon="time"
-          :button="false"
-        >
-          Started
-          <span class="mcr-num">{{ Util.TF(chart.currentTimeStarted) }}</span>
-          {{ new Date(chart.currentTimestamp).toLocaleString() }}
-        </IconLabel>
+        <VuiFlex gap="10px">
+          <IconLabel
+            icon="time"
+            :button="false"
+          >
+            Started
+            <span class="mcr-num">{{ Util.TF(chart.currentTimeStarted) }}</span>
+          </IconLabel>
+          <div>{{ new Date(chart.currentTimestamp).toLocaleString() }}</div>
+        </VuiFlex>
       </VuiFlex>
     </VuiPopover>
   </div>
