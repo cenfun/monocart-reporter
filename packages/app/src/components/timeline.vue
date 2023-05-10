@@ -120,7 +120,7 @@
                 :text-anchor="item.anchor"
                 :fill="item.color"
                 alignment-baseline="middle"
-              >{{ item.name }}</text>
+              >{{ item.label }}</text>
             </g>
           </g>
 
@@ -222,6 +222,7 @@ import {
 } from 'vue';
 import { components } from 'vine-ui';
 import { microtask } from 'async-tick';
+import niceTicks from 'nice-ticks';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
@@ -238,7 +239,7 @@ const chart = shallowReactive({
     innerWidth: 1000 - 90 - 5,
     // dynamic
     height: 0,
-    gap: 20
+    gap: 10
 
 });
 
@@ -483,6 +484,70 @@ const workerListHandler = () => {
     chart.height = barY;
 };
 
+const gridHandler = (width, height) => {
+
+    // width is innerWidth
+
+    const point = Util.point;
+    const pxFixed = Util.pxFixed;
+
+    const system = state.system;
+    const time_start = system.timestampStart;
+    const time_end = system.timestampEnd;
+    const max = time_end - time_start;
+    const maxColumns = 10;
+    const timeTicks = niceTicks(0, max, maxColumns);
+    const axisTicks = timeTicks.map((it, i, list) => {
+        if (it < max) {
+            return {
+                value: it,
+                x: pxFixed(it / max * width),
+                anchor: 'middle',
+                label: it ? Util.TF(it) : '0'
+            };
+        }
+
+        // max  1000 - left / 10
+        const tw = (max - list[i - 1]) * (chart.width - chart.left) / max;
+        // min width 50px
+        const label = tw > 50 ? Util.TF(max) : '';
+
+        return {
+            isMax: true,
+            value: max,
+            x: pxFixed(width),
+            anchor: 'end',
+            label
+        };
+
+    });
+
+    // console.log(axisTicks);
+
+    chart.axisTicks = axisTicks;
+
+    // grid lines
+    const gridList = [];
+
+    const out = 5;
+    axisTicks.forEach((it) => {
+        gridList.push(`M${point(it.x, 0)}L${point(it.x, height + out)}`);
+    });
+
+    const gridRows = 4;
+    const gridHeight = height / gridRows;
+    for (let i = 0; i <= gridRows; i++) {
+        const gy = pxFixed(i * gridHeight);
+        gridList.push(`M${point(0, gy)}L${point(width, gy)}`);
+    }
+    const gridD = gridList.join('');
+
+    chart.grid = {
+        d: gridD,
+        color: '#ddd'
+    };
+};
+
 const usageHandler = () => {
 
     const system = state.system;
@@ -495,7 +560,6 @@ const usageHandler = () => {
 
     const point = Util.point;
     const dFixed = Util.dFixed;
-    const pxFixed = Util.pxFixed;
 
     const left = chart.left;
     const width = chart.innerWidth;
@@ -569,29 +633,7 @@ const usageHandler = () => {
 
     chart.lines = [memLine, cpuLine];
 
-    // ===================================================================
-    // grid lines
-    const gridList = [];
-    const gridColumns = 10;
-    const gridWidth = width / gridColumns;
-    for (let i = 0; i <= gridColumns; i++) {
-        const gx = pxFixed(i * gridWidth);
-        gridList.push(`M${point(gx, 0)}L${point(gx, height)}`);
-    }
-    const gridRows = 4;
-    const gridHeight = height / gridRows;
-    for (let i = 0; i <= gridRows; i++) {
-        const gy = pxFixed(i * gridHeight);
-        gridList.push(`M${point(0, gy)}L${point(width, gy)}`);
-    }
-    const gridD = gridList.join('');
-
-    chart.grid = {
-        d: gridD,
-        color: '#ddd'
-    };
-
-    // ===================================================================
+    gridHandler(width, height);
 
     chart.usage = {
         x: left,
@@ -605,13 +647,7 @@ const usageHandler = () => {
 };
 
 const axisHandler = () => {
-
-    const system = state.system;
-    const time_start = system.timestampStart;
-    const time_end = system.timestampEnd;
-
     const point = Util.point;
-    const pxFixed = Util.pxFixed;
 
     const left = chart.left;
     const padding = chart.padding;
@@ -625,7 +661,7 @@ const axisHandler = () => {
 
     const labelX = left - padding;
 
-    const d = `M${point(0.5, 0.5)}h${width} M${point(pxFixed(labelX), 0.5)}v10 M${point(pxFixed(width), 0)}v10`;
+    const d = `M${point(0.5, 0.5)}h${width}`;
 
     chart.axis = {
         x,
@@ -634,19 +670,17 @@ const axisHandler = () => {
         color: '#999'
     };
 
-    chart.labels = [{
-        x: labelX + 5,
-        y: height * 0.5,
-        anchor: 'start',
-        color: '#666',
-        name: new Date(time_start).toLocaleString()
-    }, {
-        x: width - 5,
-        y: height * 0.5,
-        anchor: 'end',
-        color: '#666',
-        name: new Date(time_end).toLocaleString()
-    }];
+    const axisTicks = chart.axisTicks;
+
+    chart.labels = axisTicks.map((item) => {
+        return {
+            x: labelX + item.x,
+            y: height * 0.5,
+            color: '#666',
+            anchor: item.anchor,
+            label: item.label
+        };
+    });
 
     chart.height = y + height + padding;
 };
