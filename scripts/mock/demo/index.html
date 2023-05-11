@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="icon" href="data:,">
+    <title>coverage page</title>
+    <link href="style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="demo.js"></script>
+    <script src="browser.js"></script>
+    <script src="fps-detector.js"></script>
+
+    <script src="ie-polyfill.js"></script>
+    <script src="redirection.js"></script>
+</head>
+
+<body>
+    <h3 class="red inline-used and-used">
+      Mock Coverage
+    </h3>
+    <div class="fps-detector"></div>
+    <script>
+       console.log('body');
+       const FPSDetector = window['fps-detector'].FPSDetector;
+
+       new FPSDetector('.fps-detector');
+
+    </script>
+
+
+</body>
+
+</html>

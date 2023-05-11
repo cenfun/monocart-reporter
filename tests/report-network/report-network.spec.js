@@ -63,7 +63,7 @@ test.describe('attach network report 2', () => {
             }
         });
         const page = await context.newPage();
-        await page.goto('http://localhost:8090/playwright.dev/', {
+        await page.goto('http://localhost:8090/istanbul/', {
             waitUntil: 'networkidle'
         });
         await delay(500);

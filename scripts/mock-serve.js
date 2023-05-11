@@ -4,7 +4,7 @@ const EC = require('eight-colors');
 const KSR = require('koa-static-resolver');
 const Koa = require('koa');
 
-const outputDir = path.resolve(__dirname, '../.temp/mock');
+const outputDir = path.resolve(__dirname, './mock');
 
 console.log('serve dir', outputDir);
 

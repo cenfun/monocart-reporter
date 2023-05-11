@@ -71,52 +71,104 @@ const el = ref(null);
 let $el;
 let codeViewer;
 
-const oneLineHandler = (sLoc, eLoc, coverage) => {
-    if (sLoc.column === 0 && eLoc.column === eLoc.last) {
-        coverage.line[sLoc.line] = 'uncovered';
-    } else {
-        coverage.line[sLoc.line] = 'partial';
-        coverage.bg[sLoc.line] = {
-            start: sLoc.column,
-            end: eLoc.column
-        };
-    }
+const setCoverageLineValue = (coverage, line, value) => {
+    const item = coverage.line;
+    // const prev = item[line];
+    // if (prev && prev !== value) {
+    // console.log('previous line', line, prev, value);
+    // }
+    item[line] = value;
 };
 
-const multipleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
+const setCoverageBgValue = (coverage, line, value) => {
+    const item = coverage.bg;
+    const prev = item[line];
+    if (prev) {
+        prev.push(value);
+        return;
+    }
+    item[line] = [value];
+};
+
+const setCoverageCountValue = (coverage, line, value) => {
+    const item = coverage.count;
+    const prev = item[line];
+    if (prev) {
+        prev.push(value);
+        return;
+    }
+    item[line] = [value];
+};
+
+const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
+    // console.log(sLoc, eLoc);
+    if (sLoc.column === 0 && eLoc.column === eLoc.last) {
+        setCoverageLineValue(coverage, sLoc.line, 'uncovered');
+        return;
+    }
+
+    if (eLoc.column === eLoc.last) {
+
+        // const text = formattedMapping.getFormattedSlice(sLoc.offset + sLoc.column, eLoc.offset + eLoc.column);
+        // console.log(text);
+
+        // return;
+    }
+
+    setCoverageLineValue(coverage, sLoc.line, 'partial');
+    setCoverageBgValue(coverage, sLoc.line, {
+        start: sLoc.column,
+        end: eLoc.column
+    });
+
+};
+
+const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     if (sLoc.column < sLoc.last) {
 
         if (sLoc.column === 0) {
-            coverage.line[sLoc.line] = 'uncovered';
+
+            setCoverageLineValue(coverage, sLoc.line, 'uncovered');
+
         } else {
-            coverage.line[sLoc.line] = 'partial';
-            coverage.bg[sLoc.line] = {
+
+            setCoverageLineValue(coverage, sLoc.line, 'partial');
+
+            setCoverageBgValue(coverage, sLoc.line, {
                 start: sLoc.column,
                 end: sLoc.last
-            };
+            });
+
         }
 
     }
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
-        coverage.line[i] = 'uncovered';
+
+        setCoverageLineValue(coverage, i, 'uncovered');
+
     }
 
     if (eLoc.column > 0) {
 
         if (eLoc.column === eLoc.last) {
-            coverage.line[eLoc.line] = 'uncovered';
+
+            setCoverageLineValue(coverage, eLoc.line, 'uncovered');
+
         } else {
 
             // check if all \s
             const s = formattedMapping.getFormattedSlice(eLoc.offset, eLoc.offset + eLoc.column);
             if ((/[^\s]/).test(s)) {
-                coverage.line[eLoc.line] = 'partial';
-                coverage.bg[eLoc.line] = {
+
+                setCoverageLineValue(coverage, eLoc.line, 'partial');
+
+                setCoverageBgValue(coverage, eLoc.line, {
                     start: 0,
                     end: eLoc.column
-                };
+                });
+
             }
         }
 
@@ -131,11 +183,11 @@ const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
     // console.log('end', end, eLoc);
 
     if (eLoc.line === sLoc.line) {
-        oneLineHandler(sLoc, eLoc, coverage);
+        singleLineHandler(sLoc, eLoc, coverage, formattedMapping);
         return;
     }
 
-    multipleLineHandler(sLoc, eLoc, coverage, formattedMapping);
+    multipleLinesHandler(sLoc, eLoc, coverage, formattedMapping);
 
 };
 
@@ -207,10 +259,10 @@ const getCoverage = (item, text, content, mapping) => {
         } else if (count > 1) {
             const sLoc = formattedMapping.originalToFormatted(startOffset);
             // small probability, ignore if multiple counts in a line
-            coverage.count[sLoc.line] = {
+            setCoverageCountValue(coverage, sLoc.line, {
                 value: count,
                 column: sLoc.column
-            };
+            });
         }
     });
 

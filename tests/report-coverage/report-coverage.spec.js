@@ -34,7 +34,7 @@ test.describe('take V8 js to Istanbul coverage report', () => {
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
         await page.coverage.startJSCoverage();
-        await page.goto('http://localhost:8090/playwright.dev/');
+        await page.goto('http://localhost:8090/istanbul/');
     });
 
     test('next, run test cases', async () => {
