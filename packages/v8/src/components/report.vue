@@ -41,6 +41,24 @@
         />
         <div>{{ Util.PF(summary.lines.pct, 100) }}</div>
       </VuiFlex>
+      <VuiFlex
+        v-if="summary.topExecutions"
+        padding="5px"
+        gap="10px"
+      >
+        <div><b>Top Executions:</b></div>
+
+        <VuiFlex
+          v-for="(item, i) in summary.topExecutions"
+          :key="i"
+          gap="5px"
+        >
+          <div>line: {{ Util.NF(item.line) }}</div>
+          <div class="mcr-count">
+            x{{ item.count }}
+          </div>
+        </VuiFlex>
+      </VuiFlex>
     </VuiFlex>
     <div
       ref="el"
@@ -259,6 +277,33 @@ const getCoverage = (item, text, formattedMapping) => {
 
 };
 
+const getTopExecutions = (executionCounts) => {
+    const list = [];
+    Object.keys(executionCounts).forEach((line) => {
+        const arr = executionCounts[line];
+        arr.forEach((item) => {
+            list.push({
+                line: parseInt(line) + 1,
+                count: item.value
+            });
+        });
+    });
+
+    if (!list.length) {
+        return;
+    }
+
+    list.sort((a, b) => {
+        return b.count - a.count;
+    });
+
+    if (list.length > 3) {
+        list.length = 3;
+    }
+
+    return list;
+};
+
 const getReport = async (item) => {
     if (item.report) {
         return new Promise((resolve) => {
@@ -280,6 +325,8 @@ const getReport = async (item) => {
     const formattedMapping = new Mapping(content, mapping);
 
     const coverage = getCoverage(item, text, formattedMapping);
+
+    coverage.topExecutions = getTopExecutions(coverage.executionCounts);
 
     const report = {
         coverage,
@@ -305,7 +352,9 @@ const showReport = async () => {
         return;
     }
 
-    const { totalLines, uncoveredLines } = report.coverage;
+    const {
+        totalLines, uncoveredLines, topExecutions
+    } = report.coverage;
     let uncovered = 0;
     Object.values(uncoveredLines).forEach((v) => {
         if (v === 'uncovered') {
@@ -327,7 +376,9 @@ const showReport = async () => {
         percentChart
     };
 
-    // console.log(report);
+    summary.topExecutions = topExecutions;
+
+    console.log(report);
 
     if (codeViewer) {
         codeViewer.update(report);
@@ -366,6 +417,14 @@ onMounted(() => {
 
 .mcr-report-code {
     position: relative;
+}
+
+.mcr-count {
+    padding: 0 3px;
+    font-size: 12px;
+    border: 1px solid #4eb62f;
+    border-radius: 3px;
+    background-color: #e6f5d0;
 }
 
 </style>
