@@ -53,7 +53,7 @@
           :key="i"
           gap="5px"
         >
-          <div>line: {{ Util.NF(item.line) }}</div>
+          <div>line {{ Util.NF(item.line) }}</div>
           <div class="mcr-count">
             x{{ item.count }}
           </div>
@@ -148,6 +148,7 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
     }
 
     if (sLoc.column === codeOffset && eLoc.column === eLoc.last) {
+        // console.log('single', sLoc.line);
         setUncoveredLines(coverage, sLoc.line, 'uncovered');
         return;
     }
@@ -171,6 +172,8 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
 
+        // console.log('multiple', i);
+        // TODO if empty line
         setUncoveredLines(coverage, i, 'uncovered');
 
     }
@@ -200,7 +203,7 @@ const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
 
 };
 
-const cssCoveredToUncovered = (ranges, contentLength) => {
+const getUncoveredFromCovered = (ranges, contentLength) => {
     const uncoveredRanges = [];
     if (!ranges || !ranges.length) {
 
@@ -275,7 +278,7 @@ const getCoverage = (item, text, formattedMapping) => {
     // css, text, ranges: [ {start, end} ]
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
     if (item.type === 'css') {
-        const ranges = cssCoveredToUncovered(item.ranges, text.length);
+        const ranges = getUncoveredFromCovered(item.ranges, text.length);
         ranges.forEach((range) => {
             const { start, end } = range;
             rangeLinesHandler(formattedMapping, start, end, coverage);
@@ -328,6 +331,8 @@ const getReport = async (item) => {
 
     const coverage = getCoverage(item, text, formattedMapping);
 
+    // console.log(coverage);
+
     const report = {
         coverage,
         content
@@ -378,7 +383,7 @@ const showReport = async () => {
 
     summary.topExecutions = topExecutions;
 
-    console.log(report);
+    // console.log(report);
 
     if (codeViewer) {
         codeViewer.update(report);
