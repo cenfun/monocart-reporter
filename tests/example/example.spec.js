@@ -306,6 +306,11 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
             expect('passed').toBe('failed');
         });
 
+        test('throw string error', () => {
+            // eslint-disable-next-line no-throw-literal
+            throw 'Invalid error';
+        });
+
         test('case fail - not yet ready', () => {
 
             test.fail();

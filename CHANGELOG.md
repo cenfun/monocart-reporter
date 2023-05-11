@@ -1,6 +1,7 @@
 
 * 1.6.22
   - fixed code viewer for coverage
+  - fixed error if throw a string
 
 * 1.6.21
   - fixed timeline chart
