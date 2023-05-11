@@ -71,17 +71,17 @@ const el = ref(null);
 let $el;
 let codeViewer;
 
-const setCoverageLineValue = (coverage, line, value) => {
-    const item = coverage.line;
+const setUncoveredLines = (coverage, line, value) => {
+    const item = coverage.uncoveredLines;
     // const prev = item[line];
     // if (prev && prev !== value) {
-    // console.log('previous line', line, prev, value);
+    //     console.log('previous line', line, prev, value);
     // }
     item[line] = value;
 };
 
-const setCoverageBgValue = (coverage, line, value) => {
-    const item = coverage.bg;
+const setUncoveredPieces = (coverage, line, value) => {
+    const item = coverage.uncoveredPieces;
     const prev = item[line];
     if (prev) {
         prev.push(value);
@@ -90,8 +90,8 @@ const setCoverageBgValue = (coverage, line, value) => {
     item[line] = [value];
 };
 
-const setCoverageCountValue = (coverage, line, value) => {
-    const item = coverage.count;
+const setExecutionCounts = (coverage, line, value) => {
+    const item = coverage.executionCounts;
     const prev = item[line];
     if (prev) {
         prev.push(value);
@@ -123,12 +123,12 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
     }
 
     if (sLoc.column === codeOffset && eLoc.column === eLoc.last) {
-        setCoverageLineValue(coverage, sLoc.line, 'uncovered');
+        setUncoveredLines(coverage, sLoc.line, 'uncovered');
         return;
     }
 
-    setCoverageLineValue(coverage, sLoc.line, 'partial');
-    setCoverageBgValue(coverage, sLoc.line, {
+    setUncoveredLines(coverage, sLoc.line, 'partial');
+    setUncoveredPieces(coverage, sLoc.line, {
         start: sLoc.column,
         end: eLoc.column
     });
@@ -146,7 +146,7 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
 
-        setCoverageLineValue(coverage, i, 'uncovered');
+        setUncoveredLines(coverage, i, 'uncovered');
 
     }
 
@@ -211,14 +211,13 @@ const cssCoveredToUncovered = (ranges, contentLength) => {
     return uncoveredRanges;
 };
 
-const getCoverage = (item, text, content, mapping) => {
-
-    const formattedMapping = new Mapping(content, mapping);
+const getCoverage = (item, text, formattedMapping) => {
 
     const coverage = {
-        line: {},
-        bg: {},
-        count: {}
+        totalLines: formattedMapping.formattedLineEndings.length,
+        uncoveredLines: {},
+        uncoveredPieces: {},
+        executionCounts: {}
     };
 
     // css, text, ranges: [ {start, end} ]
@@ -242,8 +241,7 @@ const getCoverage = (item, text, content, mapping) => {
             rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
         } else if (count > 1) {
             const sLoc = formattedMapping.originalToFormatted(startOffset);
-            // small probability, ignore if multiple counts in a line
-            setCoverageCountValue(coverage, sLoc.line, {
+            setExecutionCounts(coverage, sLoc.line, {
                 value: count,
                 column: sLoc.column
             });
@@ -271,7 +269,10 @@ const getReport = async (item) => {
     }
 
     const { content, mapping } = res;
-    const coverage = getCoverage(item, text, content, mapping);
+
+    const formattedMapping = new Mapping(content, mapping);
+
+    const coverage = getCoverage(item, text, formattedMapping);
 
     const report = {
         coverage,
@@ -297,7 +298,7 @@ const showReport = async () => {
         return;
     }
 
-    // console.log(report);
+    console.log(report);
 
     if (codeViewer) {
         codeViewer.update(report);
