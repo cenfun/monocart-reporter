@@ -20,19 +20,26 @@
         padding="5px"
         gap="10px"
       >
-        <div><b>Total Bytes:</b> {{ Util.NF(summary.total) }} ({{ Util.BF(summary.total) }})</div>
-        <div><b>Used Bytes:</b> {{ Util.NF(summary.covered) }} ({{ Util.BF(summary.covered) }})</div>
-        <div><b>Unused Bytes:</b> {{ Util.NF(summary.unused) }} ({{ Util.BF(summary.unused) }})</div>
-      </VuiFlex>
-      <VuiFlex
-        padding="5px"
-        gap="10px"
-      >
-        <div><b>Coverage:</b> {{ Util.PF(summary.pct, 100) }}</div>
+        <div><b>Total Bytes:</b> {{ Util.NF(summary.total) }}</div>
+        <div><b>Unused Bytes:</b> {{ Util.NF(summary.unused) }}</div>
         <div
           style="width: 100px;"
           v-html="summary.percentChart"
         />
+        <div>{{ Util.PF(summary.pct, 100) }}</div>
+      </VuiFlex>
+      <VuiFlex
+        v-if="summary.lines"
+        padding="5px"
+        gap="10px"
+      >
+        <div><b>Formatted Lines:</b> {{ Util.NF(summary.lines.total) }}</div>
+        <div><b>Uncovered Lines:</b> {{ Util.NF(summary.lines.uncovered) }}</div>
+        <div
+          style="width: 100px;"
+          v-html="summary.lines.percentChart"
+        />
+        <div>{{ Util.PF(summary.lines.pct, 100) }}</div>
       </VuiFlex>
     </VuiFlex>
     <div
@@ -298,7 +305,29 @@ const showReport = async () => {
         return;
     }
 
-    console.log(report);
+    const { totalLines, uncoveredLines } = report.coverage;
+    let uncovered = 0;
+    Object.values(uncoveredLines).forEach((v) => {
+        if (v === 'uncovered') {
+            uncovered += 1;
+            return;
+        }
+        uncovered += 0.5;
+    });
+
+    uncovered = Math.floor(uncovered);
+
+    const pct = Util.PF(totalLines - uncovered, totalLines, 1, '');
+    const percentChart = Util.generatePercentChart(pct);
+
+    summary.lines = {
+        total: totalLines,
+        uncovered,
+        pct,
+        percentChart
+    };
+
+    // console.log(report);
 
     if (codeViewer) {
         codeViewer.update(report);

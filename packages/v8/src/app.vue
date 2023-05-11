@@ -232,20 +232,16 @@ const bindGridEvents = (grid) => {
     });
 };
 
-const generatePercentChart = (percent) => {
-    return `<div style="--mcr-percent:${percent}%;" class="mcr-percent-chart"></div>`;
-};
-
 const getGridData = () => {
     const { summary, files } = state.reportData;
 
     // init unused and percentChart
     files.forEach((item) => {
         item.summary.unused = item.summary.total - item.summary.covered;
-        item.summary.percentChart = generatePercentChart(item.summary.pct);
+        item.summary.percentChart = Util.generatePercentChart(item.summary.pct);
     });
     summary.unused = summary.total - summary.covered;
-    summary.percentChart = generatePercentChart(summary.pct);
+    summary.percentChart = Util.generatePercentChart(summary.pct);
 
     const fileMap = {};
 
