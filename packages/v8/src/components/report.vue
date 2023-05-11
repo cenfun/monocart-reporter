@@ -102,17 +102,29 @@ const setCoverageCountValue = (coverage, line, value) => {
 
 const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
     // console.log(sLoc, eLoc);
-    if (sLoc.column === 0 && eLoc.column === eLoc.last) {
-        setCoverageLineValue(coverage, sLoc.line, 'uncovered');
+
+    // nothing between
+    if (sLoc.column >= eLoc.column) {
         return;
     }
 
-    if (eLoc.column === eLoc.last) {
+    const lineText = formattedMapping.getFormattedSlice(sLoc.offset, sLoc.offset + sLoc.last);
+    const codeOffset = lineText.search(/\S/g);
+    // console.log(sLoc.line, codeOffset, sLoc.column);
 
-        // const text = formattedMapping.getFormattedSlice(sLoc.offset + sLoc.column, eLoc.offset + eLoc.column);
-        // console.log(text);
+    // multiple line end line, start code offset
+    if (sLoc.fromCode) {
+        sLoc.column = codeOffset;
+    }
 
-        // return;
+    // nothing between after code offset
+    if (sLoc.column >= eLoc.column) {
+        return;
+    }
+
+    if (sLoc.column === codeOffset && eLoc.column === eLoc.last) {
+        setCoverageLineValue(coverage, sLoc.line, 'uncovered');
+        return;
     }
 
     setCoverageLineValue(coverage, sLoc.line, 'partial');
@@ -125,24 +137,12 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
 const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
-    if (sLoc.column < sLoc.last) {
+    const firstELoc = {
+        ... sLoc,
+        column: sLoc.last
+    };
+    singleLineHandler(sLoc, firstELoc, coverage, formattedMapping);
 
-        if (sLoc.column === 0) {
-
-            setCoverageLineValue(coverage, sLoc.line, 'uncovered');
-
-        } else {
-
-            setCoverageLineValue(coverage, sLoc.line, 'partial');
-
-            setCoverageBgValue(coverage, sLoc.line, {
-                start: sLoc.column,
-                end: sLoc.last
-            });
-
-        }
-
-    }
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
 
@@ -150,29 +150,13 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     }
 
-    if (eLoc.column > 0) {
+    const lastSLoc = {
+        ... eLoc,
+        column: 0,
+        fromCode: true
+    };
+    singleLineHandler(lastSLoc, eLoc, coverage, formattedMapping);
 
-        if (eLoc.column === eLoc.last) {
-
-            setCoverageLineValue(coverage, eLoc.line, 'uncovered');
-
-        } else {
-
-            // check if all \s
-            const s = formattedMapping.getFormattedSlice(eLoc.offset, eLoc.offset + eLoc.column);
-            if ((/[^\s]/).test(s)) {
-
-                setCoverageLineValue(coverage, eLoc.line, 'partial');
-
-                setCoverageBgValue(coverage, eLoc.line, {
-                    start: 0,
-                    end: eLoc.column
-                });
-
-            }
-        }
-
-    }
 };
 
 const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
