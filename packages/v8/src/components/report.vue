@@ -46,7 +46,7 @@
         padding="5px"
         gap="10px"
       >
-        <div><b>Top Executions:</b></div>
+        <div><b>Top 3 Executions:</b></div>
 
         <VuiFlex
           v-for="(item, i) in summary.topExecutions"
@@ -236,6 +236,33 @@ const cssCoveredToUncovered = (ranges, contentLength) => {
     return uncoveredRanges;
 };
 
+const getTopExecutions = (executionCounts) => {
+    const list = [];
+    Object.keys(executionCounts).forEach((line) => {
+        const arr = executionCounts[line];
+        arr.forEach((item) => {
+            list.push({
+                line: parseInt(line) + 1,
+                count: item.value
+            });
+        });
+    });
+
+    if (!list.length) {
+        return;
+    }
+
+    list.sort((a, b) => {
+        return b.count - a.count;
+    });
+
+    if (list.length > 3) {
+        list.length = 3;
+    }
+
+    return list;
+};
+
 const getCoverage = (item, text, formattedMapping) => {
 
     const coverage = {
@@ -273,35 +300,10 @@ const getCoverage = (item, text, formattedMapping) => {
         }
     });
 
+    coverage.topExecutions = getTopExecutions(coverage.executionCounts);
+
     return coverage;
 
-};
-
-const getTopExecutions = (executionCounts) => {
-    const list = [];
-    Object.keys(executionCounts).forEach((line) => {
-        const arr = executionCounts[line];
-        arr.forEach((item) => {
-            list.push({
-                line: parseInt(line) + 1,
-                count: item.value
-            });
-        });
-    });
-
-    if (!list.length) {
-        return;
-    }
-
-    list.sort((a, b) => {
-        return b.count - a.count;
-    });
-
-    if (list.length > 3) {
-        list.length = 3;
-    }
-
-    return list;
 };
 
 const getReport = async (item) => {
@@ -325,8 +327,6 @@ const getReport = async (item) => {
     const formattedMapping = new Mapping(content, mapping);
 
     const coverage = getCoverage(item, text, formattedMapping);
-
-    coverage.topExecutions = getTopExecutions(coverage.executionCounts);
 
     const report = {
         coverage,
