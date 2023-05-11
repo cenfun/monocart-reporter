@@ -148,46 +148,5 @@ watch(() => state.entry, (v) => {
 
 .mcr-content-editor {
     height: 100%;
-
-    .cm-editor {
-        width: 100%;
-        height: 100%;
-    }
-
-    .cm-scroller {
-        overflow: auto;
-    }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    .cm-gutterElement {
-        .cm-fold {
-            display: block;
-            width: 15px;
-            height: 100%;
-            padding-left: 3px;
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: 10px 10px;
-            cursor: pointer;
-            opacity: 0.6;
-            overflow: hidden;
-            user-select: none;
-        }
-
-        .cm-fold-open {
-            background-image: url("../images/arrow-fold-open.svg");
-        }
-
-        .cm-fold-close {
-            background-image: url("../images/arrow-fold-close.svg");
-        }
-    }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    .cm-activeLineGutter {
-        .cm-fold {
-            opacity: 1;
-        }
-    }
 }
 </style>

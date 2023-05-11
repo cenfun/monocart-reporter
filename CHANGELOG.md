@@ -1,4 +1,7 @@
 
+* 1.6.22
+  - fixed code viewer for coverage
+
 * 1.6.21
   - fixed timeline chart
 

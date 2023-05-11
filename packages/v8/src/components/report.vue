@@ -71,52 +71,52 @@ const el = ref(null);
 let $el;
 let codeViewer;
 
-const oneLineHandler = (sLoc, eLoc, lineMap, bgMap) => {
+const oneLineHandler = (sLoc, eLoc, coverage) => {
     if (sLoc.column === 0 && eLoc.column === eLoc.last) {
-        lineMap.set(sLoc.line, 'uncovered');
+        coverage.line[sLoc.line] = 'uncovered';
     } else {
-        lineMap.set(sLoc.line, 'partial');
-        bgMap.set(sLoc.line, {
+        coverage.line[sLoc.line] = 'partial';
+        coverage.bg[sLoc.line] = {
             start: sLoc.column,
             end: eLoc.column
-        });
+        };
     }
 };
 
-const multipleLineHandler = (sLoc, eLoc, lineMap, bgMap, formattedMapping) => {
+const multipleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     if (sLoc.column < sLoc.last) {
 
         if (sLoc.column === 0) {
-            lineMap.set(sLoc.line, 'uncovered');
+            coverage.line[sLoc.line] = 'uncovered';
         } else {
-            lineMap.set(sLoc.line, 'partial');
-            bgMap.set(sLoc.line, {
+            coverage.line[sLoc.line] = 'partial';
+            coverage.bg[sLoc.line] = {
                 start: sLoc.column,
                 end: sLoc.last
-            });
+            };
         }
 
     }
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
-        lineMap.set(i, 'uncovered');
+        coverage.line[i] = 'uncovered';
     }
 
     if (eLoc.column > 0) {
 
         if (eLoc.column === eLoc.last) {
-            lineMap.set(eLoc.line, 'uncovered');
+            coverage.line[eLoc.line] = 'uncovered';
         } else {
 
             // check if all \s
             const s = formattedMapping.getFormattedSlice(eLoc.offset, eLoc.offset + eLoc.column);
             if ((/[^\s]/).test(s)) {
-                lineMap.set(eLoc.line, 'partial');
-                bgMap.set(eLoc.line, {
+                coverage.line[eLoc.line] = 'partial';
+                coverage.bg[eLoc.line] = {
                     start: 0,
                     end: eLoc.column
-                });
+                };
             }
         }
 
@@ -130,15 +130,12 @@ const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
     // console.log('start', start, sLoc);
     // console.log('end', end, eLoc);
 
-    const { lineMap, bgMap } = coverage;
-
-
     if (eLoc.line === sLoc.line) {
-        oneLineHandler(sLoc, eLoc, lineMap, bgMap);
+        oneLineHandler(sLoc, eLoc, coverage);
         return;
     }
 
-    multipleLineHandler(sLoc, eLoc, lineMap, bgMap, formattedMapping);
+    multipleLineHandler(sLoc, eLoc, coverage, formattedMapping);
 
 };
 
@@ -182,13 +179,15 @@ const getCoverage = (item, text, content, mapping) => {
 
     const formattedMapping = new Mapping(content, mapping);
 
+    const coverage = {
+        line: {},
+        bg: {},
+        count: {}
+    };
+
     // css, text, ranges: [ {start, end} ]
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
     if (item.type === 'css') {
-        const coverage = {
-            lineMap: new Map(),
-            bgMap: new Map()
-        };
         const ranges = cssCoveredToUncovered(item.ranges, text.length);
         ranges.forEach((range) => {
             const { start, end } = range;
@@ -196,15 +195,7 @@ const getCoverage = (item, text, content, mapping) => {
         });
 
         return coverage;
-
     }
-
-    const countMap = new Map();
-    const coverage = {
-        lineMap: new Map(),
-        bgMap: new Map(),
-        countMap
-    };
 
     const flatRanges = Util.getFlatRanges(item.functions);
     flatRanges.forEach((range) => {
@@ -215,7 +206,11 @@ const getCoverage = (item, text, content, mapping) => {
             rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
         } else if (count > 1) {
             const sLoc = formattedMapping.originalToFormatted(startOffset);
-            countMap.set(sLoc.line, count);
+            // small probability, ignore if multiple counts in a line
+            coverage.count[sLoc.line] = {
+                value: count,
+                column: sLoc.column
+            };
         }
     });
 
@@ -266,6 +261,8 @@ const showReport = async () => {
         return;
     }
 
+    // console.log(report);
+
     if (codeViewer) {
         codeViewer.update(report);
     } else {
@@ -303,81 +300,6 @@ onMounted(() => {
 
 .mcr-report-code {
     position: relative;
-
-    .cm-editor {
-        width: 100%;
-        height: 100%;
-    }
-
-    .cm-scroller {
-        overflow: auto;
-    }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    .cm-gutterElement {
-        .cm-fold {
-            display: block;
-            width: 15px;
-            height: 100%;
-            padding-left: 3px;
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: 10px 10px;
-            cursor: pointer;
-            opacity: 0.6;
-            overflow: hidden;
-            user-select: none;
-        }
-
-        .cm-fold-open {
-            background-image: url("../images/arrow-fold-open.svg");
-        }
-
-        .cm-fold-close {
-            background-image: url("../images/arrow-fold-close.svg");
-        }
-    }
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    .cm-activeLineGutter {
-        .cm-fold {
-            opacity: 1;
-        }
-    }
-}
-
-.cm-coverage-line {
-    width: 5px;
-
-    .cm-line-covered {
-        background-color: green;
-    }
-
-    .cm-line-partial {
-        background-color: orange;
-    }
-
-    .cm-line-uncovered {
-        background-color: red;
-    }
-}
-
-.cm-coverage-count {
-    .cm-line-count {
-        padding: 0 3px;
-        font-size: 12px;
-        font-family: var(--font-monospace);
-        text-align: right;
-        background-color: #e6f5d0;
-    }
-}
-
-.cm-bg-covered {
-    background: #e6f5d0;
-}
-
-.cm-bg-uncovered {
-    background: #fce1e5;
 }
 
 </style>

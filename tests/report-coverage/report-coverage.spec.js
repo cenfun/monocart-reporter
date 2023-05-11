@@ -128,6 +128,11 @@ test.describe('take V8 js and css coverage report', () => {
     });
 
     test('next, run test cases', async () => {
+        const screenshot = await page.screenshot();
+        await test.info().attach('screenshot', {
+            body: screenshot,
+            contentType: 'image/png'
+        });
         await delay(500);
     });
 

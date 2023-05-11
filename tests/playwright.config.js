@@ -230,7 +230,7 @@ module.exports = {
                     // locator.type(input[type=password], mysecretpassword)
                     // apiRequestContext.get(https://api.npmjs.org/?token=myapitoken)
 
-                    const mySecrets = [process.env.LOGIN_PASSWORD, process.env.API_TOKEN];
+                    const mySecrets = [process.env.PASSWORD, process.env.TOKEN];
                     mySecrets.forEach((secret) => {
                         data.title = data.title.replace(secret, '***');
                     });
