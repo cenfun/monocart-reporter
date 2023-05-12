@@ -2,165 +2,103 @@
     "type": "istanbul",
     "summary": {
         "lines": {
-            "total": 152,
-            "covered": 108,
+            "total": 1458,
+            "covered": 1416,
             "skipped": 0,
-            "pct": 71.05,
-            "status": "medium"
+            "pct": 97.11,
+            "status": "high"
         },
         "statements": {
-            "total": 152,
-            "covered": 108,
+            "total": 1458,
+            "covered": 1416,
             "skipped": 0,
-            "pct": 71.05,
-            "status": "medium"
+            "pct": 97.11,
+            "status": "high"
         },
         "functions": {
-            "total": 1505,
-            "covered": 203,
+            "total": 24,
+            "covered": 12,
             "skipped": 0,
-            "pct": 13.48,
-            "status": "low"
+            "pct": 50,
+            "status": "medium"
         },
         "branches": {
-            "total": 555,
-            "covered": 386,
+            "total": 31,
+            "covered": 24,
             "skipped": 0,
-            "pct": 69.54,
+            "pct": 77.41,
             "status": "medium"
         },
         "branchesTrue": {
             "total": 0,
             "covered": 0,
             "skipped": 0,
-            "pct": 100,
+            "pct": "Unknown",
             "status": "unknown"
         }
     },
     "files": [
         {
             "lines": {
-                "total": 2,
-                "covered": 2,
+                "total": 1455,
+                "covered": 1413,
                 "skipped": 0,
-                "pct": 100,
+                "pct": 97.11,
                 "status": "high"
             },
             "functions": {
-                "total": 1482,
-                "covered": 186,
-                "skipped": 0,
-                "pct": 12.55,
-                "status": "low"
-            },
-            "statements": {
-                "total": 2,
-                "covered": 2,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "branches": {
-                "total": 478,
-                "covered": 340,
-                "skipped": 0,
-                "pct": 71.12,
-                "status": "medium"
-            },
-            "name": "main.c781fedc.js"
-        },
-        {
-            "lines": {
-                "total": 1,
-                "covered": 1,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "functions": {
-                "total": 20,
-                "covered": 14,
-                "skipped": 0,
-                "pct": 70,
-                "status": "medium"
-            },
-            "statements": {
-                "total": 1,
-                "covered": 1,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "branches": {
-                "total": 49,
-                "covered": 33,
-                "skipped": 0,
-                "pct": 67.34,
-                "status": "medium"
-            },
-            "name": "runtime~main.5cf89495.js"
-        },
-        {
-            "lines": {
-                "total": 1,
-                "covered": 1,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "functions": {
-                "total": 1,
-                "covered": 1,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "statements": {
-                "total": 1,
-                "covered": 1,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "branches": {
-                "total": 10,
-                "covered": 5,
+                "total": 24,
+                "covered": 12,
                 "skipped": 0,
                 "pct": 50,
                 "status": "medium"
             },
-            "name": "index.js"
+            "statements": {
+                "total": 1455,
+                "covered": 1413,
+                "skipped": 0,
+                "pct": 97.11,
+                "status": "high"
+            },
+            "branches": {
+                "total": 30,
+                "covered": 23,
+                "skipped": 0,
+                "pct": 76.66,
+                "status": "medium"
+            },
+            "name": "coverage-demo.js"
         },
         {
             "lines": {
-                "total": 148,
-                "covered": 104,
+                "total": 3,
+                "covered": 3,
                 "skipped": 0,
-                "pct": 70.27,
-                "status": "medium"
+                "pct": 100,
+                "status": "high"
             },
             "functions": {
-                "total": 2,
-                "covered": 2,
+                "total": 0,
+                "covered": 0,
                 "skipped": 0,
                 "pct": 100,
                 "status": "high"
             },
             "statements": {
-                "total": 148,
-                "covered": 104,
+                "total": 3,
+                "covered": 3,
                 "skipped": 0,
-                "pct": 70.27,
-                "status": "medium"
+                "pct": 100,
+                "status": "high"
             },
             "branches": {
-                "total": 18,
-                "covered": 8,
+                "total": 1,
+                "covered": 1,
                 "skipped": 0,
-                "pct": 44.44,
-                "status": "low"
+                "pct": 100,
+                "status": "high"
             },
-            "name": "redirection.js"
+            "name": "index.js"
         }
     ]
 }
