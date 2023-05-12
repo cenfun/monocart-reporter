@@ -53,7 +53,12 @@
           :key="i"
           gap="5px"
         >
-          <div>line {{ Util.NF(item.line) }}</div>
+          <div
+            class="mcr-line"
+            @click="scrollToLine(item.line)"
+          >
+            line {{ Util.NF(item.line) }}
+          </div>
           <div class="mcr-count">
             x{{ item.count }}
           </div>
@@ -95,6 +100,19 @@ const summary = shallowReactive({
 const el = ref(null);
 let $el;
 let codeViewer;
+
+const scrollToLine = (line) => {
+    if (codeViewer) {
+        const viewer = codeViewer.viewer;
+        const top = (line - 1) * viewer.defaultLineHeight;
+        if (top >= 0) {
+            viewer.scrollDOM.scrollTo({
+                top,
+                behavior: 'smooth'
+            });
+        }
+    }
+};
 
 const setUncoveredLines = (coverage, line, value) => {
     const item = coverage.uncoveredLines;
@@ -147,7 +165,7 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
         return;
     }
 
-    console.log(sLoc);
+    // console.log(sLoc, codeOffset, eLoc);
 
     if (sLoc.column === codeOffset && eLoc.column === eLoc.length) {
         // console.log('single', sLoc.line);
@@ -249,6 +267,7 @@ const getTopExecutions = (executionCounts) => {
         const arr = executionCounts[line];
         arr.forEach((item) => {
             list.push({
+                // line index to line number
                 line: parseInt(line) + 1,
                 count: item.value
             });
@@ -335,7 +354,7 @@ const getReport = async (item) => {
 
     const coverage = getCoverage(item, text, formattedMapping);
 
-    console.log(coverage);
+    // console.log(coverage);
 
     const report = {
         coverage,
@@ -426,6 +445,14 @@ onMounted(() => {
 
 .mcr-report-code {
     position: relative;
+}
+
+.mcr-line {
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 .mcr-count {
