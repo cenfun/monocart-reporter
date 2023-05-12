@@ -133,8 +133,8 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
         return;
     }
 
-    const lineText = formattedMapping.getFormattedSlice(sLoc.offset, sLoc.offset + sLoc.last);
-    const codeOffset = lineText.search(/\S/g);
+    const lineInfo = formattedMapping.getFormattedLine(sLoc.line);
+    const codeOffset = lineInfo.text.search(/\S/g);
     // console.log(sLoc.line, codeOffset, sLoc.column);
 
     // multiple line end line, start code offset
@@ -147,7 +147,9 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
         return;
     }
 
-    if (sLoc.column === codeOffset && eLoc.column === eLoc.last) {
+    console.log(sLoc);
+
+    if (sLoc.column === codeOffset && eLoc.column === eLoc.length) {
         // console.log('single', sLoc.line);
         setUncoveredLines(coverage, sLoc.line, 'uncovered');
         return;
@@ -165,7 +167,7 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     const firstELoc = {
         ... sLoc,
-        column: sLoc.last
+        column: sLoc.length
     };
     singleLineHandler(sLoc, firstELoc, coverage, formattedMapping);
 
@@ -173,7 +175,12 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
 
         // console.log('multiple', i);
-        // TODO if empty line
+        // if empty line
+        const isEmpty = formattedMapping.isFormattedLineEmpty(i);
+        if (isEmpty) {
+            continue;
+        }
+
         setUncoveredLines(coverage, i, 'uncovered');
 
     }
@@ -188,11 +195,8 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 };
 
 const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
-    const sLoc = formattedMapping.originalToFormatted(start);
-    const eLoc = formattedMapping.originalToFormatted(end);
-
-    // console.log('start', start, sLoc);
-    // console.log('end', end, eLoc);
+    const sLoc = formattedMapping.getFormattedLocation(start);
+    const eLoc = formattedMapping.getFormattedLocation(end);
 
     if (eLoc.line === sLoc.line) {
         singleLineHandler(sLoc, eLoc, coverage, formattedMapping);
@@ -269,7 +273,7 @@ const getTopExecutions = (executionCounts) => {
 const getCoverage = (item, text, formattedMapping) => {
 
     const coverage = {
-        totalLines: formattedMapping.formattedLineEndings.length,
+        totalLines: formattedMapping.formattedLines.length,
         uncoveredLines: {},
         uncoveredPieces: {},
         executionCounts: {}
@@ -295,7 +299,7 @@ const getCoverage = (item, text, formattedMapping) => {
         if (count === 0) {
             rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
         } else if (count > 1) {
-            const sLoc = formattedMapping.originalToFormatted(startOffset);
+            const sLoc = formattedMapping.getFormattedLocation(startOffset);
             setExecutionCounts(coverage, sLoc.line, {
                 value: count,
                 column: sLoc.column
@@ -331,7 +335,7 @@ const getReport = async (item) => {
 
     const coverage = getCoverage(item, text, formattedMapping);
 
-    // console.log(coverage);
+    console.log(coverage);
 
     const report = {
         coverage,
