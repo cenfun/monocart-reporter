@@ -20,8 +20,8 @@
         padding="5px"
         gap="10px"
       >
-        <div><b>Total Bytes:</b> {{ Util.NF(summary.total) }}</div>
-        <div><b>Unused Bytes:</b> {{ Util.NF(summary.unused) }}</div>
+        <div><b>Total:</b> {{ Util.NF(summary.total) }} Bytes</div>
+        <div><b>Unused:</b> <span :class="summary.unusedClass">{{ Util.NF(summary.unused) }} Bytes</span></div>
         <div
           style="width: 100px;"
           v-html="summary.percentChart"
@@ -33,8 +33,8 @@
         padding="5px"
         gap="10px"
       >
-        <div><b>Formatted Lines:</b> {{ Util.NF(summary.lines.total) }}</div>
-        <div><b>Uncovered Lines:</b> {{ Util.NF(summary.lines.uncovered) }}</div>
+        <div><b>Total:</b> {{ Util.NF(summary.lines.total) }} Lines</div>
+        <div><b>Uncovered:</b> <span :class="summary.lines.uncoveredClass">{{ Util.NF(summary.lines.uncovered) }} Lines</span></div>
         <div
           style="width: 100px;"
           v-html="summary.lines.percentChart"
@@ -373,6 +373,7 @@ const showReport = async () => {
     state.loading = true;
 
     Object.assign(summary, item.summary);
+    summary.unusedClass = summary.unused > 0 ? 'mcr-uncovered' : '';
 
     const report = await getReport(item);
     if (!report) {
@@ -400,6 +401,7 @@ const showReport = async () => {
     summary.lines = {
         total: totalLines,
         uncovered,
+        uncoveredClass: uncovered > 0 ? 'mcr-uncovered' : '',
         pct,
         percentChart
     };
@@ -445,6 +447,10 @@ onMounted(() => {
 
 .mcr-report-code {
     position: relative;
+}
+
+.mcr-uncovered {
+    color: red;
 }
 
 .mcr-line {
