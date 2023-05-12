@@ -116,10 +116,13 @@ const scrollToLine = (line) => {
 
 const setUncoveredLines = (coverage, line, value) => {
     const item = coverage.uncoveredLines;
-    // const prev = item[line];
-    // if (prev && prev !== value) {
-    //     console.log('previous line', line, prev, value);
-    // }
+    const prev = item[line];
+    if (prev && prev !== value) {
+        if (prev === 'uncovered') {
+            return prev;
+        }
+        // console.log('previous line', line, prev, value);
+    }
     item[line] = value;
 };
 
@@ -173,7 +176,13 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
         return;
     }
 
-    setUncoveredLines(coverage, sLoc.line, 'partial');
+    // already uncovered, should not sub partial
+    const prevUncovered = setUncoveredLines(coverage, sLoc.line, 'partial');
+    if (prevUncovered) {
+        // console.log(sLoc.line);
+        return;
+    }
+
     setUncoveredPieces(coverage, sLoc.line, {
         start: sLoc.column,
         end: eLoc.column
