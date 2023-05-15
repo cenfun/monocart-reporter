@@ -49,15 +49,7 @@ test.describe('take V8 js to Istanbul coverage report', () => {
 
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
             toIstanbul: true,
-            excludePath: (realPath) => {
-
-                // except /
-                // if(/[\\:*?"<>|]/.test(realPath))
-
-                if (realPath.includes('{') || realPath.includes('?')) {
-                    return true;
-                }
-            }
+            sourceMap: true
         });
         console.log(report.summary);
     });
@@ -162,7 +154,9 @@ test.describe('take V8 js and css coverage report', () => {
         //         return true;
         //     }
         // });
-        const report = await attachCoverageReport(coverageList, test.info());
+        const report = await attachCoverageReport(coverageList, test.info(), {
+            sourceMap: true
+        });
         console.log(report.summary);
     });
 
