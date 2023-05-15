@@ -956,7 +956,7 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
  - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
  - Packages
     - `packages/app` Monocart report UI
-    - `packages/istanbul` Istanbul report libs
+    - `packages/coverage` Coverage report libs
     - `packages/network` Network HAR report libs
     - `packages/v8` V8 HTML report UI
     - `packages/vendor` Third-party libs

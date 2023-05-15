@@ -2,11 +2,17 @@
 import V8toIstanbul from 'v8-to-istanbul';
 import istanbulLibCoverage from 'istanbul-lib-coverage';
 import istanbulLibReport from 'istanbul-lib-report';
-import { mapFileCommentRegex } from 'convert-source-map';
+
+import * as convertSourceMap from 'convert-source-map';
+import * as traceMapping from '@jridgewell/trace-mapping';
+import axios from 'axios';
 
 export {
     V8toIstanbul,
     istanbulLibCoverage,
     istanbulLibReport,
-    mapFileCommentRegex
+
+    convertSourceMap,
+    traceMapping,
+    axios
 };

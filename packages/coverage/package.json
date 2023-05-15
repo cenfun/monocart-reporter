@@ -1,8 +1,8 @@
 {
-    "name": "monocart-istanbul",
+    "name": "monocart-coverage",
     "version": "1.6.22",
     "private": true,
-    "main": "dist/monocart-istanbul.js",
+    "main": "dist/monocart-coverage.js",
     "files": [
         "dist"
     ],

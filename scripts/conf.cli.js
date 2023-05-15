@@ -148,19 +148,25 @@ module.exports = {
 
         afterAll: (results) => {
 
+            const production = results.jobList[0].production;
+            if (!production) {
+                return 0;
+            }
+
             const EC = require('eight-colors');
 
             const toPath = path.resolve(__dirname, '../lib/runtime');
-            if (!fs.existsSync(toPath)) {
-                fs.mkdirSync(toPath);
+            if (fs.existsSync(toPath)) {
+                fs.rmSync(toPath, {
+                    recursive: true,
+                    force: true
+                });
             }
+            fs.mkdirSync(toPath);
 
             const moduleFiles = {};
 
             results.jobList.forEach((item) => {
-                if (!item.production) {
-                    return;
-                }
 
                 Object.assign(moduleFiles, item.dependencies.moduleFiles);
 

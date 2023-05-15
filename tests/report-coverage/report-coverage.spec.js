@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { attachCoverageReport } = require('monocart-reporter');
+const { attachCoverageReport, addCoverageReport } = require('monocart-reporter');
 const { delay } = require('../common/util.js');
 
 test.describe.configure({
@@ -34,7 +34,7 @@ test.describe('take V8 js to Istanbul coverage report', () => {
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
         await page.coverage.startJSCoverage();
-        await page.goto('http://localhost:8090/istanbul/');
+        await page.goto('http://localhost:8090/demo/');
     });
 
     test('next, run test cases', async () => {
@@ -44,8 +44,20 @@ test.describe('take V8 js to Istanbul coverage report', () => {
     test('finally, take coverage', async () => {
         const jsCoverageList = await page.coverage.stopJSCoverage();
         await page.close();
+
+        await addCoverageReport(jsCoverageList, test.info());
+
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
-            toIstanbul: true
+            toIstanbul: true,
+            excludePath: (realPath) => {
+
+                // except /
+                // if(/[\\:*?"<>|]/.test(realPath))
+
+                if (realPath.includes('{') || realPath.includes('?')) {
+                    return true;
+                }
+            }
         });
         console.log(report.summary);
     });

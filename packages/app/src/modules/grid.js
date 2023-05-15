@@ -65,10 +65,10 @@ export const showFlyover = (component, data) => {
     state.flyoverVisible = true;
 };
 
-const showDetailByIndex = (grid, index, title) => {
-    if (index) {
-        const rowItem = grid.getRowItem(parseInt(index));
-        if (rowItem && rowItem.title === title) {
+const showDetailById = (grid, id) => {
+    if (id) {
+        const rowItem = grid.getRowItemById(id);
+        if (rowItem) {
             grid.scrollRowIntoView(rowItem);
             grid.setRowSelected(rowItem);
             showFlyover('detail', rowItem);
@@ -102,12 +102,12 @@ const showDetail = (pagePath) => {
     }
 
     const list = pagePath.split('/');
-    const index = list.shift();
+    const id = list.shift();
     const title = list.join('/');
-    // console.log('page:', page, 'index:', index, 'title:', title);
+    // console.log('page:', page, 'id:', id, 'title:', title);
 
-    // match index and title
-    if (showDetailByIndex(grid, index, title)) {
+    // match id
+    if (showDetailById(grid, id)) {
         return true;
     }
 
@@ -160,8 +160,8 @@ const getClickCaseItem = (rowItem) => {
 
 const showRowDetail = (data) => {
     state.flyoverData = data;
-    const { tg_index, title } = data;
-    Util.setHash('page', `detail/${tg_index}/${title}`);
+    const { id, title } = data;
+    Util.setHash('page', `detail/${id}/${title}`);
 };
 
 const onRowClickHandler = (d, force) => {
