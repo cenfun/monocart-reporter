@@ -350,7 +350,7 @@ const getReport = async (item) => {
         });
     }
 
-    const text = item.source || item.text;
+    const text = item.source;
     const res = await format(text, item.type);
     if (res.error) {
         console.log(res.error.message);
