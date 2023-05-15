@@ -248,6 +248,15 @@ module.exports = {
             onEnd: async (reportData, capability) => {
                 // console.log('onEnd hook start');
 
+                // rename report filename
+                // const fs = require('fs');
+                // const path = require('path');
+                // fs.renameSync(
+                //     path.resolve(reportData.htmlPath),
+                //     path.resolve(reportData.outputDir, 'new-filename.html')
+                // );
+
+
                 // console.log(reportData.summary);
 
                 // send email

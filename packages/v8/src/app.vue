@@ -404,7 +404,6 @@ const init = async () => {
 
 onMounted(() => {
     init();
-
 });
 
 window.addEventListener('resize', () => {
