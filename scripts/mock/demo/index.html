@@ -8,6 +8,7 @@
     <title>coverage page</title>
     <link href="style.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,12 +19,14 @@
     <div class="fps-detector"></div>
 
     <script src="demo.js"></script>
+    <script src="js/demo.js"></script>
+    
     <script src="browser.js"></script>
     <script src="fps-detector.js"></script>
 
     <script src="ie-polyfill.js"></script>
     <script src="redirection.js"></script>
-	<!-- <script src="turbogrid.js"></script> -->
+	<script src="turbogrid.js"></script>
     
     <script>
        console.log('body');
@@ -31,21 +34,21 @@
 
        new FPSDetector('.fps-detector');
 
-//    const { Grid } = window.turbogrid;
-//    const grid = new Grid('.grid');
-//    grid.setOption({
-//        autoHeight: true
-//    });
-//    grid.setData({
-//        columns: [{
-//            id: 'name',
-//            name: 'Name'
-//        }],
-//        rows: [{
-//            name: 'name'
-//        }]
-//    });
-//    grid.render();
+       const { Grid } = window.turbogrid;
+       const grid = new Grid('.grid');
+       grid.setOption({
+           autoHeight: true
+       });
+       grid.setData({
+           columns: [{
+               id: 'name',
+               name: 'Name'
+           }],
+           rows: [{
+               name: 'name'
+           }]
+       });
+       grid.render();
     </script>
 
 
