@@ -11,52 +11,47 @@
       <VuiFlex padding="5px">
         <div class="vui-flex-auto">
           <b>URL:</b> <a
-            :href="summary.url"
+            :href="data.url"
             target="_blank"
-          >{{ summary.url }}</a>
+          >{{ data.url }}</a>
         </div>
       </VuiFlex>
       <VuiFlex
+        v-for="(item, i) in data.list"
+        :key="i"
         padding="5px"
         gap="10px"
       >
-        <div><b>Bytes</b></div>
-        <div>Total: {{ Util.NF(summary.total) }}</div>
-        <div>Unused: <span :class="summary.unusedClass">{{ Util.NF(summary.unused) }}</span></div>
+        <div :tooltip="item.totalTooltip">
+          <b>{{ item.indicatorName }}</b> {{ Util.NF(item.total) }}
+        </div>
+        <div :tooltip="item.coveredTooltip">
+          Covered: <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
+        </div>
+        <div :tooltip="item.uncoveredTooltip">
+          Uncovered: <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
+        </div>
         <div
           style="width: 100px;"
-          v-html="summary.percentChart"
+          v-html="item.percentChart"
         />
         <div
           style="padding: 0 5px;"
-          :class="'mcr-'+summary.status"
+          :class="'mcr-'+item.status"
         >
-          {{ Util.PF(summary.pct, 100) }}
+          {{ Util.PF(item.pct, 100) }}
         </div>
       </VuiFlex>
+
       <VuiFlex
-        v-if="summary.lines"
-        padding="5px"
-        gap="10px"
-      >
-        <div><b>Formatted Lines</b></div>
-        <div>Total: {{ Util.NF(summary.lines.total) }}</div>
-        <div>Uncovered: <span :class="summary.lines.uncoveredClass">{{ Util.NF(summary.lines.uncovered) }}</span></div>
-        <div
-          style="width: 100px;"
-          v-html="summary.lines.percentChart"
-        />
-        <div>{{ Util.PF(summary.lines.pct, 100) }}</div>
-      </VuiFlex>
-      <VuiFlex
-        v-if="summary.topExecutions"
+        v-if="data.topExecutions"
         padding="5px"
         gap="10px"
       >
         <div><b>Top 3 Executions:</b></div>
 
         <VuiFlex
-          v-for="(item, i) in summary.topExecutions"
+          v-for="(item, i) in data.topExecutions"
           :key="i"
           gap="5px"
         >
@@ -101,7 +96,7 @@ const { VuiFlex, VuiLoading } = components;
 
 const state = inject('state');
 
-const summary = shallowReactive({
+const data = shallowReactive({
 });
 
 const el = ref(null);
@@ -388,12 +383,23 @@ const showReport = async () => {
     const item = state.fileMap[id];
     state.loading = true;
 
-    Object.assign(summary, item.summary);
-    summary.unusedClass = summary.unused > 0 ? 'mcr-uncovered' : '';
+    const summary = item.summary;
+    data.summary = item.summary;
+    data.url = summary.url;
+
+    summary.indicatorName = 'Bytes';
+
+    summary.totalTooltip = `Total ${Util.BSF(summary.total)}`;
+
+    summary.coveredTooltip = `Covered ${Util.BSF(summary.covered)}`;
+    summary.coveredClass = summary.covered > 0 ? 'mcr-covered' : '';
+    summary.uncoveredTooltip = `Uncovered ${Util.BSF(summary.uncovered)}`;
+    summary.uncoveredClass = summary.uncovered > 0 ? 'mcr-uncovered' : '';
 
     const report = await getReport(item);
     if (!report) {
         console.log(`failed to format source: ${item.filename}`);
+        data.list = [summary];
         return;
     }
 
@@ -411,18 +417,29 @@ const showReport = async () => {
 
     uncovered = Math.floor(uncovered);
 
+    const covered = totalLines - uncovered;
+
     const pct = Util.PF(totalLines - uncovered, totalLines, 1, '');
     const percentChart = Util.generatePercentChart(pct);
 
-    summary.lines = {
+    const lineInfo = {
+        indicatorName: 'Formatted Lines',
         total: totalLines,
+        totalTooltip: '',
+        covered,
+        coveredTooltip: '',
+        coveredClass: covered > 0 ? 'mcr-covered' : '',
         uncovered,
+        uncoveredTooltip: '',
         uncoveredClass: uncovered > 0 ? 'mcr-uncovered' : '',
         pct,
         percentChart
     };
 
-    summary.topExecutions = topExecutions;
+
+    data.list = [summary, lineInfo];
+
+    data.topExecutions = topExecutions;
 
     // console.log(report);
 
@@ -463,6 +480,10 @@ onMounted(() => {
 
 .mcr-report-code {
     position: relative;
+}
+
+.mcr-covered {
+    color: green;
 }
 
 .mcr-uncovered {

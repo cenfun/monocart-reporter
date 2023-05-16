@@ -235,12 +235,10 @@ const bindGridEvents = (grid) => {
 const getGridData = () => {
     const { summary, files } = state.reportData;
 
-    // init unused and percentChart
+    // init uncovered and percentChart
     files.forEach((item) => {
-        item.summary.unused = item.summary.total - item.summary.covered;
         item.summary.percentChart = Util.generatePercentChart(item.summary.pct);
     });
-    summary.unused = summary.total - summary.covered;
     summary.percentChart = Util.generatePercentChart(summary.pct);
 
     const fileMap = {};
@@ -279,7 +277,7 @@ const getGridData = () => {
     });
 
     rows.sort((a, b) => {
-        return b.unused - a.unused;
+        return b.uncovered - a.uncovered;
     });
 
     const columns = [{
@@ -304,19 +302,19 @@ const getGridData = () => {
         id: 'total',
         name: 'Total Bytes',
         align: 'right',
-        width: 81,
+        width: 88,
         formatter: 'bytes'
     }, {
         id: 'covered',
-        name: 'Used Bytes',
+        name: 'Covered',
         align: 'right',
-        width: 81,
+        width: 88,
         formatter: 'bytes'
     }, {
-        id: 'unused',
-        name: 'Unused Bytes',
+        id: 'uncovered',
+        name: 'Uncovered',
         align: 'right',
-        width: 81,
+        width: 88,
         formatter: 'bytes'
     }, {
         id: 'url',
@@ -347,7 +345,7 @@ const initGrid = () => {
         collapseAllVisible: true,
         rowHeight: 36,
         selectMultiple: false,
-        // sortField: 'unused',
+        // sortField: 'uncovered',
         // sortAsc: false,
         // sortOnInit: true,
         rowNumberVisible: true,
@@ -358,9 +356,29 @@ const initGrid = () => {
         }
     };
     grid.setFormatter({
-        bytes: (v) => {
+        bytes: (v, rowItem, columnItem) => {
             if (typeof v === 'number') {
-                return Util.NF(v);
+
+                const str = Util.NF(v);
+                const bytes = Util.BSF(v);
+
+                if (columnItem.id === 'total') {
+                    return `<span tooltip="Total ${bytes}">${str}</span>`;
+                }
+
+                if (columnItem.id === 'covered') {
+                    if (v > 0) {
+                        return `<span tooltip="Covered ${bytes}" class="mcr-covered">${str}</span>`;
+                    }
+                }
+
+                if (columnItem.id === 'uncovered') {
+                    if (v > 0) {
+                        return `<span tooltip="Uncovered ${bytes}" class="mcr-uncovered">${str}</span>`;
+                    }
+                }
+
+                return str;
             }
             return v;
         },

@@ -175,9 +175,9 @@ const getAudit = (path, name, report) => {
 
 const addCoverageGroup = (list, item) => {
     list.push('<div class="mcr-attachment-group">');
-    list.push(`<div><b>${item.name}</b></div>`);
-    list.push(`<div title="${item.totalTitle}">Total: ${Util.NF(item.total)}</div>`);
-    list.push(`<div title="${item.uncoveredTitle}">${item.uncoveredName}: <span class="${item.uncoveredClass}">${Util.NF(item.uncovered)}</span></div>`);
+    list.push(`<div title="${item.totalTitle}"><b>${item.name}</b> ${Util.NF(item.total)}</div>`);
+    list.push(`<div title="${item.coveredTitle}">Covered: <span class="${item.coveredClass}">${Util.NF(item.covered)}</span></div>`);
+    list.push(`<div title="${item.uncoveredTitle}">Uncovered: <span class="${item.uncoveredClass}">${Util.NF(item.uncovered)}</span></div>`);
 
     list.push(`<div style="width:100px;">${item.percentChart}</div>`);
     list.push(`<div style="padding:0 5px;" class="mcr-${item.status}">${Util.PF(item.pct, 100)}</div>`);
@@ -202,12 +202,18 @@ const getIstanbulSummary = (report, list) => {
         if (!item) {
             return;
         }
+
         item.name = map[k];
         item.totalTitle = '';
-        item.uncoveredTitle = '';
+
+        item.coveredTitle = '';
+        item.coveredClass = item.covered > 0 ? 'mcr-covered' : '';
+
+        // only covered in istanbul
         item.uncovered = item.total - item.covered;
-        item.uncoveredName = 'Uncovered';
+        item.uncoveredTitle = '';
         item.uncoveredClass = item.uncovered > 0 ? 'mcr-uncovered' : '';
+
         item.percentChart = Util.generatePercentChart(item.pct);
 
         addCoverageGroup(list, item);
@@ -220,18 +226,20 @@ const getIstanbulSummary = (report, list) => {
 
 const getV8Summary = (report, list) => {
 
-    const summary = report.summary;
-    summary.unused = summary.total - summary.covered;
+    const item = report.summary;
 
-    summary.name = 'Bytes';
-    summary.totalTitle = `Total ${Util.BSF(summary.total)}`;
-    summary.uncovered = summary.unused;
-    summary.uncoveredName = 'Unused';
-    summary.uncoveredTitle = `Unused ${Util.BSF(summary.unused)}`;
-    summary.uncoveredClass = summary.unused > 0 ? 'mcr-uncovered' : '';
-    summary.percentChart = Util.generatePercentChart(summary.pct);
+    item.name = 'Bytes';
+    item.totalTitle = `Total ${Util.BSF(item.total)}`;
 
-    addCoverageGroup(list, summary);
+    item.coveredTitle = `Covered ${Util.BSF(item.covered)}`;
+    item.coveredClass = item.covered > 0 ? 'mcr-covered' : '';
+
+    item.uncoveredTitle = `Uncovered ${Util.BSF(item.uncovered)}`;
+    item.uncoveredClass = item.uncovered > 0 ? 'mcr-uncovered' : '';
+
+    item.percentChart = Util.generatePercentChart(item.pct);
+
+    addCoverageGroup(list, item);
 
     return list.join('');
 };

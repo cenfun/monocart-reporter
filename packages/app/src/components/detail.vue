@@ -797,6 +797,10 @@ onActivated(() => {
         background: rgb(230 245 208);
     }
 
+    .mcr-covered {
+        color: green;
+    }
+
     .mcr-uncovered {
         color: red;
     }
