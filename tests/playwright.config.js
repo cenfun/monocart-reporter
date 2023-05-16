@@ -79,6 +79,10 @@ module.exports = {
                 // return `https://cenfun.github.io/monocart-reporter/${relativePath}`;
             },
 
+            coverage: {
+                // sourceMap: false
+            },
+
             trend: () => {
                 return new Promise((resolve) => {
                     const fs = require('fs');
