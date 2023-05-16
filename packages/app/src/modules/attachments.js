@@ -185,9 +185,9 @@ const getIstanbulSummary = (report) => {
 
     // refer to sonar coverage are lines + branches
     items.sort((a, b) => {
-        const ac = (a.lines.covered + a.branches.covered) / (a.lines.total + a.branches.total);
-        const bc = (b.lines.covered + b.branches.covered) / (b.lines.total + b.branches.total);
-        return bc - ac;
+        const au = 1 - (a.lines.covered + a.branches.covered) / (a.lines.total + a.branches.total);
+        const bu = 1 - (b.lines.covered + b.branches.covered) / (b.lines.total + b.branches.total);
+        return bu - au;
     });
 
     if (files.length > 1) {
