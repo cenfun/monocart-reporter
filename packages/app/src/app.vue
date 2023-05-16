@@ -543,6 +543,8 @@ const onExportClick = () => {
 
 // =================================================================================
 const init = async () => {
+    initStore();
+
     const reportStr = await inflate(window.reportData);
     const reportData = JSON.parse(reportStr);
     console.log(reportData);
@@ -569,8 +571,6 @@ const init = async () => {
     state.title = reportData.name;
     state.date = reportData.dateH;
     state.duration = reportData.durationH;
-
-    initStore();
 
     initFlyoverSize();
 

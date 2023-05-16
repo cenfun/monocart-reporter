@@ -16,6 +16,13 @@
       </VuiFlex>
 
       <div class="vui-flex-auto" />
+
+      <VuiSwitch
+        v-model="state.group"
+        :label-clickable="true"
+      >
+        Group
+      </VuiSwitch>
     </VuiFlex>
 
     <div class="mcr-coverage-grid vui-flex-auto" />
@@ -41,19 +48,21 @@
 </template>
 <script setup>
 import {
-    shallowReactive, onMounted, reactive, provide
+    shallowReactive, onMounted, reactive, provide, watch
 } from 'vue';
 import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
 import inflate from 'lz-utils/inflate';
 
 import Util from './utils/util.js';
+import store from '../../app/src/utils/store.js';
 
 import Flyover from './components/flyover.vue';
 import Report from './components/report.vue';
 
 const {
     VuiFlex,
+    VuiSwitch,
     VuiTooltip,
     VuiLoading
 } = components;
@@ -63,6 +72,8 @@ const {
 const state = shallowReactive({
     title: '',
     summary: {},
+
+    group: true,
 
     windowWidth: window.innerWidth,
 
@@ -74,6 +85,7 @@ const state = shallowReactive({
     flyoverData: null,
 
     grid: null,
+    gridDataCache: {},
 
     loading: false,
     initializing: true
@@ -210,7 +222,7 @@ const bindGridEvents = (grid) => {
             return;
         }
 
-        if (rowItem.isSummary) {
+        if (rowItem.isSummary || rowItem.subs) {
             return;
         }
 
@@ -232,58 +244,117 @@ const bindGridEvents = (grid) => {
     });
 };
 
-const getGridData = () => {
+const getGroupRows = (summaryRows) => {
+    const groups = [];
+
+    summaryRows.forEach((summaryItem) => {
+        const sourcePath = summaryItem.sourcePath;
+        const pathList = sourcePath.split('/');
+
+        const lastName = pathList.pop();
+
+        let subs = groups;
+        pathList.forEach((key) => {
+            const item = subs.find((it) => it.name === key && it.subs);
+            if (item) {
+                subs = item.subs;
+                return;
+            }
+            const sub = {
+                name: key,
+                subs: []
+            };
+            subs.push(sub);
+            subs = sub.subs;
+        });
+
+        subs.push({
+            ... summaryItem,
+            name: lastName
+        });
+
+    });
+
+    // calculate groups
+    const calculateGroups = (list, parent) => {
+        if (!list) {
+            return;
+        }
+        if (typeof parent.total !== 'number') {
+            parent.total = 0;
+            parent.covered = 0;
+            parent.uncovered = 0;
+        }
+        list.forEach((item) => {
+            if (typeof item.total !== 'number') {
+                calculateGroups(item.subs, item);
+            }
+            parent.total += item.total;
+            parent.covered += item.covered;
+            parent.uncovered += item.uncovered;
+        });
+        parent.pct = Util.PNF(parent.covered, parent.total, 2);
+        parent.percentChart = Util.generatePercentChart(parent.pct);
+    };
+
+    const summary = {};
+    calculateGroups(groups, summary);
+
+    console.log(summary);
+
+    return groups;
+};
+
+const getGridRows = () => {
+    const key = ['grid', state.group].join('-');
+    const cacheRows = state.gridDataCache[key];
+    if (cacheRows) {
+        return cacheRows;
+    }
+
     const { summary, files } = state.reportData;
 
-    // init uncovered and percentChart
-    files.forEach((item) => {
-        item.summary.percentChart = Util.generatePercentChart(item.summary.pct);
-    });
-    summary.percentChart = Util.generatePercentChart(summary.pct);
-
-    const fileMap = {};
-
-    const rows = files.map((item) => {
-        const fileSummary = item.summary;
-        const id = Util.uid();
-        const row = {
-            id,
-            ... fileSummary
+    const summaryRows = files.map((it) => {
+        return {
+            id: it.id,
+            sourcePath: it.sourcePath,
+            ... it.summary
         };
-
-        fileMap[id] = item;
-
-        return row;
     });
 
     // sort before summary
-    rows.sort((a, b) => {
+    summaryRows.sort((a, b) => {
         return b.uncovered - a.uncovered;
     });
 
-    // console.log(rows.map((it) => it.url));
+    let rows = [{
+        name: 'Summary',
+        type: '',
+        url: '',
+        isSummary: true,
+        classMap: 'mcr-row-summary',
+        ... summary
+    }];
 
-    state.fileMap = fileMap;
-
-    const options = {};
-    if (rows.length > 1) {
-        const rowSummary = {
-            name: 'Summary',
-            type: '',
-            url: '',
-            isSummary: true,
-            classMap: 'mcr-row-summary',
-            ... summary
-        };
-        options.frozenRow = 0;
-        rows.unshift(rowSummary);
+    if (state.group) {
+        rows = rows.concat(getGroupRows(summaryRows));
+    } else {
+        rows = rows.concat(summaryRows);
     }
-
-    // console.log(rows.map((it) => it.url));
 
     rows.forEach((item) => {
         item.pctClassMap = `mcr-${item.status}`;
     });
+
+    state.gridDataCache[key] = rows;
+
+    return rows;
+};
+
+
+const getGridData = () => {
+
+    const rows = getGridRows();
 
     const columns = [{
         id: 'name',
@@ -330,10 +401,26 @@ const getGridData = () => {
     }];
 
     return {
-        options,
         columns,
         rows
     };
+
+};
+
+const initData = () => {
+    const { summary, files } = state.reportData;
+
+    const fileMap = {};
+    files.forEach((item) => {
+        // init percentChart
+        item.summary.percentChart = Util.generatePercentChart(item.summary.pct);
+        const id = Util.uid();
+        item.id = id;
+        fileMap[id] = item;
+    });
+    state.fileMap = fileMap;
+
+    summary.percentChart = Util.generatePercentChart(summary.pct);
 
 };
 
@@ -350,12 +437,13 @@ const initGrid = () => {
         collapseAllVisible: true,
         rowHeight: 36,
         selectMultiple: false,
+        frozenRow: 0,
         // sortField: 'uncovered',
         // sortAsc: false,
         // sortOnInit: true,
         rowNumberVisible: true,
         rowNumberFilter: (rowItem) => {
-            if (!rowItem.isSummary) {
+            if (!rowItem.isSummary && !rowItem.subs) {
                 return rowNumber++;
             }
         }
@@ -405,8 +493,31 @@ const initGrid = () => {
     grid.render();
 };
 
+const updateGrid = () => {
+    if (state.grid) {
+        state.grid.setData(getGridData());
+        state.grid.render();
+    }
+};
+
 // =================================================================================
+
+const initStore = () => {
+    const booleans = {
+        'true': true,
+        'false': false
+    };
+    ['group'].forEach((item) => {
+        const visible = booleans[store.get(item)];
+        if (typeof visible === 'boolean') {
+            state[item] = visible;
+        }
+    });
+};
+
 const init = async () => {
+    initStore();
+
     const reportStr = await inflate(window.reportData);
     const reportData = JSON.parse(reportStr);
     console.log(reportData);
@@ -419,6 +530,8 @@ const init = async () => {
 
     initFlyoverSize();
 
+    initData();
+
     initGrid();
 
     state.initializing = false;
@@ -427,6 +540,11 @@ const init = async () => {
 
 onMounted(() => {
     init();
+});
+
+watch(() => state.group, (v) => {
+    store.set('group', v);
+    updateGrid();
 });
 
 window.addEventListener('resize', () => {
@@ -536,6 +654,13 @@ icon
 .mcr-column-name {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.tg-group {
+    .mcr-column-name {
+        text-decoration: none;
+        cursor: default;
+    }
 }
 
 .mcr-row-summary {
