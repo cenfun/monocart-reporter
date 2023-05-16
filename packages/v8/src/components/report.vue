@@ -20,21 +20,28 @@
         padding="5px"
         gap="10px"
       >
-        <div><b>Total:</b> {{ Util.NF(summary.total) }} Bytes</div>
-        <div><b>Unused:</b> <span :class="summary.unusedClass">{{ Util.NF(summary.unused) }} Bytes</span></div>
+        <div><b>Bytes</b></div>
+        <div>Total: {{ Util.NF(summary.total) }}</div>
+        <div>Unused: <span :class="summary.unusedClass">{{ Util.NF(summary.unused) }}</span></div>
         <div
           style="width: 100px;"
           v-html="summary.percentChart"
         />
-        <div>{{ Util.PF(summary.pct, 100) }}</div>
+        <div
+          style="padding: 0 5px;"
+          :class="'mcr-'+summary.status"
+        >
+          {{ Util.PF(summary.pct, 100) }}
+        </div>
       </VuiFlex>
       <VuiFlex
         v-if="summary.lines"
         padding="5px"
         gap="10px"
       >
-        <div><b>Total:</b> {{ Util.NF(summary.lines.total) }} Lines</div>
-        <div><b>Uncovered:</b> <span :class="summary.lines.uncoveredClass">{{ Util.NF(summary.lines.uncovered) }} Lines</span></div>
+        <div><b>Formatted Lines</b></div>
+        <div>Total: {{ Util.NF(summary.lines.total) }}</div>
+        <div>Uncovered: <span :class="summary.lines.uncoveredClass">{{ Util.NF(summary.lines.uncovered) }}</span></div>
         <div
           style="width: 100px;"
           v-html="summary.lines.percentChart"

@@ -965,6 +965,27 @@ icon
     }
 }
 
+.mcr-percent-chart {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 10px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    background-color: #ee442f;
+    overflow: hidden;
+}
+
+.mcr-percent-chart::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    width: var(--mcr-percent);
+    height: 100%;
+    background-color: #4d9221;
+}
+
 .mcr-tag {
     display: inline-block;
     min-width: 20px;

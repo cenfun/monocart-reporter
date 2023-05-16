@@ -775,6 +775,32 @@ onActivated(() => {
         }
     }
 
+    .mcr-attachment-group {
+        display: flex;
+        flex-flow: row wrap;
+        gap: 10px;
+    }
+
+    .mcr-attachment-group:not(:last-child) {
+        margin-bottom: 10px;
+    }
+
+    .mcr-low {
+        background: #fce1e5;
+    }
+
+    .mcr-medium {
+        background: #fff4c2;
+    }
+
+    .mcr-high {
+        background: rgb(230 245 208);
+    }
+
+    .mcr-uncovered {
+        color: red;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -834,18 +860,6 @@ onActivated(() => {
             text-align: left;
         }
 
-        .mcr-low {
-            background: #fce1e5;
-        }
-
-        .mcr-medium {
-            background: #fff4c2;
-        }
-
-        .mcr-high {
-            background: rgb(230 245 208);
-        }
-
         .mcr-head {
             background-color: #f8f8f8;
         }
@@ -897,7 +911,6 @@ onActivated(() => {
 
 .mcr-attachment-coverage {
     .mcr-attachment-body {
-        padding: 0;
         border: 1px solid #ddd;
         overflow-x: auto;
     }
@@ -905,16 +918,6 @@ onActivated(() => {
 
 .mcr-attachment-network {
     .mcr-attachment-body {
-        .mcr-network-group {
-            display: flex;
-            flex-flow: row wrap;
-            gap: 10px;
-        }
-
-        .mcr-network-group:not(:last-child) {
-            margin-bottom: 10px;
-        }
-
         .mcr-network-waterfall {
             width: 100%;
             height: 30px;

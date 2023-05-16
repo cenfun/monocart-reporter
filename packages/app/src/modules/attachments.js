@@ -173,120 +173,67 @@ const getAudit = (path, name, report) => {
 
 // ================================================================================================
 
-const getIstanbulSummary = (report) => {
-    const files = report.files;
+const addCoverageGroup = (list, item) => {
+    list.push('<div class="mcr-attachment-group">');
+    list.push(`<div><b>${item.name}</b></div>`);
+    list.push(`<div title="${item.totalTitle}">Total: ${Util.NF(item.total)}</div>`);
+    list.push(`<div title="${item.uncoveredTitle}">${item.uncoveredName}: <span class="${item.uncoveredClass}">${Util.NF(item.uncovered)}</span></div>`);
+
+    list.push(`<div style="width:100px;">${item.percentChart}</div>`);
+    list.push(`<div style="padding:0 5px;" class="mcr-${item.status}">${Util.PF(item.pct, 100)}</div>`);
+
+    list.push('</div>');
+};
+
+const getIstanbulSummary = (report, list) => {
+
     const map = {
         statements: 'Statements',
         branches: 'Branches',
         functions: 'Functions',
         lines: 'Lines'
     };
-    const items = [].concat(files);
 
-    // refer to sonar coverage are lines + branches
-    items.sort((a, b) => {
-        const au = 1 - (a.lines.covered + a.branches.covered) / (a.lines.total + a.branches.total);
-        const bu = 1 - (b.lines.covered + b.branches.covered) / (b.lines.total + b.branches.total);
-        return bu - au;
-    });
+    const summary = report.summary;
+    // console.log(summary);
 
-    if (files.length > 1) {
-        const summary = report.summary;
-        summary.isSummary = true;
-        summary.name = 'Summary';
-        items.push(summary);
-    }
-
-    const ls = [];
-    ls.push('<table>');
-
-    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-filename">File</td>');
     Object.keys(map).forEach((k) => {
-        ls.push(`<td colspan="2">${map[k]}</td>`);
-    });
-    ls.push('</tr>');
-
-    items.forEach((item, i) => {
-
-        if (item.isSummary) {
-            ls.push('<tr class="mcr-row-summary">');
-        } else {
-            ls.push('<tr>');
+        const item = summary[k];
+        if (!item) {
+            return;
         }
-        if (item.isSummary) {
-            ls.push('<td></td>');
-        } else {
-            ls.push(`<td>${i + 1}</td>`);
-        }
-        ls.push(`<td class="mcr-column-filename">${item.name}</td>`);
+        item.name = map[k];
+        item.totalTitle = '';
+        item.uncoveredTitle = '';
+        item.uncovered = item.total - item.covered;
+        item.uncoveredName = 'Uncovered';
+        item.uncoveredClass = item.uncovered > 0 ? 'mcr-uncovered' : '';
+        item.percentChart = Util.generatePercentChart(item.pct);
 
-        Object.keys(map).forEach((k) => {
-            const d = item[k] || {};
-            ls.push(`<td class="mcr-${d.status}">${Util.NF(d.covered)}/${Util.NF(d.total)}</td>`);
-            // low, medium, high, unknown
-            ls.push(`<td class="mcr-${d.status}">${Util.PF(d.pct, 100, 2)}</td>`);
-        });
-        ls.push('</tr>');
+        addCoverageGroup(list, item);
+
     });
-    ls.push('</table>');
-    return ls.join('');
+
+    return list.join('');
 };
 
 
-const getV8Summary = (report) => {
-    const files = report.files;
-    const items = [].concat(files);
+const getV8Summary = (report, list) => {
 
-    items.forEach((item) => {
-        item.unused = item.total - item.covered;
-    });
+    const summary = report.summary;
+    summary.unused = summary.total - summary.covered;
 
-    items.sort((a, b) => {
-        return b.unused - a.unused;
-    });
+    summary.name = 'Bytes';
+    summary.totalTitle = `Total ${Util.BSF(summary.total)}`;
+    summary.uncovered = summary.unused;
+    summary.uncoveredName = 'Unused';
+    summary.uncoveredTitle = `Unused ${Util.BSF(summary.unused)}`;
+    summary.uncoveredClass = summary.unused > 0 ? 'mcr-uncovered' : '';
+    summary.percentChart = Util.generatePercentChart(summary.pct);
 
-    if (files.length > 1) {
-        const summary = report.summary;
-        summary.unused = summary.total - summary.covered;
-        summary.isSummary = true;
-        summary.name = 'Summary';
-        summary.type = '';
-        items.push(summary);
-    }
+    addCoverageGroup(list, summary);
 
-    const ls = [];
-    ls.push('<table>');
-
-    ls.push('<tr class="mcr-head"><td></td><td class="mcr-column-filename">File</td>');
-    ls.push('<td>Coverage</td><td>Type</td><td>Total Bytes</td><td>Used Bytes</td><td>Unused Bytes</td>');
-    ls.push('</tr>');
-
-    items.forEach((item, i) => {
-
-        if (item.isSummary) {
-            ls.push('<tr class="mcr-row-summary">');
-        } else {
-            ls.push('<tr>');
-        }
-        if (item.isSummary) {
-            ls.push('<td></td>');
-        } else {
-            ls.push(`<td>${i + 1}</td>`);
-        }
-        ls.push(`<td class="mcr-column-filename">${item.name}</td>`);
-
-        // low, medium, high, unknown
-        ls.push(`<td class="mcr-${item.status}">${Util.PF(item.pct, 100, 2)}</td>`);
-
-        ls.push(`<td>${item.type}</td>`);
-        ls.push(`<td title="${Util.BF(item.total)}">${Util.NF(item.total)}</td>`);
-        ls.push(`<td title="${Util.BF(item.covered)}">${Util.NF(item.covered)}</td>`);
-        ls.push(`<td title="${Util.BF(item.unused)}">${Util.NF(item.unused)}</td>`);
-
-        ls.push('</tr>');
-    });
-    ls.push('</table>');
-    return ls.join('');
+    return list.join('');
 };
 
 const getCoverageBody = (report) => {
@@ -294,11 +241,17 @@ const getCoverageBody = (report) => {
         return '';
     }
 
+    const list = [];
+    list.push('<div class="mcr-attachment-group">');
+    list.push(`<div><b>Files</b> ${Util.NF(report.files.length)}</div>`);
+    list.push(`<div><b>Type</b> ${report.type}</div>`);
+    list.push('</div>');
+
     if (report.type === 'istanbul') {
-        return getIstanbulSummary(report);
+        return getIstanbulSummary(report, list);
     }
 
-    return getV8Summary(report);
+    return getV8Summary(report, list);
 };
 
 const getCoverage = (path, name, report) => {
@@ -330,7 +283,7 @@ const getNetworkBody = (report) => {
         if (pages.length > 1) {
             number = ` ${i + 1}`;
         }
-        list.push('<div class="mcr-network-group">');
+        list.push('<div class="mcr-attachment-group">');
         list.push(`<div><b>Page${number}</b></div>`);
         list.push(`<div>${title}</div>`);
 
@@ -348,17 +301,17 @@ const getNetworkBody = (report) => {
         list.push('</div>');
 
         const waterfallChart = generateWaterfallChart(waterfall);
-        list.push('<div class="mcr-network-group">');
+        list.push('<div class="mcr-attachment-group">');
         list.push(`<div class="mcr-network-waterfall">${waterfallChart}</div>`);
         list.push('</div>');
     });
 
-    list.push('<div class="mcr-network-group">');
+    list.push('<div class="mcr-attachment-group">');
     list.push(`<div><b>Requests</b> <span class="mcr-num">${summary.requests}</span></div>`);
     list.push(`<div><b>Transferred</b> ${Util.BF(summary.size)}</div>`);
     list.push('</div>');
 
-    list.push('<div class="mcr-network-group">');
+    list.push('<div class="mcr-attachment-group">');
     list.push('<div><b>Status</b></div>');
     Object.keys(summary.status).forEach((k) => {
         let s = `${k}`;
@@ -371,7 +324,7 @@ const getNetworkBody = (report) => {
     });
     list.push('</div>');
 
-    list.push('<div class="mcr-network-group">');
+    list.push('<div class="mcr-attachment-group">');
     list.push('<div><b>Method</b></div>');
     Object.keys(summary.methods).forEach((k) => {
         list.push(`<div>${k} <span class="mcr-num">${summary.methods[k]}</span></div>`);
@@ -379,7 +332,7 @@ const getNetworkBody = (report) => {
     list.push('</div>');
 
 
-    list.push('<div class="mcr-network-group">');
+    list.push('<div class="mcr-attachment-group">');
     if (browser) {
         list.push(`<div><b>Browser</b> ${browser.name} v${browser.version}</div>`);
     }
