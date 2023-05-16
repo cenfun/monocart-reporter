@@ -300,7 +300,7 @@ const getGroupRows = (summaryRows) => {
     const summary = {};
     calculateGroups(groups, summary);
 
-    console.log(summary);
+    // console.log(summary);
 
     return groups;
 };
@@ -318,6 +318,7 @@ const getGridRows = () => {
         return {
             id: it.id,
             sourcePath: it.sourcePath,
+            pctClassMap: `mcr-${it.summary.status}`,
             ... it.summary
         };
     });
@@ -333,6 +334,7 @@ const getGridRows = () => {
         url: '',
         isSummary: true,
         classMap: 'mcr-row-summary',
+        pctClassMap: `mcr-${summary.status}`,
         ... summary
     }];
 
@@ -341,10 +343,6 @@ const getGridRows = () => {
     } else {
         rows = rows.concat(summaryRows);
     }
-
-    rows.forEach((item) => {
-        item.pctClassMap = `mcr-${item.status}`;
-    });
 
     state.gridDataCache[key] = rows;
 
