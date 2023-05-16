@@ -251,7 +251,7 @@ const getCoverageBody = (report) => {
 
     const list = [];
     list.push('<div class="mcr-attachment-group">');
-    list.push(`<div><b>Files</b> ${Util.NF(report.files.length)}</div>`);
+    list.push(`<div><b>Files</b> <span class="mcr-num">${Util.NF(report.files.length)}</span></div>`);
     list.push(`<div><b>Type</b> ${report.type}</div>`);
     list.push('</div>');
 
