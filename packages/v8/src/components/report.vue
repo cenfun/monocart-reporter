@@ -343,6 +343,21 @@ const getCoverage = (item, text, formattedMapping) => {
 
 };
 
+const formatSource = (item) => {
+    const source = item.source;
+
+    if (item.parent) {
+        return {
+            content: source,
+            mapping: {
+                original: [0],
+                formatted: [0]
+            }
+        };
+    }
+    return format(source, item.type);
+};
+
 const getReport = async (item) => {
     if (item.report) {
         return new Promise((resolve) => {
@@ -352,8 +367,7 @@ const getReport = async (item) => {
         });
     }
 
-    const text = item.source;
-    const res = await format(text, item.type);
+    const res = await formatSource(item);
     if (res.error) {
         console.log(res.error.message);
         return;
@@ -363,7 +377,7 @@ const getReport = async (item) => {
 
     const formattedMapping = new Mapping(content, mapping);
 
-    const coverage = getCoverage(item, text, formattedMapping);
+    const coverage = getCoverage(item, item.source, formattedMapping);
 
     // console.log(coverage);
 

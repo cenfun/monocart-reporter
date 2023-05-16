@@ -256,6 +256,13 @@ const getGridData = () => {
         return row;
     });
 
+    // sort before summary
+    rows.sort((a, b) => {
+        return b.uncovered - a.uncovered;
+    });
+
+    // console.log(rows.map((it) => it.url));
+
     state.fileMap = fileMap;
 
     const options = {};
@@ -272,12 +279,10 @@ const getGridData = () => {
         rows.unshift(rowSummary);
     }
 
+    // console.log(rows.map((it) => it.url));
+
     rows.forEach((item) => {
         item.pctClassMap = `mcr-${item.status}`;
-    });
-
-    rows.sort((a, b) => {
-        return b.uncovered - a.uncovered;
     });
 
     const columns = [{
