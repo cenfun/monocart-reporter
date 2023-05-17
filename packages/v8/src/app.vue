@@ -366,6 +366,7 @@ const getGridRows = () => {
         isSummary: true,
         classMap: 'mcr-row-summary',
         pctClassMap: `mcr-${summary.status}`,
+        sortFixed: 'top',
         ... summary
     }];
     if (state.group) {
@@ -482,7 +483,6 @@ const initGrid = () => {
         collapseAllVisible: true,
         rowHeight: 36,
         selectMultiple: false,
-        frozenRow: 0,
         // sortField: 'uncovered',
         // sortAsc: false,
         // sortOnInit: true,
@@ -492,7 +492,8 @@ const initGrid = () => {
             if (!rowItem.isSummary && !rowItem.subs) {
                 return rowNumber++;
             }
-        }
+        },
+        rowNotFound: 'No Results'
     };
     grid.setFormatter({
         bytes: (v, rowItem, columnItem) => {
