@@ -80,7 +80,7 @@ module.exports = {
             },
 
             coverage: {
-                // sourceMap: false
+                // unpackSourceMap: false
             },
 
             trend: () => {

@@ -50,8 +50,8 @@
           <b>Formatted</b>
         </VuiSwitch>
 
-        <span v-if="data.sourceMapFile">
-          <b>Unpacked From</b> {{ data.sourceMapFile }}
+        <span v-if="data.distFile">
+          <b>Dist File</b> {{ data.distFile }}
         </span>
       </VuiFlex>
 
@@ -391,7 +391,7 @@ const formatSource = (item) => {
 
     // console.log('formatSource', data.formatted);
 
-    // no format for sourceMapFile item, may vue format or others
+    // no format for distFile item, may vue format or others
     if (!data.formatted) {
         return {
             content: source,
@@ -515,7 +515,7 @@ const showReport = () => {
     data.item = item;
     data.url = item.url;
     data.sourcePath = item.sourcePath;
-    data.sourceMapFile = item.sourceMapFile;
+    data.distFile = item.distFile;
 
     const summary = item.summary;
     summary.indicatorName = 'Bytes';
@@ -525,7 +525,7 @@ const showReport = () => {
     summary.uncoveredTooltip = `Uncovered ${Util.BSF(summary.uncovered)}`;
     summary.uncoveredClass = summary.uncovered > 0 ? 'mcr-uncovered' : '';
 
-    data.formatted = !item.sourceMapFile;
+    data.formatted = !item.distFile;
 
     renderReportAsync();
 };

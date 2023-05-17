@@ -49,7 +49,7 @@ test.describe('take V8 js to Istanbul coverage report', () => {
 
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
             toIstanbul: true,
-            sourceMap: true
+            unpackSourceMap: true
         });
         console.log(report.summary);
     });
@@ -158,7 +158,7 @@ test.describe('take V8 js and css coverage report', () => {
         await addCoverageReport(coverageList, test.info());
 
         const report = await attachCoverageReport(coverageList, test.info(), {
-            sourceMap: true
+            unpackSourceMap: true
         });
         console.log(report.summary);
     });
