@@ -1,36 +1,45 @@
 {
     "type": "v8",
+    "htmlPath": ".temp/monocart/coverage-129fdb012e214a1ce2ad/index.html",
+    "watermarks": [
+        50,
+        80
+    ],
     "summary": {
         "total": 7982,
         "covered": 2926,
+        "uncovered": 5056,
         "pct": 36.66,
         "status": "low"
     },
     "files": [
         {
-            "name": "anonymous.js",
+            "name": "anonymous-1.js",
             "type": "js",
-            "url": "",
+            "url": "file://anonymous-1.js",
             "total": 7687,
             "covered": 2631,
+            "uncovered": 5056,
             "pct": 34.23,
             "status": "low"
         },
         {
-            "name": "anonymous-1.js",
+            "name": "anonymous-2.js",
             "type": "js",
-            "url": "",
+            "url": "file://anonymous-2.js",
             "total": 61,
             "covered": 61,
+            "uncovered": 0,
             "pct": 100,
             "status": "high"
         },
         {
-            "name": "anonymous-2.js",
+            "name": "anonymous-3.js",
             "type": "js",
-            "url": "",
+            "url": "file://anonymous-3.js",
             "total": 234,
             "covered": 234,
+            "uncovered": 0,
             "pct": 100,
             "status": "high"
         }

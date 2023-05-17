@@ -1,10 +1,16 @@
 {
     "type": "v8",
+    "htmlPath": ".temp/monocart/coverage-f8ad4b6741d60f9e7b81/index.html",
+    "watermarks": [
+        50,
+        80
+    ],
     "summary": {
-        "total": 263397,
-        "covered": 140369,
-        "pct": 53.29,
-        "status": "medium"
+        "total": 2769005,
+        "covered": 1342804,
+        "uncovered": 1426201,
+        "pct": 48.49,
+        "status": "low"
     },
     "files": [
         {
@@ -13,6 +19,7 @@
             "url": "http://localhost:8090/demo/demo.js",
             "total": 830,
             "covered": 684,
+            "uncovered": 146,
             "pct": 82.41,
             "status": "high"
         },
@@ -22,16 +29,8 @@
             "url": "http://localhost:8090/demo/browser.js",
             "total": 10582,
             "covered": 7373,
+            "uncovered": 3209,
             "pct": 69.67,
-            "status": "medium"
-        },
-        {
-            "name": "fps-detector.js",
-            "type": "js",
-            "url": "http://localhost:8090/demo/fps-detector.js",
-            "total": 7043,
-            "covered": 5557,
-            "pct": 78.9,
             "status": "medium"
         },
         {
@@ -40,6 +39,7 @@
             "url": "http://localhost:8090/demo/ie-polyfill.js",
             "total": 238107,
             "covered": 121935,
+            "uncovered": 116172,
             "pct": 51.21,
             "status": "medium"
         },
@@ -48,16 +48,18 @@
             "type": "js",
             "url": "http://localhost:8090/demo/redirection.js",
             "total": 6507,
-            "covered": 4575,
-            "pct": 70.31,
+            "covered": 4756,
+            "uncovered": 1751,
+            "pct": 73.09,
             "status": "medium"
         },
         {
-            "name": "index.js",
+            "name": "demo",
             "type": "js",
             "url": "http://localhost:8090/demo/",
-            "total": 139,
-            "covered": 139,
+            "total": 493,
+            "covered": 493,
+            "uncovered": 0,
             "pct": 100,
             "status": "high"
         },
@@ -67,8 +69,1989 @@
             "url": "http://localhost:8090/demo/style.css",
             "total": 189,
             "covered": 106,
+            "uncovered": 83,
             "pct": 56.08,
             "status": "medium"
+        },
+        {
+            "name": "bootstrap.min.css",
+            "type": "css",
+            "url": "http://localhost:8090/demo/dist/bootstrap.min.css",
+            "total": 194898,
+            "covered": 3090,
+            "uncovered": 191808,
+            "pct": 1.59,
+            "status": "low"
+        },
+        {
+            "name": "universalModuleDefinition",
+            "type": "js",
+            "url": "webpack://fps-detector/webpack/universalModuleDefinition",
+            "total": 388,
+            "covered": 263,
+            "uncovered": 125,
+            "pct": 67.78,
+            "status": "medium"
+        },
+        {
+            "name": "bootstrap",
+            "type": "js",
+            "url": "webpack://fps-detector/webpack/bootstrap",
+            "total": 52,
+            "covered": 52,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "define-property-getters",
+            "type": "js",
+            "url": "webpack://fps-detector/webpack/runtime/define property getters",
+            "total": 308,
+            "covered": 308,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "hasOwnProperty-shorthand",
+            "type": "js",
+            "url": "webpack://fps-detector/webpack/runtime/hasOwnProperty shorthand",
+            "total": 88,
+            "covered": 88,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "make-namespace-object",
+            "type": "js",
+            "url": "webpack://fps-detector/webpack/runtime/make namespace object",
+            "total": 274,
+            "covered": 274,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://fps-detector/src/index.js",
+            "total": 10310,
+            "covered": 6859,
+            "uncovered": 3451,
+            "pct": 66.53,
+            "status": "medium"
+        },
+        {
+            "name": "universalModuleDefinition",
+            "type": "js",
+            "url": "webpack://turbogrid/webpack/universalModuleDefinition",
+            "total": 379,
+            "covered": 260,
+            "uncovered": 119,
+            "pct": 68.6,
+            "status": "medium"
+        },
+        {
+            "name": "theme.scss",
+            "type": "js",
+            "url": "webpack://turbogrid/src/theme/theme.scss",
+            "total": 15672,
+            "covered": 15672,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "api.js",
+            "type": "js",
+            "url": "webpack://turbogrid/starfall-cli/node_modules/css-loader/dist/runtime/api.js",
+            "total": 2303,
+            "covered": 327,
+            "uncovered": 1976,
+            "pct": 14.2,
+            "status": "low"
+        },
+        {
+            "name": "noSourceMaps.js",
+            "type": "js",
+            "url": "webpack://turbogrid/starfall-cli/node_modules/css-loader/dist/runtime/noSourceMaps.js",
+            "total": 64,
+            "covered": 32,
+            "uncovered": 32,
+            "pct": 50,
+            "status": "medium"
+        },
+        {
+            "name": "bootstrap",
+            "type": "js",
+            "url": "webpack://turbogrid/webpack/bootstrap",
+            "total": 621,
+            "covered": 593,
+            "uncovered": 28,
+            "pct": 95.49,
+            "status": "high"
+        },
+        {
+            "name": "compat-get-default-export",
+            "type": "js",
+            "url": "webpack://turbogrid/webpack/runtime/compat get default export",
+            "total": 267,
+            "covered": 225,
+            "uncovered": 42,
+            "pct": 84.27,
+            "status": "high"
+        },
+        {
+            "name": "define-property-getters",
+            "type": "js",
+            "url": "webpack://turbogrid/webpack/runtime/define property getters",
+            "total": 308,
+            "covered": 308,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "hasOwnProperty-shorthand",
+            "type": "js",
+            "url": "webpack://turbogrid/webpack/runtime/hasOwnProperty shorthand",
+            "total": 88,
+            "covered": 88,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "make-namespace-object",
+            "type": "js",
+            "url": "webpack://turbogrid/webpack/runtime/make namespace object",
+            "total": 274,
+            "covered": 274,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "const.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/const.js",
+            "total": 297,
+            "covered": 297,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "is-object.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/is-object.js",
+            "total": 515,
+            "covered": 515,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "merge.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/merge.js",
+            "total": 1735,
+            "covered": 521,
+            "uncovered": 1214,
+            "pct": 30.03,
+            "status": "low"
+        },
+        {
+            "name": "microtask.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/microtask.js",
+            "total": 1218,
+            "covered": 993,
+            "uncovered": 225,
+            "pct": 81.53,
+            "status": "high"
+        },
+        {
+            "name": "util.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/util.js",
+            "total": 13508,
+            "covered": 3739,
+            "uncovered": 9769,
+            "pct": 27.68,
+            "status": "low"
+        },
+        {
+            "name": "query.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/query.js",
+            "total": 12871,
+            "covered": 2645,
+            "uncovered": 10226,
+            "pct": 20.55,
+            "status": "low"
+        },
+        {
+            "name": "cache.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/cache.js",
+            "total": 3599,
+            "covered": 1345,
+            "uncovered": 2254,
+            "pct": 37.37,
+            "status": "low"
+        },
+        {
+            "name": "event-types.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/event-types.js",
+            "total": 1010,
+            "covered": 1010,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "cells.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/cells.js",
+            "total": 4547,
+            "covered": 281,
+            "uncovered": 4266,
+            "pct": 6.18,
+            "status": "low"
+        },
+        {
+            "name": "column-add-delete.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/column-add-delete.js",
+            "total": 3159,
+            "covered": 225,
+            "uncovered": 2934,
+            "pct": 7.12,
+            "status": "low"
+        },
+        {
+            "name": "column-display.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/column-display.js",
+            "total": 2106,
+            "covered": 408,
+            "uncovered": 1698,
+            "pct": 19.37,
+            "status": "low"
+        },
+        {
+            "name": "column-line.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/column-line.js",
+            "total": 4967,
+            "covered": 741,
+            "uncovered": 4226,
+            "pct": 14.92,
+            "status": "low"
+        },
+        {
+            "name": "columns.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/columns.js",
+            "total": 6838,
+            "covered": 1070,
+            "uncovered": 5768,
+            "pct": 15.65,
+            "status": "low"
+        },
+        {
+            "name": "common.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/common.js",
+            "total": 6783,
+            "covered": 709,
+            "uncovered": 6074,
+            "pct": 10.45,
+            "status": "low"
+        },
+        {
+            "name": "css.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/css.js",
+            "total": 7866,
+            "covered": 1161,
+            "uncovered": 6705,
+            "pct": 14.76,
+            "status": "low"
+        },
+        {
+            "name": "destroy.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/destroy.js",
+            "total": 2803,
+            "covered": 1551,
+            "uncovered": 1252,
+            "pct": 55.33,
+            "status": "medium"
+        },
+        {
+            "name": "event.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/event.js",
+            "total": 723,
+            "covered": 403,
+            "uncovered": 320,
+            "pct": 55.74,
+            "status": "medium"
+        },
+        {
+            "name": "event-util.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/event-util.js",
+            "total": 6742,
+            "covered": 741,
+            "uncovered": 6001,
+            "pct": 10.99,
+            "status": "low"
+        },
+        {
+            "name": "event-base.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/event-base.js",
+            "total": 1677,
+            "covered": 229,
+            "uncovered": 1448,
+            "pct": 13.66,
+            "status": "low"
+        },
+        {
+            "name": "drag.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/components/drag.js",
+            "total": 3985,
+            "covered": 514,
+            "uncovered": 3471,
+            "pct": 12.9,
+            "status": "low"
+        },
+        {
+            "name": "motion.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/components/motion.js",
+            "total": 5053,
+            "covered": 663,
+            "uncovered": 4390,
+            "pct": 13.12,
+            "status": "low"
+        },
+        {
+            "name": "touch.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/components/touch.js",
+            "total": 10303,
+            "covered": 949,
+            "uncovered": 9354,
+            "pct": 9.21,
+            "status": "low"
+        },
+        {
+            "name": "events.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/events.js",
+            "total": 20333,
+            "covered": 2003,
+            "uncovered": 18330,
+            "pct": 9.85,
+            "status": "low"
+        },
+        {
+            "name": "export.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/export.js",
+            "total": 2036,
+            "covered": 196,
+            "uncovered": 1840,
+            "pct": 9.63,
+            "status": "low"
+        },
+        {
+            "name": "flush.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/flush.js",
+            "total": 3217,
+            "covered": 728,
+            "uncovered": 2489,
+            "pct": 22.63,
+            "status": "low"
+        },
+        {
+            "name": "icon.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/core/icon.js",
+            "total": 2496,
+            "covered": 2384,
+            "uncovered": 112,
+            "pct": 95.51,
+            "status": "high"
+        },
+        {
+            "name": "default-formatters.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/config/default-formatters.js",
+            "total": 1795,
+            "covered": 569,
+            "uncovered": 1226,
+            "pct": 31.7,
+            "status": "low"
+        },
+        {
+            "name": "formatter.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/formatter.js",
+            "total": 3885,
+            "covered": 958,
+            "uncovered": 2927,
+            "pct": 24.66,
+            "status": "low"
+        },
+        {
+            "name": "header-table.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/header-table.js",
+            "total": 9451,
+            "covered": 965,
+            "uncovered": 8486,
+            "pct": 10.21,
+            "status": "low"
+        },
+        {
+            "name": "header.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/header.js",
+            "total": 2629,
+            "covered": 299,
+            "uncovered": 2330,
+            "pct": 11.37,
+            "status": "low"
+        },
+        {
+            "name": "create.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/create.js",
+            "total": 4562,
+            "covered": 1051,
+            "uncovered": 3511,
+            "pct": 23.04,
+            "status": "low"
+        },
+        {
+            "name": "init-columns.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/init-columns.js",
+            "total": 9883,
+            "covered": 862,
+            "uncovered": 9021,
+            "pct": 8.72,
+            "status": "low"
+        },
+        {
+            "name": "init-header.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/init-header.js",
+            "total": 3550,
+            "covered": 486,
+            "uncovered": 3064,
+            "pct": 13.69,
+            "status": "low"
+        },
+        {
+            "name": "default-row-props.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/config/default-row-props.js",
+            "total": 562,
+            "covered": 562,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "default-column-props.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/config/default-column-props.js",
+            "total": 1077,
+            "covered": 1077,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "default-sort-comparers.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/config/default-sort-comparers.js",
+            "total": 4000,
+            "covered": 1088,
+            "uncovered": 2912,
+            "pct": 27.2,
+            "status": "low"
+        },
+        {
+            "name": "init-options.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/init-options.js",
+            "total": 5228,
+            "covered": 4585,
+            "uncovered": 643,
+            "pct": 87.7,
+            "status": "high"
+        },
+        {
+            "name": "default-options.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/config/default-options.js",
+            "total": 6585,
+            "covered": 6585,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "init-resize.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/init-resize.js",
+            "total": 1655,
+            "covered": 269,
+            "uncovered": 1386,
+            "pct": 16.25,
+            "status": "low"
+        },
+        {
+            "name": "init-rows.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/init-rows.js",
+            "total": 8948,
+            "covered": 876,
+            "uncovered": 8072,
+            "pct": 9.79,
+            "status": "low"
+        },
+        {
+            "name": "init.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/init.js",
+            "total": 6816,
+            "covered": 2041,
+            "uncovered": 4775,
+            "pct": 29.94,
+            "status": "low"
+        },
+        {
+            "name": "loading.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/loading.js",
+            "total": 2066,
+            "covered": 232,
+            "uncovered": 1834,
+            "pct": 11.23,
+            "status": "low"
+        },
+        {
+            "name": "node.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/node.js",
+            "total": 3815,
+            "covered": 531,
+            "uncovered": 3284,
+            "pct": 13.92,
+            "status": "low"
+        },
+        {
+            "name": "render.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/render.js",
+            "total": 4505,
+            "covered": 1711,
+            "uncovered": 2794,
+            "pct": 37.98,
+            "status": "low"
+        },
+        {
+            "name": "resize.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/resize.js",
+            "total": 11999,
+            "covered": 1557,
+            "uncovered": 10442,
+            "pct": 12.98,
+            "status": "low"
+        },
+        {
+            "name": "row-add-delete.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/row-add-delete.js",
+            "total": 3970,
+            "covered": 280,
+            "uncovered": 3690,
+            "pct": 7.05,
+            "status": "low"
+        },
+        {
+            "name": "row-collapse.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/row-collapse.js",
+            "total": 8125,
+            "covered": 1118,
+            "uncovered": 7007,
+            "pct": 13.76,
+            "status": "low"
+        },
+        {
+            "name": "row-drag.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/row-drag.js",
+            "total": 13757,
+            "covered": 1130,
+            "uncovered": 12627,
+            "pct": 8.21,
+            "status": "low"
+        },
+        {
+            "name": "row-move.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/row-move.js",
+            "total": 4605,
+            "covered": 531,
+            "uncovered": 4074,
+            "pct": 11.53,
+            "status": "low"
+        },
+        {
+            "name": "row-select.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/row-select.js",
+            "total": 9618,
+            "covered": 1509,
+            "uncovered": 8109,
+            "pct": 15.69,
+            "status": "low"
+        },
+        {
+            "name": "row-state.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/row-state.js",
+            "total": 2282,
+            "covered": 464,
+            "uncovered": 1818,
+            "pct": 20.33,
+            "status": "low"
+        },
+        {
+            "name": "rows.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/rows.js",
+            "total": 10173,
+            "covered": 863,
+            "uncovered": 9310,
+            "pct": 8.48,
+            "status": "low"
+        },
+        {
+            "name": "scrollbar.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/components/scrollbar.js",
+            "total": 15144,
+            "covered": 2778,
+            "uncovered": 12366,
+            "pct": 18.34,
+            "status": "low"
+        },
+        {
+            "name": "scroll-pane.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/components/scroll-pane.js",
+            "total": 16529,
+            "covered": 2237,
+            "uncovered": 14292,
+            "pct": 13.53,
+            "status": "low"
+        },
+        {
+            "name": "scroll-pane.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/scroll-pane.js",
+            "total": 19577,
+            "covered": 2463,
+            "uncovered": 17114,
+            "pct": 12.58,
+            "status": "low"
+        },
+        {
+            "name": "scroll-state.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/scroll-state.js",
+            "total": 7665,
+            "covered": 932,
+            "uncovered": 6733,
+            "pct": 12.16,
+            "status": "low"
+        },
+        {
+            "name": "scroll.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/scroll.js",
+            "total": 13380,
+            "covered": 2378,
+            "uncovered": 11002,
+            "pct": 17.77,
+            "status": "low"
+        },
+        {
+            "name": "sorter.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/components/sorter.js",
+            "total": 2689,
+            "covered": 234,
+            "uncovered": 2455,
+            "pct": 8.7,
+            "status": "low"
+        },
+        {
+            "name": "sort.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/sort.js",
+            "total": 4990,
+            "covered": 634,
+            "uncovered": 4356,
+            "pct": 12.71,
+            "status": "low"
+        },
+        {
+            "name": "theme-options.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/theme/theme-options.js",
+            "total": 222,
+            "covered": 222,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "lightblue-options.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/theme/lightblue/lightblue-options.js",
+            "total": 92,
+            "covered": 92,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "dark-options.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/theme/dark/dark-options.js",
+            "total": 24,
+            "covered": 24,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "theme.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/theme.js",
+            "total": 254,
+            "covered": 128,
+            "uncovered": 126,
+            "pct": 50.39,
+            "status": "medium"
+        },
+        {
+            "name": "update.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/update.js",
+            "total": 1505,
+            "covered": 141,
+            "uncovered": 1364,
+            "pct": 9.37,
+            "status": "low"
+        },
+        {
+            "name": "viewport.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/viewport.js",
+            "total": 6824,
+            "covered": 616,
+            "uncovered": 6208,
+            "pct": 9.03,
+            "status": "low"
+        },
+        {
+            "name": "grid.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/grid.js",
+            "total": 5259,
+            "covered": 4475,
+            "uncovered": 784,
+            "pct": 85.09,
+            "status": "high"
+        },
+        {
+            "name": "navigation.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/navigation.js",
+            "total": 1496,
+            "covered": 496,
+            "uncovered": 1000,
+            "pct": 33.16,
+            "status": "low"
+        },
+        {
+            "name": "row-display.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/grid/row-display.js",
+            "total": 842,
+            "covered": 86,
+            "uncovered": 756,
+            "pct": 10.21,
+            "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://turbogrid/src/index.js",
+            "total": 716,
+            "covered": 716,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "universalModuleDefinition",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/webpack/universalModuleDefinition",
+            "total": 406,
+            "covered": 269,
+            "uncovered": 137,
+            "pct": 66.26,
+            "status": "medium"
+        },
+        {
+            "name": "vine-ui.esm.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/vine-ui/dist/vine-ui.esm.js",
+            "total": 77126,
+            "covered": 61177,
+            "uncovered": 15949,
+            "pct": 79.32,
+            "status": "medium"
+        },
+        {
+            "name": "dialog.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/dialog/dialog.vue?3d89",
+            "total": 615,
+            "covered": 615,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "flyover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flyover/flyover.vue?f26c",
+            "total": 757,
+            "covered": 757,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-columns.vue?64ea",
+            "total": 549,
+            "covered": 549,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "home.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/home.vue?0123",
+            "total": 725,
+            "covered": 725,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "app.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/app.vue?f271",
+            "total": 2176,
+            "covered": 2176,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "demo.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demo.vue?2095",
+            "total": 1214,
+            "covered": 1214,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "flex.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flex/flex.vue?2974",
+            "total": 656,
+            "covered": 656,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-rows.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-rows.vue?340e",
+            "total": 993,
+            "covered": 993,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-4-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-4-columns.vue?2d77",
+            "total": 557,
+            "covered": 557,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-nesting.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-nesting.vue?c4ab",
+            "total": 910,
+            "covered": 910,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "popover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/popover/popover.vue?443a",
+            "total": 729,
+            "covered": 729,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "tab.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/tab/tab.vue?ff78",
+            "total": 1593,
+            "covered": 1593,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "api.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/css-loader/dist/runtime/api.js",
+            "total": 2303,
+            "covered": 327,
+            "uncovered": 1976,
+            "pct": 14.2,
+            "status": "low"
+        },
+        {
+            "name": "getUrl.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/css-loader/dist/runtime/getUrl.js",
+            "total": 597,
+            "covered": 470,
+            "uncovered": 127,
+            "pct": 78.73,
+            "status": "medium"
+        },
+        {
+            "name": "noSourceMaps.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/css-loader/dist/runtime/noSourceMaps.js",
+            "total": 64,
+            "covered": 32,
+            "uncovered": 32,
+            "pct": 50,
+            "status": "medium"
+        },
+        {
+            "name": "dialog.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/dialog/dialog.vue?3f5a",
+            "total": 1414,
+            "covered": 1396,
+            "uncovered": 18,
+            "pct": 98.73,
+            "status": "high"
+        },
+        {
+            "name": "flyover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flyover/flyover.vue?720f",
+            "total": 1415,
+            "covered": 1397,
+            "uncovered": 18,
+            "pct": 98.73,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-columns.vue?3339",
+            "total": 1424,
+            "covered": 1406,
+            "uncovered": 18,
+            "pct": 98.74,
+            "status": "high"
+        },
+        {
+            "name": "home.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/home.vue?ad80",
+            "total": 1364,
+            "covered": 1346,
+            "uncovered": 18,
+            "pct": 98.68,
+            "status": "high"
+        },
+        {
+            "name": "app.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/app.vue?9fd8",
+            "total": 1426,
+            "covered": 1408,
+            "uncovered": 18,
+            "pct": 98.74,
+            "status": "high"
+        },
+        {
+            "name": "demo.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demo.vue?5175",
+            "total": 1427,
+            "covered": 1409,
+            "uncovered": 18,
+            "pct": 98.74,
+            "status": "high"
+        },
+        {
+            "name": "flex.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flex/flex.vue?044e",
+            "total": 1481,
+            "covered": 1463,
+            "uncovered": 18,
+            "pct": 98.78,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-rows.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-rows.vue?c9aa",
+            "total": 1490,
+            "covered": 1472,
+            "uncovered": 18,
+            "pct": 98.79,
+            "status": "high"
+        },
+        {
+            "name": "layout-4-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-4-columns.vue?e264",
+            "total": 1493,
+            "covered": 1475,
+            "uncovered": 18,
+            "pct": 98.79,
+            "status": "high"
+        },
+        {
+            "name": "layout-nesting.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-nesting.vue?c4f6",
+            "total": 1491,
+            "covered": 1473,
+            "uncovered": 18,
+            "pct": 98.79,
+            "status": "high"
+        },
+        {
+            "name": "popover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/popover/popover.vue?60f2",
+            "total": 1484,
+            "covered": 1466,
+            "uncovered": 18,
+            "pct": 98.79,
+            "status": "high"
+        },
+        {
+            "name": "tab.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/tab/tab.vue?be14",
+            "total": 1480,
+            "covered": 1462,
+            "uncovered": 18,
+            "pct": 98.78,
+            "status": "high"
+        },
+        {
+            "name": "injectStylesIntoStyleTag.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js",
+            "total": 2480,
+            "covered": 1345,
+            "uncovered": 1135,
+            "pct": 54.23,
+            "status": "medium"
+        },
+        {
+            "name": "insertBySelector.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/style-loader/dist/runtime/insertBySelector.js",
+            "total": 1003,
+            "covered": 616,
+            "uncovered": 387,
+            "pct": 61.42,
+            "status": "medium"
+        },
+        {
+            "name": "insertStyleElement.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/style-loader/dist/runtime/insertStyleElement.js",
+            "total": 285,
+            "covered": 285,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "setAttributesWithAttributesAndNonce.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/style-loader/dist/runtime/setAttributesWithAttributesAndNonce.js",
+            "total": 271,
+            "covered": 271,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "singletonStyleDomAPI.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/style-loader/dist/runtime/singletonStyleDomAPI.js",
+            "total": 2196,
+            "covered": 1601,
+            "uncovered": 595,
+            "pct": 72.91,
+            "status": "medium"
+        },
+        {
+            "name": "button.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/button/button.vue?5187",
+            "total": 189,
+            "covered": 189,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "button.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/button/button.vue",
+            "total": 752,
+            "covered": 717,
+            "uncovered": 35,
+            "pct": 95.35,
+            "status": "high"
+        },
+        {
+            "name": "checkbox.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/checkbox/checkbox.vue?94a5",
+            "total": 193,
+            "covered": 193,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "checkbox.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/checkbox/checkbox.vue",
+            "total": 1037,
+            "covered": 982,
+            "uncovered": 55,
+            "pct": 94.7,
+            "status": "high"
+        },
+        {
+            "name": "dialog.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/dialog/dialog.vue",
+            "total": 1336,
+            "covered": 1277,
+            "uncovered": 59,
+            "pct": 95.58,
+            "status": "high"
+        },
+        {
+            "name": "dialog.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/dialog/dialog.vue?68a9",
+            "total": 256,
+            "covered": 256,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "flex.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flex/flex.vue",
+            "total": 5289,
+            "covered": 5289,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "flex.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flex/flex.vue?d362",
+            "total": 251,
+            "covered": 251,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "flyover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flyover/flyover.vue",
+            "total": 3925,
+            "covered": 3723,
+            "uncovered": 202,
+            "pct": 94.85,
+            "status": "high"
+        },
+        {
+            "name": "flyover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/flyover/flyover.vue?ffd1",
+            "total": 259,
+            "covered": 259,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "input.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/input/input.vue?8d28",
+            "total": 187,
+            "covered": 187,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "input.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/input/input.vue",
+            "total": 785,
+            "covered": 785,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-columns.vue",
+            "total": 851,
+            "covered": 851,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-columns.vue?c744",
+            "total": 286,
+            "covered": 286,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-rows.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-rows.vue",
+            "total": 1568,
+            "covered": 1568,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-2-rows.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-2-rows.vue?0d54",
+            "total": 278,
+            "covered": 278,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-4-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-4-columns.vue",
+            "total": 1197,
+            "covered": 1197,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-4-columns.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-4-columns.vue?e069",
+            "total": 287,
+            "covered": 287,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-nesting.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-nesting.vue",
+            "total": 2296,
+            "covered": 2296,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "layout-nesting.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/layout/layout-nesting.vue?2415",
+            "total": 281,
+            "covered": 281,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "loading.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/loading/loading.vue",
+            "total": 1446,
+            "covered": 1446,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "loading.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/loading/loading.vue?d7da",
+            "total": 191,
+            "covered": 191,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "modal.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/modal/modal.vue?b370",
+            "total": 187,
+            "covered": 187,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "modal.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/modal/modal.vue",
+            "total": 1846,
+            "covered": 1846,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "popover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/popover/popover.vue",
+            "total": 4890,
+            "covered": 3786,
+            "uncovered": 1104,
+            "pct": 77.42,
+            "status": "medium"
+        },
+        {
+            "name": "popover.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/popover/popover.vue?bb3b",
+            "total": 260,
+            "covered": 260,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "progress.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/progress/progress.vue?c85c",
+            "total": 193,
+            "covered": 193,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "progress.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/progress/progress.vue",
+            "total": 579,
+            "covered": 579,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "radio.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/radio/radio.vue?1275",
+            "total": 187,
+            "covered": 187,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "radio.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/radio/radio.vue",
+            "total": 1782,
+            "covered": 1782,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "select.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/select/select.vue?a01a",
+            "total": 189,
+            "covered": 189,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "select.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/select/select.vue",
+            "total": 6143,
+            "covered": 5296,
+            "uncovered": 847,
+            "pct": 86.21,
+            "status": "high"
+        },
+        {
+            "name": "switch.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/switch/switch.vue?651d",
+            "total": 189,
+            "covered": 189,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "switch.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/switch/switch.vue",
+            "total": 2540,
+            "covered": 2540,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "tab.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/tab/tab.vue",
+            "total": 3275,
+            "covered": 3275,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "tab.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/tab/tab.vue?9009",
+            "total": 248,
+            "covered": 248,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "tooltip.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/tooltip/tooltip.vue",
+            "total": 2519,
+            "covered": 2159,
+            "uncovered": 360,
+            "pct": 85.71,
+            "status": "high"
+        },
+        {
+            "name": "tooltip.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/tooltip/tooltip.vue?f4e8",
+            "total": 191,
+            "covered": 191,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "reactivity.esm-bundler.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js",
+            "total": 42949,
+            "covered": 28882,
+            "uncovered": 14067,
+            "pct": 67.25,
+            "status": "medium"
+        },
+        {
+            "name": "runtime-core.esm-bundler.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js",
+            "total": 316502,
+            "covered": 252607,
+            "uncovered": 63895,
+            "pct": 79.81,
+            "status": "medium"
+        },
+        {
+            "name": "runtime-dom.esm-bundler.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js",
+            "total": 60425,
+            "covered": 41521,
+            "uncovered": 18904,
+            "pct": 68.71,
+            "status": "medium"
+        },
+        {
+            "name": "shared.esm-bundler.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@vue/shared/dist/shared.esm-bundler.js",
+            "total": 23750,
+            "covered": 20674,
+            "uncovered": 3076,
+            "pct": 87.05,
+            "status": "high"
+        },
+        {
+            "name": "fps-detector.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/fps-detector/dist/fps-detector.js",
+            "total": 7043,
+            "covered": 6548,
+            "uncovered": 495,
+            "pct": 92.97,
+            "status": "high"
+        },
+        {
+            "name": "-sync-.vue$",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos/ sync \\.vue$",
+            "total": 1112,
+            "covered": 1009,
+            "uncovered": 103,
+            "pct": 90.74,
+            "status": "high"
+        },
+        {
+            "name": "bootstrap",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/webpack/bootstrap",
+            "total": 621,
+            "covered": 621,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "compat-get-default-export",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/webpack/runtime/compat get default export",
+            "total": 267,
+            "covered": 252,
+            "uncovered": 15,
+            "pct": 94.38,
+            "status": "high"
+        },
+        {
+            "name": "define-property-getters",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/webpack/runtime/define property getters",
+            "total": 308,
+            "covered": 308,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "global",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/webpack/runtime/global",
+            "total": 221,
+            "covered": 131,
+            "uncovered": 90,
+            "pct": 59.28,
+            "status": "medium"
+        },
+        {
+            "name": "hasOwnProperty-shorthand",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/webpack/runtime/hasOwnProperty shorthand",
+            "total": 88,
+            "covered": 88,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "make-namespace-object",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/webpack/runtime/make namespace object",
+            "total": 274,
+            "covered": 274,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "demos.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demos.js",
+            "total": 907,
+            "covered": 907,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "app.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/app.vue",
+            "total": 4485,
+            "covered": 4293,
+            "uncovered": 192,
+            "pct": 95.72,
+            "status": "high"
+        },
+        {
+            "name": "app.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/app.vue?1590",
+            "total": 248,
+            "covered": 248,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "vue-router.mjs",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/vue-router/dist/vue-router.mjs",
+            "total": 149362,
+            "covered": 96938,
+            "uncovered": 52424,
+            "pct": 64.9,
+            "status": "medium"
+        },
+        {
+            "name": "home.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/home.vue",
+            "total": 250,
+            "covered": 250,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@codemirror/state/dist/index.js",
+            "total": 144999,
+            "covered": 51558,
+            "uncovered": 93441,
+            "pct": 35.56,
+            "status": "low"
+        },
+        {
+            "name": "style-mod.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/style-mod/src/style-mod.js",
+            "total": 6324,
+            "covered": 4466,
+            "uncovered": 1858,
+            "pct": 70.62,
+            "status": "medium"
+        },
+        {
+            "name": "index.es.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/w3c-keyname/index.es.js",
+            "total": 2716,
+            "covered": 2716,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@codemirror/view/dist/index.js",
+            "total": 394336,
+            "covered": 116786,
+            "uncovered": 277550,
+            "pct": 29.62,
+            "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@lezer/common/dist/index.js",
+            "total": 76023,
+            "covered": 29823,
+            "uncovered": 46200,
+            "pct": 39.23,
+            "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@lezer/highlight/dist/index.js",
+            "total": 27669,
+            "covered": 23017,
+            "uncovered": 4652,
+            "pct": 83.19,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@codemirror/language/dist/index.js",
+            "total": 94211,
+            "covered": 58649,
+            "uncovered": 35562,
+            "pct": 62.25,
+            "status": "medium"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@codemirror/commands/dist/index.js",
+            "total": 73800,
+            "covered": 36796,
+            "uncovered": 37004,
+            "pct": 49.86,
+            "status": "low"
+        },
+        {
+            "name": "index.es.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/crelt/index.es.js",
+            "total": 951,
+            "covered": 18,
+            "uncovered": 933,
+            "pct": 1.89,
+            "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@codemirror/search/dist/index.js",
+            "total": 47252,
+            "covered": 13944,
+            "uncovered": 33308,
+            "pct": 29.51,
+            "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@codemirror/autocomplete/dist/index.js",
+            "total": 78332,
+            "covered": 35948,
+            "uncovered": 42384,
+            "pct": 45.89,
+            "status": "low"
+        },
+        {
+            "name": "extends.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/starfall-cli/node_modules/@babel/runtime/helpers/esm/extends.js",
+            "total": 416,
+            "covered": 133,
+            "uncovered": 283,
+            "pct": 31.97,
+            "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@uiw/codemirror-themes/esm/index.js",
+            "total": 2226,
+            "covered": 2135,
+            "uncovered": 91,
+            "pct": 95.91,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@uiw/codemirror-theme-vscode/esm/index.js",
+            "total": 2481,
+            "covered": 2481,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@lezer/lr/dist/index.js",
+            "total": 69308,
+            "covered": 16800,
+            "uncovered": 52508,
+            "pct": 24.24,
+            "status": "low"
+        },
+        {
+            "name": "index.es.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@lezer/html/dist/index.es.js",
+            "total": 23293,
+            "covered": 18742,
+            "uncovered": 4551,
+            "pct": 80.46,
+            "status": "high"
+        },
+        {
+            "name": "index.es.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@lezer/javascript/dist/index.es.js",
+            "total": 70702,
+            "covered": 69721,
+            "uncovered": 981,
+            "pct": 98.61,
+            "status": "high"
+        },
+        {
+            "name": "index.es.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/node_modules/@lezer/css/dist/index.es.js",
+            "total": 13066,
+            "covered": 11834,
+            "uncovered": 1232,
+            "pct": 90.57,
+            "status": "high"
+        },
+        {
+            "name": "editor.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/utils/editor.js",
+            "total": 3160,
+            "covered": 1180,
+            "uncovered": 1980,
+            "pct": 37.34,
+            "status": "low"
+        },
+        {
+            "name": "demo.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demo.vue",
+            "total": 5386,
+            "covered": 5386,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "util.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/vine-ui/src/utils/util.js",
+            "total": 2569,
+            "covered": 2569,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "demo.vue",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/demo.vue?3e16",
+            "total": 251,
+            "covered": 251,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "router.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/router.js",
+            "total": 457,
+            "covered": 457,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://vine-ui-app-bundle/packages/app/src/index.js",
+            "total": 175,
+            "covered": 175,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
         }
     ]
 }

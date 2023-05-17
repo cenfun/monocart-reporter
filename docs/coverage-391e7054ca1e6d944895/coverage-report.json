@@ -40,68 +40,6 @@
     "files": [
         {
             "lines": {
-                "total": 1,
-                "covered": 1,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "functions": {
-                "total": 0,
-                "covered": 0,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "statements": {
-                "total": 1,
-                "covered": 1,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "branches": {
-                "total": 2,
-                "covered": 2,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "name": "anonymous-1.js"
-        },
-        {
-            "lines": {
-                "total": 10,
-                "covered": 10,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "functions": {
-                "total": 0,
-                "covered": 0,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "statements": {
-                "total": 10,
-                "covered": 10,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "branches": {
-                "total": 2,
-                "covered": 2,
-                "skipped": 0,
-                "pct": 100,
-                "status": "high"
-            },
-            "name": "anonymous-2.js"
-        },
-        {
-            "lines": {
                 "total": 232,
                 "covered": 89,
                 "skipped": 0,
@@ -129,7 +67,69 @@
                 "pct": 48.48,
                 "status": "low"
             },
-            "name": "anonymous.js"
+            "name": "anonymous-1.js"
+        },
+        {
+            "lines": {
+                "total": 1,
+                "covered": 1,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "functions": {
+                "total": 0,
+                "covered": 0,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "statements": {
+                "total": 1,
+                "covered": 1,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "branches": {
+                "total": 2,
+                "covered": 2,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "name": "anonymous-2.js"
+        },
+        {
+            "lines": {
+                "total": 10,
+                "covered": 10,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "functions": {
+                "total": 0,
+                "covered": 0,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "statements": {
+                "total": 10,
+                "covered": 10,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "branches": {
+                "total": 2,
+                "covered": 2,
+                "skipped": 0,
+                "pct": 100,
+                "status": "high"
+            },
+            "name": "anonymous-3.js"
         }
     ]
 }

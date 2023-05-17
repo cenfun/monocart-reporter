@@ -10,15 +10,16 @@
     },
     "pages": [
         {
-            "startedDateTime": "2023-05-12T13:39:24.559Z",
-            "id": "page@7383d96adc5aa546f64ba83c1dfb9f85",
+            "startedDateTime": "2023-05-17T16:04:55.830Z",
+            "id": "page@ca8310a916352c3a8ec60acaa020004c",
             "title": "coverage page",
             "pageTimings": {
-                "onContentLoad": 15,
-                "onLoad": 15
+                "onContentLoad": 17,
+                "onLoad": 17
             }
         }
     ],
+    "htmlPath": ".temp/monocart/network-10a547d8cdc2a5022f28/index.html",
     "summary": {
         "requests": 2,
         "size": 29206,
@@ -29,32 +30,32 @@
             "GET": 2
         },
         "waterfalls": {
-            "page@7383d96adc5aa546f64ba83c1dfb9f85": {
-                "timestampStart": 1683898764559,
+            "page@ca8310a916352c3a8ec60acaa020004c": {
+                "timestampStart": 1684339495830,
                 "start": 0,
-                "time": 15,
-                "onContentLoad": 15,
-                "onLoad": 15,
+                "time": 17,
+                "onContentLoad": 17,
+                "onLoad": 17,
                 "entries": [
                     {
-                        "start": 2,
-                        "time": 3.761,
-                        "dns": 0.004,
-                        "connect": 0.329,
-                        "ssl": 1.471,
+                        "start": 3,
+                        "time": 4.013,
+                        "dns": 0.005,
+                        "connect": 0.334,
+                        "ssl": 1.48,
                         "send": 0,
-                        "wait": 0.947,
-                        "receive": 1.01
+                        "wait": 1.072,
+                        "receive": 1.122
                     },
                     {
-                        "start": 11,
-                        "time": 1.592,
+                        "start": 13,
+                        "time": 1.755,
                         "dns": -1,
                         "connect": -1,
                         "ssl": -1,
                         "send": 0,
-                        "wait": 0.992,
-                        "receive": 0.6
+                        "wait": 1.027,
+                        "receive": 0.728
                     }
                 ]
             }
