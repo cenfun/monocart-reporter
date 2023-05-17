@@ -338,7 +338,7 @@ const mergeSingleSubGroups = (item) => {
         if (!sub.subs) {
             return;
         }
-        item.name = [item.name, sub.name].join('/');
+        item.name = [item.name, sub.name].filter((it) => it).join('/');
         item.subs = sub.subs;
         mergeSingleSubGroups(item);
         return;
@@ -375,7 +375,7 @@ const calculateGroups = (list, parent) => {
 };
 
 const getGroupRows = (summaryRows) => {
-    const groups = [];
+    let groups = [];
 
     summaryRows.forEach((summaryItem) => {
         const sourcePath = summaryItem.sourcePath;
@@ -405,9 +405,14 @@ const getGroupRows = (summaryRows) => {
 
     });
 
-    mergeSingleSubGroups({
+    const group = {
         subs: groups
-    });
+    };
+    mergeSingleSubGroups(group);
+
+    if (group.name) {
+        groups = [group];
+    }
 
     const summary = {};
     calculateGroups(groups, summary);
