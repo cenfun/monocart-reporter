@@ -34,6 +34,7 @@
 * [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
 * [Attach Code Coverage Report](#attach-code-coverage-report)
     - [Compare Istanbul, V8 and V8 to Istanbul](#compare-istanbul-v8-and-v8-to-istanbul)
+    - [Global Coverage Report](#global-coverage-report) for Component Testing
 * [Attach Network Report](#attach-network-report)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd hook](#onend-hook)
@@ -725,7 +726,7 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | Minified code | N/A | ✅ | ❌ |
 | Code formatting | N/A | ✅ | ❌ |
 
-## Global Coverage Report
+### Global Coverage Report
 If you want to generate a global coverage report, you can use the API `addCoverageReport(v8list, testInfo)`. When all the tests are finished, all added reports will be automatically merged into a global report. Currently supported `V8` only. Here is an example for Playwright Component Testing [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue).
 ```js
 // playwright.config.js
