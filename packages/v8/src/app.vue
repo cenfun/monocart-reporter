@@ -22,6 +22,7 @@
       class="mcr-filter"
       padding="10px"
       gap="10px"
+      wrap
     >
       <VuiInput
         v-model="state.keywords"
@@ -29,6 +30,7 @@
         :class="searchClass"
         placeholder="keywords"
       />
+
       <VuiSwitch
         v-model="state.group"
         :label-clickable="true"
@@ -36,6 +38,63 @@
       >
         Group
       </VuiSwitch>
+
+      <div class="vui-flex-auto" />
+
+      <VuiFlex
+        gap="5px"
+      >
+        <div>Watermarks</div>
+        <VuiFlex class="mcr-watermarks">
+          <VuiFlex
+            class="mcr-low"
+            gap="5px"
+          >
+            <VuiSwitch
+              v-model="state.watermarkLow"
+              :label-clickable="true"
+              width="22px"
+              height="15px"
+            >
+              low
+            </VuiSwitch>
+          </VuiFlex>
+
+          <VuiFlex
+            class="mcr-medium"
+            gap="5px"
+          >
+            <div class="mcr-watermarks-value">
+              {{ state.watermarks[0] }}
+            </div>
+            <VuiSwitch
+              v-model="state.watermarkMedium"
+              :label-clickable="true"
+              width="22px"
+              height="15px"
+            >
+              medium
+            </VuiSwitch>
+          </VuiFlex>
+
+          <VuiFlex
+            class="mcr-high"
+            gap="5px"
+          >
+            <div class="mcr-watermarks-value">
+              {{ state.watermarks[1] }}
+            </div>
+            <VuiSwitch
+              v-model="state.watermarkHigh"
+              :label-clickable="true"
+              width="22px"
+              height="15px"
+            >
+              high
+            </VuiSwitch>
+          </VuiFlex>
+        </VuiFlex>
+      </VuiFlex>
     </VuiFlex>
 
     <div class="mcr-coverage-grid vui-flex-auto" />
@@ -92,6 +151,11 @@ const state = shallowReactive({
     topNumber: '3',
 
     keywords: '',
+
+    watermarks: [50, 80],
+    watermarkLow: true,
+    watermarkMedium: true,
+    watermarkHigh: true,
 
     windowWidth: window.innerWidth,
 
@@ -436,7 +500,28 @@ const getGridData = () => {
 
 };
 
+const watermarkFilter = (status) => {
+    if (!status) {
+        return true;
+    }
+    const map = {
+        low: state.watermarkLow,
+        medium: state.watermarkMedium,
+        high: state.watermarkHigh
+    };
+    if (map[status]) {
+        return true;
+    }
+    return false;
+};
+
 const searchHandler = (rowItem) => {
+
+    const watermarkGate = watermarkFilter(rowItem.status);
+    if (!watermarkGate) {
+        return;
+    }
+
     const keywords = state.keywords.trim().toLowerCase();
     if (!keywords) {
         return true;
@@ -584,7 +669,7 @@ const init = async () => {
     // for export all data JSON able
     state.reportData = reportData;
     state.title = reportData.title;
-    state.watermarks = reportData.watermarks || [50, 80];
+    state.watermarks = reportData.watermarks;
 
     initTooltip();
 
@@ -612,9 +697,15 @@ watch(() => state.topNumber, (v) => {
 });
 
 const updateGridAsync = debounce(updateGrid, 200);
-watch(() => state.keywords, () => {
+watch([
+    () => state.keywords,
+    () => state.watermarkLow,
+    () => state.watermarkMedium,
+    () => state.watermarkHigh
+], () => {
     updateGridAsync();
 });
+
 
 window.addEventListener('resize', () => {
     state.windowWidth = window.innerWidth;
@@ -774,6 +865,39 @@ icon
 
 .mcr-high {
     background: #e6f5d0;
+}
+
+.mcr-watermarks {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+
+    .mcr-low,
+    .mcr-medium,
+    .mcr-high {
+        padding: 5px 20px;
+        overflow: visible;
+    }
+
+    .mcr-low {
+        padding-left: 10px;
+    }
+
+    .mcr-high {
+        padding-right: 10px;
+    }
+
+    .mcr-watermarks-value {
+        position: absolute;
+        left: 0;
+        z-index: 10;
+        padding: 2px 5px;
+        font-size: 11px;
+        font-family: Arial, sans-serif;
+        border-radius: 5px;
+        background-color: #fff;
+        transform: translateX(-50%);
+    }
 }
 
 .mcr-percent-chart {
