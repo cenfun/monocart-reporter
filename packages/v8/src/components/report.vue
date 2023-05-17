@@ -33,6 +33,7 @@
         <div :tooltip="item.totalTooltip">
           <b>{{ item.indicatorName }}</b> {{ Util.NF(item.total) }}
         </div>
+
         <div :tooltip="item.coveredTooltip">
           Covered: <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
         </div>
@@ -49,6 +50,16 @@
         >
           {{ Util.PF(item.pct, 100) }}
         </div>
+
+        <VuiSwitch
+          v-if="item.indicator==='line'"
+          v-model="data.formatted"
+          :label-clickable="true"
+          label-position="right"
+          tooltip="Will automatically turn on formatting if the file was not unpacked from a source map file"
+        >
+          <b>Formatted</b>
+        </VuiSwitch>
       </VuiFlex>
 
       <VuiFlex
@@ -107,7 +118,7 @@ import {
 } from 'vue';
 
 import { components } from 'vine-ui';
-// import { microtask } from 'async-tick';
+import { microtask } from 'async-tick';
 
 import Util from '../utils/util.js';
 
@@ -116,7 +127,7 @@ import { createCodeViewer } from 'monocart-code-viewer';
 import { format, Mapping } from 'monocart-formatter';
 
 const {
-    VuiFlex, VuiSelect, VuiLoading
+    VuiFlex, VuiSelect, VuiSwitch, VuiLoading
 } = components;
 
 const state = inject('state');
@@ -164,14 +175,19 @@ const setUncoveredPieces = (coverage, line, value) => {
     item[line] = [value];
 };
 
-const setExecutionCounts = (coverage, line, value) => {
+const setExecutionCounts = (coverage, line, execution) => {
     const item = coverage.executionCounts;
     const prev = item[line];
     if (prev) {
-        prev.push(value);
+        // check if exists
+        const ec = prev.find((it) => it.column === execution.column && it.value === execution.value);
+        if (ec) {
+            return;
+        }
+        prev.push(execution);
         return;
     }
-    item[line] = [value];
+    item[line] = [execution];
 };
 
 const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
@@ -327,8 +343,10 @@ const updateTopExecutions = () => {
         return b.count - a.count;
     });
 
-    if (list.length > state.topNumber) {
-        list.length = state.topNumber;
+    const maxNumber = parseInt(state.topNumber) || 3;
+
+    if (list.length > maxNumber) {
+        list.length = maxNumber;
     }
 
     data.topExecutions = list;
@@ -365,8 +383,8 @@ const getCoverage = (item, text, formattedMapping) => {
         } else if (count > 1) {
             const sLoc = formattedMapping.getFormattedLocation(startOffset);
             setExecutionCounts(coverage, sLoc.line, {
-                value: count,
-                column: sLoc.column
+                column: sLoc.column,
+                value: count
             });
         }
     });
@@ -378,8 +396,10 @@ const getCoverage = (item, text, formattedMapping) => {
 const formatSource = (item) => {
     const source = item.source;
 
+    // console.log('formatSource', data.formatted);
+
     // no format for sourceMapFile item, may vue format or others
-    if (item.sourceMapFile) {
+    if (!data.formatted) {
         return {
             content: source,
             mapping: {
@@ -388,11 +408,13 @@ const formatSource = (item) => {
             }
         };
     }
+
     return format(source, item.type);
 };
 
 const getReport = async (item) => {
-    if (item.report) {
+
+    if (item.report && item.report.formatted === data.formatted) {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(item.report);
@@ -415,6 +437,7 @@ const getReport = async (item) => {
     // console.log(coverage);
 
     const report = {
+        formatted: data.formatted,
         coverage,
         content
     };
@@ -422,28 +445,11 @@ const getReport = async (item) => {
     return report;
 };
 
-const showReport = async () => {
-    const id = state.flyoverData;
-    if (!id) {
-        return;
-    }
-    const item = state.fileMap[id];
+const renderReport = async () => {
     state.loading = true;
 
+    const item = data.item;
     const summary = item.summary;
-    data.summary = item.summary;
-    data.url = item.url;
-    data.sourcePath = item.sourcePath;
-    data.sourceMapFile = item.sourceMapFile;
-
-    summary.indicatorName = 'Bytes';
-
-    summary.totalTooltip = `Total ${Util.BSF(summary.total)}`;
-
-    summary.coveredTooltip = `Covered ${Util.BSF(summary.covered)}`;
-    summary.coveredClass = summary.covered > 0 ? 'mcr-covered' : '';
-    summary.uncoveredTooltip = `Uncovered ${Util.BSF(summary.uncovered)}`;
-    summary.uncoveredClass = summary.uncovered > 0 ? 'mcr-uncovered' : '';
 
     const report = await getReport(item);
     if (!report) {
@@ -472,7 +478,8 @@ const showReport = async () => {
     const percentChart = Util.generatePercentChart(pct);
 
     const lineInfo = {
-        indicatorName: 'Formatted Lines',
+        indicator: 'line',
+        indicatorName: 'Lines',
         total: totalLines,
         totalTooltip: '',
         covered,
@@ -485,8 +492,9 @@ const showReport = async () => {
         percentChart
     };
 
-
     data.list = [summary, lineInfo];
+
+    // console.log('showReport executionCounts', executionCounts);
 
     data.executionCounts = executionCounts;
     updateTopExecutions();
@@ -502,9 +510,40 @@ const showReport = async () => {
     state.loading = false;
 };
 
+const renderReportAsync = microtask(renderReport);
+
+const showReport = () => {
+    const id = state.flyoverData;
+    if (!id) {
+        return;
+    }
+    const item = state.fileMap[id];
+
+    data.item = item;
+    data.url = item.url;
+    data.sourcePath = item.sourcePath;
+    data.sourceMapFile = item.sourceMapFile;
+
+    const summary = item.summary;
+    summary.indicatorName = 'Bytes';
+    summary.totalTooltip = `Total ${Util.BSF(summary.total)}`;
+    summary.coveredTooltip = `Covered ${Util.BSF(summary.covered)}`;
+    summary.coveredClass = summary.covered > 0 ? 'mcr-covered' : '';
+    summary.uncoveredTooltip = `Uncovered ${Util.BSF(summary.uncovered)}`;
+    summary.uncoveredClass = summary.uncovered > 0 ? 'mcr-uncovered' : '';
+
+    data.formatted = !item.sourceMapFile;
+
+    renderReportAsync();
+};
+
 
 watch(() => state.flyoverData, (v) => {
     showReport();
+});
+
+watch(() => data.formatted, (v) => {
+    renderReportAsync();
 });
 
 watch(() => state.topNumber, (v) => {

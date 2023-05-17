@@ -158,18 +158,7 @@ test.describe('take V8 js and css coverage report', () => {
         await addCoverageReport(coverageList, test.info());
 
         const report = await attachCoverageReport(coverageList, test.info(), {
-            sourceMap: true,
-            sourceFilter: (sourceName) => {
-                // src
-                if (sourceName.search(/\/src\/.+/) !== -1) {
-                    return true;
-                }
-                // scss
-                if (sourceName.search(/\/scss\/.+/) !== -1) {
-                    return true;
-                }
-
-            }
+            sourceMap: true
         });
         console.log(report.summary);
     });

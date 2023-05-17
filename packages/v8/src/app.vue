@@ -41,58 +41,53 @@
 
       <div class="vui-flex-auto" />
 
-      <VuiFlex
-        gap="5px"
-      >
-        <div>Watermarks</div>
-        <VuiFlex class="mcr-watermarks">
-          <VuiFlex
-            class="mcr-low"
-            gap="5px"
+      <VuiFlex class="mcr-watermarks">
+        <VuiFlex
+          class="mcr-low"
+          gap="5px"
+        >
+          <VuiSwitch
+            v-model="state.watermarkLow"
+            :label-clickable="true"
+            width="22px"
+            height="15px"
           >
-            <VuiSwitch
-              v-model="state.watermarkLow"
-              :label-clickable="true"
-              width="22px"
-              height="15px"
-            >
-              low
-            </VuiSwitch>
-          </VuiFlex>
+            low
+          </VuiSwitch>
+        </VuiFlex>
 
-          <VuiFlex
-            class="mcr-medium"
-            gap="5px"
+        <VuiFlex
+          class="mcr-medium"
+          gap="5px"
+        >
+          <div class="mcr-watermarks-value">
+            {{ state.watermarks[0] }}
+          </div>
+          <VuiSwitch
+            v-model="state.watermarkMedium"
+            :label-clickable="true"
+            width="22px"
+            height="15px"
           >
-            <div class="mcr-watermarks-value">
-              {{ state.watermarks[0] }}
-            </div>
-            <VuiSwitch
-              v-model="state.watermarkMedium"
-              :label-clickable="true"
-              width="22px"
-              height="15px"
-            >
-              medium
-            </VuiSwitch>
-          </VuiFlex>
+            medium
+          </VuiSwitch>
+        </VuiFlex>
 
-          <VuiFlex
-            class="mcr-high"
-            gap="5px"
+        <VuiFlex
+          class="mcr-high"
+          gap="5px"
+        >
+          <div class="mcr-watermarks-value">
+            {{ state.watermarks[1] }}
+          </div>
+          <VuiSwitch
+            v-model="state.watermarkHigh"
+            :label-clickable="true"
+            width="22px"
+            height="15px"
           >
-            <div class="mcr-watermarks-value">
-              {{ state.watermarks[1] }}
-            </div>
-            <VuiSwitch
-              v-model="state.watermarkHigh"
-              :label-clickable="true"
-              width="22px"
-              height="15px"
-            >
-              high
-            </VuiSwitch>
-          </VuiFlex>
+            high
+          </VuiSwitch>
         </VuiFlex>
       </VuiFlex>
     </VuiFlex>
