@@ -9,21 +9,6 @@
       class="mcr-report-head"
     >
       <VuiFlex
-        padding="5px"
-        gap="10px"
-        wrap
-      >
-        <div>
-          <b>URL:</b> <a
-            :href="data.url"
-            target="_blank"
-          >{{ data.url }}</a>
-        </div>
-        <div v-if="data.sourceMapFile">
-          <b>Source Map File:</b> {{ data.sourceMapFile }}
-        </div>
-      </VuiFlex>
-      <VuiFlex
         v-for="(item, i) in data.list"
         :key="i"
         padding="5px"
@@ -50,16 +35,24 @@
         >
           {{ Util.PF(item.pct, 100) }}
         </div>
+      </VuiFlex>
 
+      <VuiFlex
+        gap="5px"
+        padding="5px"
+        wrap
+      >
         <VuiSwitch
-          v-if="item.indicator==='line'"
           v-model="data.formatted"
           :label-clickable="true"
-          label-position="right"
-          tooltip="Will automatically turn on formatting if the file was not unpacked from a source map file"
+          tooltip="Will automatically turn off formatting if the file was unpacked from a source map file"
         >
           <b>Formatted</b>
         </VuiSwitch>
+
+        <span v-if="data.sourceMapFile">
+          <b>Unpacked From</b> {{ data.sourceMapFile }}
+        </span>
       </VuiFlex>
 
       <VuiFlex
