@@ -8,12 +8,19 @@
       padding="5px"
       class="mcr-report-head"
     >
-      <VuiFlex padding="5px">
-        <div class="vui-flex-auto">
+      <VuiFlex
+        padding="5px"
+        gap="10px"
+        wrap
+      >
+        <div>
           <b>URL:</b> <a
             :href="data.url"
             target="_blank"
           >{{ data.url }}</a>
+        </div>
+        <div v-if="data.sourceMapFile">
+          <b>Sourcemap:</b> {{ data.sourceMapFile }}
         </div>
       </VuiFlex>
       <VuiFlex
@@ -21,6 +28,7 @@
         :key="i"
         padding="5px"
         gap="10px"
+        wrap
       >
         <div :tooltip="item.totalTooltip">
           <b>{{ item.indicatorName }}</b> {{ Util.NF(item.total) }}
@@ -68,6 +76,7 @@
           v-for="(item, i) in data.topExecutions"
           :key="i"
           gap="5px"
+          wrap
         >
           <div
             class="mcr-line"
@@ -127,7 +136,7 @@ const scrollToLine = (line) => {
         if (top >= 0) {
             viewer.scrollDOM.scrollTo({
                 top,
-                behavior: 'smooth'
+                behavior: 'auto'
             });
         }
     }
@@ -369,7 +378,8 @@ const getCoverage = (item, text, formattedMapping) => {
 const formatSource = (item) => {
     const source = item.source;
 
-    if (item.parent) {
+    // no format for sourceMapFile item, may vue format or others
+    if (item.sourceMapFile) {
         return {
             content: source,
             mapping: {
@@ -422,7 +432,9 @@ const showReport = async () => {
 
     const summary = item.summary;
     data.summary = item.summary;
-    data.url = summary.url;
+    data.url = item.url;
+    data.sourcePath = item.sourcePath;
+    data.sourceMapFile = item.sourceMapFile;
 
     summary.indicatorName = 'Bytes';
 
@@ -529,6 +541,7 @@ onMounted(() => {
 
     .vui-select-view {
         min-width: 42px;
+        text-align: center;
     }
 }
 

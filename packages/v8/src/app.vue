@@ -195,7 +195,7 @@ const initFlyoverSize = () => {
 
 const showFlyover = (rowItem) => {
     state.flyoverData = rowItem.id;
-    state.flyoverTitle = rowItem.name;
+    state.flyoverTitle = rowItem.sourcePath;
     state.flyoverVisible = true;
 };
 

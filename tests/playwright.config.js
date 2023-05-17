@@ -81,6 +81,7 @@ module.exports = {
 
             coverage: {
                 // sourceMap: false
+                sourceMapDedupe: false
             },
 
             trend: () => {
