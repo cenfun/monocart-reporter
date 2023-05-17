@@ -295,12 +295,15 @@ const getGroupRows = (summaryRows) => {
         });
         parent.pct = Util.PNF(parent.covered, parent.total, 2);
         parent.percentChart = Util.generatePercentChart(parent.pct);
+        parent.status = Util.getStatus(parent.pct, state.watermarks);
+        parent.pctClassMap = `mcr-${parent.status}`;
     };
 
     const summary = {};
     calculateGroups(groups, summary);
 
     // console.log(summary);
+
 
     return groups;
 };
@@ -523,6 +526,7 @@ const init = async () => {
     // for export all data JSON able
     state.reportData = reportData;
     state.title = reportData.title;
+    state.watermarks = reportData.watermarks || [50, 80];
 
     initTooltip();
 
