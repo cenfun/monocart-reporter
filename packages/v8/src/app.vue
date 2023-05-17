@@ -74,7 +74,7 @@ const state = shallowReactive({
     summary: {},
 
     group: true,
-    topNumber: 3,
+    topNumber: '3',
 
     windowWidth: window.innerWidth,
 
@@ -311,6 +311,8 @@ const getGroupRows = (summaryRows) => {
 
 const getGridRows = () => {
     const key = ['grid', state.group].join('-');
+    // console.log(key);
+
     const cacheRows = state.gridDataCache[key];
     if (cacheRows) {
         return cacheRows;
@@ -341,7 +343,6 @@ const getGridRows = () => {
         pctClassMap: `mcr-${summary.status}`,
         ... summary
     }];
-
     if (state.group) {
         rows = rows.concat(getGroupRows(summaryRows));
     } else {
@@ -510,7 +511,11 @@ const initStore = () => {
         'false': false
     };
     ['group', 'topNumber'].forEach((item) => {
+        // default empty string
         const v = store.get(item);
+        if (!v) {
+            return;
+        }
         if (Util.hasOwn(mapping, v)) {
             state[item] = mapping[v];
             return;
@@ -673,7 +678,8 @@ icon
 }
 
 .mcr-row-summary {
-    background-color: #f8f8f8;
+    font-weight: bold;
+    background-color: #f5f5f5;
 
     .mcr-column-name {
         text-decoration: none;
