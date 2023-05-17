@@ -20,7 +20,7 @@
           >{{ data.url }}</a>
         </div>
         <div v-if="data.sourceMapFile">
-          <b>Sourcemap:</b> {{ data.sourceMapFile }}
+          <b>Source Map File:</b> {{ data.sourceMapFile }}
         </div>
       </VuiFlex>
       <VuiFlex
