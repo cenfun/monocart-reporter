@@ -323,10 +323,55 @@ const bindGridEvents = (grid) => {
 
     });
 
-
     grid.bind('onFirstUpdated', (e) => {
 
     });
+};
+
+const mergeSingleSubGroups = (item) => {
+
+    if (!item.subs) {
+        return;
+    }
+    if (item.subs.length === 1) {
+        const sub = item.subs[0];
+        if (!sub.subs) {
+            return;
+        }
+        item.name = [item.name, sub.name].join('/');
+        item.subs = sub.subs;
+        mergeSingleSubGroups(item);
+        return;
+    }
+
+    item.subs.forEach((sub) => {
+        mergeSingleSubGroups(sub);
+    });
+
+};
+
+// calculate groups
+const calculateGroups = (list, parent) => {
+    if (!list) {
+        return;
+    }
+    if (typeof parent.total !== 'number') {
+        parent.total = 0;
+        parent.covered = 0;
+        parent.uncovered = 0;
+    }
+    list.forEach((item) => {
+        if (typeof item.total !== 'number') {
+            calculateGroups(item.subs, item);
+        }
+        parent.total += item.total;
+        parent.covered += item.covered;
+        parent.uncovered += item.uncovered;
+    });
+    parent.pct = Util.PNF(parent.covered, parent.total, 2);
+    parent.percentChart = Util.generatePercentChart(parent.pct);
+    parent.status = Util.getStatus(parent.pct, state.watermarks);
+    parent.pctClassMap = `mcr-${parent.status}`;
 };
 
 const getGroupRows = (summaryRows) => {
@@ -360,35 +405,13 @@ const getGroupRows = (summaryRows) => {
 
     });
 
-    // calculate groups
-    const calculateGroups = (list, parent) => {
-        if (!list) {
-            return;
-        }
-        if (typeof parent.total !== 'number') {
-            parent.total = 0;
-            parent.covered = 0;
-            parent.uncovered = 0;
-        }
-        list.forEach((item) => {
-            if (typeof item.total !== 'number') {
-                calculateGroups(item.subs, item);
-            }
-            parent.total += item.total;
-            parent.covered += item.covered;
-            parent.uncovered += item.uncovered;
-        });
-        parent.pct = Util.PNF(parent.covered, parent.total, 2);
-        parent.percentChart = Util.generatePercentChart(parent.pct);
-        parent.status = Util.getStatus(parent.pct, state.watermarks);
-        parent.pctClassMap = `mcr-${parent.status}`;
-    };
+    mergeSingleSubGroups({
+        subs: groups
+    });
 
     const summary = {};
     calculateGroups(groups, summary);
-
     // console.log(summary);
-
 
     return groups;
 };
