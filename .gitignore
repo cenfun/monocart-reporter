@@ -4,3 +4,4 @@
 /package-lock.json
 /lib/runtime
 /.env
+/scripts/mock/demo/dist/
