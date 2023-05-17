@@ -45,10 +45,24 @@
 
       <VuiFlex
         v-if="data.topExecutions"
-        padding="5px"
-        gap="10px"
+        gap="5px"
+        wrap
       >
-        <div><b>Top 3 Executions:</b></div>
+        <VuiFlex
+          gap="5px"
+          padding="5px"
+        >
+          <div><b>Top</b></div>
+          <VuiSelect
+            v-model="state.topNumber"
+            class="mcr-top-number"
+          >
+            <option>3</option>
+            <option>5</option>
+            <option>10</option>
+          </VuiSelect>
+          <div><b>Executions:</b></div>
+        </VuiFlex>
 
         <VuiFlex
           v-for="(item, i) in data.topExecutions"
@@ -92,11 +106,14 @@ import { createCodeViewer } from 'monocart-code-viewer';
 
 import { format, Mapping } from 'monocart-formatter';
 
-const { VuiFlex, VuiLoading } = components;
+const {
+    VuiFlex, VuiSelect, VuiLoading
+} = components;
 
 const state = inject('state');
 
 const data = shallowReactive({
+
 });
 
 const el = ref(null);
@@ -272,7 +289,14 @@ const getUncoveredFromCovered = (ranges, contentLength) => {
     return uncoveredRanges;
 };
 
-const getTopExecutions = (executionCounts) => {
+const updateTopExecutions = () => {
+
+    const executionCounts = data.executionCounts;
+    if (!executionCounts) {
+        data.topExecutions = null;
+        return;
+    }
+
     const list = [];
     Object.keys(executionCounts).forEach((line) => {
         const arr = executionCounts[line];
@@ -286,6 +310,7 @@ const getTopExecutions = (executionCounts) => {
     });
 
     if (!list.length) {
+        data.topExecutions = null;
         return;
     }
 
@@ -293,11 +318,11 @@ const getTopExecutions = (executionCounts) => {
         return b.count - a.count;
     });
 
-    if (list.length > 3) {
-        list.length = 3;
+    if (list.length > state.topNumber) {
+        list.length = state.topNumber;
     }
 
-    return list;
+    data.topExecutions = list;
 };
 
 const getCoverage = (item, text, formattedMapping) => {
@@ -336,8 +361,6 @@ const getCoverage = (item, text, formattedMapping) => {
             });
         }
     });
-
-    coverage.topExecutions = getTopExecutions(coverage.executionCounts);
 
     return coverage;
 
@@ -418,7 +441,7 @@ const showReport = async () => {
     }
 
     const {
-        totalLines, uncoveredLines, topExecutions
+        totalLines, uncoveredLines, executionCounts
     } = report.coverage;
     let uncovered = 0;
     Object.values(uncoveredLines).forEach((v) => {
@@ -453,7 +476,8 @@ const showReport = async () => {
 
     data.list = [summary, lineInfo];
 
-    data.topExecutions = topExecutions;
+    data.executionCounts = executionCounts;
+    updateTopExecutions();
 
     // console.log(report);
 
@@ -469,6 +493,10 @@ const showReport = async () => {
 
 watch(() => state.flyoverData, (v) => {
     showReport();
+});
+
+watch(() => state.topNumber, (v) => {
+    updateTopExecutions();
 });
 
 onMounted(() => {
@@ -494,6 +522,14 @@ onMounted(() => {
 
 .mcr-report-code {
     position: relative;
+}
+
+.mcr-top-number {
+    width: 42px;
+
+    .vui-select-view {
+        min-width: 42px;
+    }
 }
 
 .mcr-covered {

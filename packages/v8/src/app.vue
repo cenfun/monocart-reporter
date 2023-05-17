@@ -74,6 +74,7 @@ const state = shallowReactive({
     summary: {},
 
     group: true,
+    topNumber: 3,
 
     windowWidth: window.innerWidth,
 
@@ -504,15 +505,17 @@ const updateGrid = () => {
 // =================================================================================
 
 const initStore = () => {
-    const booleans = {
+    const mapping = {
         'true': true,
         'false': false
     };
-    ['group'].forEach((item) => {
-        const visible = booleans[store.get(item)];
-        if (typeof visible === 'boolean') {
-            state[item] = visible;
+    ['group', 'topNumber'].forEach((item) => {
+        const v = store.get(item);
+        if (Util.hasOwn(mapping, v)) {
+            state[item] = mapping[v];
+            return;
         }
+        state[item] = v;
     });
 };
 
@@ -547,6 +550,10 @@ onMounted(() => {
 watch(() => state.group, (v) => {
     store.set('group', v);
     updateGrid();
+});
+
+watch(() => state.topNumber, (v) => {
+    store.set('topNumber', v);
 });
 
 window.addEventListener('resize', () => {
