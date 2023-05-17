@@ -16,10 +16,23 @@
       </VuiFlex>
 
       <div class="vui-flex-auto" />
+    </VuiFlex>
 
+    <VuiFlex
+      class="mcr-filter"
+      padding="10px"
+      gap="10px"
+    >
+      <VuiInput
+        v-model="state.keywords"
+        width="100%"
+        :class="searchClass"
+        placeholder="keywords"
+      />
       <VuiSwitch
         v-model="state.group"
         :label-clickable="true"
+        label-position="right"
       >
         Group
       </VuiSwitch>
@@ -48,11 +61,12 @@
 </template>
 <script setup>
 import {
-    shallowReactive, onMounted, reactive, provide, watch
+    shallowReactive, onMounted, reactive, provide, watch, computed
 } from 'vue';
 import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
 import inflate from 'lz-utils/inflate';
+import { debounce } from 'async-tick';
 
 import Util from './utils/util.js';
 import store from '../../app/src/utils/store.js';
@@ -62,6 +76,7 @@ import Report from './components/report.vue';
 
 const {
     VuiFlex,
+    VuiInput,
     VuiSwitch,
     VuiTooltip,
     VuiLoading
@@ -70,11 +85,13 @@ const {
 // =================================================================================
 // do not use reactive for grid data
 const state = shallowReactive({
-    title: '',
+    title: 'Coverage Report',
     summary: {},
 
     group: true,
     topNumber: '3',
+
+    keywords: '',
 
     windowWidth: window.innerWidth,
 
@@ -100,6 +117,14 @@ const tooltip = reactive({
     target: null,
     text: '',
     html: false
+});
+
+const searchClass = computed(() => {
+    const ls = ['mcr-search'];
+    if (state.keywords) {
+        ls.push('mcr-search-keywords');
+    }
+    return ls;
 });
 
 
@@ -410,6 +435,23 @@ const getGridData = () => {
 
 };
 
+const searchHandler = (rowItem) => {
+    const keywords = state.keywords.trim().toLowerCase();
+    if (!keywords) {
+        return true;
+    }
+    const keywordList = keywords.split(/\s+/g);
+    const value = rowItem.name;
+    for (const item of keywordList) {
+        if (value.indexOf(item) !== -1) {
+            return true;
+        }
+        if (value.toLowerCase().indexOf(item.toLowerCase()) !== -1) {
+            return true;
+        }
+    }
+};
+
 const initData = () => {
     const { summary, files } = state.reportData;
 
@@ -444,6 +486,7 @@ const initGrid = () => {
         // sortField: 'uncovered',
         // sortAsc: false,
         // sortOnInit: true,
+        rowFilter: searchHandler,
         rowNumberVisible: true,
         rowNumberFilter: (rowItem) => {
             if (!rowItem.isSummary && !rowItem.subs) {
@@ -496,10 +539,16 @@ const initGrid = () => {
     grid.render();
 };
 
-const updateGrid = () => {
+const renderGrid = () => {
     if (state.grid) {
         state.grid.setData(getGridData());
         state.grid.render();
+    }
+};
+
+const updateGrid = () => {
+    if (state.grid) {
+        state.grid.update();
     }
 };
 
@@ -554,11 +603,16 @@ onMounted(() => {
 
 watch(() => state.group, (v) => {
     store.set('group', v);
-    updateGrid();
+    renderGrid();
 });
 
 watch(() => state.topNumber, (v) => {
     store.set('topNumber', v);
+});
+
+const updateGridAsync = debounce(updateGrid, 200);
+watch(() => state.keywords, () => {
+    updateGridAsync();
 });
 
 window.addEventListener('resize', () => {
@@ -662,6 +716,28 @@ icon
             color: #fff;
             text-decoration: none;
         }
+    }
+}
+
+.mcr-filter {
+    border-bottom: 1px solid #ddd;
+}
+
+.mcr-search {
+    input {
+        padding-right: 23px;
+        background-image: url("../../app/src/images/search.svg");
+        background-repeat: no-repeat;
+        background-position: 97% center;
+        background-size: 16px;
+    }
+}
+
+.mcr-search-keywords {
+    input {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
     }
 }
 
