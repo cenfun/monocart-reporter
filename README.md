@@ -725,6 +725,27 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | Minified code | N/A | ✅ | ❌ |
 | Code formatting | N/A | ✅ | ❌ |
 
+## Global Coverage Report
+If you want to generate a global coverage report, you can use the API `addCoverageReport(v8list, testInfo)`. When all the tests are finished, all added reports will be automatically merged into a global report. Currently supported `V8` only. Here is an example for Playwright Component Testing [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue).
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            // global coverage report options
+            coverage: {
+                unpackSourceMap: true,
+                excludeDistFile: true,
+                sourceFilter: (sourceName) => sourceName.search(/\/src\/.+/) !== -1,
+                entryFilter: (entry) => {}
+            }
+        }]
+    ]
+};
+```
+
 ## Attach Network Report
 Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments:
 - `har` HAR path (String) or HAR file buffer (Buffer). see [HAR 1.2 Spec](http://www.softwareishard.com/blog/har-12-spec/)
