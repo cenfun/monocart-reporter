@@ -153,8 +153,36 @@ test.describe('@util group', () => {
  * @testrail 2126
  * @xray MON-3
  */
-test('Test login page @fast', () => {
-    expect(Math.random()).toBeLessThan(0.5);
+test('@util v8 dedupeRanges', () => {
+
+    const { dedupeRanges } = require('../../lib/plugins/coverage/v8/dedupe.js');
+
+    const ranges = [{
+        start: 0, end: 10
+    }, {
+        start: 100, end: 200
+    }, {
+        start: 0, end: 15
+    }, {
+        start: 20, end: 30
+    }, {
+        start: 18, end: 25
+    }, {
+        start: 50, end: 60
+    }, {
+        start: 55, end: 58
+    }, {
+        start: 58, end: 66
+    }, {
+        start: 50, end: 80
+    }, {
+        start: 30, end: 50
+    }];
+    const newRanges = dedupeRanges(ranges);
+    console.log(newRanges);
+
+    expect(JSON.stringify(newRanges)).toBe('[{"start":0,"end":15},{"start":18,"end":80},{"start":100,"end":200}]');
+
 });
 
 /**
