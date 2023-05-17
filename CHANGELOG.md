@@ -1,4 +1,10 @@
 
+* 1.6.23
+  - added new API addCoverageReport for global coverage report
+  - supported sourceMap unpacking
+  - supported functional for options.outputFile
+  - fixed UI issues
+
 * 1.6.22
   - fixed code viewer for coverage
   - fixed error if throw a string
