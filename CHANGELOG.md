@@ -1,5 +1,6 @@
 * 1.6.24
   - updated coverage counter
+  - fixed repeated coverage file
 
 * 1.6.23
   - added new API addCoverageReport for global coverage report
