@@ -15,15 +15,21 @@
         gap="10px"
         wrap
       >
-        <div :tooltip="item.totalTooltip">
-          <b>{{ item.indicatorName }}</b> {{ Util.NF(item.total) }}
+        <div>
+          <b>{{ item.indicatorName }}</b> <span :tooltip="item.totalTooltip">{{ Util.NF(item.total) }}</span>
         </div>
 
-        <div :tooltip="item.coveredTooltip">
-          Covered: <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
+        <div>
+          Covered: <span
+            :tooltip="item.coveredTooltip"
+            :class="item.coveredClass"
+          >{{ Util.NF(item.covered) }}</span>
         </div>
-        <div :tooltip="item.uncoveredTooltip">
-          Uncovered: <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
+        <div>
+          Uncovered: <span
+            :tooltip="item.uncoveredTooltip"
+            :class="item.uncoveredClass"
+          >{{ Util.NF(item.uncovered) }}</span>
         </div>
         <div
           style="width: 100px;"
@@ -58,7 +64,6 @@
       <VuiFlex
         v-if="data.topExecutions"
         gap="10px"
-        wrap
       >
         <VuiFlex
           gap="5px"
@@ -76,20 +81,25 @@
         </VuiFlex>
 
         <VuiFlex
-          v-for="(item, i) in data.topExecutions"
-          :key="i"
-          gap="5px"
+          class="vui-flex-auto"
+          gap="8px"
           wrap
         >
-          <div
-            class="mcr-line"
-            @click="scrollToLine(item.line)"
+          <VuiFlex
+            v-for="(item, i) in data.topExecutions"
+            :key="i"
+            gap="5px"
           >
-            line {{ Util.NF(item.line) }}
-          </div>
-          <div class="mcr-count">
-            x{{ item.count }}
-          </div>
+            <div
+              class="mcr-line"
+              @click="scrollToLine(item.line)"
+            >
+              line {{ Util.NF(item.line) }}
+            </div>
+            <div class="mcr-count">
+              x{{ item.count }}
+            </div>
+          </VuiFlex>
         </VuiFlex>
       </VuiFlex>
     </VuiFlex>
