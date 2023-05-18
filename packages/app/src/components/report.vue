@@ -279,6 +279,46 @@
       </div>
     </div>
 
+    <div
+      v-if="report.artifacts"
+      class="mcr-report-item"
+    >
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <IconLabel
+            icon="artifact"
+            :button="false"
+          >
+            <b>Artifacts</b>
+          </IconLabel>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <VuiFlex
+          gap="10px"
+          padding="10px"
+          class="mcr-report-artifacts"
+          wrap
+        >
+          <IconLabel
+            v-for="(item, i) in report.artifacts"
+            :key="i"
+            icon="triangle-right"
+            :button="false"
+          >
+            <a
+              :href="item.htmlPath"
+              target="_blank"
+            >{{ item.name }}</a>
+          </IconLabel>
+        </VuiFlex>
+      </div>
+    </div>
+
     <div class="mcr-report-item">
       <div class="mcr-report-head">
         <VuiFlex
@@ -542,30 +582,6 @@ const timelineHandler = () => {
 
 // ====================================================================================
 
-const metadataHandler = () => {
-
-    const metadata = state.reportData.metadata;
-
-    const metadataList = Object.keys(metadata).map((k) => {
-        return {
-            icon: 'item-arrow',
-            name: k,
-            value: metadata[k]
-        };
-    }).filter((it) => {
-        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
-            return true;
-        }
-    });
-
-    if (metadataList.length) {
-        report.metadataList = metadataList;
-    }
-
-};
-
-// ====================================================================================
-
 const onTagClick = (tag) => {
     state.flyoverVisible = false;
     state.caseType = 'tests';
@@ -593,6 +609,42 @@ const tagsHandler = () => {
     });
 
     report.tagList = tagList;
+
+};
+
+// ====================================================================================
+
+const metadataHandler = () => {
+
+    const metadata = state.reportData.metadata;
+
+    const metadataList = Object.keys(metadata).map((k) => {
+        return {
+            icon: 'item-arrow',
+            name: k,
+            value: metadata[k]
+        };
+    }).filter((it) => {
+        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
+            return true;
+        }
+    });
+
+    if (metadataList.length) {
+        report.metadataList = metadataList;
+    }
+
+};
+
+const artifactsHandler = () => {
+    const artifacts = state.reportData.artifacts;
+    if (!Util.isList(artifacts)) {
+        return;
+    }
+
+    // console.log(artifacts);
+
+    report.artifacts = artifacts;
 
 };
 
@@ -678,6 +730,7 @@ onActivated(() => {
     timelineHandler();
     tagsHandler();
     metadataHandler();
+    artifactsHandler();
     exportHandler();
 });
 

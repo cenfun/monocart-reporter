@@ -55,6 +55,15 @@ const beforeApp = (item, Util) => {
                 });
             }
         });
+        if (reportData.artifacts) {
+            reportData.artifacts.forEach((artifact) => {
+                const prevPath = path.resolve(reportData.cwd, reportData.outputDir, artifact.htmlPath);
+                const newDir = item.devPath;
+                // console.log(prevPath, newDir);
+                const newPath = path.relative(newDir, prevPath);
+                artifact.htmlPath = formatPath(newPath);
+            });
+        }
     }
 
     const reportDataStr = deflateSync(JSON.stringify(reportData));
@@ -156,16 +165,23 @@ module.exports = {
             const EC = require('eight-colors');
 
             const toPath = path.resolve(__dirname, '../lib/runtime');
-            if (fs.existsSync(toPath)) {
+
+            // only clean if build all
+            if (results.jobList.length > 1 && fs.existsSync(toPath)) {
+                EC.logRed('removing runtime libs ...');
                 fs.rmSync(toPath, {
                     recursive: true,
                     force: true
                 });
             }
-            fs.mkdirSync(toPath);
+
+            if (!fs.existsSync(toPath)) {
+                fs.mkdirSync(toPath);
+            }
 
             const moduleFiles = {};
 
+            // sometimes only on job
             results.jobList.forEach((item) => {
 
                 Object.assign(moduleFiles, item.dependencies.moduleFiles);
