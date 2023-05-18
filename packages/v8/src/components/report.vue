@@ -40,40 +40,55 @@ const scrollToLine = (line) => {
 };
 
 const setUncoveredLines = (coverage, line, value) => {
-    const item = coverage.uncoveredLines;
-    const prev = item[line];
+    const uncoveredMap = coverage.uncoveredLines;
+    const prev = uncoveredMap[line];
     if (prev && prev !== value) {
         if (prev === 'uncovered') {
             return prev;
         }
         // console.log('previous line', line, prev, value);
     }
-    item[line] = value;
+    uncoveredMap[line] = value;
 };
 
 const setUncoveredPieces = (coverage, line, value) => {
-    const item = coverage.uncoveredPieces;
-    const prev = item[line];
-    if (prev) {
-        prev.push(value);
+    const uncoveredMap = coverage.uncoveredPieces;
+    const prevList = uncoveredMap[line];
+    if (prevList) {
+        prevList.push(value);
         return;
     }
-    item[line] = [value];
+    uncoveredMap[line] = [value];
 };
 
-const setExecutionCounts = (coverage, line, execution) => {
-    const item = coverage.executionCounts;
-    const prev = item[line];
-    if (prev) {
-        // check if exists
-        const ec = prev.find((it) => it.column === execution.column && it.value === execution.value);
-        if (ec) {
-            return;
-        }
-        prev.push(execution);
+const setExecutionCounts = (formattedMapping, range, coverage) => {
+    const executionMap = coverage.executionCounts;
+
+    const {
+        startOffset, endOffset, count
+    } = range;
+
+    const sLoc = formattedMapping.getFormattedLocation(startOffset);
+    const line = sLoc.line;
+    const column = sLoc.column;
+
+    const eLoc = formattedMapping.getFormattedLocation(endOffset);
+    const end = eLoc.start + eLoc.column;
+
+    const execution = {
+        // for start position
+        column,
+        value: count,
+        // for end position
+        end
+    };
+
+    const prevList = executionMap[line];
+    if (prevList) {
+        prevList.push(execution);
         return;
     }
-    item[line] = [execution];
+    executionMap[line] = [execution];
 };
 
 const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
@@ -267,11 +282,7 @@ const getCoverage = (item, text, formattedMapping) => {
         if (count === 0) {
             rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
         } else if (count > 1) {
-            const sLoc = formattedMapping.getFormattedLocation(startOffset);
-            setExecutionCounts(coverage, sLoc.line, {
-                column: sLoc.column,
-                value: count
-            });
+            setExecutionCounts(formattedMapping, range, coverage);
         }
     });
 
@@ -410,6 +421,7 @@ const renderReport = async () => {
     data.executionCounts = executionCounts;
     updateTopExecutions();
 
+    // for code viewer debug
     // console.log(report);
 
     if (codeViewer) {
