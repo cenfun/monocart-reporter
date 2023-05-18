@@ -1,3 +1,5 @@
+* 1.6.24
+  - updated coverage counter
 
 * 1.6.23
   - added new API addCoverageReport for global coverage report
