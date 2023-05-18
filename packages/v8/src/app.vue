@@ -1,118 +1,3 @@
-<template>
-  <div class="mcr vui-flex-column">
-    <VuiFlex
-      class="mcr-header"
-      padding="10px"
-      gap="10px"
-      shrink
-    >
-      <VuiFlex
-        gap="10px"
-        wrap
-      >
-        <div class="mcr-title">
-          <a href="./">{{ state.title }}</a>
-        </div>
-      </VuiFlex>
-
-      <div class="vui-flex-auto" />
-    </VuiFlex>
-
-    <VuiFlex
-      class="mcr-filter"
-      padding="10px"
-      gap="10px"
-      wrap
-    >
-      <VuiInput
-        v-model="state.keywords"
-        width="100%"
-        :class="searchClass"
-        placeholder="keywords"
-      />
-
-      <VuiSwitch
-        v-model="state.group"
-        :label-clickable="true"
-        label-position="right"
-      >
-        Group
-      </VuiSwitch>
-
-      <div class="vui-flex-auto" />
-
-      <VuiFlex class="mcr-watermarks">
-        <VuiFlex
-          class="mcr-low"
-          gap="5px"
-        >
-          <VuiSwitch
-            v-model="state.watermarkLow"
-            :label-clickable="true"
-            width="22px"
-            height="15px"
-          >
-            low
-          </VuiSwitch>
-        </VuiFlex>
-
-        <VuiFlex
-          class="mcr-medium"
-          gap="5px"
-        >
-          <div class="mcr-watermarks-value">
-            {{ state.watermarks[0] }}
-          </div>
-          <VuiSwitch
-            v-model="state.watermarkMedium"
-            :label-clickable="true"
-            width="22px"
-            height="15px"
-          >
-            medium
-          </VuiSwitch>
-        </VuiFlex>
-
-        <VuiFlex
-          class="mcr-high"
-          gap="5px"
-        >
-          <div class="mcr-watermarks-value">
-            {{ state.watermarks[1] }}
-          </div>
-          <VuiSwitch
-            v-model="state.watermarkHigh"
-            :label-clickable="true"
-            width="22px"
-            height="15px"
-          >
-            high
-          </VuiSwitch>
-        </VuiFlex>
-      </VuiFlex>
-    </VuiFlex>
-
-    <div class="mcr-coverage-grid vui-flex-auto" />
-
-    <Flyover>
-      <Report />
-    </Flyover>
-
-    <VuiTooltip
-      :class="tooltip.classMap"
-      :visible="tooltip.visible"
-      :target="tooltip.target"
-      :text="tooltip.text"
-      :html="tooltip.html"
-    />
-
-    <VuiLoading
-      :visible="state.initializing"
-      size="l"
-      center
-    />
-  </div>
-</template>
 <script setup>
 import {
     shallowReactive, onMounted, reactive, provide, watch, computed
@@ -120,10 +5,10 @@ import {
 import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
 import inflate from 'lz-utils/inflate';
-import { debounce } from 'async-tick';
+import { microtask, debounce } from 'async-tick';
 
 import Util from './utils/util.js';
-import store from '../../app/src/utils/store.js';
+import store from '../../app/src/common/store.js';
 
 import Flyover from './components/flyover.vue';
 import Report from './components/report.vue';
@@ -272,15 +157,36 @@ const initFlyoverSize = () => {
     state.flyoverWidth = flyoverWidth;
 };
 
-// const hideFlyover = () => {
-//     state.flyoverVisible = false;
-//     state.flyoverData = null;
-// };
+const hideFlyover = () => {
+    state.flyoverVisible = false;
+    state.flyoverData = null;
+};
 
 const showFlyover = (rowItem) => {
     state.flyoverData = rowItem.id;
     state.flyoverTitle = rowItem.sourcePath;
     state.flyoverVisible = true;
+    Util.setHash('page', rowItem.sourcePath);
+};
+
+const displayFlyoverWithHash = () => {
+
+    const page = Util.getHash('page');
+    if (page) {
+        const grid = state.grid;
+        if (grid) {
+            const rowItem = grid.getRowItemBy('sourcePath', page);
+            if (rowItem) {
+                grid.scrollRowIntoView(rowItem);
+                grid.setRowSelected(rowItem);
+                showFlyover(rowItem);
+                return;
+            }
+        }
+    }
+
+    hideFlyover();
+
 };
 
 // =================================================================================
@@ -324,7 +230,7 @@ const bindGridEvents = (grid) => {
     });
 
     grid.bind('onFirstUpdated', (e) => {
-
+        displayFlyoverWithHash();
     });
 };
 
@@ -729,6 +635,9 @@ watch([
     updateGridAsync();
 });
 
+window.addEventListener('popstate', microtask(() => {
+    displayFlyoverWithHash();
+}));
 
 window.addEventListener('resize', () => {
     state.windowWidth = window.innerWidth;
@@ -743,7 +652,131 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+window.addEventListener('message', (e) => {
+    const data = e.data;
+    if (data && typeof data === 'object') {
+        Object.assign(state, data);
+    }
+});
+
 </script>
+
+<template>
+  <div class="mcr vui-flex-column">
+    <VuiFlex
+      class="mcr-header"
+      padding="10px"
+      gap="10px"
+      shrink
+    >
+      <VuiFlex
+        gap="10px"
+        wrap
+      >
+        <div class="mcr-title">
+          <a href="./">{{ state.title }}</a>
+        </div>
+      </VuiFlex>
+
+      <div class="vui-flex-auto" />
+    </VuiFlex>
+
+    <VuiFlex
+      class="mcr-filter"
+      padding="10px"
+      gap="10px"
+      wrap
+    >
+      <VuiInput
+        v-model="state.keywords"
+        width="100%"
+        :class="searchClass"
+        placeholder="keywords"
+      />
+
+      <VuiSwitch
+        v-model="state.group"
+        :label-clickable="true"
+        label-position="right"
+      >
+        Group
+      </VuiSwitch>
+
+      <div class="vui-flex-auto" />
+
+      <VuiFlex class="mcr-watermarks">
+        <VuiFlex
+          class="mcr-low"
+          gap="5px"
+        >
+          <VuiSwitch
+            v-model="state.watermarkLow"
+            :label-clickable="true"
+            width="22px"
+            height="15px"
+          >
+            low
+          </VuiSwitch>
+        </VuiFlex>
+
+        <VuiFlex
+          class="mcr-medium"
+          gap="5px"
+        >
+          <div class="mcr-watermarks-value">
+            {{ state.watermarks[0] }}
+          </div>
+          <VuiSwitch
+            v-model="state.watermarkMedium"
+            :label-clickable="true"
+            width="22px"
+            height="15px"
+          >
+            medium
+          </VuiSwitch>
+        </VuiFlex>
+
+        <VuiFlex
+          class="mcr-high"
+          gap="5px"
+        >
+          <div class="mcr-watermarks-value">
+            {{ state.watermarks[1] }}
+          </div>
+          <VuiSwitch
+            v-model="state.watermarkHigh"
+            :label-clickable="true"
+            width="22px"
+            height="15px"
+          >
+            high
+          </VuiSwitch>
+        </VuiFlex>
+      </VuiFlex>
+    </VuiFlex>
+
+    <div class="mcr-coverage-grid vui-flex-auto" />
+
+    <Flyover>
+      <Report />
+    </Flyover>
+
+    <VuiTooltip
+      :class="tooltip.classMap"
+      :visible="tooltip.visible"
+      :target="tooltip.target"
+      :text="tooltip.text"
+      :html="tooltip.html"
+    />
+
+    <VuiLoading
+      :visible="state.initializing"
+      size="l"
+      center
+    />
+  </div>
+</template>
+
 <style lang="scss">
 html {
     height: 100%;

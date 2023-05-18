@@ -243,6 +243,8 @@ import { components, generateTooltips } from 'vine-ui';
 import { debounce, microtask } from 'async-tick';
 import inflate from 'lz-utils/inflate';
 
+import store from './common/store.js';
+
 import Util from './utils/util.js';
 import {
     createGrid, renderGrid, updateGrid, initCustomsFormatters, displayFlyoverWithHash, expandRowLevel
@@ -251,7 +253,6 @@ import {
 import Flyover from './components/flyover.vue';
 import IconLabel from './components/icon-label.vue';
 
-import store from './utils/store.js';
 import state from './modules/state.js';
 
 const {
