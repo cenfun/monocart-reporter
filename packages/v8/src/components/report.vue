@@ -38,17 +38,17 @@
       </VuiFlex>
 
       <VuiFlex
-        gap="5px"
+        gap="10px"
         padding="5px"
         wrap
       >
-        <VuiSwitch
-          v-model="data.formatted"
-          :label-clickable="true"
-          tooltip="Will automatically turn off formatting if the file was unpacked from a source map file"
-        >
+        <VuiFlex gap="5px">
           <b>Formatted</b>
-        </VuiSwitch>
+          <VuiSwitch
+            v-model="data.formatted"
+            tooltip="Will automatically turn off formatting if the file was unpacked from a source map file"
+          />
+        </VuiFlex>
 
         <span v-if="data.distFile">
           <b>Dist File</b> {{ data.distFile }}
@@ -57,14 +57,14 @@
 
       <VuiFlex
         v-if="data.topExecutions"
-        gap="5px"
+        gap="10px"
         wrap
       >
         <VuiFlex
           gap="5px"
           padding="5px"
         >
-          <div><b>Top</b></div>
+          <div><b>Top Executions</b></div>
           <VuiSelect
             v-model="state.topNumber"
             class="mcr-top-number"
@@ -73,7 +73,6 @@
             <option>5</option>
             <option>10</option>
           </VuiSelect>
-          <div><b>Executions:</b></div>
         </VuiFlex>
 
         <VuiFlex

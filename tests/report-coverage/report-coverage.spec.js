@@ -24,7 +24,9 @@ test.describe('take Istanbul coverage report', () => {
         await page.close();
         expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
         // coverage report
-        const report = await attachCoverageReport(coverageData, test.info());
+        const report = await attachCoverageReport(coverageData, test.info(), {
+            lcov: true
+        });
         console.log(report.summary);
     });
 });
