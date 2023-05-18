@@ -18,7 +18,9 @@ import {
     computed, onMounted, ref, useSlots, watch
 } from 'vue';
 
-import icons from '../utils/icons.js';
+import decodeIcons from '../common/icons.js';
+const context = require.context('../images/icons', true, /\.svg$/);
+const icons = decodeIcons(context);
 
 const props = defineProps({
     icon: {
