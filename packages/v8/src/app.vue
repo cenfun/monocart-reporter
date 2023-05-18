@@ -164,9 +164,9 @@ const hideFlyover = () => {
 
 const showFlyover = (rowItem) => {
     state.flyoverData = rowItem.id;
-    state.flyoverTitle = rowItem.sourcePath;
+    state.flyoverTitle = rowItem.url;
     state.flyoverVisible = true;
-    Util.setHash('page', rowItem.sourcePath);
+    Util.setHash('page', rowItem.id);
 };
 
 const displayFlyoverWithHash = () => {
@@ -175,7 +175,7 @@ const displayFlyoverWithHash = () => {
     if (page) {
         const grid = state.grid;
         if (grid) {
-            const rowItem = grid.getRowItemBy('sourcePath', page);
+            const rowItem = grid.getRowItemById(page);
             if (rowItem) {
                 grid.scrollRowIntoView(rowItem);
                 grid.setRowSelected(rowItem);
@@ -474,9 +474,10 @@ const initData = () => {
     files.forEach((item) => {
         // init percentChart
         item.summary.percentChart = Util.generatePercentChart(item.summary.pct);
-        const id = Util.uid();
-        item.id = id;
-        fileMap[id] = item;
+        if (fileMap[item.id]) {
+            console.error(`duplicate id: ${item.id} '${fileMap[item.id].url}' => '${item.url}'`);
+        }
+        fileMap[item.id] = item;
     });
     state.fileMap = fileMap;
 

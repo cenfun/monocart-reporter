@@ -1,119 +1,3 @@
-<template>
-  <VuiFlex
-    direction="column"
-    class="mcr-report"
-  >
-    <VuiFlex
-      direction="column"
-      padding="5px"
-      class="mcr-report-head"
-    >
-      <VuiFlex
-        v-for="(item, i) in data.list"
-        :key="i"
-        padding="5px"
-        gap="10px"
-        wrap
-      >
-        <div>
-          <b>{{ item.indicatorName }}</b> <span :tooltip="item.totalTooltip">{{ Util.NF(item.total) }}</span>
-        </div>
-
-        <div>
-          Covered: <span
-            :tooltip="item.coveredTooltip"
-            :class="item.coveredClass"
-          >{{ Util.NF(item.covered) }}</span>
-        </div>
-        <div>
-          Uncovered: <span
-            :tooltip="item.uncoveredTooltip"
-            :class="item.uncoveredClass"
-          >{{ Util.NF(item.uncovered) }}</span>
-        </div>
-        <div
-          style="width: 100px;"
-          v-html="item.percentChart"
-        />
-        <div
-          style="padding: 0 5px;"
-          :class="'mcr-'+item.status"
-        >
-          {{ Util.PF(item.pct, 100) }}
-        </div>
-      </VuiFlex>
-
-      <VuiFlex
-        gap="10px"
-        padding="5px"
-        wrap
-      >
-        <VuiFlex gap="5px">
-          <b>Formatted</b>
-          <VuiSwitch
-            v-model="data.formatted"
-            tooltip="Will automatically turn off formatting if the file was unpacked from a source map file"
-          />
-        </VuiFlex>
-
-        <span v-if="data.distFile">
-          <b>Dist File</b> {{ data.distFile }}
-        </span>
-      </VuiFlex>
-
-      <VuiFlex
-        v-if="data.topExecutions"
-        gap="10px"
-      >
-        <VuiFlex
-          gap="5px"
-          padding="5px"
-        >
-          <div><b>Top Executions</b></div>
-          <VuiSelect
-            v-model="state.topNumber"
-            class="mcr-top-number"
-          >
-            <option>3</option>
-            <option>5</option>
-            <option>10</option>
-          </VuiSelect>
-        </VuiFlex>
-
-        <VuiFlex
-          class="vui-flex-auto"
-          gap="8px"
-          wrap
-        >
-          <VuiFlex
-            v-for="(item, i) in data.topExecutions"
-            :key="i"
-            gap="5px"
-          >
-            <div
-              class="mcr-line"
-              @click="scrollToLine(item.line)"
-            >
-              line {{ Util.NF(item.line) }}
-            </div>
-            <div class="mcr-count">
-              x{{ item.count }}
-            </div>
-          </VuiFlex>
-        </VuiFlex>
-      </VuiFlex>
-    </VuiFlex>
-    <div
-      ref="el"
-      class="mcr-report-code vui-flex-auto"
-    />
-    <VuiLoading
-      center
-      :visible="state.loading"
-    />
-  </VuiFlex>
-</template>
-
 <script setup>
 import {
     ref, watch, inject, onMounted, shallowReactive
@@ -395,6 +279,25 @@ const getCoverage = (item, text, formattedMapping) => {
 
 };
 
+const autoDetectType = (item) => {
+    const { type, source } = item;
+
+    const src = source.trim();
+    if (src.startsWith('<') && src.endsWith('>')) {
+        return 'html';
+    }
+
+    // const lastDot = item.sourcePath.lastIndexOf('.');
+    // if (lastDot !== -1) {
+    //     const ext = item.sourcePath.slice(lastDot);
+    //     if (ext === '.vue') {
+    //         return 'html';
+    //     }
+    // }
+
+    return type;
+};
+
 const formatSource = (item) => {
     const source = item.source;
 
@@ -411,7 +314,12 @@ const formatSource = (item) => {
         };
     }
 
-    return format(source, item.type);
+    let type = item.type;
+    if (item.distFile && type === 'js') {
+        type = autoDetectType(item);
+    }
+
+    return format(source, type);
 };
 
 const getReport = async (item) => {
@@ -557,6 +465,123 @@ onMounted(() => {
 });
 
 </script>
+
+<template>
+  <VuiFlex
+    direction="column"
+    class="mcr-report"
+  >
+    <VuiFlex
+      direction="column"
+      padding="5px"
+      class="mcr-report-head"
+    >
+      <VuiFlex
+        v-for="(item, i) in data.list"
+        :key="i"
+        padding="5px"
+        gap="10px"
+        wrap
+      >
+        <div>
+          <b>{{ item.indicatorName }}</b> <span :tooltip="item.totalTooltip">{{ Util.NF(item.total) }}</span>
+        </div>
+
+        <div>
+          Covered: <span
+            :tooltip="item.coveredTooltip"
+            :class="item.coveredClass"
+          >{{ Util.NF(item.covered) }}</span>
+        </div>
+        <div>
+          Uncovered: <span
+            :tooltip="item.uncoveredTooltip"
+            :class="item.uncoveredClass"
+          >{{ Util.NF(item.uncovered) }}</span>
+        </div>
+        <div
+          style="width: 100px;"
+          v-html="item.percentChart"
+        />
+        <div
+          style="padding: 0 5px;"
+          :class="'mcr-'+item.status"
+        >
+          {{ Util.PF(item.pct, 100) }}
+        </div>
+      </VuiFlex>
+
+      <VuiFlex
+        gap="10px"
+        padding="5px"
+        wrap
+      >
+        <VuiFlex gap="5px">
+          <b>Formatted</b>
+          <VuiSwitch
+            v-model="data.formatted"
+            tooltip="Will automatically turn off formatting if the file was unpacked from a source map file"
+          />
+        </VuiFlex>
+
+        <span v-if="data.distFile">
+          <b>Dist File</b> {{ data.distFile }}
+        </span>
+      </VuiFlex>
+
+      <VuiFlex
+        v-if="data.topExecutions"
+        gap="10px"
+      >
+        <VuiFlex
+          gap="5px"
+          padding="5px"
+        >
+          <div><b>Top Executions</b></div>
+          <VuiSelect
+            v-model="state.topNumber"
+            class="mcr-top-number"
+          >
+            <option>3</option>
+            <option>5</option>
+            <option>10</option>
+          </VuiSelect>
+        </VuiFlex>
+
+        <VuiFlex
+          class="vui-flex-auto"
+          gap="8px"
+          wrap
+        >
+          <VuiFlex
+            v-for="(item, i) in data.topExecutions"
+            :key="i"
+            gap="5px"
+          >
+            <div
+              class="mcr-line"
+              @click="scrollToLine(item.line)"
+            >
+              line {{ Util.NF(item.line) }}
+            </div>
+            <div class="mcr-count">
+              x{{ item.count }}
+            </div>
+          </VuiFlex>
+        </VuiFlex>
+      </VuiFlex>
+    </VuiFlex>
+    <div
+      ref="el"
+      class="mcr-report-code vui-flex-auto"
+    />
+    <VuiLoading
+      center
+      :visible="state.loading"
+    />
+  </VuiFlex>
+</template>
+
 <style lang="scss">
 .mcr-report {
     position: relative;
