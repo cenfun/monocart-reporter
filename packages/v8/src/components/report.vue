@@ -399,6 +399,7 @@ const renderReport = async () => {
         uncoveredTooltip: '',
         uncoveredClass: uncovered > 0 ? 'mcr-uncovered' : '',
         pct,
+        status: Util.getStatus(pct, state.watermarks),
         percentChart
     };
 
