@@ -18,8 +18,8 @@
 * [Playwright Config](#playwright-config)
 * [Examples](#examples)
 * [Output](#output) HTML and JSON
-* [View Trace Online](#view-trace-online)
 * [Reporter Options](#reporter-options)
+* [View Trace Online](#view-trace-online)
 * [Custom Columns](#custom-columns) (Extra properties for suite/case/step)
     - [Custom Formatter](#custom-formatter)
     - [Searchable Fields](#searchable-fields)
@@ -105,12 +105,6 @@ module.exports = {
 - path-to/your-filename.json  
 Separated metadata file (Already included in the above HTML and compressed, it can be deleted). Can be used for debugging or custom data collection.
 
-## View Trace Online 
-> The [Trace Viewer](https://trace.playwright.dev/) requires that the trace file must be loaded over the http:// or https:// protocols without [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS) issue, try following start a local web server:
-```sh
-npx monocart show-report <your-outputFile-path>
-```
-
 ## Reporter Options
 ```js
 {
@@ -123,6 +117,8 @@ npx monocart show-report <your-outputFile-path>
     // attachment path handler
     attachmentPath: null,
     // attachmentPath: (currentPath, extras) => `https://another-path/${currentPath}`,
+
+    traceViewerUrl: 'https://trace.playwright.dev/?trace={traceUrl}',
 
     // global coverage settings for addCoverageReport API
     coverage: null,
@@ -161,6 +157,13 @@ npx monocart show-report <your-outputFile-path>
     // onEnd: async (reportData, capability) => {}
 }
 ```
+
+## View Trace Online 
+> The [Trace Viewer](https://trace.playwright.dev/) requires that the trace file must be loaded over the http:// or https:// protocols without [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS) issue, try following start a local web server:
+```sh
+npx monocart show-report <your-outputFile-path>
+```
+Or customize your own trace viewer url with option `traceViewerUrl` defaults to  `https://trace.playwright.dev/?trace={traceUrl}`
 
 ## Custom Columns
 The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties following:
