@@ -339,10 +339,12 @@ const formatSource = (item) => {
 
 const getReport = async (item) => {
 
-    if (item.report && item.report.formatted === data.formatted) {
+    const cacheKey = ['report', 'formatted', data.formatted].join('_');
+
+    if (item[cacheKey]) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve(item.report);
+                resolve(item[cacheKey]);
             });
         });
     }
@@ -359,7 +361,7 @@ const getReport = async (item) => {
 
     const coverage = getCoverage(item, item.source, formattedMapping);
 
-    // console.log(coverage);
+    // console.log(cacheKey, coverage);
     // console.log([item.source]);
     // console.log([content]);
 
@@ -368,6 +370,8 @@ const getReport = async (item) => {
         coverage,
         content
     };
+
+    item[cacheKey] = report;
 
     return report;
 };
