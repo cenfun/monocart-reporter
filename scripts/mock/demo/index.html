@@ -26,9 +26,9 @@
 
     <script src="ie-polyfill.js"></script>
     <script src="redirection.js"></script>
-	<script src="dist/turbogrid.js"></script>
 
-    <script src="dist/vine-ui-app-bundle.js"></script>
+    <script src="dist/coverage-data.js"></script>
+    <script src="dist/monocart-v8.js"></script>
     
     <script>
        console.log('body');
@@ -36,21 +36,6 @@
 
        new FPSDetector('.fps-detector');
 
-       const { Grid } = window.turbogrid;
-       const grid = new Grid('.grid');
-       grid.setOption({
-           autoHeight: true
-       });
-       grid.setData({
-           columns: [{
-               id: 'name',
-               name: 'Name'
-           }],
-           rows: [{
-               name: 'name'
-           }]
-       });
-       grid.render();
     </script>
 
 
