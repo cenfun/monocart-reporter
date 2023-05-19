@@ -68,14 +68,15 @@ const setExecutionCounts = (formattedMapping, range, coverage) => {
         startOffset, endOffset, count
     } = range;
 
-    const sLoc = formattedMapping.getFormattedLocation(startOffset);
+    const skipIndent = true;
+    const sLoc = formattedMapping.getFormattedLocation(startOffset, skipIndent);
     const line = sLoc.line;
     const column = sLoc.column;
 
     const eLoc = formattedMapping.getFormattedLocation(endOffset);
     const end = eLoc.start + eLoc.column;
 
-    // console.log(endOffset, end);
+    // console.log(startOffset, endOffset, sLoc);
 
     const execution = {
         // for start position
@@ -93,7 +94,7 @@ const setExecutionCounts = (formattedMapping, range, coverage) => {
     executionMap[line] = [execution];
 };
 
-const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
+const singleLineHandler = (sLoc, eLoc, coverage) => {
     // console.log(sLoc, eLoc);
 
     // nothing between
@@ -101,23 +102,9 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
         return;
     }
 
-    const lineInfo = formattedMapping.getFormattedLine(sLoc.line);
-    const realStart = lineInfo.text.search(/\S/g);
-    // console.log(sLoc.line, codeOffset, sLoc.column);
-
-    // multiple line end line, start code offset
-    if (sLoc.column < realStart) {
-        sLoc.column = realStart;
-    }
-
-    // nothing between after code offset
-    if (sLoc.column >= eLoc.column) {
-        return;
-    }
-
     // console.log(sLoc, codeOffset, eLoc);
 
-    if (sLoc.column === realStart && eLoc.column === eLoc.length) {
+    if (sLoc.column === sLoc.indent && eLoc.column === eLoc.length) {
         // console.log('single', sLoc.line);
         setUncoveredLines(coverage, sLoc.line, 'uncovered');
         return;
@@ -143,7 +130,7 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
         ... sLoc,
         column: sLoc.length
     };
-    singleLineHandler(sLoc, firstELoc, coverage, formattedMapping);
+    singleLineHandler(sLoc, firstELoc, coverage);
 
 
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
@@ -161,18 +148,19 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     const lastSLoc = {
         ... eLoc,
-        column: 0
+        column: eLoc.indent
     };
-    singleLineHandler(lastSLoc, eLoc, coverage, formattedMapping);
+    singleLineHandler(lastSLoc, eLoc, coverage);
 
 };
 
 const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
-    const sLoc = formattedMapping.getFormattedLocation(start);
-    const eLoc = formattedMapping.getFormattedLocation(end);
+    const skipIndent = true;
+    const sLoc = formattedMapping.getFormattedLocation(start, skipIndent);
+    const eLoc = formattedMapping.getFormattedLocation(end, skipIndent);
 
     if (eLoc.line === sLoc.line) {
-        singleLineHandler(sLoc, eLoc, coverage, formattedMapping);
+        singleLineHandler(sLoc, eLoc, coverage);
         return;
     }
 
