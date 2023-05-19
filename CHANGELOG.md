@@ -1,6 +1,7 @@
 
 * 1.6.25
   - fixed indent for coverage report
+  - added option traceViewerUrl
 
 * 1.6.24
   - updated coverage counter

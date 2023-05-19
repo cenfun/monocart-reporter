@@ -2,7 +2,7 @@ import Util from '../utils/util.js';
 import generateWaterfallChart from './waterfall.js';
 import { markdownFormatter } from './formatters.js';
 
-export const getAttachment = (item) => {
+export const getAttachment = (item, options) => {
     // console.log(attachment);
     // contentType 'application/json' 'image/png' 'video/webm'
     const {
@@ -28,7 +28,7 @@ export const getAttachment = (item) => {
             return name === 'trace' && contentType === 'application/zip';
         },
         handler: () => {
-            return getTrace(path, name);
+            return getTrace(path, name, options);
         }
     }, {
         condition: () => {
@@ -89,7 +89,10 @@ const getVideo = (path, name, contentType) => {
 
 // ================================================================================================
 
-const getTrace = (path, name) => {
+const getTrace = (path, name, options) => {
+    const defaultUrl = 'https://trace.playwright.dev/?trace={traceUrl}';
+    const traceViewerUrl = options.traceViewerUrl || defaultUrl;
+
     const protocol = window.location.protocol;
     const isOnline = ['http:', 'https:'].includes(protocol);
 
@@ -97,7 +100,9 @@ const getTrace = (path, name) => {
     const traceViewer = '<a href="https://trace.playwright.dev/" target="_blank">Trace Viewer</a>';
 
     const traceUrl = new URL(path, window.location.href);
-    const viewerUrl = `https://trace.playwright.dev/?trace=${encodeURIComponent(traceUrl)}`;
+    const viewerUrl = Util.replace(traceViewerUrl, {
+        traceUrl: encodeURIComponent(traceUrl)
+    });
 
     const color = isOnline ? 'green' : 'red';
     const currentProtocol = `current protocol is <code style="color:${color}">${protocol}</code>`;
@@ -110,13 +115,14 @@ const getTrace = (path, name) => {
 
     const ls = [];
     ls.push('<div class="mcr-trace-details">');
-    ls.push(`<a href="${viewerUrl}" target="_blank">View trace online</a>`);
+    ls.push(`<div><a class="mcr-icon-link" href="${viewerUrl}" target="_blank">View trace</a></div>`);
     ls.push('<details>');
     ls.push('<summary>NOTE</summary>');
 
     ls.push('<dl class="mcr-readme">');
     ls.push(`<dd class="mcr-item">${readme}</dd>`);
     ls.push(`<dd class="mcr-item">or download the ${traceFile} file and load it to the page ${traceViewer} manually.</dd>`);
+    ls.push(`<dd class="mcr-item">or customize a trace viewer url with option <code>traceViewerUrl: "${defaultUrl}"</code>.</dd>`);
     ls.push('</dl>');
 
     ls.push('</details>');

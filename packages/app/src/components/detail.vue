@@ -361,11 +361,16 @@ const getAttachments = (item, column) => {
     if (!Util.isList(attachments)) {
         return;
     }
+
+    const options = {
+        traceViewerUrl: state.reportData.traceViewerUrl
+    };
+
     const list = attachments.map((attachment) => {
         if (typeof attachment.path !== 'string') {
             return '';
         }
-        return getAttachment(attachment);
+        return getAttachment(attachment, options);
     });
 
     const content = list.join('');
@@ -881,7 +886,7 @@ onActivated(() => {
         display: flex;
         flex-direction: row;
 
-        > a {
+        a {
             white-space: nowrap;
         }
 
