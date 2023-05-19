@@ -124,6 +124,15 @@ npx monocart show-report <your-outputFile-path>
     attachmentPath: null,
     // attachmentPath: (currentPath, extras) => `https://another-path/${currentPath}`,
 
+    // global coverage settings for addCoverageReport API
+    coverage: null,
+    // coverage: {
+    //     unpackSourceMap: true,
+    //     excludeDistFile: true,
+    //     sourceFilter: (sourceName) => sourceName.search(/\/src\/.+/) !== -1,
+    //     entryFilter: (entry) => {}
+    // },
+
     // trend data handler
     trend: null,
     // trend: () => './test-results/report.json',
@@ -624,8 +633,17 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
 - `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 - `options` (Object)
-    - `watermarks` By default, watermarks of Istanbul see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) (Object), watermarks of V8 is `[50, 80]` (Array)
-    - `toIstanbul` (Boolean) for V8 data conversion
+    - Istanbul only:
+    - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report)
+    - `lcov` (Boolean) Whether to create `lcov.info`
+    - V8 only:
+    - `toIstanbul` (Boolean) Whether to convert to Istanbul report
+    - `watermarks` (Array) Defaults to `[50, 80]` 
+    - `unpackSourceMap` (Boolean) Whether to unpack all sources from the source map if a related source map file is found.
+    - `excludeDistFile` (Boolean) Whether to exclude the dist file (usually minified) if the sources are successfully unpacked from the source map.
+    - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
+    - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
+    - `inline` (Boolean) Whether inline all scripts to the single HTML file.
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
 
