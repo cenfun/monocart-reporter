@@ -75,6 +75,8 @@ const setExecutionCounts = (formattedMapping, range, coverage) => {
     const eLoc = formattedMapping.getFormattedLocation(endOffset);
     const end = eLoc.start + eLoc.column;
 
+    // console.log(endOffset, end);
+
     const execution = {
         // for start position
         column,
@@ -316,12 +318,14 @@ const formatSource = (item) => {
 
     // no format for distFile item, may vue format or others
     if (!data.formatted) {
+        // codemirror will replace all \r\n to \n, so end position will be mismatched
+        // just replace all \r\n with \n
+        const formatted = source.replace(Util.lineBreakPattern, '\n');
+        const mapping = Mapping.generate(source, formatted);
+        // console.log(mapping);
         return {
-            content: source,
-            mapping: {
-                original: [0],
-                formatted: [0]
-            }
+            content: formatted,
+            mapping
         };
     }
 
@@ -356,6 +360,8 @@ const getReport = async (item) => {
     const coverage = getCoverage(item, item.source, formattedMapping);
 
     // console.log(coverage);
+    // console.log([item.source]);
+    // console.log([content]);
 
     const report = {
         formatted: data.formatted,
