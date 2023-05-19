@@ -1,6 +1,6 @@
 {
     "name": "monocart-network",
-    "version": "1.6.24",
+    "version": "1.6.25",
     "main": "dist/monocart-network.js",
     "files": [
         "dist"
