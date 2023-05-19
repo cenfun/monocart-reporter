@@ -102,12 +102,12 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
     }
 
     const lineInfo = formattedMapping.getFormattedLine(sLoc.line);
-    const codeOffset = lineInfo.text.search(/\S/g);
+    const realStart = lineInfo.text.search(/\S/g);
     // console.log(sLoc.line, codeOffset, sLoc.column);
 
     // multiple line end line, start code offset
-    if (sLoc.fromCode) {
-        sLoc.column = codeOffset;
+    if (sLoc.column < realStart) {
+        sLoc.column = realStart;
     }
 
     // nothing between after code offset
@@ -117,7 +117,7 @@ const singleLineHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     // console.log(sLoc, codeOffset, eLoc);
 
-    if (sLoc.column === codeOffset && eLoc.column === eLoc.length) {
+    if (sLoc.column === realStart && eLoc.column === eLoc.length) {
         // console.log('single', sLoc.line);
         setUncoveredLines(coverage, sLoc.line, 'uncovered');
         return;
@@ -161,8 +161,7 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
     const lastSLoc = {
         ... eLoc,
-        column: 0,
-        fromCode: true
+        column: 0
     };
     singleLineHandler(lastSLoc, eLoc, coverage, formattedMapping);
 
