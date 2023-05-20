@@ -169,8 +169,8 @@ export const getCoverage = (item, formattedContent, formattedMapping) => {
     const originalContent = item.source;
     const originalLength = originalContent.length;
 
-    // parse commented and blank lines
-    const parseLines = item.originalType !== 'html';
+    // parse commented and blank lines, include vue html for now
+    const parseLines = true;
     const mapping = new Mapping(formattedContent, formattedMapping, parseLines);
 
     const formattedLines = mapping.formattedLines;
