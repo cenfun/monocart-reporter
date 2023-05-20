@@ -570,14 +570,13 @@ onMounted(() => {
           v-for="(item, i) in data.topExecutions"
           :key="i"
           gap="5px"
+          class="mcr-top-item"
+          @click="scrollToLine(item.line)"
         >
-          <div
-            class="mcr-line"
-            @click="scrollToLine(item.line)"
-          >
-            line {{ Util.NF(item.line) }}
+          <div class="mcr-top-line">
+            L{{ Util.NF(item.line) }}
           </div>
-          <div class="mcr-count">
+          <div class="mcr-top-count">
             x{{ item.count }}
           </div>
         </VuiFlex>
@@ -638,20 +637,23 @@ onMounted(() => {
     color: red;
 }
 
-.mcr-line {
+.mcr-top-item {
     cursor: pointer;
 
     &:hover {
-        text-decoration: underline;
+        .mcr-top-line {
+            text-decoration: underline;
+        }
     }
-}
 
-.mcr-count {
-    padding: 0 3px;
-    font-size: 12px;
-    border: 1px solid #4eb62f;
-    border-radius: 3px;
-    background-color: #e6f5d0;
+    .mcr-top-count {
+        padding: 0 3px;
+        font-size: 12px;
+        font-family: monospace;
+        border: 1px solid #4eb62f;
+        border-radius: 3px;
+        background-color: #e6f5d0;
+    }
 }
 
 </style>
