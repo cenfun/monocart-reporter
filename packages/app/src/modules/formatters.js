@@ -183,9 +183,7 @@ const formatters = {
             formattedValue = `${formattedValue} <span class="mcr-num">${Util.NF(rowItem.caseNum)}</span>`;
         } else if (rowItem.type === 'case') {
             // add open icon for case
-            formattedValue = `${formattedValue} <div class="tg-cell-hover-icon mcr-flyover-icon">
-                <div class="mcr-icon mcr-icon-open" />
-            </div>`;
+            formattedValue = `<div class="tg-cell-open">${formattedValue}</div>`;
         } else if (rowItem.type === 'step' && rowItem.count) {
             // add count number for step
             formattedValue = `${formattedValue} <span class="mcr-num mcr-count">${Util.NF(rowItem.count)}</span>`;

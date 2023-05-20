@@ -183,7 +183,7 @@ const onRowClickHandler = (d, force) => {
     const cls = e.target.classList;
     const columnId = columnItem.id;
 
-    const isInfo = columnId === 'title' && cls.contains('mcr-icon-open');
+    const isCaseTitle = columnId === 'title' && rowItem.type === 'case';
 
     const isClickColumn = [
         'ok',
@@ -193,7 +193,7 @@ const onRowClickHandler = (d, force) => {
         'attachments'
     ].includes(columnId) && !cls.contains('tg-cell');
 
-    if (isInfo || isClickColumn) {
+    if (isCaseTitle || isClickColumn) {
         showRowDetail(caseItem);
     }
 

@@ -752,10 +752,6 @@ icon
     opacity: 1;
 }
 
-.mcr-icon-open {
-    background-image: url("./images/open.svg");
-}
-
 .mcr-icon-link {
     padding-left: 18px;
     background-image: url("./images/link.svg");
@@ -928,6 +924,14 @@ icon
     .tg-step.tg-group.tg-row,
     .tg-case.tg-group.tg-row {
         font-weight: normal;
+    }
+
+    .tg-cell-open {
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
     .tg-cell .mcr-icon,
