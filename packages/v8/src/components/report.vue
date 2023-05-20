@@ -489,9 +489,10 @@ onMounted(() => {
       <VuiFlex
         v-for="(item, i) in data.list"
         :key="i"
-        padding="5px"
         gap="10px"
+        padding="5px"
         wrap
+        class="mcr-report-item"
       >
         <div>
           <b>{{ item.indicatorName }}</b> <span :tooltip="item.totalTooltip">{{ Util.NF(item.total) }}</span>
@@ -525,6 +526,7 @@ onMounted(() => {
         gap="10px"
         padding="5px"
         wrap
+        class="mcr-report-item"
       >
         <VuiFlex gap="5px">
           <b>Formatted</b>
@@ -542,42 +544,34 @@ onMounted(() => {
       <VuiFlex
         v-if="data.topExecutions"
         gap="10px"
+        padding="5px"
+        wrap
+        class="mcr-report-item"
       >
-        <VuiFlex
-          gap="5px"
-          padding="5px"
+        <div><b>Top Executions</b></div>
+        <VuiSelect
+          v-model="state.topNumber"
+          class="mcr-top-number"
         >
-          <div><b>Top Executions</b></div>
-          <VuiSelect
-            v-model="state.topNumber"
-            class="mcr-top-number"
-          >
-            <option>3</option>
-            <option>5</option>
-            <option>10</option>
-          </VuiSelect>
-        </VuiFlex>
+          <option>3</option>
+          <option>5</option>
+          <option>10</option>
+        </VuiSelect>
 
         <VuiFlex
-          class="vui-flex-auto"
-          gap="8px"
-          wrap
+          v-for="(item, i) in data.topExecutions"
+          :key="i"
+          gap="5px"
         >
-          <VuiFlex
-            v-for="(item, i) in data.topExecutions"
-            :key="i"
-            gap="5px"
+          <div
+            class="mcr-line"
+            @click="scrollToLine(item.line)"
           >
-            <div
-              class="mcr-line"
-              @click="scrollToLine(item.line)"
-            >
-              line {{ Util.NF(item.line) }}
-            </div>
-            <div class="mcr-count">
-              x{{ item.count }}
-            </div>
-          </VuiFlex>
+            line {{ Util.NF(item.line) }}
+          </div>
+          <div class="mcr-count">
+            x{{ item.count }}
+          </div>
         </VuiFlex>
       </VuiFlex>
     </VuiFlex>
@@ -605,6 +599,13 @@ onMounted(() => {
 
     a {
         word-break: break-all;
+    }
+}
+
+@media (hover: none) {
+    .mcr-report-item {
+        flex-wrap: nowrap;
+        overflow-x: auto;
     }
 }
 
