@@ -1,10 +1,11 @@
+import { Mapping } from 'monocart-formatter';
 import Util from './util.js';
 
 const setUncoveredLines = (coverage, line, value) => {
     const uncoveredMap = coverage.uncoveredLines;
     const prev = uncoveredMap[line];
     if (prev && prev !== value) {
-        if (prev === 'uncovered') {
+        if (prev === 'uncovered' || prev === 'comment' || prev === 'blank') {
             return prev;
         }
         // console.log('previous line', line, prev, value);
@@ -22,7 +23,7 @@ const setUncoveredPieces = (coverage, line, value) => {
     uncoveredMap[line] = [value];
 };
 
-const setExecutionCounts = (formattedMapping, range, coverage) => {
+const setExecutionCounts = (mapping, range, coverage) => {
     const executionMap = coverage.executionCounts;
 
     const {
@@ -30,19 +31,19 @@ const setExecutionCounts = (formattedMapping, range, coverage) => {
     } = range;
 
     const skipIndent = true;
-    const sLoc = formattedMapping.getFormattedLocation(startOffset, skipIndent);
+    const sLoc = mapping.getFormattedLocation(startOffset, skipIndent);
     const line = sLoc.line;
     let column = sLoc.column;
 
     // It should never be possible to start with }
     const pos = sLoc.start + column;
-    const char = formattedMapping.getFormattedSlice(pos, pos + 1);
+    const char = mapping.getFormattedSlice(pos, pos + 1);
     if (char === '}') {
         // console.log(line, char);
         column += 1;
     }
 
-    const eLoc = formattedMapping.getFormattedLocation(endOffset);
+    const eLoc = mapping.getFormattedLocation(endOffset);
     const end = eLoc.start + eLoc.column;
 
     // console.log(startOffset, endOffset, sLoc);
@@ -93,7 +94,7 @@ const singleLineHandler = (sLoc, eLoc, coverage) => {
 
 };
 
-const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
+const multipleLinesHandler = (sLoc, eLoc, coverage, mapping) => {
 
     const firstELoc = {
         ... sLoc,
@@ -101,18 +102,8 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
     };
     singleLineHandler(sLoc, firstELoc, coverage);
 
-
     for (let i = sLoc.line + 1; i < eLoc.line; i++) {
-
-        // console.log('multiple', i);
-        // if empty line
-        const isEmpty = formattedMapping.isFormattedLineEmpty(i);
-        if (isEmpty) {
-            continue;
-        }
-
         setUncoveredLines(coverage, i, 'uncovered');
-
     }
 
     const lastSLoc = {
@@ -123,17 +114,17 @@ const multipleLinesHandler = (sLoc, eLoc, coverage, formattedMapping) => {
 
 };
 
-const rangeLinesHandler = (formattedMapping, start, end, coverage) => {
+const rangeLinesHandler = (mapping, start, end, coverage) => {
     const skipIndent = true;
-    const sLoc = formattedMapping.getFormattedLocation(start, skipIndent);
-    const eLoc = formattedMapping.getFormattedLocation(end, skipIndent);
+    const sLoc = mapping.getFormattedLocation(start, skipIndent);
+    const eLoc = mapping.getFormattedLocation(end, skipIndent);
 
     if (eLoc.line === sLoc.line) {
         singleLineHandler(sLoc, eLoc, coverage);
         return;
     }
 
-    multipleLinesHandler(sLoc, eLoc, coverage, formattedMapping);
+    multipleLinesHandler(sLoc, eLoc, coverage, mapping);
 
 };
 
@@ -173,26 +164,45 @@ const getUncoveredFromCovered = (ranges, contentLength) => {
     return uncoveredRanges;
 };
 
+export const getCoverage = (item, formattedContent, formattedMapping) => {
 
-export const getCoverage = (item, formattedMapping) => {
+    const originalContent = item.source;
+    const originalLength = originalContent.length;
 
-    const source = item.source;
-    const maxLength = source.length;
+    // parse commented and blank lines
+    const parseLines = item.originalType !== 'html';
+    const mapping = new Mapping(formattedContent, formattedMapping, parseLines);
+
+    const formattedLines = mapping.formattedLines;
+    const commentedLines = mapping.commentedLines;
+    const blankLines = mapping.blankLines;
 
     const coverage = {
-        totalLines: formattedMapping.formattedLines.length,
+        totalLines: formattedLines.length,
+        commentedLines: commentedLines.length,
+        blankLines: blankLines.length,
+        codeLines: formattedLines.length - commentedLines.length - blankLines.length,
         uncoveredLines: {},
         uncoveredPieces: {},
         executionCounts: {}
     };
 
+    commentedLines.forEach((lineIndex) => {
+        coverage.uncoveredLines[lineIndex] = 'comment';
+    });
+    blankLines.forEach((lineIndex) => {
+        coverage.uncoveredLines[lineIndex] = 'blank';
+    });
+
+    // console.log(coverage);
+
     // css, text, ranges: [ {start, end} ]
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
     if (item.type === 'css') {
-        const ranges = getUncoveredFromCovered(item.ranges, maxLength);
+        const ranges = getUncoveredFromCovered(item.ranges, originalLength);
         ranges.forEach((range) => {
             const { start, end } = range;
-            rangeLinesHandler(formattedMapping, start, end, coverage);
+            rangeLinesHandler(mapping, start, end, coverage);
         });
 
         return coverage;
@@ -204,9 +214,9 @@ export const getCoverage = (item, formattedMapping) => {
             startOffset, endOffset, count
         } = range;
         if (count === 0) {
-            rangeLinesHandler(formattedMapping, startOffset, endOffset, coverage);
+            rangeLinesHandler(mapping, startOffset, endOffset, coverage);
         } else if (count > 1) {
-            setExecutionCounts(formattedMapping, range, coverage);
+            setExecutionCounts(mapping, range, coverage);
         }
     });
 

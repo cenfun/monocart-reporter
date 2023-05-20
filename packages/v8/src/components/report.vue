@@ -85,6 +85,7 @@ const autoDetectType = (item) => {
 
     const src = source.trim();
     if (src.startsWith('<') && src.endsWith('>')) {
+        item.originalType = 'html';
         return 'html';
     }
 
@@ -108,11 +109,11 @@ const formatSource = (item) => {
     if (!data.formatted) {
         // codemirror will replace all \r\n to \n, so end position will be mismatched
         // just replace all \r\n with \n
-        const formatted = source.replace(Util.lineBreakPattern, '\n');
-        const mapping = Mapping.generate(source, formatted);
+        const formattedContent = source.replace(Util.lineBreakPattern, '\n');
+        const mapping = Mapping.generate(source, formattedContent);
         // console.log(mapping);
         return {
-            content: formatted,
+            content: formattedContent,
             mapping
         };
     }
@@ -145,9 +146,7 @@ const getReport = async (item) => {
 
     const { content, mapping } = res;
 
-    const formattedMapping = new Mapping(content, mapping);
-
-    const coverage = getCoverage(item, formattedMapping);
+    const coverage = getCoverage(item, content, mapping);
 
     // console.log(cacheKey, coverage);
     // console.log([item.source]);
@@ -178,7 +177,7 @@ const renderReport = async () => {
     }
 
     const {
-        totalLines, uncoveredLines, executionCounts
+        uncoveredLines, executionCounts, totalLines, commentedLines, blankLines, codeLines
     } = report.coverage;
     let uncovered = 0;
     Object.values(uncoveredLines).forEach((v) => {
@@ -186,20 +185,38 @@ const renderReport = async () => {
             uncovered += 1;
             return;
         }
-        uncovered += 0.5;
+        if (v === 'partial') {
+            uncovered += 0.5;
+        }
     });
 
     uncovered = Math.floor(uncovered);
 
-    const covered = totalLines - uncovered;
+    const covered = codeLines - uncovered;
 
-    const pct = Util.PF(totalLines - uncovered, totalLines, 1, '');
+    const pct = Util.PF(codeLines - uncovered, codeLines, 1, '');
     const percentChart = Util.generatePercentChart(pct);
+
+    const list = [];
+    if (commentedLines) {
+        list.push({
+            name: 'Comments',
+            value: commentedLines,
+            tooltip: Util.PSF(commentedLines, totalLines)
+        });
+    }
+    if (blankLines) {
+        list.push({
+            name: 'Blanks',
+            value: blankLines,
+            tooltip: Util.PSF(blankLines, totalLines)
+        });
+    }
 
     const lineInfo = {
         indicator: 'line',
         indicatorName: 'Lines',
-        total: totalLines,
+        total: codeLines,
         totalTooltip: '',
         covered,
         coveredTooltip: '',
@@ -209,7 +226,8 @@ const renderReport = async () => {
         uncoveredClass: uncovered > 0 ? 'mcr-uncovered' : '',
         pct,
         status: Util.getStatus(pct, state.watermarks),
-        percentChart
+        percentChart,
+        list
     };
 
     data.list = [summary, lineInfo];
@@ -320,6 +338,13 @@ onMounted(() => {
           :class="'mcr-'+item.status"
         >
           {{ Util.PF(item.pct, 100) }}
+        </div>
+        <div
+          v-for="(it, j) in item.list"
+          :key="j"
+        >
+          {{ it.name }}:
+          <span :tooltip="it.tooltip">{{ Util.NF(it.value) }}</span>
         </div>
       </VuiFlex>
 
