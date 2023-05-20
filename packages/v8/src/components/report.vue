@@ -71,7 +71,15 @@ const setExecutionCounts = (formattedMapping, range, coverage) => {
     const skipIndent = true;
     const sLoc = formattedMapping.getFormattedLocation(startOffset, skipIndent);
     const line = sLoc.line;
-    const column = sLoc.column;
+    let column = sLoc.column;
+
+    // It should never be possible to start with }
+    const pos = sLoc.start + column;
+    const char = formattedMapping.getFormattedSlice(pos, pos + 1);
+    if (char === '}') {
+        // console.log(line, char);
+        column += 1;
+    }
 
     const eLoc = formattedMapping.getFormattedLocation(endOffset);
     const end = eLoc.start + eLoc.column;
