@@ -25,9 +25,9 @@ class CoverageParser {
         });
 
         if (item.type === 'css') {
-            this.parseCss(item.ranges, formattedLines);
+            this.parseCss(item.ranges, item.source.length);
         } else {
-            this.parseJs(item.ranges, formattedLines);
+            this.parseJs(item.ranges);
         }
 
         // remove all covered lines
@@ -58,56 +58,71 @@ class CoverageParser {
 
     // ====================================================================================================
 
-    // css, ranges: [ {start, end} ]
-    parseCss(ranges, formattedLines) {
+    getUncoveredFromCovered(ranges, contentLength) {
+        const uncoveredRanges = [];
+        if (!ranges.length) {
 
+            // nothing covered
+            uncoveredRanges.push({
+                start: 0,
+                end: contentLength
+            });
+
+            return uncoveredRanges;
+        }
+
+        ranges.sort((a, b) => a.start - b.start);
+
+        let pos = 0;
         ranges.forEach((range) => {
-            const { start, end } = range;
-            this.setRangeLines(start, end, 'covered');
+            if (range.start > pos) {
+                uncoveredRanges.push({
+                    start: pos,
+                    end: range.start
+                });
+            }
+            pos = range.end;
         });
 
-        // left are uncovered lines
-        formattedLines.forEach((line, i) => {
-            if (!this.uncoveredLines[i]) {
-                this.uncoveredLines[i] = 'uncovered';
-            }
+        if (pos < contentLength) {
+            uncoveredRanges.push({
+                start: pos,
+                end: contentLength
+            });
+        }
+
+        return uncoveredRanges;
+    }
+
+    // css, ranges: [ {start, end} ]
+    parseCss(ranges, contentLength) {
+        const uncoveredRanges = this.getUncoveredFromCovered(ranges, contentLength);
+        uncoveredRanges.forEach((range) => {
+            const { start, end } = range;
+            this.setRangeLines(start, end);
         });
+
     }
 
     // js, source, ranges: [ {start, end, count} ]
-    parseJs(ranges, formattedLines) {
+    parseJs(ranges) {
 
-        // no functions mark all as covered
+        // no ranges mark all as covered
         if (!ranges.length) {
             return;
         }
 
-        const coveredRanges = [];
         ranges.forEach((range) => {
             const {
                 start, end, count
             } = range;
             if (count > 0) {
-                coveredRanges.push(range);
                 if (count > 1) {
                     this.setExecutionCounts(start, end, count);
                 }
             } else {
                 // set uncovered first
-                this.setRangeLines(start, end, 'uncovered');
-            }
-        });
-
-        // then set all covered
-        coveredRanges.forEach((range) => {
-            const { start, end } = range;
-            this.setRangeLines(start, end, 'covered');
-        });
-
-        // left are uncovered lines
-        formattedLines.forEach((line, i) => {
-            if (!this.uncoveredLines[i]) {
-                this.uncoveredLines[i] = 'uncovered';
+                this.setRangeLines(start, end);
             }
         });
 
@@ -115,7 +130,7 @@ class CoverageParser {
 
     // ====================================================================================================
 
-    setUncoveredLines(line, value) {
+    setUncoveredLine(line, value) {
         const prev = this.uncoveredLines[line];
         if (prev) {
             return prev;
@@ -132,7 +147,7 @@ class CoverageParser {
         this.uncoveredPieces[line] = [value];
     }
 
-    setSingleLine(sLoc, eLoc, value) {
+    setSingleLine(sLoc, eLoc) {
         // console.log(sLoc, eLoc);
 
         // nothing between
@@ -144,71 +159,59 @@ class CoverageParser {
 
         if (sLoc.column === sLoc.indent && eLoc.column === eLoc.length) {
             // console.log('single', sLoc.line);
-            this.setUncoveredLines(sLoc.line, value);
+            this.setUncoveredLine(sLoc.line, 'uncovered');
             return;
         }
 
         // already uncovered/comment/blank, should not be partial
-        const prev = this.setUncoveredLines(sLoc.line, 'partial');
+        const prev = this.setUncoveredLine(sLoc.line, 'partial');
         if (prev) {
             // console.log(sLoc.line, prev);
             return;
         }
 
-        if (value === 'uncovered') {
-            // set pieces for partial, only js
-            this.setUncoveredPieces(sLoc.line, {
-                start: sLoc.column,
-                end: eLoc.column
-            });
-            return;
-        }
-
-        // const text = sLoc.text.slice(sLoc.column, eLoc.column);
-        //  console.log('covered', sLoc.line + 1, sLoc.column, eLoc.column, text);
-
+        // set pieces for partial, only js
         this.setUncoveredPieces(sLoc.line, {
-            start: sLoc.indent,
-            end: sLoc.column
+            start: sLoc.column,
+            end: eLoc.column
         });
-
 
     }
 
-    setMultipleLines(sLoc, eLoc, value) {
+    setMultipleLines(sLoc, eLoc) {
 
         const firstELoc = {
             ... sLoc,
             column: sLoc.length
         };
-        this.setSingleLine(sLoc, firstELoc, value);
+        this.setSingleLine(sLoc, firstELoc);
 
         for (let i = sLoc.line + 1; i < eLoc.line; i++) {
-            this.setUncoveredLines(i, value);
+            this.setUncoveredLine(i, 'uncovered');
         }
 
         const lastSLoc = {
             ... eLoc,
             column: eLoc.indent
         };
-        this.setSingleLine(lastSLoc, eLoc, value);
+        this.setSingleLine(lastSLoc, eLoc);
 
     }
 
     // ====================================================================================================
 
-    setRangeLines(start, end, value) {
+    setRangeLines(start, end) {
         const mapping = this.mapping;
         const skipIndent = true;
         const sLoc = mapping.getFormattedLocation(start, skipIndent);
         const eLoc = mapping.getFormattedLocation(end, skipIndent);
 
         if (eLoc.line === sLoc.line) {
-            this.setSingleLine(sLoc, eLoc, value);
+            this.setSingleLine(sLoc, eLoc);
             return;
         }
 
-        this.setMultipleLines(sLoc, eLoc, value);
+        this.setMultipleLines(sLoc, eLoc);
     }
 
     // ====================================================================================================

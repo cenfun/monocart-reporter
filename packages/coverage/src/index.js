@@ -4,7 +4,6 @@ import istanbulLibCoverage from 'istanbul-lib-coverage';
 import istanbulLibReport from 'istanbul-lib-report';
 
 import * as convertSourceMap from 'convert-source-map';
-import * as traceMapping from '@jridgewell/trace-mapping';
 import axios from 'axios';
 
 export {
@@ -13,6 +12,5 @@ export {
     istanbulLibReport,
 
     convertSourceMap,
-    traceMapping,
     axios
 };

@@ -42,12 +42,12 @@
         "koa": "^2.14.2",
         "koa-static-resolver": "^1.0.4",
         "lz-utils": "^2.0.1",
-        "open": "^9.1.0"
+        "open": "^9.1.0",
+        "source-map": "^0.7.4"
     },
     "devDependencies": {
         "@babel/code-frame": "^7.21.4",
         "@babel/parser": "^7.21.8",
-        "@jridgewell/trace-mapping": "^0.3.18",
         "@playwright/test": "^1.34.0",
         "@slack/web-api": "^6.8.1",
         "@slack/webhook": "^6.1.0",
