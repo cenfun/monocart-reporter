@@ -1,6 +1,4 @@
 import { Mapping } from 'monocart-formatter';
-import Util from './util.js';
-
 class CoverageParser {
 
     constructor(item, formattedContent, formattedMapping) {
@@ -29,7 +27,7 @@ class CoverageParser {
         if (item.type === 'css') {
             this.parseCss(item.ranges, formattedLines);
         } else {
-            this.parseJs(item.functions, formattedLines);
+            this.parseJs(item.ranges, formattedLines);
         }
 
         // remove all covered lines
@@ -77,34 +75,33 @@ class CoverageParser {
     }
 
     // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
-    parseJs(functions, formattedLines) {
+    parseJs(ranges, formattedLines) {
 
         // no functions mark all as covered
-        if (!functions.length) {
+        if (!ranges.length) {
             return;
         }
 
         const coveredRanges = [];
-        const flatRanges = Util.getFlatRanges(functions);
-        flatRanges.forEach((range) => {
+        ranges.forEach((range) => {
             const {
-                startOffset, endOffset, count
+                start, end, count
             } = range;
             if (count > 0) {
                 coveredRanges.push(range);
                 if (count > 1) {
-                    this.setExecutionCounts(startOffset, endOffset, count);
+                    this.setExecutionCounts(start, end, count);
                 }
             } else {
                 // set uncovered first
-                this.setRangeLines(startOffset, endOffset, 'uncovered');
+                this.setRangeLines(start, end, 'uncovered');
             }
         });
 
         // then set all covered
         coveredRanges.forEach((range) => {
-            const { startOffset, endOffset } = range;
-            this.setRangeLines(startOffset, endOffset, 'covered');
+            const { start, end } = range;
+            this.setRangeLines(start, end, 'covered');
         });
 
         // left are uncovered lines
