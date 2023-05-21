@@ -58,7 +58,7 @@ class CoverageParser {
 
     // ====================================================================================================
 
-    // css, text, ranges: [ {start, end} ]
+    // css, ranges: [ {start, end} ]
     parseCss(ranges, formattedLines) {
 
         ranges.forEach((range) => {
@@ -74,7 +74,7 @@ class CoverageParser {
         });
     }
 
-    // js, source, functions:[ {functionName, isBlockCoverage, ranges: [{startOffset, endOffset, count}] } ]
+    // js, source, ranges: [ {start, end, count} ]
     parseJs(ranges, formattedLines) {
 
         // no functions mark all as covered
@@ -214,12 +214,12 @@ class CoverageParser {
     // ====================================================================================================
 
     // only for js
-    setExecutionCounts(startOffset, endOffset, count) {
+    setExecutionCounts(start, end, count) {
 
         const mapping = this.mapping;
 
         const skipIndent = true;
-        const sLoc = mapping.getFormattedLocation(startOffset, skipIndent);
+        const sLoc = mapping.getFormattedLocation(start, skipIndent);
         const line = sLoc.line;
         let column = sLoc.column;
 
@@ -231,17 +231,17 @@ class CoverageParser {
             column += 1;
         }
 
-        const eLoc = mapping.getFormattedLocation(endOffset);
-        const end = eLoc.start + eLoc.column;
+        const eLoc = mapping.getFormattedLocation(end);
+        const endPos = eLoc.start + eLoc.column;
 
-        // console.log(startOffset, endOffset, sLoc);
+        // console.log(start, end, sLoc);
 
         const execution = {
         // for start position
             column,
             value: count,
             // for end position
-            end
+            end: endPos
         };
 
         const prevList = this.executionCounts[line];
