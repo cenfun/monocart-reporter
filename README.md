@@ -123,10 +123,10 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     // global coverage settings for addCoverageReport API
     coverage: null,
     // coverage: {
+    //     entryFilter: (entry) => true,
     //     unpackSourceMap: true,
     //     excludeDistFile: true,
     //     sourceFilter: (sourceName) => sourceName.search(/\/src\/.+/) !== -1,
-    //     entryFilter: (entry) => {}
     // },
 
     // trend data handler
@@ -642,10 +642,10 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
     - V8 only:
     - `toIstanbul` (Boolean) Whether to convert to Istanbul report
     - `watermarks` (Array) Defaults to `[50, 80]` 
+    - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
     - `unpackSourceMap` (Boolean) Whether to unpack all sources from the source map if a related source map file is found.
     - `excludeDistFile` (Boolean) Whether to exclude the dist file (usually minified) if the sources are successfully unpacked from the source map.
     - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
-    - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
     - `inline` (Boolean) Whether inline all scripts to the single HTML file.
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
@@ -758,10 +758,10 @@ module.exports = {
             outputFile: './test-results/report.html',
             // global coverage report options
             coverage: {
+                entryFilter: (entry) => true,
                 unpackSourceMap: true,
                 excludeDistFile: true,
                 sourceFilter: (sourceName) => sourceName.search(/\/src\/.+/) !== -1,
-                entryFilter: (entry) => {}
             }
         }]
     ]

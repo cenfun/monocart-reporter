@@ -50,8 +50,9 @@ test.describe('take V8 js to Istanbul coverage report', () => {
         await addCoverageReport(jsCoverageList, test.info());
 
         const report = await attachCoverageReport(jsCoverageList, test.info(), {
-            toIstanbul: true,
-            unpackSourceMap: true
+            // unpackSourceMap: false,
+            // sourceFilter: (sourceName) => sourceName.indexOf('node_modules') === -1,
+            toIstanbul: true
         });
         console.log(report.summary);
     });
