@@ -60,6 +60,8 @@ import Flyover from './components/flyover.vue';
 import Waterfall from './components/waterfall.vue';
 import Timing from './components/timing.vue';
 
+import faviconIcon from '../../app/src/images/favicon.svg';
+
 const {
     VuiFlex,
     VuiTooltip,
@@ -732,6 +734,11 @@ const init = async () => {
     initFlyoverSize();
 
     initGrid();
+
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+        favicon.href = faviconIcon;
+    }
 
     state.initializing = false;
 };

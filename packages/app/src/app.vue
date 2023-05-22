@@ -255,6 +255,8 @@ import IconLabel from './components/icon-label.vue';
 
 import state from './modules/state.js';
 
+import faviconIcon from './images/favicon.svg';
+
 const {
     VuiInput,
     VuiFlex,
@@ -578,6 +580,11 @@ const init = async () => {
     createGrid();
 
     initTooltip();
+
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+        favicon.href = faviconIcon;
+    }
 
     state.initializing = false;
 };

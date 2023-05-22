@@ -13,6 +13,8 @@ import store from '../../app/src/common/store.js';
 import Flyover from './components/flyover.vue';
 import Report from './components/report.vue';
 
+import faviconIcon from '../../app/src/images/favicon.svg';
+
 const {
     VuiFlex,
     VuiInput,
@@ -608,6 +610,11 @@ const init = async () => {
     initData();
 
     initGrid();
+
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+        favicon.href = faviconIcon;
+    }
 
     state.initializing = false;
 };
