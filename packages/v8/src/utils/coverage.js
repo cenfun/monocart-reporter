@@ -234,8 +234,11 @@ class CoverageParser {
             column += 1;
         }
 
-        const eLoc = mapping.getFormattedLocation(end);
-        const endPos = eLoc.start + eLoc.column;
+        const eLoc = mapping.getFormattedLocation(end, skipIndent);
+        let endPos = eLoc.start;
+        if (eLoc.column > eLoc.indent) {
+            endPos += eLoc.column;
+        }
 
         // console.log(start, end, sLoc);
 
