@@ -6,21 +6,41 @@
         80
     ],
     "summary": {
-        "total": 1246658,
-        "covered": 514528,
-        "uncovered": 732130,
-        "pct": 41.27,
+        "total": 1249281,
+        "covered": 516373,
+        "uncovered": 732908,
+        "pct": 41.33,
         "status": "low"
     },
     "files": [
         {
-            "name": "injectStylesIntoStyleTag.js",
+            "name": "report.vue",
             "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js",
-            "total": 2480,
-            "covered": 1145,
-            "uncovered": 1335,
-            "pct": 46.17,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/report.vue",
+            "total": 11019,
+            "covered": 2626,
+            "uncovered": 8393,
+            "pct": 23.83,
+            "status": "low"
+        },
+        {
+            "name": "71dc",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/app.vue?71dc",
+            "total": 507,
+            "covered": 507,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "share.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./lib/platform/share.js",
+            "total": 8517,
+            "covered": 4039,
+            "uncovered": 4478,
+            "pct": 47.42,
             "status": "low"
         },
         {
@@ -34,19 +54,29 @@
             "status": "high"
         },
         {
-            "name": "report.vue",
+            "name": "e437",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/report.vue?8f96",
-            "total": 1449,
-            "covered": 1386,
-            "uncovered": 63,
-            "pct": 95.65,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/report.vue?e437",
+            "total": 478,
+            "covered": 478,
+            "uncovered": 0,
+            "pct": 100,
             "status": "high"
+        },
+        {
+            "name": "turbogrid.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./node_modules/turbogrid/dist/turbogrid.js",
+            "total": 166081,
+            "covered": 99357,
+            "uncovered": 66724,
+            "pct": 59.82,
+            "status": "medium"
         },
         {
             "name": "runtime-core.esm-bundler.js",
             "type": "js",
-            "url": "webpack://monocart-v8/node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js",
+            "url": "webpack://monocart-v8/./node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js",
             "total": 316502,
             "covered": 108186,
             "uncovered": 208316,
@@ -64,11 +94,21 @@
             "status": "high"
         },
         {
-            "name": "setAttributesWithAttributesAndNonce.js",
+            "name": "util.js",
             "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/style-loader/dist/runtime/setAttributesWithAttributesAndNonce.js",
-            "total": 271,
-            "covered": 271,
+            "url": "webpack://monocart-v8/./packages/v8/src/utils/util.js",
+            "total": 409,
+            "covered": 281,
+            "uncovered": 128,
+            "pct": 68.7,
+            "status": "medium"
+        },
+        {
+            "name": "32fe",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/report.vue?32fe",
+            "total": 484,
+            "covered": 484,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
@@ -84,26 +124,6 @@
             "status": "high"
         },
         {
-            "name": "index.js",
-            "type": "js",
-            "url": "webpack://fps-detector/src/index.js",
-            "total": 10310,
-            "covered": 5453,
-            "uncovered": 4857,
-            "pct": 52.89,
-            "status": "medium"
-        },
-        {
-            "name": "flyover.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/flyover.vue?eba5",
-            "total": 855,
-            "covered": 855,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
             "name": "style.css",
             "type": "css",
             "url": "http://localhost:8090/demo/style.css",
@@ -114,49 +134,79 @@
             "status": "medium"
         },
         {
-            "name": "report.vue",
+            "name": "reactivity.esm-bundler.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/report.vue?5281",
-            "total": 482,
-            "covered": 482,
+            "url": "webpack://monocart-v8/./node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js",
+            "total": 42949,
+            "covered": 20553,
+            "uncovered": 22396,
+            "pct": 47.85,
+            "status": "low"
+        },
+        {
+            "name": "exportHelper.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/vue-loader/dist/exportHelper.js",
+            "total": 328,
+            "covered": 328,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
         },
         {
-            "name": "runtime-dom.esm-bundler.js",
+            "name": "a4df",
             "type": "js",
-            "url": "webpack://monocart-v8/node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js",
-            "total": 60425,
-            "covered": 16559,
-            "uncovered": 43866,
-            "pct": 27.4,
-            "status": "low"
-        },
-        {
-            "name": "flyover.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/flyover.vue",
-            "total": 1821,
-            "covered": 1632,
-            "uncovered": 189,
-            "pct": 89.62,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/flyover.vue?a4df",
+            "total": 479,
+            "covered": 479,
+            "uncovered": 0,
+            "pct": 100,
             "status": "high"
         },
         {
-            "name": "insertBySelector.js",
+            "name": "0b1e",
             "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/style-loader/dist/runtime/insertBySelector.js",
-            "total": 1003,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/report.vue?0b1e",
+            "total": 533,
+            "covered": 533,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "vine-ui.esm.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./node_modules/vine-ui/dist/vine-ui.esm.js",
+            "total": 77126,
+            "covered": 48007,
+            "uncovered": 29119,
+            "pct": 62.24,
+            "status": "medium"
+        },
+        {
+            "name": "inflate.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./node_modules/lz-utils/dist/inflate.js",
+            "total": 3714,
+            "covered": 3686,
+            "uncovered": 28,
+            "pct": 99.25,
+            "status": "high"
+        },
+        {
+            "name": "d678",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/icon-label.vue?d678",
+            "total": 492,
             "covered": 492,
-            "uncovered": 511,
-            "pct": 49.05,
-            "status": "low"
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
         },
         {
             "name": "store.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/app/src/common/store.js",
+            "url": "webpack://monocart-v8/./packages/app/src/common/store.js",
             "total": 450,
             "covered": 285,
             "uncovered": 165,
@@ -164,29 +214,9 @@
             "status": "medium"
         },
         {
-            "name": "report.vue",
+            "name": "d8da",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/report.vue?ac7d",
-            "total": 1163,
-            "covered": 1163,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "app.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/app.vue?73a8",
-            "total": 314,
-            "covered": 314,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "icon-label.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/icon-label.vue?9403",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/icon-label.vue?d8da",
             "total": 1147,
             "covered": 1147,
             "uncovered": 0,
@@ -194,44 +224,44 @@
             "status": "high"
         },
         {
-            "name": "shared.esm-bundler.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/node_modules/@vue/shared/dist/shared.esm-bundler.js",
-            "total": 23750,
-            "covered": 15022,
-            "uncovered": 8728,
-            "pct": 63.25,
-            "status": "medium"
-        },
-        {
             "name": "app.vue",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/app.vue?ffe4",
-            "total": 1419,
-            "covered": 1356,
-            "uncovered": 63,
-            "pct": 95.56,
-            "status": "high"
-        },
-        {
-            "name": "turbogrid.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/node_modules/turbogrid/dist/turbogrid.js",
-            "total": 166081,
-            "covered": 99357,
-            "uncovered": 66724,
-            "pct": 59.82,
+            "url": "webpack://monocart-v8/./packages/v8/src/app.vue",
+            "total": 21419,
+            "covered": 16403,
+            "uncovered": 5016,
+            "pct": 76.58,
             "status": "medium"
         },
         {
             "name": "icon-label.vue",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/icon-label.vue?c39a",
-            "total": 330,
-            "covered": 330,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/icon-label.vue",
+            "total": 2820,
+            "covered": 2524,
+            "uncovered": 296,
+            "pct": 89.5,
+            "status": "high"
+        },
+        {
+            "name": "5065",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/icon-label.vue?5065",
+            "total": 553,
+            "covered": 553,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
+        },
+        {
+            "name": "vue.runtime.esm-bundler.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./node_modules/vue/dist/vue.runtime.esm-bundler.js",
+            "total": 597,
+            "covered": 306,
+            "uncovered": 291,
+            "pct": 51.26,
+            "status": "medium"
         },
         {
             "name": "global",
@@ -244,101 +274,81 @@
             "status": "low"
         },
         {
-            "name": "icon-label.vue",
+            "name": "insertStyleElement.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/icon-label.vue",
-            "total": 2820,
-            "covered": 2529,
-            "uncovered": 291,
-            "pct": 89.68,
-            "status": "high"
-        },
-        {
-            "name": "index.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/index.js",
-            "total": 113,
-            "covered": 113,
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/style-loader/dist/runtime/insertStyleElement.js",
+            "total": 285,
+            "covered": 285,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
         },
         {
-            "name": "flyover.vue",
+            "name": "api.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/flyover.vue?801b",
-            "total": 538,
-            "covered": 538,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "flyover.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/flyover.vue?e63d",
-            "total": 484,
-            "covered": 484,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "vue.runtime.esm-bundler.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/node_modules/vue/dist/vue.runtime.esm-bundler.js",
-            "total": 597,
-            "covered": 306,
-            "uncovered": 291,
-            "pct": 51.26,
-            "status": "medium"
-        },
-        {
-            "name": "noSourceMaps.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/css-loader/dist/runtime/noSourceMaps.js",
-            "total": 64,
-            "covered": 15,
-            "uncovered": 49,
-            "pct": 23.44,
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/css-loader/dist/runtime/api.js",
+            "total": 2303,
+            "covered": 298,
+            "uncovered": 2005,
+            "pct": 12.94,
             "status": "low"
         },
         {
-            "name": "app.vue",
+            "name": "coverage.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/app.vue?fbaf",
-            "total": 3915,
-            "covered": 3915,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "icon-label.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/icon-label.vue?9377",
-            "total": 490,
-            "covered": 490,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "report.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/report.vue",
-            "total": 15444,
-            "covered": 1777,
-            "uncovered": 13667,
-            "pct": 11.51,
+            "url": "webpack://monocart-v8/./packages/v8/src/utils/coverage.js",
+            "total": 7585,
+            "covered": 732,
+            "uncovered": 6853,
+            "pct": 9.65,
             "status": "low"
         },
         {
-            "name": "report.vue",
+            "name": "97be",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/report.vue?0b1e",
-            "total": 533,
-            "covered": 533,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/icon-label.vue?97be",
+            "total": 331,
+            "covered": 331,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "5c89",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/report.vue?5c89",
+            "total": 1327,
+            "covered": 1327,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "8e7a",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/icon-label.vue?8e7a",
+            "total": 1454,
+            "covered": 1391,
+            "uncovered": 63,
+            "pct": 95.67,
+            "status": "high"
+        },
+        {
+            "name": "50ef",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/app.vue?50ef",
+            "total": 1420,
+            "covered": 1357,
+            "uncovered": 63,
+            "pct": 95.56,
+            "status": "high"
+        },
+        {
+            "name": "c68f",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/flyover.vue?c68f",
+            "total": 328,
+            "covered": 328,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
@@ -346,32 +356,12 @@
         {
             "name": "singletonStyleDomAPI.js",
             "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/style-loader/dist/runtime/singletonStyleDomAPI.js",
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/style-loader/dist/runtime/singletonStyleDomAPI.js",
             "total": 2196,
             "covered": 1224,
             "uncovered": 972,
             "pct": 55.74,
             "status": "medium"
-        },
-        {
-            "name": "flyover.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/flyover.vue?966f",
-            "total": 477,
-            "covered": 477,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "getUrl.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/css-loader/dist/runtime/getUrl.js",
-            "total": 597,
-            "covered": 256,
-            "uncovered": 341,
-            "pct": 42.88,
-            "status": "low"
         },
         {
             "name": "browser.js",
@@ -382,26 +372,6 @@
             "uncovered": 3209,
             "pct": 69.67,
             "status": "medium"
-        },
-        {
-            "name": "flyover.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/flyover.vue?b7a1",
-            "total": 1450,
-            "covered": 1387,
-            "uncovered": 63,
-            "pct": 95.66,
-            "status": "high"
-        },
-        {
-            "name": "index.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/node_modules/async-tick/src/index.js",
-            "total": 1319,
-            "covered": 272,
-            "uncovered": 1047,
-            "pct": 20.62,
-            "status": "low"
         },
         {
             "name": "universalModuleDefinition",
@@ -424,16 +394,6 @@
             "status": "high"
         },
         {
-            "name": "icon-label.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/icon-label.vue?a368",
-            "total": 1453,
-            "covered": 1390,
-            "uncovered": 63,
-            "pct": 95.66,
-            "status": "high"
-        },
-        {
             "name": "bootstrap.min.css",
             "type": "css",
             "url": "http://localhost:8090/demo/dist/bootstrap.min.css",
@@ -444,39 +404,99 @@
             "status": "low"
         },
         {
-            "name": "inflate.js",
+            "name": "7b12",
             "type": "js",
-            "url": "webpack://monocart-v8/node_modules/lz-utils/dist/inflate.js",
-            "total": 3714,
-            "covered": 3686,
-            "uncovered": 28,
-            "pct": 99.25,
-            "status": "high"
-        },
-        {
-            "name": "icon-label.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/icon-label.vue?028b",
-            "total": 480,
-            "covered": 480,
+            "url": "webpack://monocart-v8/./packages/v8/src/app.vue?7b12",
+            "total": 460,
+            "covered": 460,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
         },
         {
-            "name": "app.vue",
+            "name": "shared.esm-bundler.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/app.vue",
-            "total": 21422,
-            "covered": 16406,
-            "uncovered": 5016,
-            "pct": 76.58,
+            "url": "webpack://monocart-v8/./node_modules/@vue/shared/dist/shared.esm-bundler.js",
+            "total": 23750,
+            "covered": 15022,
+            "uncovered": 8728,
+            "pct": 63.25,
             "status": "medium"
+        },
+        {
+            "name": "injectStylesIntoStyleTag.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js",
+            "total": 2480,
+            "covered": 1145,
+            "uncovered": 1335,
+            "pct": 46.17,
+            "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://fps-detector/./src/index.js",
+            "total": 10310,
+            "covered": 5453,
+            "uncovered": 4857,
+            "pct": 52.89,
+            "status": "medium"
+        },
+        {
+            "name": "microtask.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./node_modules/async-tick/src/microtask.js",
+            "total": 1218,
+            "covered": 51,
+            "uncovered": 1167,
+            "pct": 4.19,
+            "status": "low"
+        },
+        {
+            "name": "747d",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/flyover.vue?747d",
+            "total": 907,
+            "covered": 907,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "0555",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/report.vue?0555",
+            "total": 1450,
+            "covered": 1387,
+            "uncovered": 63,
+            "pct": 95.66,
+            "status": "high"
+        },
+        {
+            "name": "noSourceMaps.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/css-loader/dist/runtime/noSourceMaps.js",
+            "total": 64,
+            "covered": 15,
+            "uncovered": 49,
+            "pct": 23.44,
+            "status": "low"
+        },
+        {
+            "name": "801b",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/flyover.vue?801b",
+            "total": 538,
+            "covered": 538,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
         },
         {
             "name": "icons.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/app/src/common/icons.js",
+            "url": "webpack://monocart-v8/./packages/app/src/common/icons.js",
             "total": 486,
             "covered": 486,
             "uncovered": 0,
@@ -484,44 +504,44 @@
             "status": "high"
         },
         {
-            "name": "api.js",
+            "name": "5ece",
             "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/css-loader/dist/runtime/api.js",
-            "total": 2303,
-            "covered": 298,
-            "uncovered": 2005,
-            "pct": 12.94,
-            "status": "low"
-        },
-        {
-            "name": "vine-ui.esm.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/node_modules/vine-ui/dist/vine-ui.esm.js",
-            "total": 77126,
-            "covered": 48007,
-            "uncovered": 29119,
-            "pct": 62.24,
-            "status": "medium"
-        },
-        {
-            "name": "app.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/app.vue?7298",
-            "total": 458,
-            "covered": 458,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/icon-label.vue?5ece",
+            "total": 482,
+            "covered": 482,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
         },
         {
-            "name": "share.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/lib/platform/share.js",
-            "total": 9347,
-            "covered": 4063,
-            "uncovered": 5284,
-            "pct": 43.47,
+            "name": "style.css",
+            "type": "css",
+            "url": "http://localhost:8090/demo/css/style.css",
+            "total": 0,
+            "covered": 0,
+            "uncovered": 0,
+            "pct": 0,
             "status": "low"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./node_modules/async-tick/src/index.js",
+            "total": 1319,
+            "covered": 272,
+            "uncovered": 1047,
+            "pct": 20.62,
+            "status": "low"
+        },
+        {
+            "name": "f6bb",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/flyover.vue?f6bb",
+            "total": 486,
+            "covered": 486,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
         },
         {
             "name": "make-namespace-object",
@@ -529,16 +549,6 @@
             "url": "webpack://fps-detector/webpack/runtime/make namespace object",
             "total": 274,
             "covered": 274,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "exportHelper.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/vue-loader/dist/exportHelper.js",
-            "total": 328,
-            "covered": 328,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
@@ -554,33 +564,63 @@
             "status": "medium"
         },
         {
-            "name": "reactivity.esm-bundler.js",
+            "name": "5edf",
             "type": "js",
-            "url": "webpack://monocart-v8/node_modules/@vue/reactivity/dist/reactivity.esm-bundler.js",
-            "total": 42949,
-            "covered": 20553,
-            "uncovered": 22396,
-            "pct": 47.85,
-            "status": "low"
-        },
-        {
-            "name": "icon-label.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/icon-label.vue?5065",
-            "total": 553,
-            "covered": 553,
+            "url": "webpack://monocart-v8/./packages/v8/src/app.vue?5edf",
+            "total": 3915,
+            "covered": 3915,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
         },
         {
-            "name": "report.vue",
+            "name": "22b6",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/report.vue?149d",
-            "total": 326,
-            "covered": 326,
+            "url": "webpack://monocart-v8/./packages/v8/src/components/report.vue?22b6",
+            "total": 327,
+            "covered": 327,
             "uncovered": 0,
             "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "flyover.vue",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/flyover.vue",
+            "total": 1877,
+            "covered": 1688,
+            "uncovered": 189,
+            "pct": 89.93,
+            "status": "high"
+        },
+        {
+            "name": "hash.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/app/src/common/hash.js",
+            "total": 1037,
+            "covered": 219,
+            "uncovered": 818,
+            "pct": 21.12,
+            "status": "low"
+        },
+        {
+            "name": "sync-.svg$",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/images/icons/ sync \\.svg$",
+            "total": 692,
+            "covered": 551,
+            "uncovered": 141,
+            "pct": 79.62,
+            "status": "medium"
+        },
+        {
+            "name": "99d3",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/components/flyover.vue?99d3",
+            "total": 1451,
+            "covered": 1388,
+            "uncovered": 63,
+            "pct": 95.66,
             "status": "high"
         },
         {
@@ -592,16 +632,6 @@
             "uncovered": 0,
             "pct": 100,
             "status": "high"
-        },
-        {
-            "name": "hash.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/app/src/common/hash.js",
-            "total": 1037,
-            "covered": 219,
-            "uncovered": 818,
-            "pct": 21.12,
-            "status": "low"
         },
         {
             "name": "define-property-getters",
@@ -624,21 +654,11 @@
             "status": "high"
         },
         {
-            "name": "flyover.vue",
+            "name": "203c",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/flyover.vue?1d68",
-            "total": 327,
-            "covered": 327,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "insertStyleElement.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/starfall-cli/node_modules/style-loader/dist/runtime/insertStyleElement.js",
-            "total": 285,
-            "covered": 285,
+            "url": "webpack://monocart-v8/./packages/v8/src/app.vue?203c",
+            "total": 466,
+            "covered": 466,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
@@ -654,14 +674,14 @@
             "status": "high"
         },
         {
-            "name": "-sync-.svg$",
+            "name": "setAttributesWithAttributesAndNonce.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/images/icons/ sync \\.svg$",
-            "total": 692,
-            "covered": 551,
-            "uncovered": 141,
-            "pct": 79.62,
-            "status": "medium"
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/style-loader/dist/runtime/setAttributesWithAttributesAndNonce.js",
+            "total": 271,
+            "covered": 271,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
         },
         {
             "name": "compat-get-default-export",
@@ -671,16 +691,6 @@
             "covered": 238,
             "uncovered": 29,
             "pct": 89.14,
-            "status": "high"
-        },
-        {
-            "name": "app.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/app.vue?71dc",
-            "total": 507,
-            "covered": 507,
-            "uncovered": 0,
-            "pct": 100,
             "status": "high"
         },
         {
@@ -694,14 +704,24 @@
             "status": "medium"
         },
         {
-            "name": "report.vue",
+            "name": "insertBySelector.js",
             "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/components/report.vue?94fa",
-            "total": 476,
-            "covered": 476,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/style-loader/dist/runtime/insertBySelector.js",
+            "total": 1003,
+            "covered": 492,
+            "uncovered": 511,
+            "pct": 49.05,
+            "status": "low"
+        },
+        {
+            "name": "runtime-dom.esm-bundler.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js",
+            "total": 60425,
+            "covered": 16559,
+            "uncovered": 43866,
+            "pct": 27.4,
+            "status": "low"
         },
         {
             "name": "make-namespace-object",
@@ -724,16 +744,6 @@
             "status": "medium"
         },
         {
-            "name": "app.vue",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/app.vue?5cc4",
-            "total": 464,
-            "covered": 464,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
             "name": "hasOwnProperty-shorthand",
             "type": "js",
             "url": "webpack://monocart-v8/webpack/runtime/hasOwnProperty shorthand",
@@ -742,16 +752,6 @@
             "uncovered": 0,
             "pct": 100,
             "status": "high"
-        },
-        {
-            "name": "util.js",
-            "type": "js",
-            "url": "webpack://monocart-v8/packages/v8/src/utils/util.js",
-            "total": 409,
-            "covered": 281,
-            "uncovered": 128,
-            "pct": 68.7,
-            "status": "medium"
         },
         {
             "name": "demo",
@@ -774,14 +774,34 @@
             "status": "high"
         },
         {
-            "name": "microtask.js",
+            "name": "getUrl.js",
             "type": "js",
-            "url": "webpack://monocart-v8/node_modules/async-tick/src/microtask.js",
-            "total": 1218,
-            "covered": 51,
-            "uncovered": 1167,
-            "pct": 4.19,
+            "url": "webpack://monocart-v8/../starfall-cli/node_modules/css-loader/dist/runtime/getUrl.js",
+            "total": 597,
+            "covered": 256,
+            "uncovered": 341,
+            "pct": 42.88,
             "status": "low"
+        },
+        {
+            "name": "cdba",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/app.vue?cdba",
+            "total": 315,
+            "covered": 315,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
+            "name": "index.js",
+            "type": "js",
+            "url": "webpack://monocart-v8/./packages/v8/src/index.js",
+            "total": 113,
+            "covered": 113,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
         }
     ]
 }

@@ -14,9 +14,19 @@
     },
     "files": [
         {
+            "name": "anonymous-3.js",
+            "type": "js",
+            "url": "",
+            "total": 234,
+            "covered": 234,
+            "uncovered": 0,
+            "pct": 100,
+            "status": "high"
+        },
+        {
             "name": "anonymous-1.js",
             "type": "js",
-            "url": "file://anonymous-1.js",
+            "url": "",
             "total": 7687,
             "covered": 2631,
             "uncovered": 5056,
@@ -26,19 +36,9 @@
         {
             "name": "anonymous-2.js",
             "type": "js",
-            "url": "file://anonymous-2.js",
+            "url": "",
             "total": 61,
             "covered": 61,
-            "uncovered": 0,
-            "pct": 100,
-            "status": "high"
-        },
-        {
-            "name": "anonymous-3.js",
-            "type": "js",
-            "url": "file://anonymous-3.js",
-            "total": 234,
-            "covered": 234,
             "uncovered": 0,
             "pct": 100,
             "status": "high"
