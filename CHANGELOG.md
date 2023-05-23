@@ -1,3 +1,5 @@
+* 1.6.27
+  - optimized package size
 
 * 1.6.26
   - fixed coverage report UI issues
