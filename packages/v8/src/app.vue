@@ -4,7 +4,7 @@ import {
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import {
-    Grid, inflate, microtask, debounce, hash, store, icons
+    Grid, inflate, microtask, debounce, hash, store, setFavicon
 } from 'monocart-common';
 
 import Util from './utils/util.js';
@@ -608,10 +608,7 @@ const init = async () => {
 
     initGrid();
 
-    const favicon = document.querySelector('link[rel="icon"]');
-    if (favicon) {
-        favicon.href = icons.favicon;
-    }
+    setFavicon();
 
     state.initializing = false;
 };

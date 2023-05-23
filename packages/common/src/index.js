@@ -8,8 +8,17 @@ import hash from './hash.js';
 import store from './store.js';
 
 import decodeIcons from './icons.js';
-const context = require.context('./icons', true, /\.svg$/);
-const icons = decodeIcons(context);
+import faviconIcon from './images/favicon.svg';
+
+// const context = require.context('./images/icons', true, /\.svg$/);
+// const icons = decodeIcons(context);
+
+const setFavicon = () => {
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+        favicon.href = faviconIcon;
+    }
+};
 
 import CommonUtil from './util.js';
 
@@ -24,8 +33,8 @@ export {
     hash,
     store,
 
-    icons,
     decodeIcons,
+    setFavicon,
 
     CommonUtil
 };

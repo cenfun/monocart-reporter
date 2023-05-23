@@ -5,7 +5,7 @@ import {
 import { components, generateTooltips } from 'vine-ui';
 
 import {
-    Grid, icons, inflate
+    Grid, inflate, setFavicon
 } from 'monocart-common';
 
 import Util from './utils/util.js';
@@ -687,10 +687,7 @@ const init = async () => {
 
     initGrid();
 
-    const favicon = document.querySelector('link[rel="icon"]');
-    if (favicon) {
-        favicon.href = icons.favicon;
-    }
+    setFavicon();
 
     state.initializing = false;
 };

@@ -4,7 +4,7 @@ import {
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import {
-    debounce, microtask, inflate, store, hash, icons
+    debounce, microtask, inflate, store, hash, setFavicon
 } from 'monocart-common';
 
 import Util from './utils/util.js';
@@ -341,10 +341,7 @@ const init = async () => {
 
     initTooltip();
 
-    const favicon = document.querySelector('link[rel="icon"]');
-    if (favicon) {
-        favicon.href = icons.favicon;
-    }
+    setFavicon();
 
     state.initializing = false;
 };
