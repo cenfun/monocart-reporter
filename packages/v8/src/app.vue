@@ -879,7 +879,7 @@ icon
 .mcr-search {
     input {
         padding-right: 23px;
-        background-image: url("../../reporter/src/images/search.svg");
+        background-image: url("./images/search.svg");
         background-repeat: no-repeat;
         background-position: 97% center;
         background-size: 16px;
