@@ -1,240 +1,3 @@
-<template>
-  <div class="mcr vui-flex-column">
-    <VuiFlex
-      class="mcr-header"
-      padding="10px"
-      gap="10px"
-      shrink
-    >
-      <VuiFlex
-        gap="10px"
-        wrap
-      >
-        <div class="mcr-title">
-          <a href="./">{{ state.title }}</a>
-        </div>
-
-        <IconLabel
-          icon="calendar"
-          size="16px"
-          :button="false"
-        >
-          {{ state.date }}
-        </IconLabel>
-
-        <IconLabel
-          icon="time"
-          size="16px"
-          :button="false"
-        >
-          {{ state.duration }}
-        </IconLabel>
-      </VuiFlex>
-
-      <div class="vui-flex-auto" />
-
-      <IconLabel
-        icon="menu"
-        size="20px"
-        @click="onMenuClick"
-      />
-    </VuiFlex>
-
-    <VuiFlex
-      class="mcr-filter"
-      gap="10px"
-      padding="10px"
-      wrap
-      shrink
-    >
-      <VuiButton
-        v-if="state.exportSelected"
-        primary
-        @click="onExportClick"
-      >
-        Export
-      </VuiButton>
-
-      <div class="mcr-nav">
-        <div
-          v-for="(item, i) in state.navList"
-          :key="i"
-          :class="navItemClass(item)"
-          @click="onNavItemClick(item)"
-        >
-          <VuiFlex
-            gap="5px"
-            wrap
-            center
-          >
-            <b>{{ item.name }}</b>
-            <span>{{ Util.NF(item.value) }}</span>
-          </VuiFlex>
-        </div>
-      </div>
-
-      <div class="vui-flex-auto" />
-
-      <VuiFlex
-        shrink
-        gap="10px"
-      >
-        <VuiFlex
-          gap="2px"
-          padding="5px 0 5px 5px"
-          shrink
-        >
-          <VuiInput
-            v-model="state.keywords"
-            width="100%"
-            :class="searchClass"
-            placeholder="keywords"
-          />
-          <IconLabel
-            icon="triangle-down"
-            @click="onSearchDropdownClick($event)"
-          />
-        </VuiFlex>
-        <VuiSwitch
-          v-model="state.suiteVisible"
-          :label-clickable="true"
-          label-position="right"
-        >
-          Suite
-        </VuiSwitch>
-        <VuiSwitch
-          v-model="state.stepVisible"
-          :label-clickable="true"
-          label-position="right"
-        >
-          Step
-        </VuiSwitch>
-      </VuiFlex>
-    </VuiFlex>
-
-    <div class="mcr-grid vui-flex-auto" />
-
-    <Flyover />
-
-    <VuiPopover
-      v-model="state.searchDropdownVisible"
-      :target="state.searchDropdownTarget"
-      positions="bottom"
-      title="Searchable Fields"
-      width="150px"
-    >
-      <VuiFlex direction="column">
-        <VuiCheckbox
-          v-for="(item, i) in searchable.columns"
-          :key="i"
-          v-model="item.checked"
-        >
-          {{ item.name }}
-        </VuiCheckbox>
-      </VuiFlex>
-    </VuiPopover>
-
-    <VuiPopover
-      v-model="state.levelPopoverVisible"
-      :target="state.levelPopoverTarget"
-      title="Expand Levels"
-      width="150px"
-    >
-      <VuiFlex
-        direction="column"
-        gap="10px"
-        margin="10px 0"
-      >
-        <template v-if="state.suiteVisible">
-          <IconLabel
-            v-if="state.systemList"
-            icon="shard"
-            @click="expandRowLevel('shard')"
-          >
-            Shard
-          </IconLabel>
-
-          <IconLabel
-            icon="project"
-            @click="expandRowLevel('project')"
-          >
-            Project
-          </IconLabel>
-
-          <IconLabel
-            icon="file"
-            @click="expandRowLevel('file')"
-          >
-            File
-          </IconLabel>
-
-          <IconLabel
-            icon="suite"
-            @click="expandRowLevel('suite')"
-          >
-            Suite
-          </IconLabel>
-        </template>
-        <IconLabel
-          icon="case"
-          @click="expandRowLevel('case')"
-        >
-          Case
-        </IconLabel>
-        <IconLabel
-          v-if="state.stepVisible"
-          icon="step"
-          @click="expandRowLevel('step')"
-        >
-          Step
-        </IconLabel>
-      </VuiFlex>
-    </VuiPopover>
-
-    <VuiTooltip
-      :class="tooltip.classMap"
-      :visible="tooltip.visible"
-      :target="tooltip.target"
-      :text="tooltip.text"
-      :html="tooltip.html"
-    />
-
-    <VuiDialog v-model="dialog.visible">
-      <VuiFlex
-        direction="column"
-        gap="0"
-      >
-        <h3>{{ dialog.message }}</h3>
-        <div>
-          <VuiFlex
-            gap="10px"
-            padding="5px"
-          >
-            <VuiButton
-              primary
-              width="80px"
-              @click="dialog.onOkClick"
-            >
-              {{ dialog.ok }}
-            </VuiButton>
-            <VuiButton
-              width="80px"
-              @click="dialog.onCancelClick"
-            >
-              Cancel
-            </VuiButton>
-          </VuiFlex>
-        </div>
-      </VuiFlex>
-    </VuiDialog>
-
-    <VuiLoading
-      :visible="state.initializing"
-      size="l"
-      center
-    />
-  </div>
-</template>
 <script setup>
 import {
     watch, onMounted, reactive, computed
@@ -655,6 +418,245 @@ window.addEventListener('message', (e) => {
     }
 });
 </script>
+
+<template>
+  <div class="mcr vui-flex-column">
+    <VuiFlex
+      class="mcr-header"
+      padding="10px"
+      gap="10px"
+      shrink
+    >
+      <VuiFlex
+        gap="10px"
+        wrap
+      >
+        <div class="mcr-title">
+          <a href="./">{{ state.title }}</a>
+        </div>
+
+        <IconLabel
+          icon="calendar"
+          size="16px"
+          :button="false"
+        >
+          {{ state.date }}
+        </IconLabel>
+
+        <IconLabel
+          icon="time"
+          size="16px"
+          :button="false"
+        >
+          {{ state.duration }}
+        </IconLabel>
+      </VuiFlex>
+
+      <div class="vui-flex-auto" />
+
+      <IconLabel
+        icon="menu"
+        size="20px"
+        @click="onMenuClick"
+      />
+    </VuiFlex>
+
+    <VuiFlex
+      class="mcr-filter"
+      gap="10px"
+      padding="10px"
+      wrap
+      shrink
+    >
+      <VuiButton
+        v-if="state.exportSelected"
+        primary
+        @click="onExportClick"
+      >
+        Export
+      </VuiButton>
+
+      <div class="mcr-nav">
+        <div
+          v-for="(item, i) in state.navList"
+          :key="i"
+          :class="navItemClass(item)"
+          @click="onNavItemClick(item)"
+        >
+          <VuiFlex
+            gap="5px"
+            wrap
+            center
+          >
+            <b>{{ item.name }}</b>
+            <span>{{ Util.NF(item.value) }}</span>
+          </VuiFlex>
+        </div>
+      </div>
+
+      <div class="vui-flex-auto" />
+
+      <VuiFlex
+        shrink
+        gap="10px"
+      >
+        <VuiFlex
+          gap="2px"
+          padding="5px 0 5px 5px"
+          shrink
+        >
+          <VuiInput
+            v-model="state.keywords"
+            width="100%"
+            :class="searchClass"
+            placeholder="keywords"
+          />
+          <IconLabel
+            icon="triangle-down"
+            @click="onSearchDropdownClick($event)"
+          />
+        </VuiFlex>
+        <VuiSwitch
+          v-model="state.suiteVisible"
+          :label-clickable="true"
+          label-position="right"
+        >
+          Suite
+        </VuiSwitch>
+        <VuiSwitch
+          v-model="state.stepVisible"
+          :label-clickable="true"
+          label-position="right"
+        >
+          Step
+        </VuiSwitch>
+      </VuiFlex>
+    </VuiFlex>
+
+    <div class="mcr-grid vui-flex-auto" />
+
+    <Flyover />
+
+    <VuiPopover
+      v-model="state.searchDropdownVisible"
+      :target="state.searchDropdownTarget"
+      positions="bottom"
+      title="Searchable Fields"
+      width="150px"
+    >
+      <VuiFlex direction="column">
+        <VuiCheckbox
+          v-for="(item, i) in searchable.columns"
+          :key="i"
+          v-model="item.checked"
+        >
+          {{ item.name }}
+        </VuiCheckbox>
+      </VuiFlex>
+    </VuiPopover>
+
+    <VuiPopover
+      v-model="state.levelPopoverVisible"
+      :target="state.levelPopoverTarget"
+      title="Expand Levels"
+      width="150px"
+    >
+      <VuiFlex
+        direction="column"
+        gap="10px"
+        margin="10px 0"
+      >
+        <template v-if="state.suiteVisible">
+          <IconLabel
+            v-if="state.systemList"
+            icon="shard"
+            @click="expandRowLevel('shard')"
+          >
+            Shard
+          </IconLabel>
+
+          <IconLabel
+            icon="project"
+            @click="expandRowLevel('project')"
+          >
+            Project
+          </IconLabel>
+
+          <IconLabel
+            icon="file"
+            @click="expandRowLevel('file')"
+          >
+            File
+          </IconLabel>
+
+          <IconLabel
+            icon="suite"
+            @click="expandRowLevel('suite')"
+          >
+            Suite
+          </IconLabel>
+        </template>
+        <IconLabel
+          icon="case"
+          @click="expandRowLevel('case')"
+        >
+          Case
+        </IconLabel>
+        <IconLabel
+          v-if="state.stepVisible"
+          icon="step"
+          @click="expandRowLevel('step')"
+        >
+          Step
+        </IconLabel>
+      </VuiFlex>
+    </VuiPopover>
+
+    <VuiTooltip
+      :class="tooltip.classMap"
+      :visible="tooltip.visible"
+      :target="tooltip.target"
+      :text="tooltip.text"
+      :html="tooltip.html"
+    />
+
+    <VuiDialog v-model="dialog.visible">
+      <VuiFlex
+        direction="column"
+        gap="0"
+      >
+        <h3>{{ dialog.message }}</h3>
+        <div>
+          <VuiFlex
+            gap="10px"
+            padding="5px"
+          >
+            <VuiButton
+              primary
+              width="80px"
+              @click="dialog.onOkClick"
+            >
+              {{ dialog.ok }}
+            </VuiButton>
+            <VuiButton
+              width="80px"
+              @click="dialog.onCancelClick"
+            >
+              Cancel
+            </VuiButton>
+          </VuiFlex>
+        </div>
+      </VuiFlex>
+    </VuiDialog>
+
+    <VuiLoading
+      :visible="state.initializing"
+      size="l"
+      center
+    />
+  </div>
+</template>
+
 <style lang="scss">
 @keyframes mcr-blink-fade-in {
     0% {

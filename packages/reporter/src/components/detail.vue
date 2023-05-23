@@ -1,147 +1,3 @@
-<template>
-  <div
-    ref="el"
-    class="mcr-detail"
-  >
-    <div
-      v-for="item, ik in data.list"
-      :key="ik"
-      class="mcr-detail-item"
-      :style="item.style"
-    >
-      <VuiFlex
-        :class="itemHeadClass(item.data)"
-        gap="10px"
-        padding="5px"
-        :position-id="item.positionId"
-        wrap
-      >
-        <IconLabel
-          v-if="item.stepGroup"
-          :icon="item.data.collapsed?'collapsed':'expanded'"
-          @click="onRowHeadClick(item.data)"
-        >
-          {{ item.data.title }}
-        </IconLabel>
-
-        <VuiFlex
-          v-else
-          gap="5px"
-        >
-          <IconLabel
-            :icon="item.icon"
-            :size="item.size"
-            :button="false"
-          />
-          <div
-            class="mcr-detail-title"
-            v-html="tagFormatter(item.data)"
-          />
-
-          <span
-            v-if="item.data.count"
-            class="mcr-num mcr-count"
-          >{{ item.data.count }}</span>
-        </VuiFlex>
-
-        <VuiFlex
-          v-for="column, sk in item.simpleColumns"
-          :key="sk"
-          gap="5px"
-          wrap
-          class="mcr-column-simple"
-        >
-          <div class="mcr-simple-head">
-            {{ column.data.name }}
-          </div>
-          <div
-            class="mcr-simple-content"
-            v-html="column.content"
-          />
-        </VuiFlex>
-
-        <div class="vui-flex-auto" />
-
-        <div
-          v-if="item.data.location"
-          class="mcr-detail-location"
-        >
-          {{ item.data.location }}
-        </div>
-
-        <div
-          v-if="Util.isNum(item.data.duration)"
-          class="mcr-detail-duration"
-        >
-          {{ Util.TF(item.data.duration) }}
-        </div>
-      </VuiFlex>
-      <div class="mcr-detail-body">
-        <div
-          v-for="column, dk in item.detailColumns"
-          :key="dk"
-          :class="itemColumnClass(column.data)"
-          :position-id="column.positionId"
-          :position-type="column.positionType"
-        >
-          <IconLabel
-            :icon="column.collapsed?'collapsed':'expanded'"
-            class="mcr-column-head"
-            @click="onColumnHeadClick(column)"
-          >
-            <IconLabel
-              :icon="column.icon"
-              size="20px"
-            >
-              {{ column.data.name }}
-            </IconLabel>
-          </IconLabel>
-          <div
-            :class="columnContentClass(column)"
-            v-html="column.content"
-          />
-        </div>
-        <VuiFlex
-          v-if="item.data.type==='case'&&item.data.stepNum"
-          class="mcr-detail-column"
-          gap="10px"
-        >
-          <IconLabel
-            :icon="item.data.collapsed?'collapsed':'expanded'"
-            class="mcr-column-head"
-            @click="onRowHeadClick(item.data)"
-          >
-            Steps
-          </IconLabel>
-          <div class="mcr-num">
-            {{ item.data.stepNum }}
-          </div>
-
-          <VuiSwitch
-            v-if="item.data.stepSubs&&!item.data.collapsed"
-            v-model="item.data.stepCollapsed"
-            :disabled="data.stepCollapsedDisabled"
-            :label-clickable="true"
-            label-position="right"
-            @change="onStepCollapsedClick(item.data)"
-          >
-            Collapse All
-          </VuiSwitch>
-
-          <VuiSwitch
-            v-if="item.data.stepFailed&&!item.data.collapsed"
-            v-model="item.data.stepFailedOnly"
-            :label-clickable="true"
-            label-position="right"
-            @change="onStepFailedClick(item.data)"
-          >
-            Only Failed
-          </VuiSwitch>
-        </VuiFlex>
-      </div>
-    </div>
-  </div>
-</template>
 <script setup>
 import {
     ref, watch, shallowReactive, onMounted, onActivated
@@ -617,6 +473,152 @@ onActivated(() => {
 });
 
 </script>
+
+<template>
+  <div
+    ref="el"
+    class="mcr-detail"
+  >
+    <div
+      v-for="item, ik in data.list"
+      :key="ik"
+      class="mcr-detail-item"
+      :style="item.style"
+    >
+      <VuiFlex
+        :class="itemHeadClass(item.data)"
+        gap="10px"
+        padding="5px"
+        :position-id="item.positionId"
+        wrap
+      >
+        <IconLabel
+          v-if="item.stepGroup"
+          :icon="item.data.collapsed?'collapsed':'expanded'"
+          @click="onRowHeadClick(item.data)"
+        >
+          {{ item.data.title }}
+        </IconLabel>
+
+        <VuiFlex
+          v-else
+          gap="5px"
+        >
+          <IconLabel
+            :icon="item.icon"
+            :size="item.size"
+            :button="false"
+          />
+          <div
+            class="mcr-detail-title"
+            v-html="tagFormatter(item.data)"
+          />
+
+          <span
+            v-if="item.data.count"
+            class="mcr-num mcr-count"
+          >{{ item.data.count }}</span>
+        </VuiFlex>
+
+        <VuiFlex
+          v-for="column, sk in item.simpleColumns"
+          :key="sk"
+          gap="5px"
+          wrap
+          class="mcr-column-simple"
+        >
+          <div class="mcr-simple-head">
+            {{ column.data.name }}
+          </div>
+          <div
+            class="mcr-simple-content"
+            v-html="column.content"
+          />
+        </VuiFlex>
+
+        <div class="vui-flex-auto" />
+
+        <div
+          v-if="item.data.location"
+          class="mcr-detail-location"
+        >
+          {{ item.data.location }}
+        </div>
+
+        <div
+          v-if="Util.isNum(item.data.duration)"
+          class="mcr-detail-duration"
+        >
+          {{ Util.TF(item.data.duration) }}
+        </div>
+      </VuiFlex>
+      <div class="mcr-detail-body">
+        <div
+          v-for="column, dk in item.detailColumns"
+          :key="dk"
+          :class="itemColumnClass(column.data)"
+          :position-id="column.positionId"
+          :position-type="column.positionType"
+        >
+          <IconLabel
+            :icon="column.collapsed?'collapsed':'expanded'"
+            class="mcr-column-head"
+            @click="onColumnHeadClick(column)"
+          >
+            <IconLabel
+              :icon="column.icon"
+              size="20px"
+            >
+              {{ column.data.name }}
+            </IconLabel>
+          </IconLabel>
+          <div
+            :class="columnContentClass(column)"
+            v-html="column.content"
+          />
+        </div>
+        <VuiFlex
+          v-if="item.data.type==='case'&&item.data.stepNum"
+          class="mcr-detail-column"
+          gap="10px"
+        >
+          <IconLabel
+            :icon="item.data.collapsed?'collapsed':'expanded'"
+            class="mcr-column-head"
+            @click="onRowHeadClick(item.data)"
+          >
+            Steps
+          </IconLabel>
+          <div class="mcr-num">
+            {{ item.data.stepNum }}
+          </div>
+
+          <VuiSwitch
+            v-if="item.data.stepSubs&&!item.data.collapsed"
+            v-model="item.data.stepCollapsed"
+            :disabled="data.stepCollapsedDisabled"
+            :label-clickable="true"
+            label-position="right"
+            @change="onStepCollapsedClick(item.data)"
+          >
+            Collapse All
+          </VuiSwitch>
+
+          <VuiSwitch
+            v-if="item.data.stepFailed&&!item.data.collapsed"
+            v-model="item.data.stepFailedOnly"
+            :label-clickable="true"
+            label-position="right"
+            @change="onStepFailedClick(item.data)"
+          >
+            Only Failed
+          </VuiSwitch>
+        </VuiFlex>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style lang="scss">
 .mcr-detail {
     width: 100%;

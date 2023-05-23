@@ -1,114 +1,3 @@
-<template>
-  <div
-    v-show="chart.trendList"
-    class="mcr-report-item"
-  >
-    <div class="mcr-report-head">
-      <VuiFlex
-        gap="15px"
-        padding="10px"
-        wrap
-      >
-        <IconLabel
-          icon="trend"
-          :button="false"
-        >
-          <b>Trends</b>
-        </IconLabel>
-
-        <VuiSelect
-          v-model="chart.density"
-          :options="chart.densityOptions"
-          label="x"
-        />
-
-        <VuiSelect
-          v-model="chart.type"
-          :options="chart.typeOptions"
-          label="y"
-        />
-      </VuiFlex>
-    </div>
-    <div class="mcr-report-chart">
-      <div class="mcr-trend-chart">
-        <svg
-          :viewBox="viewBox"
-          width="100%"
-          height="100%"
-          xmlns="http://www.w3.org/2000/svg"
-          @mouseleave="hidePopover"
-          @click="chart.bezier=!chart.bezier"
-        >
-          <rect
-            :width="chart.width"
-            :height="chart.height"
-            fill="#fff"
-            fill-opacity="0"
-            @mousemove="onMouseMove($event)"
-          />
-          <g
-            pointer-events="none"
-            font-family="Verdana,Helvetica,sans-serif"
-          >
-
-            <g
-              v-for="(item, i) in chart.lines"
-              :key="i"
-            >
-              <path
-                :d="item.d"
-                :fill="item.fill"
-                :stroke="item.stroke"
-                :opacity="item.opacity"
-                :fill-opacity="item.fillOpacity"
-              />
-            </g>
-
-            <g v-if="chart.focus">
-              <path
-                :d="chart.focus.d"
-                :stroke="chart.focus.color"
-              />
-            </g>
-
-          </g>
-        </svg>
-      </div>
-    </div>
-    <VuiPopover
-      ref="popover"
-      v-model="pd.visible"
-      :positions="['top','bottom']"
-      :target="pd.target"
-      nonreactive
-      class="mcr-trend-popover"
-      width="200px"
-    >
-      <VuiFlex
-        direction="column"
-        gap="10px"
-      >
-        <VuiFlex
-          v-for="(item, i) in pd.results"
-          :key="i"
-          gap="10px"
-        >
-          <IconLabel
-            :icon="item.icon"
-            :button="false"
-          >
-            {{ item.name }}
-          </IconLabel>
-          <span
-            v-if=" item.value"
-            class="mcr-num"
-          >{{ item.value }}</span>
-          <span v-if="item.percent">{{ item.percent }}</span>
-        </VuiFlex>
-      </VuiFlex>
-    </VuiPopover>
-  </div>
-</template>
 <script setup>
 import {
     shallowReactive, computed, watch, ref, onMounted
@@ -613,6 +502,119 @@ onMounted(() => {
 });
 
 </script>
+
+<template>
+  <div
+    v-show="chart.trendList"
+    class="mcr-report-item"
+  >
+    <div class="mcr-report-head">
+      <VuiFlex
+        gap="15px"
+        padding="10px"
+        wrap
+      >
+        <IconLabel
+          icon="trend"
+          :button="false"
+        >
+          <b>Trends</b>
+        </IconLabel>
+
+        <VuiSelect
+          v-model="chart.density"
+          :options="chart.densityOptions"
+          label="x"
+        />
+
+        <VuiSelect
+          v-model="chart.type"
+          :options="chart.typeOptions"
+          label="y"
+        />
+      </VuiFlex>
+    </div>
+    <div class="mcr-report-chart">
+      <div class="mcr-trend-chart">
+        <svg
+          :viewBox="viewBox"
+          width="100%"
+          height="100%"
+          xmlns="http://www.w3.org/2000/svg"
+          @mouseleave="hidePopover"
+          @click="chart.bezier=!chart.bezier"
+        >
+          <rect
+            :width="chart.width"
+            :height="chart.height"
+            fill="#fff"
+            fill-opacity="0"
+            @mousemove="onMouseMove($event)"
+          />
+          <g
+            pointer-events="none"
+            font-family="Verdana,Helvetica,sans-serif"
+          >
+
+            <g
+              v-for="(item, i) in chart.lines"
+              :key="i"
+            >
+              <path
+                :d="item.d"
+                :fill="item.fill"
+                :stroke="item.stroke"
+                :opacity="item.opacity"
+                :fill-opacity="item.fillOpacity"
+              />
+            </g>
+
+            <g v-if="chart.focus">
+              <path
+                :d="chart.focus.d"
+                :stroke="chart.focus.color"
+              />
+            </g>
+
+          </g>
+        </svg>
+      </div>
+    </div>
+    <VuiPopover
+      ref="popover"
+      v-model="pd.visible"
+      :positions="['top','bottom']"
+      :target="pd.target"
+      nonreactive
+      class="mcr-trend-popover"
+      width="200px"
+    >
+      <VuiFlex
+        direction="column"
+        gap="10px"
+      >
+        <VuiFlex
+          v-for="(item, i) in pd.results"
+          :key="i"
+          gap="10px"
+        >
+          <IconLabel
+            :icon="item.icon"
+            :button="false"
+          >
+            {{ item.name }}
+          </IconLabel>
+          <span
+            v-if=" item.value"
+            class="mcr-num"
+          >{{ item.value }}</span>
+          <span v-if="item.percent">{{ item.percent }}</span>
+        </VuiFlex>
+      </VuiFlex>
+    </VuiPopover>
+  </div>
+</template>
+
 <style lang="scss">
 .mcr-trend-chart {
     position: relative;

@@ -1,3 +1,343 @@
+<script setup>
+import {
+    shallowReactive, watch, onActivated
+} from 'vue';
+
+import { components } from 'vine-ui';
+
+import state from '../modules/state.js';
+import Util from '../utils/util.js';
+import {
+    renderGrid, updateGrid, hideFlyover
+} from '../modules/grid.js';
+
+import IconLabel from './icon-label.vue';
+import Pie from './pie.vue';
+import Timeline from './timeline.vue';
+import Trend from './trend.vue';
+
+const { VuiFlex, VuiSelect } = components;
+
+const report = shallowReactive({
+    systemIndex: 0,
+    monocart: `Monocart Reporter v${window.VERSION}`
+});
+
+// ====================================================================================
+
+const onExportClick = (item) => {
+    if (typeof item.asyncExport === 'function') {
+        item.asyncExport();
+        return;
+    }
+
+    const d = item.getData();
+    if (!d) {
+        console.log('Not found data to export');
+        return;
+    }
+    // without ext
+    const name = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
+    Util.exportJson(d, name);
+};
+
+const getExportCases = (caseType) => {
+    const list = [];
+    Util.forEach(state.reportData.rows, (item) => {
+        if (item.type === 'case' && item.caseType === caseType) {
+            const it = {
+                ... item
+            };
+            delete it.subs;
+            delete it.steps;
+            list.push(it);
+        }
+    });
+    return list;
+};
+
+const exportHandler = () => {
+    report.exportList = [{
+        list: [{
+            name: 'Report Data',
+            icon: 'item',
+            getData: () => {
+                return state.reportData;
+            }
+        }, {
+            name: 'Summary',
+            icon: 'item',
+            getData: () => {
+                return state.reportData.summary;
+            }
+        }, {
+            name: 'Pie Chart',
+            icon: 'item',
+            getData: () => {
+                return report.pieChart;
+            }
+        }, {
+            name: 'Errors',
+            icon: 'item',
+            getData: () => {
+                const list = [];
+                Util.forEach(state.reportData.rows, (item) => {
+                    if (item.errors) {
+                        const it = {
+                            ... item
+                        };
+                        delete it.subs;
+                        delete it.steps;
+                        list.push(it);
+                    }
+                });
+                return list;
+            }
+        }, {
+            name: 'Failed Cases',
+            icon: 'item',
+            getData: () => {
+                return getExportCases('failed');
+            }
+        }, {
+            name: 'Skipped Cases',
+            icon: 'item',
+            getData: () => {
+                return getExportCases('skipped');
+            }
+        }, {
+            name: 'Selected Rows',
+            icon: 'item',
+            asyncExport: () => {
+                state.exportSelected = true;
+                hideFlyover(true);
+            }
+        }]
+    }];
+};
+
+// ====================================================================================
+
+const systemHandler = () => {
+    // for system options select
+    if (!state.systemList) {
+        return;
+    }
+    report.systemOptions = state.systemList.map((item, i) => {
+        return {
+            label: item.hostname,
+            value: i
+        };
+    });
+};
+
+
+const timelineHandler = () => {
+    const system = state.system;
+    report.playwright = `Playwright v${system.playwright}`;
+    report.usageList = [{
+        icon: 'worker',
+        name: 'Workers',
+        value: `${Util.NF(system.workers)} (Max)`
+    }, {
+        icon: 'cpu',
+        name: 'CPU',
+        value: `${system.cpu.model} (${system.cpu.count}T)`,
+        color: system.cpu.color
+    }, {
+        icon: 'memory',
+        name: 'Memory',
+        value: Util.BF(system.mem.total),
+        color: system.mem.color
+    }];
+
+    report.infoList = [{
+        list: [{
+            icon: 'host',
+            name: 'Host',
+            value: system.hostname
+        }, {
+            icon: 'os',
+            name: 'OS',
+            value: `${system.version} (${system.arch})`
+        }, {
+            icon: 'cwd',
+            name: 'CWD',
+            value: system.cwd
+        }]
+    }, {
+        list: [{
+            icon: 'config',
+            name: 'Config File',
+            value: system.configFile
+        }, {
+            icon: 'folder',
+            name: 'Test Dir',
+            value: system.testDir
+        }, {
+            icon: 'output',
+            name: 'Output Dir',
+            value: system.outputDir
+        }]
+    }];
+};
+
+// ====================================================================================
+
+const onTagClick = (tag) => {
+    state.flyoverVisible = false;
+    state.caseType = 'tests';
+    state.keywords = `@${tag.name}`;
+    updateGrid();
+};
+
+const tagsHandler = () => {
+    const tagMap = state.tagMap;
+    // tags and style
+    const tagList = [];
+    Object.keys(tagMap).forEach((tag) => {
+        tagList.push({
+            name: tag,
+            ... tagMap[tag]
+        });
+    });
+
+    if (!tagList.length) {
+        return;
+    }
+
+    tagList.sort((a, b) => {
+        return b.value - a.value;
+    });
+
+    report.tagList = tagList;
+
+};
+
+// ====================================================================================
+
+const metadataHandler = () => {
+
+    const metadata = state.reportData.metadata;
+
+    const metadataList = Object.keys(metadata).map((k) => {
+        return {
+            icon: 'item-arrow',
+            name: k,
+            value: metadata[k]
+        };
+    }).filter((it) => {
+        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
+            return true;
+        }
+    });
+
+    if (metadataList.length) {
+        report.metadataList = metadataList;
+    }
+
+};
+
+const artifactsHandler = () => {
+    const artifacts = state.reportData.artifacts;
+    if (!Util.isList(artifacts)) {
+        return;
+    }
+
+    // console.log(artifacts);
+
+    report.artifacts = artifacts;
+
+};
+
+// ====================================================================================
+
+const onAmountClick = (item) => {
+
+    const sortFields = {
+        errors: 'errors',
+        logs: 'logs',
+        attachments: 'attachments',
+        retries: 'retry'
+    };
+
+    const sortField = sortFields[item.id];
+    if (sortField) {
+        onSortClick('tests', sortField);
+    }
+
+};
+
+const onSortClick = (caseType, sortField) => {
+    hideFlyover(true);
+    state.sortField = sortField;
+    state.sortAsc = false;
+    state.keywords = '';
+
+    // manual render when same value
+    if (state.suiteVisible === false && state.caseType === caseType) {
+        renderGrid();
+        return;
+    }
+
+    // auto renderGrid by watch state change
+    state.suiteVisible = false;
+    state.caseType = caseType;
+
+};
+
+const pieHandler = () => {
+
+    const reportData = state.reportData;
+
+    report.pieChart = reportData.pieChart;
+
+    const summary = state.summary;
+
+    report.amountHeads = [summary.tests, summary.suites, summary.steps];
+    report.amountList = [{
+        icon: 'suite',
+        button: false,
+        list: [
+            summary.projects,
+            summary.files,
+            summary.describes,
+            summary.shards
+        ]
+    }, {
+        icon: 'sort',
+        button: true,
+        primary: true,
+        list: [
+            summary.errors,
+            summary.logs,
+            summary.attachments,
+            summary.retries
+        ]
+    }];
+
+};
+
+// ====================================================================================
+
+watch(() => report.systemIndex, (v) => {
+    state.system = state.systemList[v];
+    timelineHandler();
+});
+
+
+onActivated(() => {
+    pieHandler();
+    systemHandler();
+    timelineHandler();
+    tagsHandler();
+    metadataHandler();
+    artifactsHandler();
+    exportHandler();
+});
+
+</script>
+
 <template>
   <VuiFlex
     direction="column"
@@ -396,345 +736,6 @@
   </VuiFlex>
 </template>
 
-<script setup>
-import {
-    shallowReactive, watch, onActivated
-} from 'vue';
-
-import { components } from 'vine-ui';
-
-import state from '../modules/state.js';
-import Util from '../utils/util.js';
-import {
-    renderGrid, updateGrid, hideFlyover
-} from '../modules/grid.js';
-
-import IconLabel from './icon-label.vue';
-import Pie from './pie.vue';
-import Timeline from './timeline.vue';
-import Trend from './trend.vue';
-
-const { VuiFlex, VuiSelect } = components;
-
-const report = shallowReactive({
-    systemIndex: 0,
-    monocart: `Monocart Reporter v${window.VERSION}`
-});
-
-// ====================================================================================
-
-const onExportClick = (item) => {
-    if (typeof item.asyncExport === 'function') {
-        item.asyncExport();
-        return;
-    }
-
-    const d = item.getData();
-    if (!d) {
-        console.log('Not found data to export');
-        return;
-    }
-    // without ext
-    const name = [state.title, state.date, item.name].join('-').replace(/[\s:/]+/g, '-');
-    Util.exportJson(d, name);
-};
-
-const getExportCases = (caseType) => {
-    const list = [];
-    Util.forEach(state.reportData.rows, (item) => {
-        if (item.type === 'case' && item.caseType === caseType) {
-            const it = {
-                ... item
-            };
-            delete it.subs;
-            delete it.steps;
-            list.push(it);
-        }
-    });
-    return list;
-};
-
-const exportHandler = () => {
-    report.exportList = [{
-        list: [{
-            name: 'Report Data',
-            icon: 'item',
-            getData: () => {
-                return state.reportData;
-            }
-        }, {
-            name: 'Summary',
-            icon: 'item',
-            getData: () => {
-                return state.reportData.summary;
-            }
-        }, {
-            name: 'Pie Chart',
-            icon: 'item',
-            getData: () => {
-                return report.pieChart;
-            }
-        }, {
-            name: 'Errors',
-            icon: 'item',
-            getData: () => {
-                const list = [];
-                Util.forEach(state.reportData.rows, (item) => {
-                    if (item.errors) {
-                        const it = {
-                            ... item
-                        };
-                        delete it.subs;
-                        delete it.steps;
-                        list.push(it);
-                    }
-                });
-                return list;
-            }
-        }, {
-            name: 'Failed Cases',
-            icon: 'item',
-            getData: () => {
-                return getExportCases('failed');
-            }
-        }, {
-            name: 'Skipped Cases',
-            icon: 'item',
-            getData: () => {
-                return getExportCases('skipped');
-            }
-        }, {
-            name: 'Selected Rows',
-            icon: 'item',
-            asyncExport: () => {
-                state.exportSelected = true;
-                hideFlyover(true);
-            }
-        }]
-    }];
-};
-
-// ====================================================================================
-
-const systemHandler = () => {
-    // for system options select
-    if (!state.systemList) {
-        return;
-    }
-    report.systemOptions = state.systemList.map((item, i) => {
-        return {
-            label: item.hostname,
-            value: i
-        };
-    });
-};
-
-
-const timelineHandler = () => {
-    const system = state.system;
-    report.playwright = `Playwright v${system.playwright}`;
-    report.usageList = [{
-        icon: 'worker',
-        name: 'Workers',
-        value: `${Util.NF(system.workers)} (Max)`
-    }, {
-        icon: 'cpu',
-        name: 'CPU',
-        value: `${system.cpu.model} (${system.cpu.count}T)`,
-        color: system.cpu.color
-    }, {
-        icon: 'memory',
-        name: 'Memory',
-        value: Util.BF(system.mem.total),
-        color: system.mem.color
-    }];
-
-    report.infoList = [{
-        list: [{
-            icon: 'host',
-            name: 'Host',
-            value: system.hostname
-        }, {
-            icon: 'os',
-            name: 'OS',
-            value: `${system.version} (${system.arch})`
-        }, {
-            icon: 'cwd',
-            name: 'CWD',
-            value: system.cwd
-        }]
-    }, {
-        list: [{
-            icon: 'config',
-            name: 'Config File',
-            value: system.configFile
-        }, {
-            icon: 'folder',
-            name: 'Test Dir',
-            value: system.testDir
-        }, {
-            icon: 'output',
-            name: 'Output Dir',
-            value: system.outputDir
-        }]
-    }];
-};
-
-// ====================================================================================
-
-const onTagClick = (tag) => {
-    state.flyoverVisible = false;
-    state.caseType = 'tests';
-    state.keywords = `@${tag.name}`;
-    updateGrid();
-};
-
-const tagsHandler = () => {
-    const tagMap = state.tagMap;
-    // tags and style
-    const tagList = [];
-    Object.keys(tagMap).forEach((tag) => {
-        tagList.push({
-            name: tag,
-            ... tagMap[tag]
-        });
-    });
-
-    if (!tagList.length) {
-        return;
-    }
-
-    tagList.sort((a, b) => {
-        return b.value - a.value;
-    });
-
-    report.tagList = tagList;
-
-};
-
-// ====================================================================================
-
-const metadataHandler = () => {
-
-    const metadata = state.reportData.metadata;
-
-    const metadataList = Object.keys(metadata).map((k) => {
-        return {
-            icon: 'item-arrow',
-            name: k,
-            value: metadata[k]
-        };
-    }).filter((it) => {
-        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
-            return true;
-        }
-    });
-
-    if (metadataList.length) {
-        report.metadataList = metadataList;
-    }
-
-};
-
-const artifactsHandler = () => {
-    const artifacts = state.reportData.artifacts;
-    if (!Util.isList(artifacts)) {
-        return;
-    }
-
-    // console.log(artifacts);
-
-    report.artifacts = artifacts;
-
-};
-
-// ====================================================================================
-
-const onAmountClick = (item) => {
-
-    const sortFields = {
-        errors: 'errors',
-        logs: 'logs',
-        attachments: 'attachments',
-        retries: 'retry'
-    };
-
-    const sortField = sortFields[item.id];
-    if (sortField) {
-        onSortClick('tests', sortField);
-    }
-
-};
-
-const onSortClick = (caseType, sortField) => {
-    hideFlyover(true);
-    state.sortField = sortField;
-    state.sortAsc = false;
-    state.keywords = '';
-
-    // manual render when same value
-    if (state.suiteVisible === false && state.caseType === caseType) {
-        renderGrid();
-        return;
-    }
-
-    // auto renderGrid by watch state change
-    state.suiteVisible = false;
-    state.caseType = caseType;
-
-};
-
-const pieHandler = () => {
-
-    const reportData = state.reportData;
-
-    report.pieChart = reportData.pieChart;
-
-    const summary = state.summary;
-
-    report.amountHeads = [summary.tests, summary.suites, summary.steps];
-    report.amountList = [{
-        icon: 'suite',
-        button: false,
-        list: [
-            summary.projects,
-            summary.files,
-            summary.describes,
-            summary.shards
-        ]
-    }, {
-        icon: 'sort',
-        button: true,
-        primary: true,
-        list: [
-            summary.errors,
-            summary.logs,
-            summary.attachments,
-            summary.retries
-        ]
-    }];
-
-};
-
-// ====================================================================================
-
-watch(() => report.systemIndex, (v) => {
-    state.system = state.systemList[v];
-    timelineHandler();
-});
-
-
-onActivated(() => {
-    pieHandler();
-    systemHandler();
-    timelineHandler();
-    tagsHandler();
-    metadataHandler();
-    artifactsHandler();
-    exportHandler();
-});
-
-</script>
 <style lang="scss">
 .mcr-report {
     overflow-y: auto;

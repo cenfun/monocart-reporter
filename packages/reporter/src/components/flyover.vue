@@ -1,3 +1,36 @@
+<script setup>
+import { components } from 'vine-ui';
+
+import { hash } from 'monocart-common';
+
+import state from '../modules/state.js';
+
+import IconLabel from './icon-label.vue';
+import Detail from './detail.vue';
+import Report from './report.vue';
+
+const {
+    VuiFlex, VuiFlyover, VuiLoading
+} = components;
+
+const flyoverComponents = {
+    detail: Detail,
+    report: Report
+};
+
+// remove tag till flyover animation end
+const onFlyoverEnd = () => {
+    if (!state.flyoverVisible) {
+        hash.remove('page');
+    }
+};
+
+const onFlyoverResize = (width) => {
+    state.flyoverWidth = width;
+};
+
+</script>
+
 <template>
   <VuiFlyover
     ref="flyover"
@@ -41,38 +74,6 @@
   </VuiFlyover>
 </template>
 
-<script setup>
-import { components } from 'vine-ui';
-
-import { hash } from 'monocart-common';
-
-import state from '../modules/state.js';
-
-import IconLabel from './icon-label.vue';
-import Detail from './detail.vue';
-import Report from './report.vue';
-
-const {
-    VuiFlex, VuiFlyover, VuiLoading
-} = components;
-
-const flyoverComponents = {
-    detail: Detail,
-    report: Report
-};
-
-// remove tag till flyover animation end
-const onFlyoverEnd = () => {
-    if (!state.flyoverVisible) {
-        hash.remove('page');
-    }
-};
-
-const onFlyoverResize = (width) => {
-    state.flyoverWidth = width;
-};
-
-</script>
 <style lang="scss">
 .mcr-flyover-icon {
     position: absolute;

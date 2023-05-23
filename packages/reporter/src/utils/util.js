@@ -17,10 +17,6 @@ const Util = {
         }
     },
 
-    isTouchDevice: function() {
-        return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
-    },
-
     quoteAttr: (s) => {
         return `${s}`
             // This MUST be the 1st replacement.

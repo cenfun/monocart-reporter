@@ -1,16 +1,3 @@
-<template>
-  <VuiFlex
-    v-if="props.pieChart"
-    class="mcr-pie-chart"
-    gap="20px"
-  >
-    <div
-      :style="pieStyle(props.pieChart)"
-      @click="onPieClick($event)"
-      v-html="props.pieChart.svg"
-    />
-  </VuiFlex>
-</template>
 <script setup>
 import { components } from 'vine-ui';
 
@@ -63,6 +50,21 @@ const onPieClick = (e) => {
 };
 
 </script>
+
+<template>
+  <VuiFlex
+    v-if="props.pieChart"
+    class="mcr-pie-chart"
+    gap="20px"
+  >
+    <div
+      :style="pieStyle(props.pieChart)"
+      @click="onPieClick($event)"
+      v-html="props.pieChart.svg"
+    />
+  </VuiFlex>
+</template>
+
 <style lang="scss">
 .mcr-pie-chart {
     position: relative;
