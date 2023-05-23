@@ -4,9 +4,10 @@ import {
 } from 'vue';
 import { components } from 'vine-ui';
 import { debounce, microtask } from 'monocart-common';
-import 'github-markdown-css/github-markdown-light.css';
 
 import Convert from 'ansi-to-html';
+
+import 'github-markdown-css/github-markdown-light.css';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';

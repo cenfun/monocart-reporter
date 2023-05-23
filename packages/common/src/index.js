@@ -2,6 +2,7 @@ import { Grid } from 'turbogrid';
 import { microtask, debounce } from 'async-tick';
 import inflate from 'lz-utils/inflate';
 import niceTicks from 'nice-ticks';
+import { saveAs } from 'file-saver';
 
 import hash from './hash.js';
 import store from './store.js';
@@ -18,6 +19,7 @@ export {
     debounce,
     inflate,
     niceTicks,
+    saveAs,
 
     hash,
     store,
