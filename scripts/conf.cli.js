@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const beforeApp = (item, Util) => {
+const beforeReporter = (item, Util) => {
 
     const EC = require('eight-colors');
     const { deflateSync } = require('lz-utils');
@@ -132,7 +132,7 @@ module.exports = {
 
     build: {
 
-        vendors: ['app', 'v8', 'network', 'common'],
+        vendors: ['common', 'reporter', 'v8', 'network'],
 
         before: (item, Util) => {
 
@@ -140,8 +140,8 @@ module.exports = {
                 item.devtool = false;
             }
 
-            if (item.name === 'app') {
-                return beforeApp(item, Util);
+            if (item.name === 'reporter') {
+                return beforeReporter(item, Util);
             }
 
             if (item.name === 'v8') {
