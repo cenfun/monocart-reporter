@@ -1,19 +1,3 @@
-<template>
-  <div class="mcr-waterfall">
-    <div
-      v-for="(item, i) in data.rects"
-      :key="i"
-      :style="item.style"
-      class="mcr-waterfall-rect"
-    />
-    <div
-      v-for="(item, i) in data.lines"
-      :key="i"
-      :style="item.style"
-      class="mcr-waterfall-line"
-    />
-  </div>
-</template>
 <script setup>
 import { shallowReactive, watchEffect } from 'vue';
 import Util from '../utils/util.js';
@@ -82,6 +66,24 @@ watchEffect(() => {
     update(props.pageTimings, props.timings);
 });
 </script>
+
+<template>
+  <div class="mcr-waterfall">
+    <div
+      v-for="(item, i) in data.rects"
+      :key="i"
+      :style="item.style"
+      class="mcr-waterfall-rect"
+    />
+    <div
+      v-for="(item, i) in data.lines"
+      :key="i"
+      :style="item.style"
+      class="mcr-waterfall-line"
+    />
+  </div>
+</template>
+
 <style lang="scss">
 .mcr-waterfall {
     position: relative;

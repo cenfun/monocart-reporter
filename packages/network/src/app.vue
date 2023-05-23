@@ -1,51 +1,3 @@
-<template>
-  <div class="mcr vui-flex-column">
-    <VuiFlex
-      class="mcr-header"
-      padding="10px"
-      gap="10px"
-      shrink
-    >
-      <VuiFlex
-        gap="10px"
-        wrap
-      >
-        <div class="mcr-title">
-          <a href="./">{{ state.title }}</a>
-        </div>
-      </VuiFlex>
-
-      <div class="vui-flex-auto" />
-    </VuiFlex>
-
-    <div class="mcr-network-grid vui-flex-auto" />
-
-    <Flyover />
-
-    <VuiTooltip
-      :class="tooltip.classMap"
-      :visible="tooltip.visible"
-      :target="tooltip.target"
-      :text="tooltip.text"
-      :html="tooltip.html"
-    />
-
-    <VuiPopover
-      v-model="popover.visible"
-      :target="popover.target"
-      width="300px"
-      class="mcr-popover-timing"
-    >
-      <Timing :entry="popover.entry" />
-    </VuiPopover>
-
-    <VuiLoading
-      :visible="state.initializing"
-      size="l"
-      center
-    />
-  </div>
-</template>
 <script setup>
 import {
     shallowReactive, onMounted, provide, createApp
@@ -761,6 +713,56 @@ window.addEventListener('keydown', (e) => {
 });
 
 </script>
+
+<template>
+  <div class="mcr vui-flex-column">
+    <VuiFlex
+      class="mcr-header"
+      padding="10px"
+      gap="10px"
+      shrink
+    >
+      <VuiFlex
+        gap="10px"
+        wrap
+      >
+        <div class="mcr-title">
+          <a href="./">{{ state.title }}</a>
+        </div>
+      </VuiFlex>
+
+      <div class="vui-flex-auto" />
+    </VuiFlex>
+
+    <div class="mcr-network-grid vui-flex-auto" />
+
+    <Flyover />
+
+    <VuiTooltip
+      :class="tooltip.classMap"
+      :visible="tooltip.visible"
+      :target="tooltip.target"
+      :text="tooltip.text"
+      :html="tooltip.html"
+    />
+
+    <VuiPopover
+      v-model="popover.visible"
+      :target="popover.target"
+      width="300px"
+      class="mcr-popover-timing"
+    >
+      <Timing :entry="popover.entry" />
+    </VuiPopover>
+
+    <VuiLoading
+      :visible="state.initializing"
+      size="l"
+      center
+    />
+  </div>
+</template>
+
 <style lang="scss">
 html {
     height: 100%;

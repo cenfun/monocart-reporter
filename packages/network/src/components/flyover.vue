@@ -1,3 +1,38 @@
+<script setup>
+import { inject, watch } from 'vue';
+import { components } from 'vine-ui';
+
+import IconLabel from './icon-label.vue';
+
+import Request from './request.vue';
+import Response from './response.vue';
+import Content from './content.vue';
+import Timing from './timing.vue';
+
+const {
+    VuiFlyover, VuiTab, VuiLoading
+} = components;
+
+const state = inject('state');
+
+const onFlyoverResize = (width) => {
+    state.flyoverWidth = width;
+};
+
+const showReport = () => {
+    const id = state.flyoverData;
+    if (!id) {
+        return;
+    }
+    state.entry = state.entryMap[id];
+};
+
+watch(() => state.flyoverData, (v) => {
+    showReport();
+});
+
+</script>
+
 <template>
   <VuiFlyover
     ref="flyover"
@@ -46,40 +81,6 @@
   </VuiFlyover>
 </template>
 
-<script setup>
-import { inject, watch } from 'vue';
-import { components } from 'vine-ui';
-
-import IconLabel from './icon-label.vue';
-
-import Request from './request.vue';
-import Response from './response.vue';
-import Content from './content.vue';
-import Timing from './timing.vue';
-
-const {
-    VuiFlyover, VuiTab, VuiLoading
-} = components;
-
-const state = inject('state');
-
-const onFlyoverResize = (width) => {
-    state.flyoverWidth = width;
-};
-
-const showReport = () => {
-    const id = state.flyoverData;
-    if (!id) {
-        return;
-    }
-    state.entry = state.entryMap[id];
-};
-
-watch(() => state.flyoverData, (v) => {
-    showReport();
-});
-
-</script>
 <style lang="scss">
 .mcr-report {
     position: relative;

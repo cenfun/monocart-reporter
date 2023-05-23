@@ -4,10 +4,9 @@ import {
 } from 'vue';
 
 import { components } from 'vine-ui';
-import { microtask } from 'async-tick';
 
+import { microtask } from 'monocart-common';
 import { createCodeViewer } from 'monocart-code-viewer';
-
 import { format, Mapping } from 'monocart-formatter';
 
 import Util from '../utils/util.js';

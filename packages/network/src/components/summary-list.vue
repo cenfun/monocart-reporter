@@ -1,3 +1,24 @@
+<script setup>
+import { components } from 'vine-ui';
+
+const { VuiFlex } = components;
+
+const props = defineProps({
+    title: {
+        type: String,
+        default: ''
+    },
+    list: {
+        type: Array,
+        default: () => {
+            return [];
+        }
+    }
+});
+
+
+</script>
+
 <template>
   <div
     v-if="props.list.length"
@@ -31,26 +52,7 @@
     </details>
   </div>
 </template>
-<script setup>
-import { components } from 'vine-ui';
 
-const { VuiFlex } = components;
-
-const props = defineProps({
-    title: {
-        type: String,
-        default: ''
-    },
-    list: {
-        type: Array,
-        default: () => {
-            return [];
-        }
-    }
-});
-
-
-</script>
 <style lang="scss">
 .mcr-summary-list {
     position: relative;
