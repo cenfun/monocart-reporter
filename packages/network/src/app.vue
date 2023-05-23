@@ -60,7 +60,7 @@ import Flyover from './components/flyover.vue';
 import Waterfall from './components/waterfall.vue';
 import Timing from './components/timing.vue';
 
-import faviconIcon from '../../app/src/images/favicon.svg';
+import faviconIcon from '../../reporter/src/images/favicon.svg';
 
 const {
     VuiFlex,

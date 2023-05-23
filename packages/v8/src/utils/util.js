@@ -1,6 +1,6 @@
 import { Util as GridUtil } from 'turbogrid';
 import Share from '../../../../lib/platform/share.js';
-import * as Hash from '../../../app/src/common/hash.js';
+import * as Hash from '../../../reporter/src/common/hash.js';
 
 const Util = {
     ... GridUtil,

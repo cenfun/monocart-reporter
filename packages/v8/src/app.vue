@@ -8,12 +8,12 @@ import inflate from 'lz-utils/inflate';
 import { microtask, debounce } from 'async-tick';
 
 import Util from './utils/util.js';
-import store from '../../app/src/common/store.js';
+import store from '../../reporter/src/common/store.js';
 
 import Flyover from './components/flyover.vue';
 import Report from './components/report.vue';
 
-import faviconIcon from '../../app/src/images/favicon.svg';
+import faviconIcon from '../../reporter/src/images/favicon.svg';
 
 const {
     VuiFlex,
@@ -882,7 +882,7 @@ icon
 .mcr-search {
     input {
         padding-right: 23px;
-        background-image: url("../../app/src/images/search.svg");
+        background-image: url("../../reporter/src/images/search.svg");
         background-repeat: no-repeat;
         background-position: 97% center;
         background-size: 16px;
