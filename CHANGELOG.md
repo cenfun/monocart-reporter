@@ -1,6 +1,6 @@
 
 * 1.6.26
-  - fixed overage report UI issues
+  - fixed coverage report UI issues
   - added counts of comments and blanks for coverage
   - added first screen loading
 

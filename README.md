@@ -992,18 +992,11 @@ Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoft
 - [weixin-webhook.js](/tests/common/weixin-webhook.js)
 - [feishu-webhook.js](/tests/common/feishu-webhook.js)
 
-## Dependencies and Packages
+## Dependencies
  - UI Framework [Vue 3](https://github.com/vuejs/core)
  - Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
  - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
  - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
- - Packages
-    - `packages/app` Monocart report UI
-    - `packages/coverage` Coverage report libs
-    - `packages/network` Network HAR report libs
-    - `packages/v8` V8 HTML report UI
-    - `packages/vendor` Third-party libs
-
 
 ## Contributing
 ```sh

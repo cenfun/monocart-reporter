@@ -1,0 +1,10 @@
+{
+    "name": "monocart-common",
+    "version": "",
+    "main": "dist/monocart-common.js",
+    "files": [
+        "dist"
+    ],
+    "dependencies": {},
+    "devDependencies": {}
+}
