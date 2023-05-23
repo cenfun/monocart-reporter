@@ -20,7 +20,7 @@
         "build": "sf lint && sf b -p",
         "dev": "sf d reporter -w .temp/monocart/index.json",
         "patch": "npm run build && sf publish patch -r",
-        "pack": "sf pack -o docs -q v={version} && nmls -p",
+        "pack": "sf pack reporter -o docs -q v={version} && nmls -p",
         "mock-download": "node ./scripts/mock-download.js",
         "mock-serve": "node ./scripts/mock-serve.js"
     },

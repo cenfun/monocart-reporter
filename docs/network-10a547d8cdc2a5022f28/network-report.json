@@ -10,12 +10,12 @@
     },
     "pages": [
         {
-            "startedDateTime": "2023-05-22T15:22:36.819Z",
-            "id": "page@3c95dd5db1b4053d4e529cd3c637d246",
+            "startedDateTime": "2023-05-23T15:10:02.253Z",
+            "id": "page@b4da6a7090848878c6dc17e8569001c5",
             "title": "coverage page",
             "pageTimings": {
-                "onContentLoad": 18,
-                "onLoad": 18
+                "onContentLoad": 15,
+                "onLoad": 15
             }
         }
     ],
@@ -30,32 +30,32 @@
             "GET": 2
         },
         "waterfalls": {
-            "page@3c95dd5db1b4053d4e529cd3c637d246": {
-                "timestampStart": 1684768956819,
+            "page@b4da6a7090848878c6dc17e8569001c5": {
+                "timestampStart": 1684854602253,
                 "start": 0,
-                "time": 18,
-                "onContentLoad": 18,
-                "onLoad": 18,
+                "time": 15,
+                "onContentLoad": 15,
+                "onLoad": 15,
                 "entries": [
                     {
-                        "start": 3,
-                        "time": 5.083,
-                        "dns": 0.009,
-                        "connect": 0.306,
-                        "ssl": 1.685,
+                        "start": 2,
+                        "time": 4.1,
+                        "dns": 0.007,
+                        "connect": 0.294,
+                        "ssl": 1.737,
                         "send": 0,
-                        "wait": 2.015,
-                        "receive": 1.068
+                        "wait": 0.989,
+                        "receive": 1.073
                     },
                     {
-                        "start": 15,
-                        "time": 1.605,
+                        "start": 11,
+                        "time": 1.4449999999999998,
                         "dns": -1,
                         "connect": -1,
                         "ssl": -1,
                         "send": 0,
-                        "wait": 0.859,
-                        "receive": 0.746
+                        "wait": 0.825,
+                        "receive": 0.62
                     }
                 ]
             }

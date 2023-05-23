@@ -167,7 +167,7 @@ module.exports = {
             const toPath = path.resolve(__dirname, '../lib/runtime');
 
             // only clean if build all
-            if (results.jobList.length > 1 && fs.existsSync(toPath)) {
+            if (results.jobList.length === 6 && fs.existsSync(toPath)) {
                 EC.logRed('removing runtime libs ...');
                 fs.rmSync(toPath, {
                     recursive: true,

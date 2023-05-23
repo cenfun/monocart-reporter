@@ -10,12 +10,12 @@
     },
     "pages": [
         {
-            "startedDateTime": "2023-05-22T15:22:35.206Z",
-            "id": "page@2cfc0e4a66a7d5b1e2fcf82c0ae3b3fe",
+            "startedDateTime": "2023-05-23T15:10:00.653Z",
+            "id": "page@bb314664434a6c6bc35f6fced9debf95",
             "title": "coverage page",
             "pageTimings": {
-                "onContentLoad": 256,
-                "onLoad": 256
+                "onContentLoad": 314,
+                "onLoad": 314
             }
         }
     ],
@@ -31,142 +31,142 @@
             "GET": 13
         },
         "waterfalls": {
-            "page@2cfc0e4a66a7d5b1e2fcf82c0ae3b3fe": {
-                "timestampStart": 1684768955206,
+            "page@bb314664434a6c6bc35f6fced9debf95": {
+                "timestampStart": 1684854600653,
                 "start": 0,
-                "time": 292.156,
-                "onContentLoad": 256,
-                "onLoad": 256,
+                "time": 351.129,
+                "onContentLoad": 314,
+                "onLoad": 314,
                 "entries": [
                     {
-                        "start": 5,
-                        "time": 4.895,
-                        "dns": 0.005,
-                        "connect": 0.361,
-                        "ssl": 1.871,
+                        "start": 4,
+                        "time": 3.7139999999999995,
+                        "dns": 0.006,
+                        "connect": 0.269,
+                        "ssl": 1.626,
                         "send": 0,
-                        "wait": 1.271,
-                        "receive": 1.387
+                        "wait": 0.924,
+                        "receive": 0.889
+                    },
+                    {
+                        "start": 17,
+                        "time": 4.021,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 1.717,
+                        "receive": 2.304
+                    },
+                    {
+                        "start": 17,
+                        "time": 4.286,
+                        "dns": 0.008,
+                        "connect": 0.463,
+                        "ssl": 1.638,
+                        "send": 0,
+                        "wait": 2.177,
+                        "receive": -1
+                    },
+                    {
+                        "start": 17,
+                        "time": 4.647,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 2.248,
+                        "receive": 2.399
+                    },
+                    {
+                        "start": 17,
+                        "time": 12.016,
+                        "dns": 0,
+                        "connect": 2.396,
+                        "ssl": 4.935,
+                        "send": 0,
+                        "wait": 3.027,
+                        "receive": 1.658
+                    },
+                    {
+                        "start": 18,
+                        "time": 6.545,
+                        "dns": 0,
+                        "connect": 1.486,
+                        "ssl": 4.291,
+                        "send": 0,
+                        "wait": 0.768,
+                        "receive": -1
+                    },
+                    {
+                        "start": 18,
+                        "time": 6.072,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 3.822,
+                        "receive": 2.25
+                    },
+                    {
+                        "start": 18,
+                        "time": 10.616,
+                        "dns": 0,
+                        "connect": 0.363,
+                        "ssl": 4.231,
+                        "send": 0,
+                        "wait": 4.16,
+                        "receive": 1.862
+                    },
+                    {
+                        "start": 18,
+                        "time": 12.365,
+                        "dns": 0,
+                        "connect": 0.382,
+                        "ssl": 3.411,
+                        "send": 0,
+                        "wait": 4.76,
+                        "receive": 3.812
+                    },
+                    {
+                        "start": 18,
+                        "time": 7.803,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 4.314,
+                        "receive": 3.489
+                    },
+                    {
+                        "start": 18,
+                        "time": 6.361,
+                        "dns": -1,
+                        "connect": -1,
+                        "ssl": -1,
+                        "send": 0,
+                        "wait": 2.828,
+                        "receive": 3.533
                     },
                     {
                         "start": 19,
-                        "time": 4.343999999999999,
+                        "time": 9.671,
                         "dns": -1,
                         "connect": -1,
                         "ssl": -1,
                         "send": 0,
-                        "wait": 2.185,
-                        "receive": 2.159
+                        "wait": 3.905,
+                        "receive": 5.766
                     },
                     {
-                        "start": 20,
-                        "time": 3.508,
-                        "dns": 0.005,
-                        "connect": 0.315,
-                        "ssl": 1.399,
-                        "send": 0,
-                        "wait": 1.789,
-                        "receive": -1
-                    },
-                    {
-                        "start": 20,
-                        "time": 9.967,
-                        "dns": 0.01,
-                        "connect": 1.72,
-                        "ssl": 3.281,
-                        "send": 0,
-                        "wait": 1.538,
-                        "receive": 3.418
-                    },
-                    {
-                        "start": 20,
-                        "time": 2.9619999999999997,
-                        "dns": -1,
-                        "connect": -1,
-                        "ssl": -1,
-                        "send": 0,
-                        "wait": 1.679,
-                        "receive": 1.283
-                    },
-                    {
-                        "start": 20,
-                        "time": 5.073,
-                        "dns": 0,
-                        "connect": 1.136,
-                        "ssl": 3.393,
-                        "send": 0,
-                        "wait": 0.544,
-                        "receive": -1
-                    },
-                    {
-                        "start": 20,
-                        "time": 5.62,
-                        "dns": -1,
-                        "connect": -1,
-                        "ssl": -1,
-                        "send": 0,
-                        "wait": 2.426,
-                        "receive": 3.194
-                    },
-                    {
-                        "start": 20,
-                        "time": 9.978000000000002,
-                        "dns": 0,
-                        "connect": 0.384,
-                        "ssl": 3.298,
-                        "send": 0,
-                        "wait": 3.298,
-                        "receive": 2.998
-                    },
-                    {
-                        "start": 20,
-                        "time": 12.079,
-                        "dns": 0,
-                        "connect": 0.286,
-                        "ssl": 2.705,
-                        "send": 0,
-                        "wait": 4.363,
-                        "receive": 4.725
-                    },
-                    {
-                        "start": 21,
-                        "time": 8.331,
-                        "dns": -1,
-                        "connect": -1,
-                        "ssl": -1,
-                        "send": 0,
-                        "wait": 4.739,
-                        "receive": 3.592
-                    },
-                    {
-                        "start": 21,
-                        "time": 6.391,
-                        "dns": -1,
-                        "connect": -1,
-                        "ssl": -1,
-                        "send": 0,
-                        "wait": 3.137,
-                        "receive": 3.254
-                    },
-                    {
-                        "start": 21,
-                        "time": 8.555,
-                        "dns": -1,
-                        "connect": -1,
-                        "ssl": -1,
-                        "send": 0,
-                        "wait": 2.593,
-                        "receive": 5.962
-                    },
-                    {
-                        "start": 277,
-                        "time": 15.156,
+                        "start": 334,
+                        "time": 17.129,
                         "dns": -1,
                         "connect": -1,
                         "ssl": -1,
                         "send": 0,
                         "wait": -1,
-                        "receive": 15.156
+                        "receive": 17.129
                     }
                 ]
             }
