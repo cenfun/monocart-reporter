@@ -2,18 +2,15 @@
 import {
     shallowReactive, onMounted, reactive, provide, watch, computed
 } from 'vue';
-import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
-import inflate from 'lz-utils/inflate';
-import { microtask, debounce } from 'async-tick';
+import {
+    Grid, inflate, microtask, debounce, hash, store, icons
+} from 'monocart-common';
 
 import Util from './utils/util.js';
-import store from '../../reporter/src/common/store.js';
 
 import Flyover from './components/flyover.vue';
 import Report from './components/report.vue';
-
-import faviconIcon from '../../reporter/src/images/favicon.svg';
 
 const {
     VuiFlex,
@@ -168,12 +165,12 @@ const showFlyover = (rowItem) => {
     state.flyoverData = rowItem.id;
     state.flyoverTitle = rowItem.url;
     state.flyoverVisible = true;
-    Util.setHash('page', rowItem.id);
+    hash.set('page', rowItem.id);
 };
 
 const displayFlyoverWithHash = () => {
 
-    const page = Util.getHash('page');
+    const page = hash.get('page');
     if (page) {
         const grid = state.grid;
         if (grid) {
@@ -613,7 +610,7 @@ const init = async () => {
 
     const favicon = document.querySelector('link[rel="icon"]');
     if (favicon) {
-        favicon.href = faviconIcon;
+        favicon.href = icons.favicon;
     }
 
     state.initializing = false;

@@ -1,6 +1,7 @@
 import { createApp, h } from 'vue';
-import { marked } from 'marked';
 import { components } from 'vine-ui';
+
+import { marked } from 'marked';
 
 import IconLabel from '../components/icon-label.vue';
 import Util from '../utils/util.js';

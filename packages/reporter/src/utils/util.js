@@ -1,13 +1,8 @@
-import { Util as GridUtil } from 'turbogrid';
+import { CommonUtil } from 'monocart-common';
 import { saveAs } from 'file-saver';
-import Share from '../../../../lib/platform/share.js';
-import * as Hash from '../common/hash.js';
 
 const Util = {
-    ... GridUtil,
-
-    ... Share,
-    ... Hash,
+    ... CommonUtil,
 
     findBetween: function(list, callback) {
         const end = list.length - 1;

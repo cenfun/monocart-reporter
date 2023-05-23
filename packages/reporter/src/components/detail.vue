@@ -147,7 +147,7 @@ import {
     ref, watch, shallowReactive, onMounted, onActivated
 } from 'vue';
 import { components } from 'vine-ui';
-import { debounce, microtask } from 'async-tick';
+import { debounce, microtask } from 'monocart-common';
 import 'github-markdown-css/github-markdown-light.css';
 
 import Convert from 'ansi-to-html';

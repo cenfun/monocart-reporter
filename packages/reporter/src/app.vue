@@ -240,10 +240,9 @@ import {
     watch, onMounted, reactive, computed
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
-import { debounce, microtask } from 'async-tick';
-import inflate from 'lz-utils/inflate';
-
-import store from './common/store.js';
+import {
+    debounce, microtask, inflate, store, hash, icons
+} from 'monocart-common';
 
 import Util from './utils/util.js';
 import {
@@ -254,8 +253,6 @@ import Flyover from './components/flyover.vue';
 import IconLabel from './components/icon-label.vue';
 
 import state from './modules/state.js';
-
-import faviconIcon from './images/favicon.svg';
 
 const {
     VuiInput,
@@ -492,7 +489,7 @@ const onSearchDropdownClick = (e) => {
 };
 
 const onMenuClick = (e) => {
-    Util.setHash('page', 'report');
+    hash.set('page', 'report');
 };
 
 const onExportClick = () => {
@@ -583,7 +580,7 @@ const init = async () => {
 
     const favicon = document.querySelector('link[rel="icon"]');
     if (favicon) {
-        favicon.href = faviconIcon;
+        favicon.href = icons.favicon;
     }
 
     state.initializing = false;
@@ -609,10 +606,10 @@ watch(() => searchable.columns, (v) => {
 
 watch(() => state.caseType, (v) => {
     if (v === 'tests') {
-        Util.delHash('caseType');
+        hash.remove('caseType');
     } else {
-        Util.setHash('caseType', v);
-        Util.delHash('page');
+        hash.set('caseType', v);
+        hash.remove('page');
     }
     renderGrid();
 });
@@ -633,7 +630,7 @@ watch([
 });
 
 window.addEventListener('popstate', microtask(() => {
-    const caseType = Util.getHash('caseType');
+    const caseType = hash.get('caseType');
     state.caseType = caseType || 'tests';
     displayFlyoverWithHash();
 }));

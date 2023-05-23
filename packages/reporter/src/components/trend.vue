@@ -114,7 +114,7 @@ import {
     shallowReactive, computed, watch, ref, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
-import { microtask } from 'async-tick';
+import { microtask } from 'monocart-common';
 
 import state from '../modules/state.js';
 import Util from '../utils/util';

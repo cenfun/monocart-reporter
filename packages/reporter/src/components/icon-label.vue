@@ -18,7 +18,7 @@ import {
     computed, onMounted, ref, useSlots, watch
 } from 'vue';
 
-import decodeIcons from '../common/icons.js';
+import { decodeIcons } from 'monocart-common';
 const context = require.context('../images/icons', true, /\.svg$/);
 const icons = decodeIcons(context);
 

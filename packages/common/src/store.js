@@ -5,6 +5,7 @@ const key = (k) => {
 };
 
 const store = {
+
     get(k, dv = '') {
         const v = window.localStorage.getItem(key(k));
         if (v === null) {
@@ -12,9 +13,11 @@ const store = {
         }
         return v;
     },
+
     set(k, v) {
         window.localStorage.setItem(key(k), v);
     },
+
     remove(k) {
         window.localStorage.removeItem(key(k));
     }

@@ -230,7 +230,7 @@ import {
     shallowReactive, watch, computed, ref, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
-import { microtask } from 'async-tick';
+import { microtask } from 'monocart-common';
 import niceTicks from 'nice-ticks';
 
 import Util from '../utils/util.js';

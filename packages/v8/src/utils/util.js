@@ -1,12 +1,7 @@
-import { Util as GridUtil } from 'turbogrid';
-import Share from '../../../../lib/platform/share.js';
-import * as Hash from '../../../reporter/src/common/hash.js';
+import { CommonUtil } from 'monocart-common';
 
 const Util = {
-    ... GridUtil,
-
-    ... Share,
-    ... Hash,
+    ... CommonUtil,
 
     isTouchDevice: function() {
         return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;

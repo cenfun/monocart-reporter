@@ -1,5 +1,5 @@
 import { shallowReactive } from 'vue';
-import Util from '../utils/util.js';
+import { hash } from 'monocart-common';
 
 // do not use reactive for grid data
 const state = shallowReactive({
@@ -12,7 +12,7 @@ const state = shallowReactive({
     searchableAllKeys: [],
     searchableKeys: [],
 
-    caseType: Util.getHash('caseType') || 'tests',
+    caseType: hash.get('caseType') || 'tests',
     suiteVisible: true,
     stepVisible: false,
 

@@ -1,4 +1,4 @@
-import { Grid } from 'turbogrid';
+import { Grid, hash } from 'monocart-common';
 
 import Util from '../utils/util.js';
 import { formatters, matchedFormatter } from './formatters.js';
@@ -53,7 +53,7 @@ export const hideFlyover = (immediately) => {
     state.flyoverVisible = false;
     state.flyoverData = null;
     if (immediately) {
-        Util.delHash('page');
+        hash.remove('page');
     }
 };
 
@@ -119,7 +119,7 @@ const showDetail = (pagePath) => {
 
 export const displayFlyoverWithHash = () => {
 
-    const page = Util.getHash('page');
+    const page = hash.get('page');
     if (page) {
 
         const list = page.split('/');
@@ -161,7 +161,7 @@ const getClickCaseItem = (rowItem) => {
 const showRowDetail = (data) => {
     state.flyoverData = data;
     const { id, title } = data;
-    Util.setHash('page', `detail/${id}/${title}`);
+    hash.set('page', `detail/${id}/${title}`);
 };
 
 const onRowClickHandler = (d, force) => {

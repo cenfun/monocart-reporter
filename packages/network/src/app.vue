@@ -50,17 +50,17 @@
 import {
     shallowReactive, onMounted, provide, createApp
 } from 'vue';
-import { Grid } from 'turbogrid';
 import { components, generateTooltips } from 'vine-ui';
-import inflate from 'lz-utils/inflate';
+
+import {
+    Grid, icons, inflate
+} from 'monocart-common';
 
 import Util from './utils/util.js';
 
 import Flyover from './components/flyover.vue';
 import Waterfall from './components/waterfall.vue';
 import Timing from './components/timing.vue';
-
-import faviconIcon from '../../reporter/src/images/favicon.svg';
 
 const {
     VuiFlex,
@@ -737,7 +737,7 @@ const init = async () => {
 
     const favicon = document.querySelector('link[rel="icon"]');
     if (favicon) {
-        favicon.href = faviconIcon;
+        favicon.href = icons.favicon;
     }
 
     state.initializing = false;

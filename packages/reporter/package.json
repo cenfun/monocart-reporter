@@ -8,7 +8,9 @@
         "dist"
     ],
     "license": "MIT",
-    "dependencies": {},
+    "dependencies": {
+        "monocart-common": ""
+    },
     "devDependencies": {},
     "link": false
 }

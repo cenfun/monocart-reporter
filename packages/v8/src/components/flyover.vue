@@ -38,7 +38,7 @@
 <script setup>
 import { inject } from 'vue';
 import { components } from 'vine-ui';
-import Util from '../utils/util.js';
+import { hash } from 'monocart-common';
 
 import IconLabel from './icon-label.vue';
 
@@ -49,7 +49,7 @@ const state = inject('state');
 // remove tag till flyover animation end
 const onFlyoverEnd = () => {
     if (!state.flyoverVisible) {
-        Util.delHash('page');
+        hash.remove('page');
     }
 };
 
