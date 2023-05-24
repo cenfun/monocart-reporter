@@ -1,3 +1,7 @@
+* 1.6.28
+  - fixed location issue for detail page
+  - updated artifacts list
+
 * 1.6.27
   - optimized package size
 
