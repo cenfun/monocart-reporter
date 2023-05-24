@@ -57,11 +57,11 @@ const beforeReporter = (item, Util) => {
         });
         if (reportData.artifacts) {
             reportData.artifacts.forEach((artifact) => {
-                const prevPath = path.resolve(reportData.cwd, reportData.outputDir, artifact.htmlPath);
+                const prevPath = path.resolve(reportData.cwd, reportData.outputDir, artifact.path);
                 const newDir = item.devPath;
                 // console.log(prevPath, newDir);
                 const newPath = path.relative(newDir, prevPath);
-                artifact.htmlPath = formatPath(newPath);
+                artifact.path = formatPath(newPath);
             });
         }
     }
@@ -167,7 +167,8 @@ module.exports = {
             const toPath = path.resolve(__dirname, '../lib/runtime');
 
             // only clean if build all
-            if (results.jobList.length === 6 && fs.existsSync(toPath)) {
+            const totalComponents = fs.readdirSync(path.resolve(__dirname, '../packages'));
+            if (results.jobList.length === totalComponents.length && fs.existsSync(toPath)) {
                 EC.logRed('removing runtime libs ...');
                 fs.rmSync(toPath, {
                     recursive: true,

@@ -644,17 +644,23 @@ onActivated(() => {
           class="mcr-report-artifacts"
           wrap
         >
-          <IconLabel
+          <VuiFlex
             v-for="(item, i) in report.artifacts"
             :key="i"
-            icon="triangle-right"
-            :button="false"
+            gap="5px"
           >
+            <IconLabel
+              icon="triangle-right"
+              :button="false"
+            >
+              {{ item.name }}
+            </IconLabel>
             <a
-              :href="item.htmlPath"
+              :href="item.path"
               target="_blank"
-            >{{ item.name }}</a>
-          </IconLabel>
+            >{{ item.title }}</a>
+            <span v-if="item.global">(global)</span>
+          </VuiFlex>
         </VuiFlex>
       </div>
     </div>
