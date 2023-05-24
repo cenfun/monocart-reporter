@@ -65,12 +65,12 @@ export const getAttachment = (item, options) => {
     return getLink(path, name);
 };
 
-const getLink = (path, name, type = 'link', body = '') => {
+const getLink = (path, name, title = '', type = 'link', body = '') => {
     if (body) {
         body = `<div class="mcr-attachment-body">${body}</div>`;
     }
     return `<div class="mcr-detail-attachment mcr-attachment-${type}">
-                <div class="mcr-attachment-head"><a href="${path}" target="_blank" class="mcr-item">${name}</a></div>
+                <div class="mcr-attachment-head"><a href="${path}" target="_blank" class="mcr-item">${name}</a> ${title}</div>
                 ${body}
             </div>`;
 };
@@ -78,13 +78,13 @@ const getLink = (path, name, type = 'link', body = '') => {
 // ================================================================================================
 
 const getImage = (path, name) => {
-    const body = `<img src="${path}" alt="${name}" />`;
-    return getLink(path, name, 'image', body);
+    const body = `<a href="${path}" target="_blank"><img src="${path}" alt="${name}" /></a>`;
+    return getLink(path, name, '', 'image', body);
 };
 
 const getVideo = (path, name, contentType) => {
     const body = `<video controls height="350"><source src="${path}" type="${contentType}"></video>`;
-    return getLink(path, name, 'video', body);
+    return getLink(path, name, '', 'video', body);
 };
 
 // ================================================================================================
@@ -129,7 +129,7 @@ const getTrace = (path, name, options) => {
     ls.push('</div">');
 
     const body = ls.join('');
-    return getLink(path, name, 'trace', body);
+    return getLink(path, name, '', 'trace', body);
 };
 
 // ================================================================================================
@@ -174,7 +174,7 @@ const getAuditBody = (report) => {
 
 const getAudit = (path, name, report) => {
     const body = getAuditBody(report);
-    return getLink(path, name, 'audit', body);
+    return getLink(path, name, report.title, 'audit', body);
 };
 
 // ================================================================================================
@@ -270,7 +270,7 @@ const getCoverageBody = (report) => {
 
 const getCoverage = (path, name, report) => {
     const body = getCoverageBody(report);
-    return getLink(path, name, 'coverage', body);
+    return getLink(path, name, report.title, 'coverage', body);
 };
 
 // ================================================================================================
@@ -363,6 +363,6 @@ const getNetworkBody = (report) => {
 
 const getNetwork = (path, name, report) => {
     const body = getNetworkBody(report);
-    return getLink(path, name, 'network', body);
+    return getLink(path, name, report.title, 'network', body);
 };
 
