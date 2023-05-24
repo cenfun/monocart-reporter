@@ -213,9 +213,6 @@ const getClickPosition = (columnItem, rowItem) => {
 };
 
 const showPositionHandler = (d) => {
-    if (!state.flyoverVisible) {
-        return;
-    }
     const { rowItem, columnItem } = d;
     const position = getClickPosition(columnItem, rowItem);
     state.position = position;
