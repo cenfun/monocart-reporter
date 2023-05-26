@@ -44,6 +44,7 @@ jobs:
       - run: npm run link
 
       - run: npx playwright test -c tests example.spec.js
+        if: always()
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
