@@ -43,4 +43,4 @@ jobs:
       - run: npm run build
       - run: npm run link
 
-      - run: npx playwright test -c tests example.spec.js
+      - run: npx playwright test -c tests report-network.spec.js
