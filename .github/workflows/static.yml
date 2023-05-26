@@ -44,3 +44,15 @@ jobs:
       - run: npm run link
 
       - run: npx playwright test -c tests report-network.spec.js
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './.temp/monocart'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
