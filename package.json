@@ -16,7 +16,8 @@
         "./package.json": "./package.json"
     },
     "scripts": {
-        "test": "node ./scripts/link.js && npx playwright test -c tests",
+        "link": "node ./scripts/link.js",
+        "test": "npm run link && npx playwright test -c tests",
         "build": "sf lint && sf b -p",
         "dev": "sf d reporter -w .temp/monocart/index.json",
         "patch": "npm run build && sf publish patch -r",
