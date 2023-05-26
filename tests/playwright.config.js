@@ -28,6 +28,11 @@ module.exports = {
 
     // testDir: '../tests/home-page/',
 
+    webServer: {
+        command: 'npm run mock-serve',
+        url: 'http://localhost:8090/'
+    },
+
     projects: [
         // {
         //     name: 'Desktop Firefox',
