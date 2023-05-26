@@ -30,13 +30,13 @@ const beforeReporter = (item, Util) => {
 
     if (!fs.existsSync(jsonPath)) {
         EC.logRed(`ERROR: Not found test json: ${jsonPath}`);
-        return 1;
+        return 0;
     }
 
     const reportData = Util.readJSONSync(jsonPath);
     if (!reportData) {
         EC.logRed(`ERROR: Invalid json: ${jsonPath}`);
-        return 1;
+        return 0;
     }
 
     // attachment path handler for preview
@@ -86,12 +86,12 @@ const beforeV8 = (item, Util) => {
     const jsDataPath = path.resolve(__dirname, `../.temp/${dataFile}`);
     if (!fs.existsSync(jsDataPath)) {
         EC.logRed(`ERROR: Not found: ${jsDataPath}`);
-        return 1;
+        return 0;
     }
 
     const jsPath = path.resolve(item.buildPath, dataFile);
     fs.copyFileSync(jsDataPath, jsPath);
-    Util.logGreen(`coverage data file copied: ${dataFile}`);
+    EC.logGreen(`coverage data file copied: ${dataFile}`);
 
     if (!item.dependencies.files.includes(jsPath)) {
         item.dependencies.files.unshift(jsPath);
@@ -103,16 +103,15 @@ const beforeV8 = (item, Util) => {
 const beforeNetwork = (item, Util) => {
 
     const EC = require('eight-colors');
-
-    // const { deflateSync } = require('lz-utils');
-    // const harData = fs.readFileSync(path.resolve(__dirname, '../.temp/har/music.163.com.har'));
-    // const reportDataStr = `window.reportData = "${deflateSync(harData.toString('utf-8'))}";`;
-
-    const reportDataStr = fs.readFileSync(path.resolve(__dirname, '../.temp/network-data.js'));
-
     const dataFile = 'network-data.js';
+    const jsDataPath = path.resolve(__dirname, `../.temp/${dataFile}`);
+    if (!fs.existsSync(jsDataPath)) {
+        EC.logRed(`ERROR: Not found: ${jsDataPath}`);
+        return 0;
+    }
+
     const jsPath = path.resolve(item.buildPath, dataFile);
-    fs.writeFileSync(jsPath, reportDataStr);
+    fs.copyFileSync(jsDataPath, jsPath);
     EC.logGreen(`network data file copied: ${dataFile}`);
 
     if (!item.dependencies.files.includes(jsPath)) {
