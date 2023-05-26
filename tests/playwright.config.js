@@ -88,33 +88,33 @@ module.exports = {
                 // unpackSourceMap: false
             },
 
-            trend: () => {
-                return new Promise((resolve) => {
-                    const fs = require('fs');
-                    fs.readFile('.temp/monocart/index.json', (err, data) => {
-                        if (err) {
-                            console.log(err);
-                            resolve();
-                            return;
-                        }
-                        const json = JSON.parse(data);
-                        // mock data
-                        // for (let i = 0; i < 100; i++) {
-                        //     const item = {
-                        //         ... json.trends[0]
-                        //     };
-                        //     item.date -= 60 * 60 * 1000 + Math.floor(Math.random() * 60 * 60 * 1000);
-                        //     if (Math.random() > 0.9) {
-                        //         item.tests -= 1;
-                        //         item.passed -= 1;
-                        //     }
-                        //     json.trends.unshift(item);
-                        // }
+            // trend: () => {
+            //     return new Promise((resolve) => {
+            //         const fs = require('fs');
+            //         fs.readFile('.temp/monocart/index.json', (err, data) => {
+            //             if (err) {
+            //                 console.log(err);
+            //                 resolve();
+            //                 return;
+            //             }
+            //             const json = JSON.parse(data);
+            //             // mock data
+            //             // for (let i = 0; i < 100; i++) {
+            //             //     const item = {
+            //             //         ... json.trends[0]
+            //             //     };
+            //             //     item.date -= 60 * 60 * 1000 + Math.floor(Math.random() * 60 * 60 * 1000);
+            //             //     if (Math.random() > 0.9) {
+            //             //         item.tests -= 1;
+            //             //         item.passed -= 1;
+            //             //     }
+            //             //     json.trends.unshift(item);
+            //             // }
 
-                        resolve(json);
-                    });
-                });
-            },
+            //             resolve(json);
+            //         });
+            //     });
+            // },
 
             tags: {
                 smoke: {
