@@ -63,17 +63,17 @@ module.exports = {
     outputDir: '../.temp/monocart/',
     reporter: [
         ['list'],
-        ['json', {
-            outputFile: '../.temp/json/results.json'
-        }],
-        ['html', {
-            outputFolder: '../.temp/html',
-            outputFile: 'results.html',
-            open: 'never'
-        }],
-        ['junit', {
-            outputFile: '../.temp/junit/results.xml'
-        }],
+        // ['json', {
+        //     outputFile: '../.temp/json/results.json'
+        // }],
+        // ['html', {
+        //     outputFolder: '../.temp/html',
+        //     outputFile: 'results.html',
+        //     open: 'never'
+        // }],
+        // ['junit', {
+        //     outputFile: '../.temp/junit/results.xml'
+        // }],
         // ['monocart-reporter']
         ['monocart-reporter', {
             name: 'My Test Report',
