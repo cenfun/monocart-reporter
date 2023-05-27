@@ -13,9 +13,6 @@ test.describe('@util group', () => {
  * add extra information for case
  * @owner Kevin
  * @jira MCR-16888
- * @testrail 2125
- * @zephyr MON-T1
- * @xray MON-2
  */
     test('@util time format', () => {
 
@@ -52,11 +49,6 @@ test.describe('@util group', () => {
         expect(new Date(60 * 24 * 3601000).toISOString()).toBe('1970-03-02T00:24:00.000Z');
     });
 
-    /**
-     * @zephyr MON-T2
-     *
-     *
-     */
     test('@util parseComments', () => {
         const str = `/**
 
@@ -66,7 +58,7 @@ test.describe('@util group', () => {
     multiple lines comments @user_name Mark
     * @owner Kevin * Tom 
     * @jira MCR-16888 MCR-16889 
-    ** @testrail 2125
+    ** @someId 2125
     **/`;
 
         const parsed = Util.parseComments(str);
@@ -81,14 +73,10 @@ test.describe('@util group', () => {
         expect(parsed.user_name).toBe('Mark');
         expect(parsed.owner).toBe('Kevin * Tom');
         expect(parsed.jira).toBe('MCR-16888 MCR-16889');
-        expect(parsed.testrail).toBe('2125');
+        expect(parsed.someId).toBe('2125');
 
     });
 
-    /**
-     * @zephyr MON-T3
-     *
-     */
     test('@util forEach', () => {
         const list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, {
             toString: () => 10,
@@ -148,11 +136,6 @@ test.describe('@util group', () => {
 
 });
 
-
-/**
- * @testrail 2126
- * @xray MON-3
- */
 test('@util v8 dedupeRanges', () => {
 
     const { dedupeRanges } = require('../../lib/plugins/coverage/v8/dedupe.js');
@@ -185,10 +168,6 @@ test('@util v8 dedupeRanges', () => {
 
 });
 
-/**
- * @testrail 2127
- * @xray MON-4
- */
 test('@smoke Test full report', () => {
     expect(Math.random()).toBeLessThan(0.5);
 });
@@ -205,7 +184,6 @@ test.describe('suite group 1 @beta', () => {
     /**
      * @owner Mark
      * @jira MCR-16933
-     * @testrail 2128
      */
     test('@smoke case info', () => {
 
@@ -218,9 +196,6 @@ test.describe('suite group 1 @beta', () => {
 
     });
 
-    /**
-     * @testrail 2129
-     */
     test('@sanity case steps @slow', async () => {
 
         const result1 = await test.step('step 1', async () => {

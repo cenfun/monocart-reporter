@@ -262,56 +262,7 @@ module.exports = {
                 //     path.resolve(reportData.outputDir, 'new-filename.html')
                 // );
 
-
                 // console.log(reportData.summary);
-
-                // send email
-                // const sendEmail = require('./common/send-email.js');
-                // await sendEmail(reportData, capability);
-
-                // testrail integration
-                // const testrail = require('./common/testrail.js');
-                // await testrail(reportData, capability);
-
-                // jira + zephyr scale integration
-                // const zephyrScale = require('./common/zephyr-scale.js');
-                // await zephyrScale(reportData, capability);
-
-                // jira + xray integration
-                // const xray = require('./common/xray.js');
-                // await xray(reportData, capability);
-
-                // slack integration with webhook
-                // const slackWebhook = require('./common/slack-webhook.js');
-                // await slackWebhook(reportData, capability);
-
-                // slack integration with web api
-                // const slackWebApi = require('./common/slack-web-api.js');
-                // await slackWebApi(reportData, capability);
-
-                // discord integration with webhook
-                // const discordWebhook = require('./common/discord-webhook.js');
-                // await discordWebhook(reportData, capability);
-
-                // teams integration with webhook
-                // const teamsWebhook = require('./common/teams-webhook.js');
-                // await teamsWebhook(reportData, capability);
-
-                // dingtalk integration with webhook
-                // const dingtalkWebhook = require('./common/dingtalk-webhook.js');
-                // await dingtalkWebhook(reportData, capability);
-
-                // feishu integration with webhook
-                // const feishuWebhook = require('./common/feishu-webhook.js');
-                // await feishuWebhook(reportData, capability);
-
-                // weixin integration with webhook
-                // const weixinWebhook = require('./common/weixin-webhook.js');
-                // await weixinWebhook(reportData, capability);
-
-                // html to pdf
-                // const toPdf = require('./common/to-pdf.js');
-                // await toPdf(reportData, capability);
 
             }
         }]

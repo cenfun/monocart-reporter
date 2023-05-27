@@ -906,91 +906,54 @@ module.exports = {
             // async hook after report data generated
             onEnd: async (reportData, capability) => {
                 // console.log(reportData.summary);
-
-                // send email
-                // const sendEmail = require('./common/send-email.js');
-                // await sendEmail(reportData, capability);
-
-                // testrail integration
-                // const testrail = require('./common/testrail.js');
-                // await testrail(reportData, capability);
-
-                // jira + zephyr scale integration
-                // const zephyrScale = require('./common/zephyr-scale.js');
-                // await zephyrScale(reportData, capability);
-
-                // jira + xray integration
-                // const xray = require('./common/xray.js');
-                // await xray(reportData, capability);
-
-                // slack integration with webhook
-                // const slackWebhook = require('./common/slack-webhook.js');
-                // await slackWebhook(reportData, capability);
-
-                // slack integration with web api
-                // const slackWebApi = require('./common/slack-web-api.js');
-                // await slackWebApi(reportData, capability);
-
-                // discord integration with webhook
-                // const discordWebhook = require('./common/discord-webhook.js');
-                // await discordWebhook(reportData, capability);
-
-                // teams integration with webhook
-                // const teamsWebhook = require('./common/teams-webhook.js');
-                // await teamsWebhook(reportData, capability);
-
-                // html to pdf
-                // const toPdf = require('./common/to-pdf.js');
-                // await toPdf(reportData, capability);
             }
         }]
     ]
 };
 ```
 ## Send Email
-Simply send email with [nodemailer](https://nodemailer.com), check example: [send-email.js](/tests/common/send-email.js)
+Simply send email with [nodemailer](https://nodemailer.com), check example: [send-email](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/send-email)
 
 ![](/docs/email.png)
 
 
 ## Testrail Integration
-Send results to your Testrail with [testrail-api](https://github.com/rundef/node-testrail-api), check example: [testrail.js](/tests/common/testrail.js)
+Send test results to your Testrail, check example: [testrail](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/testrail)
 
 ![](/docs/testrail.png)
 
 ## Jira + Zephyr Scale Integration
-Create test cycle and executions with [zephyr-scale-api](https://support.smartbear.com/zephyr-scale-cloud/api-docs/), check example: [zephyr-scale.js](/tests/common/zephyr-scale.js)
+Create test cycle and executions with [zephyr-scale-api](https://support.smartbear.com/zephyr-scale-cloud/api-docs/), check example: [zephyr-scale](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/zephyr-scale)
 
 ![](/docs/zephyr.png)
 
 ## Jira + Xray Integration
-check example: [xray.js](/tests/common/xray.js)
 - Import test execution results with [Xray REST API](https://docs.getxray.app/display/XRAYCLOUD/REST+API)
 - Update Jira issue status with [Jira Transition API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-transitions-post)
+check example: [xray](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/xray)
 
 ![](/docs/xray.png)
 
-
 ## Slack Integration
-1. Simply send message with [@slack/webhook](https://github.com/slackapi/node-slack-sdk), example: [slack-webhook.js](/tests/common/slack-webhook.js)
-2. Recommended: Post chat message and upload image with [@slack/web-api](https://github.com/slackapi/node-slack-sdk), example: [slack-web-api.js](/tests/common/slack-web-api.js)
+1. Simply send message with [@slack/webhook](https://github.com/slackapi/node-slack-sdk), example: [slack-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/slack-webhook)
+2. Recommended: Post chat message and upload image with [@slack/web-api](https://github.com/slackapi/node-slack-sdk), example: [slack-web-api](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/slack-web-api)
 
 ![](/docs/slack.png)
 
 ## Discord Integration
-Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. example: [discord-webhook.js](/tests/common/discord-webhook.js)
+Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. example: [discord-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/discord-webhook)
 
 ![](/docs/discord.png)
 
 ## Teams Integration
-Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. example: [teams-webhook.js](/tests/common/teams-webhook.js)
+Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. example: [teams-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/teams-webhook)
 
 ![](/docs/teams.png)
 
 ## Dingtalk/Weixin/Feishu Integration
-- [dingtalk-webhook.js](/tests/common/dingtalk-webhook.js)
-- [weixin-webhook.js](/tests/common/weixin-webhook.js)
-- [feishu-webhook.js](/tests/common/feishu-webhook.js)
+- [dingtalk-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/dingtalk-webhook)
+- [weixin-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/weixin-webhook)
+- [feishu-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/feishu-webhook)
 
 ## Dependencies
  - UI Framework [Vue 3](https://github.com/vuejs/core)
