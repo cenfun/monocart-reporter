@@ -24,6 +24,8 @@ module.exports = {
     // test flaky case
     retries: 1,
 
+    workers: 4,
+
     // testDir: '../tests/example/',
 
     // testDir: '../tests/home-page/',
@@ -63,17 +65,17 @@ module.exports = {
     outputDir: '../.temp/monocart/',
     reporter: [
         ['list'],
-        // ['json', {
-        //     outputFile: '../.temp/json/results.json'
-        // }],
-        // ['html', {
-        //     outputFolder: '../.temp/html',
-        //     outputFile: 'results.html',
-        //     open: 'never'
-        // }],
-        // ['junit', {
-        //     outputFile: '../.temp/junit/results.xml'
-        // }],
+        ['json', {
+            outputFile: '../.temp/json/results.json'
+        }],
+        ['html', {
+            outputFolder: '../.temp/html',
+            outputFile: 'results.html',
+            open: 'never'
+        }],
+        ['junit', {
+            outputFile: '../.temp/junit/results.xml'
+        }],
         // ['monocart-reporter']
         ['monocart-reporter', {
             name: 'My Test Report',
@@ -88,33 +90,28 @@ module.exports = {
                 // unpackSourceMap: false
             },
 
-            // trend: () => {
-            //     return new Promise((resolve) => {
-            //         const fs = require('fs');
-            //         fs.readFile('.temp/monocart/index.json', (err, data) => {
-            //             if (err) {
-            //                 console.log(err);
-            //                 resolve();
-            //                 return;
-            //             }
-            //             const json = JSON.parse(data);
-            //             // mock data
-            //             // for (let i = 0; i < 100; i++) {
-            //             //     const item = {
-            //             //         ... json.trends[0]
-            //             //     };
-            //             //     item.date -= 60 * 60 * 1000 + Math.floor(Math.random() * 60 * 60 * 1000);
-            //             //     if (Math.random() > 0.9) {
-            //             //         item.tests -= 1;
-            //             //         item.passed -= 1;
-            //             //     }
-            //             //     json.trends.unshift(item);
-            //             // }
+            trend: () => {
+                return new Promise((resolve) => {
+                    const { axios } = require('../lib/runtime/monocart-coverage.js');
+                    axios.get('https://cenfun.github.io/monocart-reporter/index.json').then((res) => {
+                        const json = res.data;
+                        // mock data
+                        // for (let i = 0; i < 100; i++) {
+                        //     const item = {
+                        //         ... json.trends[0]
+                        //     };
+                        //     item.date -= 60 * 60 * 1000 + Math.floor(Math.random() * 60 * 60 * 1000);
+                        //     if (Math.random() > 0.9) {
+                        //         item.tests -= 1;
+                        //         item.passed -= 1;
+                        //     }
+                        //     json.trends.unshift(item);
+                        // }
+                        resolve(json);
+                    });
 
-            //             resolve(json);
-            //         });
-            //     });
-            // },
+                });
+            },
 
             tags: {
                 smoke: {
