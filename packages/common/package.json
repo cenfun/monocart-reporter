@@ -5,6 +5,7 @@
     "files": [
         "dist"
     ],
+    "license": "MIT",
     "dependencies": {},
     "devDependencies": {}
 }
