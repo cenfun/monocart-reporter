@@ -8,6 +8,11 @@
     ],
     "license": "MIT",
     "dependencies": {},
-    "devDependencies": {},
+    "devDependencies": {
+        "@babel/code-frame": "^7.21.4",
+        "@babel/parser": "^7.22.0",
+        "nodemailer": "^6.9.2",
+        "stack-utils": "^2.0.6"
+    },
     "platform": "node"
 }
