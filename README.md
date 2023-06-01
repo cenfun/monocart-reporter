@@ -493,6 +493,7 @@ module.exports = {
     ]
 };
 ```
+see example [remove-secrets](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/remove-secrets)
 
 ## Style Tags
 * Add tag to test/describe title ( starts with `@` )
