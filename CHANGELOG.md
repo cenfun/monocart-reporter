@@ -1,3 +1,7 @@
+* 1.6.29
+  - fixed coverage issue
+  - fixed sourcemap issue
+
 * 1.6.28
   - fixed location issue for detail page
   - updated artifacts list
