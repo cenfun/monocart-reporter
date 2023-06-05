@@ -126,7 +126,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     //     entryFilter: (entry) => true,
     //     unpackSourceMap: true,
     //     excludeDistFile: true,
-    //     sourceFilter: (sourceName) => sourceName.search(/\/src\/.+/) !== -1,
+    //     sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
     // },
 
     // trend data handler
@@ -763,7 +763,7 @@ module.exports = {
                 entryFilter: (entry) => true,
                 unpackSourceMap: true,
                 excludeDistFile: true,
-                sourceFilter: (sourceName) => sourceName.search(/\/src\/.+/) !== -1,
+                sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
             }
         }]
     ]
