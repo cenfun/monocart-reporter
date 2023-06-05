@@ -163,7 +163,7 @@ const hideFlyover = () => {
 
 const showFlyover = (rowItem) => {
     state.flyoverData = rowItem.id;
-    state.flyoverTitle = rowItem.url || rowItem.sourcePath;
+    state.flyoverTitle = rowItem.sourcePath;
     state.flyoverVisible = true;
     hash.set('page', rowItem.id);
 };
