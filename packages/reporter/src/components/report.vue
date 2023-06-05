@@ -179,7 +179,7 @@ const timelineHandler = () => {
             name: 'Config File',
             value: system.configFile
         }, {
-            icon: 'folder',
+            icon: 'input',
             name: 'Test Dir',
             value: system.testDir
         }, {
