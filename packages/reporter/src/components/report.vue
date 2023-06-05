@@ -161,12 +161,20 @@ const timelineHandler = () => {
             name: 'OS',
             value: `${system.version} (${system.arch})`
         }, {
-            icon: 'cwd',
-            name: 'CWD',
-            value: system.cwd
+            icon: 'node',
+            name: 'Node',
+            value: system.node
+        }, {
+            icon: 'v8',
+            name: 'V8',
+            value: system.v8
         }]
     }, {
         list: [{
+            icon: 'cwd',
+            name: 'CWD',
+            value: system.cwd
+        }, {
             icon: 'config',
             name: 'Config File',
             value: system.configFile
