@@ -228,15 +228,20 @@ const metadataHandler = () => {
 
     const metadata = state.reportData.metadata;
 
-    const metadataList = Object.keys(metadata).map((k) => {
-        return {
-            icon: 'item-arrow',
-            name: k,
-            value: metadata[k]
-        };
-    }).filter((it) => {
-        if (typeof it.value === 'string' || typeof it.value === 'boolean' || typeof it.value === 'number') {
-            return true;
+    const metadataList = [];
+
+    Object.keys(metadata).map((k) => {
+        const v = metadata[k];
+        if (typeof v === 'string' || typeof v === 'boolean' || typeof v === 'number') {
+            const it = {
+                icon: 'item-arrow',
+                name: k,
+                value: v
+            };
+            if (typeof v === 'string' && (v.startsWith('http://') || v.startsWith('https://'))) {
+                it.isLink = true;
+            }
+            metadataList.push(it);
         }
     });
 
@@ -615,14 +620,24 @@ onActivated(() => {
           class="mcr-report-metadata"
           wrap
         >
-          <IconLabel
+          <VuiFlex
             v-for="(item, i) in report.metadataList"
             :key="i"
-            :icon="item.icon"
-            :button="false"
+            gap="5px"
           >
-            <b>{{ item.name }}</b> {{ item.value }}
-          </IconLabel>
+            <IconLabel
+              :icon="item.icon"
+              :button="false"
+            >
+              <b>{{ item.name }}</b>
+            </IconLabel>
+            <a
+              v-if="item.isLink"
+              :href="item.value"
+              target="_blank"
+            >{{ item.value }}</a>
+            <span v-else>{{ item.value }}</span>
+          </VuiFlex>
         </VuiFlex>
       </div>
     </div>
