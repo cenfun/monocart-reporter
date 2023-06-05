@@ -391,7 +391,7 @@ onMounted(() => {
           @click="scrollToLine(item.line)"
         >
           <div class="mcr-top-line">
-            L{{ Util.NF(item.line) }}
+            L{{ item.line }}
           </div>
           <div class="mcr-top-count">
             x{{ item.count }}
