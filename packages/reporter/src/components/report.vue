@@ -225,24 +225,19 @@ const tagsHandler = () => {
 // ====================================================================================
 
 const metadataHandler = () => {
-
     const metadata = state.reportData.metadata;
-
     const metadataList = [];
-
     Object.keys(metadata).map((k) => {
-        const v = metadata[k];
-        if (typeof v === 'string' || typeof v === 'boolean' || typeof v === 'number') {
-            const it = {
-                icon: 'item-arrow',
-                name: k,
-                value: v
-            };
-            if (typeof v === 'string' && (v.startsWith('http://') || v.startsWith('https://'))) {
-                it.isLink = true;
-            }
-            metadataList.push(it);
+        const str = `${metadata[k]}`.trim();
+        const it = {
+            icon: 'item-arrow',
+            name: k,
+            value: str
+        };
+        if (str.startsWith('http://') || str.startsWith('https://')) {
+            it.isLink = true;
         }
+        metadataList.push(it);
     });
 
     if (metadataList.length) {
