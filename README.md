@@ -742,7 +742,7 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | :--------------| :------ | :------ | :----------------------  |
 | Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
 | Options  | `watermarks: {}`  | `watermarks: [50, 80]` | `toIstanbul: true, watermarks: {}` |
-| Output report | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-4ffdff9b89e7b58476cf/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/coverage-f8ad4b6741d60f9e7b81/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-391e7054ca1e6d944895/index.html) |
+| Output report | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-6eaa280d68aea439a847/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/coverage/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-bbea6fd47b9c551582fe/index.html) |
 | Indicators | Covered Lines, Branches, Statements and Functions, Execution Counts | Covered Bytes, Lines (after formatted) Execution Counts | Covered Lines, Branches, Statements and Functions, Execution Counts |
 | Source code without [instrumentation](https://github.com/istanbuljs/babel-plugin-istanbul) | ❌ | ✅ | ✅ |
 | CSS coverage | ❌ | ✅ | ❌ |

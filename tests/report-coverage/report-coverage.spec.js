@@ -23,6 +23,14 @@ test.describe('take Istanbul coverage report', () => {
         const coverageData = await page.evaluate(() => window.__coverage__);
         await page.close();
         expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
+
+        Object.keys(coverageData).forEach((k) => {
+            const d = coverageData[k];
+            delete coverageData[k];
+            const p = k.replace(/\\/g, '/');
+            coverageData[p] = d;
+        });
+
         // coverage report
         const report = await attachCoverageReport(coverageData, test.info(), {
             lcov: true
