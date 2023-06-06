@@ -1,3 +1,7 @@
+* 1.6.30
+  - fixed metadata supported link
+  - fixed flyover title of v8
+
 * 1.6.29
   - fixed coverage issue
   - fixed sourcemap issue
