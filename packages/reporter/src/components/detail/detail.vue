@@ -551,44 +551,43 @@ onActivated(() => {
       </VuiFlex>
       <div class="mcr-detail-body">
         <DetailColumns :list="item.detailColumns" />
-        <VuiFlex
-          v-if="item.data.type==='case'&&item.data.stepNum"
-          class="mcr-detail-column"
-          gap="10px"
-        >
-          <IconLabel
-            :icon="item.data.collapsed?'collapsed':'expanded'"
-            class="mcr-column-head"
-            @click="onRowHeadClick(item.data)"
-          >
-            Steps
-          </IconLabel>
-          <div class="mcr-num">
-            {{ item.data.stepNum }}
-          </div>
-
-          <VuiSwitch
-            v-if="item.data.stepSubs&&!item.data.collapsed"
-            v-model="item.data.stepCollapsed"
-            :disabled="data.stepCollapsedDisabled"
-            :label-clickable="true"
-            label-position="right"
-            @change="onStepCollapsedClick(item.data)"
-          >
-            Collapse All
-          </VuiSwitch>
-
-          <VuiSwitch
-            v-if="item.data.stepFailed&&!item.data.collapsed"
-            v-model="item.data.stepFailedOnly"
-            :label-clickable="true"
-            label-position="right"
-            @change="onStepFailedClick(item.data)"
-          >
-            Only Failed
-          </VuiSwitch>
-        </VuiFlex>
       </div>
+      <VuiFlex
+        v-if="item.data.type==='case'&&item.data.stepNum"
+        class="mcr-detail-steps"
+        gap="10px"
+      >
+        <IconLabel
+          :icon="item.data.collapsed?'collapsed':'expanded'"
+          @click="onRowHeadClick(item.data)"
+        >
+          <b>Steps</b>
+        </IconLabel>
+        <div class="mcr-num">
+          {{ item.data.stepNum }}
+        </div>
+
+        <VuiSwitch
+          v-if="item.data.stepSubs&&!item.data.collapsed"
+          v-model="item.data.stepCollapsed"
+          :disabled="data.stepCollapsedDisabled"
+          :label-clickable="true"
+          label-position="right"
+          @change="onStepCollapsedClick(item.data)"
+        >
+          Collapse All
+        </VuiSwitch>
+
+        <VuiSwitch
+          v-if="item.data.stepFailed&&!item.data.collapsed"
+          v-model="item.data.stepFailedOnly"
+          :label-clickable="true"
+          label-position="right"
+          @change="onStepFailedClick(item.data)"
+        >
+          Only Failed
+        </VuiSwitch>
+      </VuiFlex>
     </div>
   </div>
 </template>
@@ -639,277 +638,22 @@ onActivated(() => {
     }
 }
 
+.mcr-detail-body {
+    border-top: thin dashed #eee;
+    border-left: thin solid #ccc;
+}
+
+.mcr-detail-steps {
+    min-height: 35px;
+    padding: 5px;
+    border-top: thin dashed #eee;
+    border-left: thin solid #ccc;
+    user-select: none;
+}
+
 .mcr-detail-suite {
     .mcr-detail-title {
         font-weight: bold;
-    }
-}
-
-.mcr-detail-column {
-    position: relative;
-    padding: 5px;
-    color: #333;
-    border-top: thin dashed #eee;
-    border-left: thin solid #ccc;
-    overflow-x: auto;
-}
-
-.mcr-column-content {
-    padding: 5px;
-
-    &.mcr-column-collapsed {
-        display: none;
-    }
-
-    &.mcr-column-expanded {
-        display: block;
-    }
-}
-
-.mcr-detail-body {
-    .mcr-column-head {
-        min-height: 20px;
-        font-weight: bold;
-        user-select: none;
-    }
-}
-
-.mcr-detail-logs {
-    border-left-color: #999;
-}
-
-.mcr-detail-errors {
-    border-left-color: var(--color-failed);
-    background-color: var(--bg-failed);
-
-    .mcr-column-head {
-        color: var(--color-failed);
-    }
-}
-
-.mcr-detail-errors,
-.mcr-detail-logs {
-    .mcr-column-content {
-        margin-top: 5px;
-        font-family: var(--font-monospace);
-        white-space: pre;
-    }
-}
-
-.mcr-detail-annotations {
-    border-left-color: #aaa;
-    background-color: #f6f8fa;
-
-    .mcr-annotation-list {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-top: 5px;
-        padding: 10px;
-        border-radius: 5px;
-        background-color: #fff;
-
-        .mcr-annotation-item {
-            display: flex;
-            flex-flow: row wrap;
-            gap: 10px;
-        }
-    }
-}
-
-.mcr-detail-attachments {
-    border-left-color: #aaa;
-
-    .mcr-detail-attachment:not(:last-child) {
-        margin-bottom: 5px;
-    }
-
-    .mcr-attachment-head {
-        padding: 5px 0;
-    }
-
-    .mcr-attachment-body {
-        padding: 10px;
-        border: 1px solid #eee;
-
-        img {
-            display: block;
-            max-width: 100%;
-        }
-    }
-
-    .mcr-attachment-group {
-        display: flex;
-        flex-flow: row wrap;
-        gap: 10px;
-    }
-
-    .mcr-attachment-group:not(:last-child) {
-        margin-bottom: 10px;
-    }
-
-    .mcr-low {
-        background: #fce1e5;
-    }
-
-    .mcr-medium {
-        background: #fff4c2;
-    }
-
-    .mcr-high {
-        background: rgb(230 245 208);
-    }
-
-    .mcr-covered {
-        color: green;
-    }
-
-    .mcr-uncovered {
-        color: red;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-
-        tr {
-            position: relative;
-        }
-
-        tr:not(:last-child) {
-            border-bottom: 1px solid #ddd;
-        }
-
-        tr.mcr-row-summary {
-            border-top: 2px solid #ddd;
-        }
-
-        tr:first-child {
-            font-weight: bold;
-        }
-
-        tr:hover::after {
-            position: absolute;
-            top: 0;
-            left: 0;
-            content: "";
-            display: block;
-            width: 100%;
-            height: 100%;
-            background-color: rgb(0 0 0 / 2%);
-            pointer-events: none;
-        }
-
-        td {
-            padding: 5px 8px;
-            text-align: right;
-        }
-
-        .mcr-column-filename {
-            min-width: 100px;
-            text-align: left;
-            word-break: break-all;
-        }
-
-        .mcr-column-left {
-            min-width: 100px;
-            white-space: nowrap;
-            text-align: left;
-        }
-
-        .mcr-column-sub {
-            padding-left: 20px;
-        }
-
-        .mcr-column-description {
-            color: #666;
-            font-size: 12px;
-            text-align: left;
-        }
-
-        .mcr-head {
-            background-color: #f8f8f8;
-        }
-    }
-}
-
-.mcr-attachment-image {
-    a {
-        display: block;
-    }
-}
-
-.mcr-attachment-trace {
-    .mcr-trace-details {
-        display: flex;
-        flex-direction: row;
-
-        a {
-            white-space: nowrap;
-        }
-
-        details {
-            summary {
-                margin-left: 15px;
-                color: #666;
-                cursor: pointer;
-                user-select: none;
-            }
-
-            dl {
-                margin-top: 5px;
-                margin-left: 15px;
-            }
-
-            dd {
-                margin: 0;
-            }
-        }
-    }
-}
-
-.mcr-attachment-audit {
-    .mcr-attachment-body {
-        padding: 0;
-        border: 1px solid #ddd;
-        overflow-x: auto;
-    }
-}
-
-.mcr-attachment-coverage {
-    .mcr-attachment-body {
-        border: 1px solid #ddd;
-        overflow-x: auto;
-    }
-}
-
-.mcr-attachment-network {
-    .mcr-attachment-body {
-        .mcr-network-waterfall {
-            width: 100%;
-            height: 30px;
-        }
-    }
-
-    .mcr-waterfall {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        background-color: #f8f8f8;
-    }
-
-    .mcr-waterfall-line {
-        position: absolute;
-        top: 0;
-        width: 1px;
-        height: 100%;
-    }
-
-    .mcr-waterfall-rect {
-        position: absolute;
-        top: 50%;
-        height: 50%;
-        transform: translateY(-50%);
     }
 }
 
