@@ -6,8 +6,8 @@ import { hash } from 'monocart-common';
 import state from '../modules/state.js';
 
 import IconLabel from './icon-label.vue';
-import Detail from './detail.vue';
-import Report from './report.vue';
+import Detail from './detail/detail.vue';
+import Report from './report/report.vue';
 
 const {
     VuiFlex, VuiFlyover, VuiLoading

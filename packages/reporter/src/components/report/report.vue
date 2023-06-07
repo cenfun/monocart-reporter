@@ -5,13 +5,13 @@ import {
 
 import { components } from 'vine-ui';
 
-import state from '../modules/state.js';
-import Util from '../utils/util.js';
+import state from '../../modules/state.js';
+import Util from '../../utils/util.js';
 import {
     renderGrid, updateGrid, hideFlyover
-} from '../modules/grid.js';
+} from '../../modules/grid.js';
 
-import IconLabel from './icon-label.vue';
+import IconLabel from '../icon-label.vue';
 import Pie from './pie.vue';
 import Timeline from './timeline.vue';
 import Trend from './trend.vue';

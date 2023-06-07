@@ -5,10 +5,10 @@ import {
 import { components } from 'vine-ui';
 import { microtask } from 'monocart-common';
 
-import state from '../modules/state.js';
-import Util from '../utils/util';
+import state from '../../modules/state.js';
+import Util from '../../utils/util.js';
 
-import IconLabel from './icon-label.vue';
+import IconLabel from '../icon-label.vue';
 
 const {
     VuiFlex, VuiSelect, VuiPopover

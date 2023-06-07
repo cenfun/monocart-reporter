@@ -7,9 +7,9 @@ const mockPageGoto = async (page, url) => {
         <head>
             <title>monocart-reporter - npm</title>
         </head>
-        <body>
+        <body style="background: #f8f8f8;">
             <h3>this is mock page</h3>
-            <div>${url}</div>
+            <div class="page-url">${url}</div>
 
             <div>
                 <label>Mock Search</label>

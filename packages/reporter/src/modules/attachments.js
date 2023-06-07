@@ -2,12 +2,92 @@ import Util from '../utils/util.js';
 import generateWaterfallChart from './waterfall.js';
 import { markdownFormatter } from './formatters.js';
 
+export const groupComparisons = (attachments) => {
+    const list = [];
+    let group;
+    for (const attachment of attachments) {
+        const match = attachment.name.match(/^(.*)-(expected|actual|diff|previous)(\.[^.]+)?$/);
+        if (match) {
+            const [, name, category, extension = ''] = match;
+
+            const item = {
+                name: attachment.name,
+                path: attachment.path,
+                category
+            };
+
+            if (group) {
+                group.list.push(item);
+            } else {
+                group = {
+                    comparison: true,
+                    name: name + extension,
+                    contentType: `${attachment.contentType}`,
+                    list: [item]
+                };
+            }
+        } else {
+
+            if (group) {
+                list.push(group);
+                group = null;
+            }
+
+            list.push(attachment);
+        }
+    }
+    return list;
+};
+
+const getLinkComparison = (item) => {
+    return item.list.map((it) => `<div><a href="${it.path}" target="_blank" class="mcr-icon-link">${it.name}</a></div>`).join('');
+};
+
+const getImageComparison = (item) => {
+
+    const titles = {
+        diff: 'Diff',
+        actual: 'Actual',
+        expected: 'Expected',
+        previous: 'Previous'
+    };
+
+    const heads = item.list.map((it) => `<div>${titles[it.category]}</div>`).join('');
+    const views = item.list.map((it) => `<div><img src="${it.path}" alt="${it.name}" /></div>`).join('');
+
+    const links = getLinkComparison(item);
+
+    return `<div>
+        <div class="vui-flex-row">${heads}</div>
+        <div class="">${views}</div>
+        ${links}
+    </div>`;
+};
+
+export const getComparison = (item) => {
+    console.log(item);
+    const { contentType, name } = item;
+
+    const body = contentType.startsWith('image') ? getImageComparison(item) : getLinkComparison(item);
+
+    return `<div class="mcr-detail-attachment mcr-attachment-comparison">
+                <div class="mcr-attachment-head"><span class="mcr-item">${name}</span></div>
+                <div class="mcr-attachment-body">${body}</div>
+            </div>`;
+};
+
 export const getAttachment = (item, options) => {
     // console.log(attachment);
     // contentType 'application/json' 'image/png' 'video/webm'
+
     const {
         contentType, name, path
     } = item;
+
+    // requires path
+    if (typeof path !== 'string') {
+        return '';
+    }
 
     const list = [{
         condition: () => {

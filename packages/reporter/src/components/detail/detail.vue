@@ -9,14 +9,17 @@ import Convert from 'ansi-to-html';
 
 import 'github-markdown-css/github-markdown-light.css';
 
-import Util from '../utils/util.js';
-import state from '../modules/state.js';
+import Util from '../../utils/util.js';
+import state from '../../modules/state.js';
 import {
     tagFormatter, markdownFormatter, mergeAnnotations
-} from '../modules/formatters.js';
-import { getAttachment } from '../modules/attachments.js';
+} from '../../modules/formatters.js';
+import {
+    groupComparisons, getComparison, getAttachment
+} from '../../modules/attachments.js';
 
-import IconLabel from './icon-label.vue';
+import IconLabel from '../icon-label.vue';
+import DetailColumns from './detail-columns.vue';
 
 const { VuiFlex, VuiSwitch } = components;
 
@@ -34,19 +37,6 @@ const itemHeadClass = (item) => {
     return ['mcr-detail-head', `mcr-detail-${item.type}`, item.classMap];
 };
 
-const itemColumnClass = (item) => {
-    return ['mcr-detail-column', `mcr-detail-${item.id}`];
-};
-
-const columnContentClass = (column) => {
-    const cls = ['mcr-column-content'];
-    if (column.collapsed) {
-        cls.push('mcr-column-collapsed');
-    } else {
-        cls.push('mcr-column-expanded');
-    }
-    return cls;
-};
 
 // ===========================================================================
 // errors logs html
@@ -95,10 +85,6 @@ const getColumn = (item, column) => {
     if (!column.name) {
         return;
     }
-    const cacheKey = `${column.id}_detail`;
-    if (Util.hasOwn(item, cacheKey)) {
-        return item[cacheKey];
-    }
 
     const defaultHandler = {
         errors: getErrors,
@@ -116,8 +102,6 @@ const getColumn = (item, column) => {
         res.positionType = column.id;
         res = shallowReactive(res);
     }
-
-    item[cacheKey] = res;
 
     return res;
 };
@@ -219,13 +203,16 @@ const getAttachments = (item, column) => {
         return;
     }
 
+    // image/text comparisons
+    const attachmentList = groupComparisons(attachments);
+
     const options = {
         traceViewerUrl: state.reportData.traceViewerUrl
     };
 
-    const list = attachments.map((attachment) => {
-        if (typeof attachment.path !== 'string') {
-            return '';
+    const list = attachmentList.map((attachment) => {
+        if (attachment.comparison) {
+            return getComparison(attachment);
         }
         return getAttachment(attachment, options);
     });
@@ -295,10 +282,6 @@ const onStepFailedClick = (item) => {
     initDataList();
 };
 
-const onColumnHeadClick = (column) => {
-    column.collapsed = !column.collapsed;
-};
-
 // ===========================================================================
 
 const showBlink = debounce((elem) => {
@@ -365,6 +348,30 @@ const initSteps = (list, steps, parent) => {
     });
 };
 
+const initDataColumns = (item) => {
+    if (item.tg_detailColumns) {
+        return;
+    }
+
+    const allColumns = [];
+    getColumns(allColumns, item, state.columns);
+
+    const simpleColumns = [];
+    const detailColumns = [];
+    if (allColumns.length) {
+        allColumns.forEach((c) => {
+            if (c.simple) {
+                simpleColumns.push(c);
+            } else {
+                detailColumns.push(c);
+            }
+        });
+    }
+
+    item.tg_simpleColumns = simpleColumns;
+    item.tg_detailColumns = detailColumns;
+};
+
 const initDataList = () => {
 
     const caseItem = state.detailMap[data.caseId];
@@ -397,20 +404,7 @@ const initDataList = () => {
 
     data.list = list.map((item) => {
 
-        const allColumns = [];
-        getColumns(allColumns, item, state.columns);
-
-        const simpleColumns = [];
-        const detailColumns = [];
-        if (allColumns.length) {
-            allColumns.forEach((c) => {
-                if (c.simple) {
-                    simpleColumns.push(c);
-                } else {
-                    detailColumns.push(c);
-                }
-            });
-        }
+        initDataColumns(item);
 
         const left = item.tg_level * 13;
         let icon = Util.getTypeIcon(item.suiteType, item.type);
@@ -430,8 +424,8 @@ const initDataList = () => {
             style: `margin-left:${left}px;`,
             icon,
             size,
-            simpleColumns,
-            detailColumns
+            simpleColumns: item.tg_simpleColumns,
+            detailColumns: item.tg_detailColumns
         };
     });
 
@@ -554,30 +548,7 @@ onActivated(() => {
         </div>
       </VuiFlex>
       <div class="mcr-detail-body">
-        <div
-          v-for="column, dk in item.detailColumns"
-          :key="dk"
-          :class="itemColumnClass(column.data)"
-          :position-id="column.positionId"
-          :position-type="column.positionType"
-        >
-          <IconLabel
-            :icon="column.collapsed?'collapsed':'expanded'"
-            class="mcr-column-head"
-            @click="onColumnHeadClick(column)"
-          >
-            <IconLabel
-              :icon="column.icon"
-              size="20px"
-            >
-              {{ column.data.name }}
-            </IconLabel>
-          </IconLabel>
-          <div
-            :class="columnContentClass(column)"
-            v-html="column.content"
-          />
-        </div>
+        <DetailColumns :list="item.detailColumns" />
         <VuiFlex
           v-if="item.data.type==='case'&&item.data.stepNum"
           class="mcr-detail-column"
@@ -712,6 +683,7 @@ onActivated(() => {
 
 .mcr-detail-body {
     .mcr-column-head {
+        min-height: 20px;
         font-weight: bold;
         user-select: none;
     }
@@ -719,7 +691,6 @@ onActivated(() => {
 
 .mcr-detail-logs {
     border-left-color: #999;
-    background-color: #fcfcfc;
 }
 
 .mcr-detail-errors {
@@ -776,10 +747,9 @@ onActivated(() => {
         padding: 10px;
         border: 1px solid #eee;
 
-        img,
-        video {
+        img {
             display: block;
-            max-height: 350px;
+            max-width: 100%;
         }
     }
 

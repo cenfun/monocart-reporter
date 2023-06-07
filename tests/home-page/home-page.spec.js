@@ -137,3 +137,13 @@ test('merge same steps - for expect', () => {
         expect(i).toBeGreaterThan(0);
     }
 });
+
+test('image comparison', async ({ page }) => {
+    await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
+    await expect(page).toHaveScreenshot();
+});
+
+test('text comparison', async ({ page }) => {
+    await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
+    expect(await page.textContent('.page-url')).toMatchSnapshot();
+});
