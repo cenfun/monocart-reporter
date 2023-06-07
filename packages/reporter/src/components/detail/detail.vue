@@ -19,6 +19,7 @@ import {
 } from '../../modules/attachments.js';
 
 import IconLabel from '../icon-label.vue';
+import SimpleColumns from './simple-columns.vue';
 import DetailColumns from './detail-columns.vue';
 
 const { VuiFlex, VuiSwitch } = components;
@@ -515,21 +516,7 @@ onActivated(() => {
           >{{ item.data.count }}</span>
         </VuiFlex>
 
-        <VuiFlex
-          v-for="column, sk in item.simpleColumns"
-          :key="sk"
-          gap="5px"
-          wrap
-          class="mcr-column-simple"
-        >
-          <div class="mcr-simple-head">
-            {{ column.data.name }}
-          </div>
-          <div
-            class="mcr-simple-content"
-            v-html="column.content"
-          />
-        </VuiFlex>
+        <SimpleColumns :list="item.simpleColumns" />
 
         <div class="vui-flex-auto" />
 
@@ -656,17 +643,6 @@ onActivated(() => {
     border-top: thin dashed #eee;
     border-left: thin solid #ccc;
     overflow-x: auto;
-}
-
-.mcr-column-simple {
-    min-width: 20px;
-    min-height: 20px;
-    padding: 0 5px;
-    font-size: 13px;
-    line-height: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: rgb(175 184 193 / 20%);
 }
 
 .mcr-column-content {

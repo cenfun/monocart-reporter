@@ -5,7 +5,7 @@ import IconLabel from '../icon-label.vue';
 const props = defineProps({
     list: {
         type: Array,
-        default: null
+        default: () => []
     }
 });
 
