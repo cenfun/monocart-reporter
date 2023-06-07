@@ -102,13 +102,6 @@ watchEffect(() => {
       >{{ props.data.name }}</a>
     </div>
     <div class="mcr-attachment-body">
-      <VuiFlex
-        gap="10px"
-        padding="8px 10px"
-      >
-        <div><b>Files</b> <span class="mcr-num">{{ d.files }}</span></div>
-        <div><b>Type</b> {{ d.type }}</div>
-      </VuiFlex>
       <table>
         <tr>
           <td />
@@ -146,6 +139,13 @@ watchEffect(() => {
           </td>
         </tr>
       </table>
+      <VuiFlex
+        gap="10px"
+        padding="8px"
+      >
+        <div><b>Files</b> <span class="mcr-num">{{ d.files }}</span></div>
+        <div><b>Type</b> {{ d.type }}</div>
+      </VuiFlex>
     </div>
   </div>
 </template>
@@ -153,7 +153,7 @@ watchEffect(() => {
 <style lang="scss">
 .mcr-attachment-coverage {
     table {
-        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
     }
 }
 

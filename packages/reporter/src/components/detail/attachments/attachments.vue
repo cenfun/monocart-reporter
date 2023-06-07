@@ -187,7 +187,7 @@ watchEffect(() => {
             font-weight: bold;
         }
 
-        tr:hover::after {
+        tr:not(:first-child):hover::after {
             position: absolute;
             top: 0;
             left: 0;
