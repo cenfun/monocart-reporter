@@ -14,9 +14,6 @@ import state from '../../modules/state.js';
 import {
     tagFormatter, markdownFormatter, mergeAnnotations
 } from '../../modules/formatters.js';
-import {
-    groupComparisons, getComparison, getAttachment
-} from '../../modules/attachments.js';
 
 import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
@@ -224,28 +221,10 @@ const getAttachments = (item, column) => {
         return;
     }
 
-    // image/text comparisons
-    const attachmentList = groupComparisons(attachments);
-
-    const options = {
-        traceViewerUrl: state.reportData.traceViewerUrl
-    };
-
-    const list = attachmentList.map((attachment) => {
-        if (attachment.comparison) {
-            return getComparison(attachment);
-        }
-        return getAttachment(attachment, options);
-    });
-
-    const content = list.join('');
-    if (!content) {
-        return;
-    }
-
     return {
+        id: column.id,
         icon: 'attachment',
-        content
+        list: attachments
     };
 };
 
