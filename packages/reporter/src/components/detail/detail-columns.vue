@@ -1,6 +1,8 @@
 <script setup>
-
+import { components } from 'vine-ui';
 import IconLabel from '../icon-label.vue';
+
+const { VuiFlex } = components;
 
 const props = defineProps({
     list: {
@@ -30,7 +32,12 @@ const onColumnHeadClick = (column) => {
 </script>
 
 <template>
-  <div v-if="props.list.length">
+  <VuiFlex
+    v-if="props.list.length"
+    direction="column"
+    gap="10px"
+    padding="10px"
+  >
     <div
       v-for="column, dk in props.list"
       :key="dk"
@@ -55,25 +62,30 @@ const onColumnHeadClick = (column) => {
         v-html="column.content"
       />
     </div>
-  </div>
+  </VuiFlex>
 </template>
 
 <style lang="scss">
+.mcr-detail-column {
+    position: relative;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
 .mcr-column-head {
     min-height: 20px;
+    padding: 5px;
     font-weight: bold;
+    background-color: #f6f8fa;
     user-select: none;
 }
 
-.mcr-detail-column {
-    position: relative;
-    padding: 5px;
-    color: #333;
-    overflow-x: auto;
-}
-
 .mcr-column-content {
-    padding: 5px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    overflow-x: auto;
 
     &.mcr-column-collapsed {
         display: none;
@@ -85,37 +97,29 @@ const onColumnHeadClick = (column) => {
 }
 
 .mcr-detail-logs {
-    border-left-color: #999;
+    position: relative;
 }
 
 .mcr-detail-errors {
-    border-left-color: var(--color-failed);
-    background-color: var(--bg-failed);
-
     .mcr-column-head {
         color: var(--color-failed);
+        background-color: var(--bg-failed);
     }
 }
 
 .mcr-detail-errors,
 .mcr-detail-logs {
     .mcr-column-content {
-        margin-top: 5px;
         font-family: var(--font-monospace);
         white-space: pre;
     }
 }
 
 .mcr-detail-annotations {
-    border-left-color: #aaa;
-    background-color: #f6f8fa;
-
     .mcr-annotation-list {
         display: flex;
         flex-direction: column;
         gap: 5px;
-        margin-top: 5px;
-        padding: 10px;
         border-radius: 5px;
         background-color: #fff;
 
@@ -128,8 +132,6 @@ const onColumnHeadClick = (column) => {
 }
 
 .mcr-detail-attachments {
-    border-left-color: #aaa;
-
     .mcr-detail-attachment:not(:last-child) {
         margin-bottom: 5px;
     }

@@ -34,8 +34,16 @@ const data = shallowReactive({
 const el = ref(null);
 let $el;
 
-const itemHeadClass = (item) => {
-    return ['mcr-detail-head', `mcr-detail-${item.type}`, item.classMap];
+const itemClass = (d) => {
+    const ls = ['mcr-detail-item'];
+    if (d.classLevel) {
+        ls.push(d.classLevel);
+    }
+    return ls;
+};
+
+const itemHeadClass = (d) => {
+    return ['mcr-detail-head', `mcr-detail-${d.type}`, d.classMap];
 };
 
 const onLocationClick = (item) => {
@@ -415,6 +423,7 @@ const initDataList = () => {
         data.stepCollapsedDisabled = false;
     }
 
+    let lastItem;
     data.list = list.map((item) => {
 
         initDataColumns(item);
@@ -429,6 +438,12 @@ const initDataList = () => {
 
         const positionId = [item.id, 'title'].join('-');
         const stepGroup = item.type === 'step' && item.subs;
+
+        if (lastItem && lastItem.tg_level > item.tg_level) {
+            item.classLevel = 'mcr-detail-out';
+        }
+
+        lastItem = item;
 
         return {
             data: item,
@@ -491,7 +506,7 @@ onActivated(() => {
     <div
       v-for="item, ik in data.list"
       :key="ik"
-      class="mcr-detail-item"
+      :class="itemClass(item.data)"
       :style="item.style"
     >
       <VuiFlex
@@ -604,18 +619,22 @@ onActivated(() => {
 
 .mcr-detail-item {
     position: relative;
-    border-bottom: thin solid #ccc;
+    border-bottom: 1px solid #ccc;
+
+    &.mcr-detail-out {
+        margin-top: -1px;
+        border-top: 1px solid #ccc;
+    }
 }
 
 .mcr-detail-body {
-    padding: 10px;
-    border-top: thin dashed #eee;
-    border-left: thin solid #ccc;
+    border-top: 1px dashed #eee;
+    border-left: 1px solid #ccc;
 }
 
 .mcr-detail-head {
     min-height: 35px;
-    border-left: thin solid #ccc;
+    border-left: 1px solid #ccc;
 
     &:hover::after {
         position: absolute;
@@ -640,7 +659,6 @@ onActivated(() => {
     &.mcr-step-error + .mcr-detail-body,
     &.mcr-case-failed,
     &.mcr-case-failed + .mcr-detail-body {
-        border-top: none;
         border-left-color: var(--color-failed);
     }
 
@@ -648,6 +666,11 @@ onActivated(() => {
     &.mcr-case-flaky,
     &.mcr-case-flaky + .mcr-detail-body {
         border-left-color: var(--color-flaky);
+    }
+
+    &.mcr-case-failed + .mcr-detail-body,
+    &.mcr-case-flaky + .mcr-detail-body {
+        border-top: none;
     }
 }
 
