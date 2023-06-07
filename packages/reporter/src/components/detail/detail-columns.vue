@@ -30,10 +30,7 @@ const onColumnHeadClick = (column) => {
 </script>
 
 <template>
-  <div
-    v-if="props.list.length"
-    class="mcr-detail-columns"
-  >
+  <div v-if="props.list.length">
     <div
       v-for="column, dk in props.list"
       :key="dk"
@@ -62,15 +59,10 @@ const onColumnHeadClick = (column) => {
 </template>
 
 <style lang="scss">
-.mcr-detail-columns {
-    position: relative;
-    padding: 10px;
-
-    .mcr-column-head {
-        min-height: 20px;
-        font-weight: bold;
-        user-select: none;
-    }
+.mcr-column-head {
+    min-height: 20px;
+    font-weight: bold;
+    user-select: none;
 }
 
 .mcr-detail-column {

@@ -549,9 +549,10 @@ onActivated(() => {
           {{ item.state.locationLabel }}
         </IconLabel>
       </VuiFlex>
-      <div class="mcr-detail-body">
-        <DetailColumns :list="item.detailColumns" />
-      </div>
+      <DetailColumns
+        class="mcr-detail-body"
+        :list="item.detailColumns"
+      />
       <VuiFlex
         v-if="item.data.type==='case'&&item.data.stepNum"
         class="mcr-detail-steps"
@@ -606,6 +607,12 @@ onActivated(() => {
     border-bottom: thin solid #ccc;
 }
 
+.mcr-detail-body {
+    padding: 10px;
+    border-top: thin dashed #eee;
+    border-left: thin solid #ccc;
+}
+
 .mcr-detail-head {
     min-height: 35px;
     border-left: thin solid #ccc;
@@ -623,24 +630,25 @@ onActivated(() => {
     }
 
     &.mcr-detail-step,
-    &.mcr-case-passed {
+    &.mcr-detail-step + .mcr-detail-body,
+    &.mcr-case-passed,
+    &.mcr-case-passed + .mcr-detail-body {
         border-left-color: var(--color-passed);
     }
 
     &.mcr-step-error,
-    &.mcr-case-failed {
+    &.mcr-step-error + .mcr-detail-body,
+    &.mcr-case-failed,
+    &.mcr-case-failed + .mcr-detail-body {
+        border-top: none;
         border-left-color: var(--color-failed);
     }
 
     &.mcr-step-retry,
-    &.mcr-case-flaky {
+    &.mcr-case-flaky,
+    &.mcr-case-flaky + .mcr-detail-body {
         border-left-color: var(--color-flaky);
     }
-}
-
-.mcr-detail-body {
-    border-top: thin dashed #eee;
-    border-left: thin solid #ccc;
 }
 
 .mcr-detail-steps {
