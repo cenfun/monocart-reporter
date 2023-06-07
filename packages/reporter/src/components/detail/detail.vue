@@ -38,6 +38,18 @@ const itemHeadClass = (item) => {
     return ['mcr-detail-head', `mcr-detail-${item.type}`, item.classMap];
 };
 
+const onLocationClick = (item) => {
+    try {
+        navigator.clipboard.writeText(item.data.location).then(() => {
+            item.state.locationLabel = 'copied';
+            setTimeout(() => {
+                item.state.locationLabel = '';
+            }, 1000);
+        });
+    } catch (e) {
+        item.state.locationLabel = item.data.location;
+    }
+};
 
 // ===========================================================================
 // errors logs html
@@ -420,6 +432,7 @@ const initDataList = () => {
 
         return {
             data: item,
+            state: shallowReactive({}),
             positionId,
             stepGroup,
             style: `margin-left:${left}px;`,
@@ -521,18 +534,20 @@ onActivated(() => {
         <div class="vui-flex-auto" />
 
         <div
-          v-if="item.data.location"
-          class="mcr-detail-location"
-        >
-          {{ item.data.location }}
-        </div>
-
-        <div
           v-if="Util.isNum(item.data.duration)"
           class="mcr-detail-duration"
         >
           {{ Util.TF(item.data.duration) }}
         </div>
+
+        <IconLabel
+          v-if="item.data.location"
+          icon="location"
+          :tooltip="item.data.location"
+          @click="onLocationClick(item)"
+        >
+          {{ item.state.locationLabel }}
+        </IconLabel>
       </VuiFlex>
       <div class="mcr-detail-body">
         <DetailColumns :list="item.detailColumns" />
@@ -622,12 +637,6 @@ onActivated(() => {
     &.mcr-case-flaky {
         border-left-color: var(--color-flaky);
     }
-}
-
-.mcr-detail-location {
-    font-size: 13px;
-    font-style: italic;
-    opacity: 0.6;
 }
 
 .mcr-detail-suite {
