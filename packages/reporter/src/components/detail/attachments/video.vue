@@ -31,10 +31,15 @@ const props = defineProps({
 
 <style lang="scss">
 .mcr-attachment-video {
+    .mcr-attachment-body {
+        padding: 10px;
+        border: none;
+    }
+
     video {
         display: block;
         max-width: 100%;
-        background-color: #000;
+        box-shadow: var(--image-shadow);
     }
 }
 </style>

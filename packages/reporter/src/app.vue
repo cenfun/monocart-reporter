@@ -695,6 +695,7 @@ body {
     --color-failed: #d00;
     --color-flaky: orange;
     --color-skipped: gray;
+    --image-shadow: rgb(0 0 0 / 35%) 0 2px 8px;
 
     width: 100%;
     height: 100%;

@@ -32,9 +32,15 @@ const props = defineProps({
 
 <style lang="scss">
 .mcr-attachment-image {
+    .mcr-attachment-body {
+        padding: 10px;
+        border: none;
+    }
+
     img {
         display: block;
         max-width: 100%;
+        box-shadow: var(--image-shadow);
     }
 }
 </style>

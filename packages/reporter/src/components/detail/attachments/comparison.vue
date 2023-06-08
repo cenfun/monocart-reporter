@@ -166,20 +166,20 @@ watchEffect(() => {
         height: 10px;
     }
 
-    .vui-tab-pane {
-        img {
-            display: block;
-            max-width: 100%;
-        }
-    }
-
     .mcr-comparison-tab {
         border-bottom: 1px solid #eee;
     }
 
     .mcr-comparison-image {
+        padding: 10px;
         cursor: default;
         user-select: none;
+
+        img {
+            display: block;
+            max-width: 100%;
+            box-shadow: var(--image-shadow);
+        }
     }
 }
 </style>

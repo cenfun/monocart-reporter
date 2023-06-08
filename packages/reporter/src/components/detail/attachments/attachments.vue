@@ -125,6 +125,7 @@ watchEffect(() => {
 <template>
   <VuiFlex
     direction="column"
+    padding="10px"
     gap="10px"
   >
     <component
@@ -148,16 +149,16 @@ watchEffect(() => {
     details[open] > summary {
         background-image: url("../../../images/arrow-down.svg");
     }
+}
 
-    .mcr-attachment-head {
-        position: relative;
-    }
+.mcr-attachment-head {
+    position: relative;
+}
 
-    .mcr-attachment-body {
-        margin-top: 5px;
-        border: 1px solid #eee;
-        overflow-x: auto;
-    }
+.mcr-attachment-body {
+    margin-top: 5px;
+    border: 1px solid #eee;
+    overflow-x: auto;
 
     .mcr-low {
         background: #fce1e5;
