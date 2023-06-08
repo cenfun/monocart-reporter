@@ -123,9 +123,7 @@ const onCopyClick = (e, column) => {
 
 .mcr-column-content {
     position: relative;
-    padding: 10px;
     border-top: 1px solid #ddd;
-    overflow-x: auto;
 
     &.mcr-column-collapsed {
         display: none;
@@ -136,11 +134,20 @@ const onCopyClick = (e, column) => {
     }
 }
 
+.mcr-column-html {
+    position: relative;
+    padding: 10px;
+    overflow-x: auto;
+}
+
 .mcr-column-copy {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 5px;
+    right: 5px;
     display: none;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #fff;
 }
 
 .mcr-column-content:hover {
