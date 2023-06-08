@@ -2,6 +2,7 @@
   - supported image diff
   - fixed UI issues
   - updated focus UI
+  - added copy button for logs/errors
 
 * 1.6.30
   - fixed metadata supported link
