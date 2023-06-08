@@ -1077,6 +1077,7 @@ icon
 
 .mcr-focus {
     outline: 2px solid #6bbbf7;
+    outline-offset: -1px;
 }
 
 </style>
