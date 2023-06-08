@@ -2,6 +2,8 @@
 import { watchEffect, shallowReactive } from 'vue';
 import { components } from 'vine-ui';
 
+import Util from '../../../utils/util.js';
+
 const { VuiFlex, VuiTab } = components;
 
 const props = defineProps({
@@ -12,7 +14,8 @@ const props = defineProps({
 });
 
 const d = shallowReactive({
-    tabIndex: 0
+    tabIndex: 0,
+    tempIndex: 0
 });
 
 const initImageComparison = () => {
@@ -26,14 +29,53 @@ const initImageComparison = () => {
             previous: 'Previous'
         };
 
-        d.list = list.map((it) => {
+        d.indexes = {};
+        d.categories = [];
+
+        d.list = list.map((it, i) => {
+
+            const {
+                category, name, path
+            } = it;
+
+            d.indexes[category] = i;
+            d.categories.push(category);
+
             return {
-                title: titles[it.category],
-                name: it.name,
-                path: it.path
+                title: titles[category],
+                name,
+                path
             };
         });
+
+        if (Util.hasOwn(d.indexes, 'diff')) {
+            d.tabIndex = d.indexes.diff;
+        }
+
     }
+};
+
+const switchTo = (e, category) => {
+    if (Util.hasOwn(d.indexes, category)) {
+        e.preventDefault();
+        d.tabIndex = d.indexes[category];
+    }
+};
+
+const onMouseDown = (e) => {
+    d.tempIndex = d.tabIndex;
+    const category = d.categories[d.tabIndex];
+    if (category === 'actual') {
+        switchTo(e, 'expected');
+    } else if (category === 'expected') {
+        switchTo(e, 'actual');
+    } else if (category === 'diff') {
+        switchTo(e, 'actual');
+    }
+};
+
+const onMouseUp = (e) => {
+    d.tabIndex = d.tempIndex;
 };
 
 watchEffect(() => {
@@ -48,12 +90,13 @@ watchEffect(() => {
     open
   >
     <summary class="mcr-attachment-head">
-      {{ props.data.name }}
+      <span v-if="d.list">image </span>mismatch: {{ props.data.name }}
     </summary>
     <div class="mcr-attachment-body">
       <VuiTab
         v-if="d.list"
         v-model="d.tabIndex"
+        class="mcr-comparison-tab"
       >
         <template #tabs>
           <div
@@ -67,6 +110,9 @@ watchEffect(() => {
           <div
             v-for="(item, i) of d.list"
             :key="i"
+            class="mcr-comparison-image"
+            @mousedown="onMouseDown"
+            @mouseup="onMouseUp"
           >
             <img
               :src="item.path"
@@ -80,6 +126,7 @@ watchEffect(() => {
         direction="column"
         gap="5px"
         padding="10px"
+        class="mcr-comparison-list"
       >
         <a
           v-for="(item, i) of props.data.list"
@@ -124,6 +171,15 @@ watchEffect(() => {
             display: block;
             max-width: 100%;
         }
+    }
+
+    .mcr-comparison-tab {
+        border-bottom: 1px solid #eee;
+    }
+
+    .mcr-comparison-image {
+        cursor: default;
+        user-select: none;
     }
 }
 </style>

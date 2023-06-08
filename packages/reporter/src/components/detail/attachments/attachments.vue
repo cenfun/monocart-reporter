@@ -96,14 +96,6 @@ const initList = (attachments) => {
                 };
             }
 
-            if (group.path) {
-                if (category === 'diff') {
-                    group.data.path = attachment.path;
-                }
-            } else {
-                group.data.path = attachment.path;
-            }
-
         } else {
 
             if (group) {
