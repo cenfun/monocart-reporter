@@ -609,8 +609,16 @@ const onFocus = (e) => {
 }
 
 .mcr-detail-body {
-    border-top: 1px solid #eee;
+    border-top: 1px dashed #eee;
     border-left: 1px solid #ccc;
+}
+
+.mcr-detail-steps {
+    min-height: 35px;
+    padding: 5px;
+    border-top: thin dashed #eee;
+    border-left: thin solid #ccc;
+    user-select: none;
 }
 
 .mcr-detail-head {
@@ -655,14 +663,6 @@ const onFocus = (e) => {
     &.mcr-case-flaky + .mcr-detail-body {
         border-top: none;
     }
-}
-
-.mcr-detail-steps {
-    min-height: 35px;
-    padding: 5px;
-    border-top: thin solid #eee;
-    border-left: thin solid #ccc;
-    user-select: none;
 }
 
 .mcr-detail-suite {
