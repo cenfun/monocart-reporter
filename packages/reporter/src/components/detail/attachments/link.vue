@@ -8,19 +8,23 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="mcr-attachment-link">
-    <div class="mcr-attachment-head">
+  <details class="mcr-attachment-link">
+    <summary class="mcr-attachment-head">
       <a
         :href="props.data.path"
         target="_blank"
-        class="mcr-item"
       >{{ props.data.name }}</a>
+    </summary>
+    <div class="mcr-attachment-body">
+      {{ props.data.path }}
     </div>
-  </div>
+  </details>
 </template>
 
 <style lang="scss">
 .mcr-attachment-link {
-    position: relative;
+    .mcr-attachment-body {
+        padding: 10px;
+    }
 }
 </style>

@@ -93,22 +93,26 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-coverage">
-    <div class="mcr-attachment-head">
+  <details
+    class="mcr-attachment-coverage"
+    open
+  >
+    <summary class="mcr-attachment-head">
       <a
         :href="props.data.path"
         target="_blank"
-        class="mcr-item"
       >{{ props.data.name }}</a>
-    </div>
+    </summary>
     <div class="mcr-attachment-body">
       <table>
         <tr>
-          <td />
+          <td class="mcr-column-left">
+            Name
+          </td>
           <td>Total</td>
           <td>Covered</td>
           <td>Uncovered</td>
-          <td />
+          <td>Coverage</td>
           <td />
         </tr>
         <tr
@@ -128,15 +132,15 @@ watchEffect(() => {
             <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
           </td>
           <td
-            style="width: 100px;"
-            v-html="item.percentChart"
-          />
-          <td
             style="padding: 0 5px;"
             :class="'mcr-'+item.status"
           >
             {{ Util.PF(item.pct, 100) }}
           </td>
+          <td
+            style="min-width: 100px;"
+            v-html="item.percentChart"
+          />
         </tr>
       </table>
       <VuiFlex
@@ -144,10 +148,9 @@ watchEffect(() => {
         padding="8px"
       >
         <div><b>Files</b> <span class="mcr-num">{{ d.files }}</span></div>
-        <div><b>Type</b> {{ d.type }}</div>
       </VuiFlex>
     </div>
-  </div>
+  </details>
 </template>
 
 <style lang="scss">

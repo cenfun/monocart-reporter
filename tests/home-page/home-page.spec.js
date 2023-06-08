@@ -48,6 +48,11 @@ test('test home page', async ({ page, context }, testInfo) => {
     const outputPath = testInfo.outputPath('screenshot.png');
     console.log('outputPath(screenshot.png)', outputPath);
 
+    await testInfo.attach('link', {
+        path: `${testInfo.snapshotDir}/report.pdf`,
+        contentType: 'application/pdf'
+    });
+
     const screenshot = await page.screenshot();
     await testInfo.attach('screenshot', {
         body: screenshot,

@@ -8,14 +8,16 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="mcr-attachment-video">
-    <div class="mcr-attachment-head">
+  <details
+    class="mcr-attachment-video"
+    open
+  >
+    <summary class="mcr-attachment-head">
       <a
         :href="props.data.path"
         target="_blank"
-        class="mcr-item"
       >{{ props.data.name }}</a>
-    </div>
+    </summary>
     <div class="mcr-attachment-body">
       <video
         controls
@@ -24,7 +26,7 @@ const props = defineProps({
         :type="props.data.contentType"
       ></video>
     </div>
-  </div>
+  </details>
 </template>
 
 <style lang="scss">

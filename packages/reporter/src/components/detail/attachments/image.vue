@@ -8,14 +8,16 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="mcr-attachment-image">
-    <div class="mcr-attachment-head">
+  <details
+    class="mcr-attachment-image"
+    open
+  >
+    <summary class="mcr-attachment-head">
       <a
         :href="props.data.path"
         target="_blank"
-        class="mcr-item"
       >{{ props.data.name }}</a>
-    </div>
+    </summary>
     <div class="mcr-attachment-body">
       <a
         :href="props.data.path"
@@ -25,7 +27,7 @@ const props = defineProps({
         :alt="props.data.name"
       ></a>
     </div>
-  </div>
+  </details>
 </template>
 
 <style lang="scss">

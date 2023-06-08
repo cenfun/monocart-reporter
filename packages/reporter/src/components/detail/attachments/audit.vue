@@ -33,14 +33,16 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-audit">
-    <div class="mcr-attachment-head">
+  <details
+    class="mcr-attachment-audit"
+    open
+  >
+    <summary class="mcr-attachment-head">
       <a
         :href="props.data.path"
         target="_blank"
-        class="mcr-item"
       >{{ props.data.name }}</a>
-    </div>
+    </summary>
     <div class="mcr-attachment-body">
       <table>
         <tr class="mcr-head">
@@ -68,7 +70,7 @@ watchEffect(() => {
         </tr>
       </table>
     </div>
-  </div>
+  </details>
 </template>
 
 <style lang="scss">

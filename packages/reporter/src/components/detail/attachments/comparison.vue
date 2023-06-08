@@ -1,4 +1,6 @@
 <script setup>
+import { watchEffect, shallowReactive } from 'vue';
+
 const props = defineProps({
     data: {
         type: Object,
@@ -6,6 +8,9 @@ const props = defineProps({
     }
 });
 
+const d = shallowReactive({
+    list: []
+});
 
 const getLinkComparison = (item) => {
     return item.list.map((it) => `<div><a href="${it.path}" target="_blank" class="mcr-icon-link">${it.name}</a></div>`).join('');
@@ -38,27 +43,30 @@ const getComparison = (item) => {
 
     const body = contentType.startsWith('image') ? getImageComparison(item) : getLinkComparison(item);
 
-    return `<div class="mcr-attachment-comparison">
-                <div class="mcr-attachment-head"><span class="mcr-item">${name}</span></div>
-                <div class="mcr-attachment-body">${body}</div>
-            </div>`;
 };
+
+
+watchEffect(() => {
+    console.log(props.data);
+});
 
 </script>
 
 <template>
-  <div class="mcr-attachment-comparison">
-    <div class="mcr-attachment-head">
+  <details
+    class="mcr-attachment-comparison"
+    open
+  >
+    <summary class="mcr-attachment-head">
       <a
         :href="props.data.path"
         target="_blank"
-        class="mcr-item"
       >{{ props.data.name }}</a>
-    </div>
+    </summary>
     <div class="mcr-attachment-body">
       ${body}
     </div>
-  </div>
+  </details>
 </template>
 
 <style lang="scss">

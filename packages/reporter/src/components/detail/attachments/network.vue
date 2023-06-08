@@ -1,6 +1,11 @@
 <script setup>
+import { watchEffect, shallowReactive } from 'vue';
+import { components } from 'vine-ui';
+
 import Util from '../../../utils/util.js';
 import generateWaterfallChart from '../../../modules/waterfall.js';
+
+const { VuiFlex } = components;
 
 const props = defineProps({
     data: {
@@ -9,21 +14,50 @@ const props = defineProps({
     }
 });
 
+const d = shallowReactive({
+    pages: []
+});
 
-const getNetworkBody = (report) => {
-    if (!report) {
-        return '';
-    }
+const initReportData = (report) => {
 
     const {
         summary, pages, browser, creator
     } = report;
 
+    d.summary = summary;
+
+    d.status = [];
+    Object.keys(summary.status).forEach((k) => {
+        const s = `${k}`;
+        let color = '';
+        if (s.startsWith('2')) {
+            color = 'color: green;';
+        } else if (s.startsWith('4')) {
+            color = 'color: red;';
+        }
+        const count = summary.status[k];
+        d.status.push({
+            name: s,
+            color,
+            count
+        });
+    });
+
+    d.methods = [];
+    Object.keys(summary.methods).forEach((k) => {
+        d.methods.push({
+            name: k,
+            count: summary.methods[k]
+        });
+    });
+
+    d.browser = browser;
+    d.creator = creator;
+
+    d.pages = [];
     if (!Util.isList(pages)) {
         return '';
     }
-
-    const list = [];
 
     pages.forEach((page, i) => {
         const { onContentLoad, onLoad } = page.pageTimings;
@@ -32,86 +66,119 @@ const getNetworkBody = (report) => {
         if (pages.length > 1) {
             number = ` ${i + 1}`;
         }
-        list.push('<div class="mcr-attachment-group">');
-        list.push(`<div><b>Page${number}</b></div>`);
-        list.push(`<div>${title}</div>`);
-
-        if (onContentLoad > 0) {
-            list.push(`<div style="color:#1A1AA6;">ContendLoaded ${Util.TF(onContentLoad)}</div>`);
-        }
-
-        if (onLoad > 0) {
-            list.push(`<div style="color:#C80000;">Load ${Util.TF(onLoad)}</div>`);
-        }
-
         const waterfall = summary.waterfalls[page.id];
-        list.push(`<div>Duration ${Util.TF(waterfall.time)}</div>`);
-
-        list.push('</div>');
-
         const waterfallChart = generateWaterfallChart(waterfall);
-        list.push('<div class="mcr-attachment-group">');
-        list.push(`<div class="mcr-network-waterfall">${waterfallChart}</div>`);
-        list.push('</div>');
+
+        d.pages.push({
+            title,
+            number,
+            onContentLoad,
+            onLoad,
+            waterfall,
+            waterfallChart
+        });
+
     });
 
-    list.push('<div class="mcr-attachment-group">');
-    list.push(`<div><b>Requests</b> <span class="mcr-num">${summary.requests}</span></div>`);
-    list.push(`<div><b>Transferred</b> ${Util.BF(summary.size)}</div>`);
-    list.push('</div>');
 
-    list.push('<div class="mcr-attachment-group">');
-    list.push('<div><b>Status</b></div>');
-    Object.keys(summary.status).forEach((k) => {
-        let s = `${k}`;
-        if (s.startsWith('2')) {
-            s = `<span style="color:green;">${s}</span>`;
-        } else if (s.startsWith('4')) {
-            s = `<span style="color:red;">${s}</span>`;
-        }
-        list.push(`<div>${s} <span class="mcr-num">${summary.status[k]}</span></div>`);
-    });
-    list.push('</div>');
-
-    list.push('<div class="mcr-attachment-group">');
-    list.push('<div><b>Method</b></div>');
-    Object.keys(summary.methods).forEach((k) => {
-        list.push(`<div>${k} <span class="mcr-num">${summary.methods[k]}</span></div>`);
-    });
-    list.push('</div>');
-
-
-    list.push('<div class="mcr-attachment-group">');
-    if (browser) {
-        list.push(`<div><b>Browser</b> ${browser.name} v${browser.version}</div>`);
-    }
-    if (creator) {
-        list.push(`<div><b>Creator</b> ${creator.name} v${creator.version}</div>`);
-    }
-    list.push('</div>');
-
-
-    const body = list.join('');
-
-    return body;
 };
 
-
+watchEffect(() => {
+    const report = props.data.report;
+    if (report) {
+        initReportData(report);
+    }
+});
 </script>
 
 <template>
-  <div class="mcr-attachment-network">
-    <div class="mcr-attachment-head">
+  <details
+    class="mcr-attachment-network"
+    open
+  >
+    <summary class="mcr-attachment-head">
       <a
         :href="props.data.path"
         target="_blank"
-        class="mcr-item"
       >{{ props.data.name }}</a>
-    </div>
-    <div class="mcr-attachment-body">
-      ${body}
-    </div>
-  </div>
+    </summary>
+    <VuiFlex
+      class="mcr-attachment-body"
+      padding="10px"
+      direction="column"
+      gap="10px"
+    >
+      <div
+        v-for="(item, i) of d.pages"
+        :key="i"
+      >
+        <VuiFlex
+          gap="10px"
+        >
+          <div><b>Page{{ item.number }}</b></div>
+          <div>{{ item.title }}</div>
+
+          <div
+            v-if="item.onContentLoad>0"
+            style="color: #1a1aa6;"
+          >
+            ContendLoaded {{ Util.TF(item.onContentLoad) }}
+          </div>
+
+          <div
+            v-if="item.onLoad>0"
+            style="color: #c80000;"
+          >
+            Load {{ Util.TF(item.onLoad) }}
+          </div>
+
+          <div>Duration {{ Util.TF(item.waterfall.time) }}</div>
+        </VuiFlex>
+
+        <div
+          class="mcr-network-waterfall"
+          v-html="item.waterfallChart"
+        />
+      </div>
+
+      <VuiFlex gap="10px">
+        <div><b>Requests</b> <span class="mcr-num">{{ d.summary.requests }}</span></div>
+        <div><b>Transferred</b> {{ Util.BF(d.summary.size) }}</div>
+      </VuiFlex>
+
+      <VuiFlex gap="10px">
+        <div><b>Status</b></div>
+        <div
+          v-for="(item, i) of d.status"
+          :key="i"
+        >
+          <span :style="item.color">{{ item.name }}</span> <span class="mcr-num">{{ item.count }}</span>
+        </div>
+      </VuiFlex>
+
+      <VuiFlex gap="10px">
+        <div><b>Methods</b></div>
+        <div
+          v-for="(item, i) of d.methods"
+          :key="i"
+        >
+          {{ item.name }} <span class="mcr-num">{{ item.count }}</span>
+        </div>
+      </VuiFlex>
+
+      <VuiFlex
+        v-if="d.browser||d.creator"
+        gap="10px"
+      >
+        <div v-if="d.browser">
+          <b>Browser</b> {{ d.browser.name }} {{ d.browser.version }}
+        </div>
+        <div v-if="d.creator">
+          <b>Creator</b> {{ d.creator.name }} {{ d.creator.version }}
+        </div>
+      </VuiFlex>
+    </VuiFlex>
+  </details>
 </template>
 
 <style lang="scss">
@@ -119,6 +186,7 @@ const getNetworkBody = (report) => {
     .mcr-network-waterfall {
         width: 100%;
         height: 30px;
+        margin-top: 10px;
     }
 
     .mcr-waterfall {

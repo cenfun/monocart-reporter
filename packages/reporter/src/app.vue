@@ -1060,13 +1060,13 @@ icon
     display: inline-block;
     min-height: 20px;
     margin: 0;
-    padding-left: 15px;
+    padding-left: 20px;
     line-height: 20px;
 
     &::before {
         position: absolute;
         top: 8px;
-        left: 2px;
+        left: 6px;
         content: "";
         width: 5px;
         height: 5px;

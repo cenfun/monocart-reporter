@@ -137,6 +137,17 @@ watchEffect(() => {
 
 <style lang="scss">
 .mcr-detail-attachments {
+    summary {
+        padding-left: 20px;
+        background: url("../../../images/arrow-right.svg") left center no-repeat;
+        background-size: 16px 16px;
+        list-style: none;
+    }
+
+    details[open] > summary {
+        background-image: url("../../../images/arrow-down.svg");
+    }
+
     .mcr-attachment-head {
         position: relative;
     }
