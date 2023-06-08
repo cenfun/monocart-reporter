@@ -1,5 +1,8 @@
 <script setup>
 import { watchEffect, shallowReactive } from 'vue';
+import { components } from 'vine-ui';
+
+const { VuiFlex, VuiTab } = components;
 
 const props = defineProps({
     data: {
@@ -9,45 +12,32 @@ const props = defineProps({
 });
 
 const d = shallowReactive({
-    list: []
+    tabIndex: 0
 });
 
-const getLinkComparison = (item) => {
-    return item.list.map((it) => `<div><a href="${it.path}" target="_blank" class="mcr-icon-link">${it.name}</a></div>`).join('');
+const initImageComparison = () => {
+    d.list = null;
+    const { contentType, list } = props.data;
+    if (contentType && contentType.startsWith('image')) {
+        const titles = {
+            diff: 'Diff',
+            actual: 'Actual',
+            expected: 'Expected',
+            previous: 'Previous'
+        };
+
+        d.list = list.map((it) => {
+            return {
+                title: titles[it.category],
+                name: it.name,
+                path: it.path
+            };
+        });
+    }
 };
-
-const getImageComparison = (item) => {
-
-    const titles = {
-        diff: 'Diff',
-        actual: 'Actual',
-        expected: 'Expected',
-        previous: 'Previous'
-    };
-
-    const heads = item.list.map((it) => `<div>${titles[it.category]}</div>`).join('');
-    const views = item.list.map((it) => `<div><img src="${it.path}" alt="${it.name}" /></div>`).join('');
-
-    const links = getLinkComparison(item);
-
-    return `<div>
-        <div class="vui-flex-row">${heads}</div>
-        <div class="">${views}</div>
-        ${links}
-    </div>`;
-};
-
-const getComparison = (item) => {
-    console.log(item);
-    const { contentType, name } = item;
-
-    const body = contentType.startsWith('image') ? getImageComparison(item) : getLinkComparison(item);
-
-};
-
 
 watchEffect(() => {
-    console.log(props.data);
+    initImageComparison();
 });
 
 </script>
@@ -58,17 +48,82 @@ watchEffect(() => {
     open
   >
     <summary class="mcr-attachment-head">
-      <a
-        :href="props.data.path"
-        target="_blank"
-      >{{ props.data.name }}</a>
+      {{ props.data.name }}
     </summary>
     <div class="mcr-attachment-body">
-      ${body}
+      <VuiTab
+        v-if="d.list"
+        v-model="d.tabIndex"
+      >
+        <template #tabs>
+          <div
+            v-for="(item, i) of d.list"
+            :key="i"
+          >
+            {{ item.title }}
+          </div>
+        </template>
+        <template #panes>
+          <div
+            v-for="(item, i) of d.list"
+            :key="i"
+          >
+            <img
+              :src="item.path"
+              :alt="item.name"
+            >
+          </div>
+        </template>
+      </VuiTab>
+
+      <VuiFlex
+        direction="column"
+        gap="5px"
+        padding="10px"
+      >
+        <a
+          v-for="(item, i) of props.data.list"
+          :key="i"
+          :href="item.path"
+          target="_blank"
+          class="mcr-item"
+        >{{ item.name }}</a>
+      </VuiFlex>
     </div>
   </details>
 </template>
 
 <style lang="scss">
+.mcr-attachment-comparison {
+    .mcr-attachment-head {
+        cursor: default;
+    }
 
+    .vui-tab-header {
+        background: #eee;
+    }
+
+    .vui-tab-tabs {
+        padding-top: 5px;
+    }
+
+    .vui-tab-item {
+        justify-content: center;
+        height: 30px;
+        min-width: 81px;
+        line-height: 30px;
+    }
+
+    .vui-tab-item::before {
+        bottom: 10px;
+        height: 10px;
+    }
+
+    .vui-tab-pane {
+        img {
+            display: block;
+            max-width: 100%;
+        }
+    }
+}
 </style>
