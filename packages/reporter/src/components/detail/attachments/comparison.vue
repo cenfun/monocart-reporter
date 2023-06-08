@@ -147,7 +147,7 @@ watchEffect(() => {
     }
 
     .vui-tab-header {
-        background: #eee;
+        background: #f5f5f5;
     }
 
     .vui-tab-tabs {

@@ -284,14 +284,6 @@ const onStepFailedClick = (item) => {
 
 // ===========================================================================
 
-const showBlink = debounce((elem) => {
-    const classList = elem.classList;
-    elem.addEventListener('animationend', function() {
-        classList.remove('mcr-blink');
-    });
-    classList.add('mcr-blink');
-});
-
 // wait for image loaded
 const updatePosition = debounce((position) => {
 
@@ -318,7 +310,7 @@ const updatePosition = debounce((position) => {
     elem.scrollIntoView();
 
     if (found) {
-        showBlink(elem);
+        Util.setFocus(elem);
     }
 
 }, 100);
@@ -475,12 +467,18 @@ onActivated(() => {
     updateCase();
 });
 
+const onFocus = (e) => {
+    Util.setFocus();
+};
+
 </script>
 
 <template>
   <div
     ref="el"
     class="mcr-detail"
+    tabindex="0"
+    @focus="onFocus"
   >
     <div
       v-for="item, ik in data.list"
@@ -607,11 +605,13 @@ onActivated(() => {
 }
 
 .mcr-detail-body {
-    border-top: 1px dashed #eee;
+    border-top: 1px solid #eee;
     border-left: 1px solid #ccc;
 }
 
 .mcr-detail-head {
+    position: relative;
+    z-index: 1;
     min-height: 35px;
     border-left: 1px solid #ccc;
 
@@ -656,7 +656,7 @@ onActivated(() => {
 .mcr-detail-steps {
     min-height: 35px;
     padding: 5px;
-    border-top: thin dashed #eee;
+    border-top: thin solid #eee;
     border-left: thin solid #ccc;
     user-select: none;
 }

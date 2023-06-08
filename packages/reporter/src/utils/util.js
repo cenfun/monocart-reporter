@@ -39,6 +39,16 @@ const Util = {
         return icons[subType] || icons[type];
     },
 
+    setFocus: (elem) => {
+        const prev = document.querySelector('.mcr-focus');
+        if (prev) {
+            prev.classList.remove('mcr-focus');
+        }
+        if (elem) {
+            elem.classList.add('mcr-focus');
+        }
+    },
+
     exportJson(json, name) {
         if (!json) {
             console.log('Not found json to export');

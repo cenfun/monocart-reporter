@@ -1075,4 +1075,8 @@ icon
     }
 }
 
+.mcr-focus {
+    outline: 2px solid #6bbbf7;
+}
+
 </style>
