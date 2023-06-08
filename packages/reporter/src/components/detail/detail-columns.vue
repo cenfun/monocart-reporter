@@ -30,6 +30,28 @@ const onColumnHeadClick = (column) => {
     column.collapsed = !column.collapsed;
 };
 
+const onCopyClick = (e, column) => {
+    const container = e.currentTarget && e.currentTarget.parentNode;
+    if (!container) {
+        return;
+    }
+    const elem = container.querySelector('.mcr-column-html');
+    if (!elem) {
+        return;
+    }
+    const text = elem.innerText;
+    try {
+        navigator.clipboard.writeText(text).then(() => {
+            column.copied = 'copied';
+            setTimeout(() => {
+                column.copied = '';
+            }, 1000);
+        });
+    } catch (err) {
+        //
+    }
+};
+
 </script>
 
 <template>
@@ -63,10 +85,20 @@ const onColumnHeadClick = (column) => {
           v-if="column.id==='attachments'"
           :list="column.list"
         />
-        <div
-          v-else
-          v-html="column.content"
-        />
+        <template v-else>
+          <div
+            class="mcr-column-html"
+            v-html="column.content"
+          />
+          <div
+            class="mcr-column-copy"
+            @click="onCopyClick($event, column)"
+          >
+            <IconLabel icon="copy">
+              {{ column.copied }}
+            </IconLabel>
+          </div>
+        </template>
       </div>
     </div>
   </VuiFlex>
@@ -90,6 +122,7 @@ const onColumnHeadClick = (column) => {
 }
 
 .mcr-column-content {
+    position: relative;
     padding: 10px;
     border-top: 1px solid #ddd;
     overflow-x: auto;
@@ -99,6 +132,19 @@ const onColumnHeadClick = (column) => {
     }
 
     &.mcr-column-expanded {
+        display: block;
+    }
+}
+
+.mcr-column-copy {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+}
+
+.mcr-column-content:hover {
+    .mcr-column-copy {
         display: block;
     }
 }
