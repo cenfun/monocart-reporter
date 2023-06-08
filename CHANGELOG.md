@@ -1,3 +1,8 @@
+* 1.6.31
+  - supported image diff
+  - fixed UI issues
+  - updated focus UI
+
 * 1.6.30
   - fixed metadata supported link
   - fixed flyover title of v8

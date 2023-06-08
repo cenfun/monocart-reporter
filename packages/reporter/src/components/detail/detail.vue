@@ -304,11 +304,15 @@ const updatePosition = debounce((position) => {
     }
 
     if (!elem) {
+        Util.setFocus();
         return;
     }
 
-    elem.scrollIntoView();
-
+    if (typeof elem.scrollIntoViewIfNeeded === 'function') {
+        elem.scrollIntoViewIfNeeded();
+    } else {
+        elem.scrollIntoView();
+    }
     if (found) {
         Util.setFocus(elem);
     }
