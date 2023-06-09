@@ -4,6 +4,8 @@ import { components } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
 
+import IconLabel from '../../icon-label.vue';
+
 const { VuiFlex, VuiTab } = components;
 
 const props = defineProps({
@@ -98,6 +100,14 @@ watchEffect(() => {
         v-model="d.tabIndex"
         class="mcr-comparison-tab"
       >
+        <template #right>
+          <div class="mcr-comparison-note">
+            <IconLabel
+              icon="help"
+              tooltip="Holding and Releasing the mouse on the image to quickly switch image previews between them"
+            />
+          </div>
+        </template>
         <template #tabs>
           <div
             v-for="(item, i) of d.list"
@@ -168,6 +178,10 @@ watchEffect(() => {
 
     .mcr-comparison-tab {
         border-bottom: 1px solid #eee;
+    }
+
+    .mcr-comparison-note {
+        margin-right: 10px;
     }
 
     .mcr-comparison-image {

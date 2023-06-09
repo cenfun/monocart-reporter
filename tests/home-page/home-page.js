@@ -6,20 +6,36 @@ const mockPageGoto = async (page, url) => {
         <html>
         <head>
             <title>monocart-reporter - npm</title>
+            <style>
+            table {
+                border-collapse: collapse;
+                min-width: 500px;
+            }
+            td, th {
+                padding: 5px 8px;
+            }
+            th {
+                background: #f5f5f5;
+            }
+            </style>
         </head>
-        <body style="background: #f8f8f8;">
+        <body>
             <h3>this is mock page</h3>
-            <div class="page-url">${url}</div>
+            <p class="page-url">${url}</p>
 
-            <div>
-                <label>Mock Search</label>
+            <p>
+                <label>Search</label>
                 <input type="search" name="search" value="">
-            </div>
+            </p>
 
-            <div>
-                <label>Mock Password</label>
+            <p>
+                <label>Password</label>
                 <input type="password" name="password" value="">
-            </div>
+            </p>
+
+            <p>
+                <button>Button</button>
+            </p>
 
         </body>
         </html>
