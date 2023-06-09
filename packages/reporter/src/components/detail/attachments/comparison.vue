@@ -104,7 +104,7 @@ watchEffect(() => {
           <div class="mcr-comparison-note">
             <IconLabel
               icon="help"
-              tooltip="Holding and Releasing the mouse on the image to quickly switch image previews between them"
+              tooltip="Holding and Releasing the mouse on the image to quickly switch previews"
             />
           </div>
         </template>
