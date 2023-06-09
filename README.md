@@ -306,6 +306,7 @@ module.exports = {
     ]
 };
 ```
+multiple matches example: [collect-data](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/collect-data)
 
 ### Collect Data from the Annotations
 It should be easier than getting from title. see [custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) via `test.info().annotations`
@@ -491,7 +492,7 @@ module.exports = {
     ]
 };
 ```
-see example [remove-secrets](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/remove-secrets)
+see example: [remove-secrets](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/remove-secrets)
 
 ## Style Tags
 * Add tag to test/describe title ( starts with `@` )
@@ -840,7 +841,7 @@ test('finally, attach HAR', async () => {
     await attachNetworkReport(harPath, test.info());
 });
 ```
-Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network-1a18723ee59b36867898/index.html)
+Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network-38e613e8d93547bdb27f/index.html)
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
@@ -873,7 +874,7 @@ await merge(reportDataList, {
     }
 });
 ```
-example: [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
+Preview [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
 ## onEnd hook
 The `onEnd` function will be executed after report generated. Arguments:
@@ -941,12 +942,12 @@ check example: [xray](https://github.com/cenfun/monocart-reporter-test/tree/main
 ![](/docs/slack.png)
 
 ## Discord Integration
-Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. example: [discord-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/discord-webhook)
+Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. check example: [discord-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/discord-webhook)
 
 ![](/docs/discord.png)
 
 ## Teams Integration
-Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. example: [teams-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/teams-webhook)
+Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. check example: [teams-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/teams-webhook)
 
 ![](/docs/teams.png)
 
