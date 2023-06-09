@@ -120,20 +120,34 @@ const tagFormatter = (item) => {
         return str;
     }
 
-    return str.replace(Util.tagPattern, function(match, key) {
-        let styleStr = '';
-        let titleStr = '';
+    return str.replace(Util.tagPattern, function(all, before, key, after) {
+
+        const cls = ['mcr-tag'];
+        if (before) {
+            cls.push('mcr-tag-before');
+        }
+        if (after) {
+            cls.push('mcr-tag-after');
+        }
+
+        const list = [];
+        list.push(`<span class="${cls.join(' ')}"`);
+
+        // tag style
         const tag = state.tagMap[key];
         if (tag) {
             const { style, description } = tag;
             if (style) {
-                styleStr = ` style="${Util.quoteAttr(Util.styleMap(style))}"`;
+                list.push(` style="${Util.quoteAttr(Util.styleMap(style))}"`);
             }
             if (description) {
-                titleStr = ` title="${Util.quoteAttr(description)}"`;
+                list.push(` title="${Util.quoteAttr(description)}"`);
             }
         }
-        return `<span class="mcr-tag"${styleStr}${titleStr}>${key}</span>`;
+
+        list.push(`>${key}</span>`);
+
+        return list.join('');
     });
 };
 

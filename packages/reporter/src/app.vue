@@ -1016,6 +1016,14 @@ icon
     background: gray;
 }
 
+.mcr-tag-before {
+    margin-left: 5px;
+}
+
+.mcr-tag-after {
+    margin-right: 5px;
+}
+
 .mcr-num {
     display: inline-block;
     min-width: 18px;
