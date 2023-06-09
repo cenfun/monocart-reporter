@@ -242,6 +242,13 @@ test.describe('suite group 1 @beta', () => {
         });
 
         // https://playwright.dev/docs/test-annotations#custom-annotations
+
+        /**
+         * @description ### Description Title [link](https://playwright.dev/)
+- description item 1
+- description item 2
+- description item 3
+         */
         test('@critical annotations', () => {
             test.info().annotations.push({
                 type: 'issues',
