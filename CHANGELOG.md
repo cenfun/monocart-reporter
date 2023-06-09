@@ -1,3 +1,6 @@
+* 1.6.32
+  - fixed minor issues for image comparison
+
 * 1.6.31
   - supported image diff
   - fixed UI issues
