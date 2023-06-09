@@ -69,6 +69,15 @@ const getAttachmentComponent = (item) => {
     return Link;
 };
 
+const sortGroupList = (group) => {
+    const ordering = ['diff', 'actual', 'expected'];
+    group.data.list.sort((a, b) => {
+        const ai = ordering.indexOf(a.category);
+        const bi = ordering.indexOf(b.category);
+        return ai - bi;
+    });
+};
+
 const initList = (attachments) => {
     const list = [];
     let group;
@@ -99,6 +108,7 @@ const initList = (attachments) => {
         } else {
 
             if (group) {
+                sortGroupList(group);
                 list.push(group);
                 group = null;
             }
