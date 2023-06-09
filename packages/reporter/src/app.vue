@@ -1045,6 +1045,8 @@ icon
 }
 
 .mcr-readme {
+    line-height: 1.2;
+
     code {
         margin: 0;
         padding: 0.2em 0.4em;

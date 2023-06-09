@@ -3,10 +3,12 @@ import { watchEffect, shallowReactive } from 'vue';
 import { components } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
+import state from '../../../modules/state.js';
 
 import IconLabel from '../../icon-label.vue';
 
 const { VuiFlex, VuiTab } = components;
+
 
 const props = defineProps({
     data: {
@@ -80,6 +82,30 @@ const onMouseUp = (e) => {
     d.tabIndex = d.tempIndex;
 };
 
+const showHelp = (e, visible) => {
+
+    const tooltip = state.tooltip;
+
+    tooltip.visible = visible;
+    if (!visible) {
+
+        tooltip.target = null;
+        tooltip.html = false;
+        tooltip.text = '';
+
+        return;
+    }
+
+    tooltip.target = e.target;
+    tooltip.html = true;
+
+    const $content = e.target.querySelector('div[hidden]');
+    if ($content) {
+        tooltip.text = $content.innerHTML;
+    }
+
+};
+
 watchEffect(() => {
     initImageComparison();
 });
@@ -101,11 +127,23 @@ watchEffect(() => {
         class="mcr-comparison-tab"
       >
         <template #right>
-          <div class="mcr-comparison-note">
+          <div
+            class="mcr-comparison-note"
+            @mouseenter="showHelp($event, true)"
+            @mouseleave="showHelp($event, false)"
+          >
             <IconLabel
               icon="help"
-              tooltip="Holding and Releasing the mouse on the image to quickly switch previews"
             />
+            <div hidden>
+              <div class="mcr-readme">
+                For quick comparison of the image, click and hold on the image. Depending on which tab you are on, the image will swap to a different one.
+                <p>For example: </p>
+                To compare the actual image with the expected one, select the <code>Actual</code> tab, click and hold the mouse on the image and it will show the image from the <code>Expected</code> tab.
+                <br>
+                Releasing the mouse will swap back to the image from the <code>Actual</code> tab.
+              </div>
+            </div>
           </div>
         </template>
         <template #tabs>
