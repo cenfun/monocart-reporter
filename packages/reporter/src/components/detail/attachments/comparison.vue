@@ -167,7 +167,7 @@ watchEffect(() => {
     .vui-tab-item {
         justify-content: center;
         height: 30px;
-        min-width: 81px;
+        min-width: 60px;
         line-height: 30px;
     }
 
