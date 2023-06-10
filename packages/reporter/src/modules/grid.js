@@ -333,6 +333,22 @@ export const expandRowLevel = (type) => {
 
 };
 
+const initTitleWidthHandler = (grid) => {
+
+    const { containerWidth, columnsWidth } = grid;
+    if (containerWidth < columnsWidth) {
+        return;
+    }
+
+    const spaceWidth = containerWidth - columnsWidth;
+    // console.log(spaceWidth);
+    const titleColumn = grid.getColumnItem('title');
+    if (titleColumn.width < titleColumn.maxWidth) {
+        grid.setColumnWidth(titleColumn, titleColumn.width + spaceWidth);
+    }
+
+};
+
 const bindGridEvents = () => {
 
     const grid = state.grid;
@@ -411,8 +427,12 @@ const bindGridEvents = () => {
         }
     });
 
+    // grid.bind('onResize', (e, d) => {
+    // });
+
     grid.bind('onFirstUpdated', (e) => {
         displayFlyoverWithHash();
+        initTitleWidthHandler(grid);
     });
 };
 

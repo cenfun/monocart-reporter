@@ -509,7 +509,7 @@ window.addEventListener('message', (e) => {
             placeholder="keywords"
           />
           <IconLabel
-            icon="link"
+            icon="triangle-down"
             @click="onSearchDropdownClick($event)"
           />
         </VuiFlex>
