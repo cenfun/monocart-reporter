@@ -49,6 +49,26 @@ const Util = {
         }
     },
 
+    getMetadataList: (metadata) => {
+        const metadataList = [];
+        if (!metadata) {
+            return metadataList;
+        }
+        Object.keys(metadata).map((k) => {
+            const str = `${metadata[k]}`.trim();
+            const it = {
+                icon: 'item-arrow',
+                name: k,
+                value: str
+            };
+            if (str.startsWith('http://') || str.startsWith('https://')) {
+                it.isLink = true;
+            }
+            metadataList.push(it);
+        });
+        return metadataList;
+    },
+
     exportJson(json, name) {
         if (!json) {
             console.log('Not found json to export');

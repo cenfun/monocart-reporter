@@ -225,25 +225,10 @@ const tagsHandler = () => {
 // ====================================================================================
 
 const metadataHandler = () => {
-    const metadata = state.reportData.metadata;
-    const metadataList = [];
-    Object.keys(metadata).map((k) => {
-        const str = `${metadata[k]}`.trim();
-        const it = {
-            icon: 'item-arrow',
-            name: k,
-            value: str
-        };
-        if (str.startsWith('http://') || str.startsWith('https://')) {
-            it.isLink = true;
-        }
-        metadataList.push(it);
-    });
-
+    const metadataList = Util.getMetadataList(state.reportData.metadata);
     if (metadataList.length) {
         report.metadataList = metadataList;
     }
-
 };
 
 const artifactsHandler = () => {

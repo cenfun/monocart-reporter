@@ -126,21 +126,15 @@ const getProjectMetadata = (item) => {
         return;
     }
 
-    const list = Object.keys(metadata).map((k) => {
-        return {
-            name: k,
-            value: metadata[k]
-        };
-    });
-
-    if (!list.length) {
+    const metadataList = Util.getMetadataList(metadata);
+    if (!metadataList.length) {
         return;
     }
 
     return {
         id: 'metadata',
         icon: 'metadata',
-        list
+        list: metadataList
     };
 };
 

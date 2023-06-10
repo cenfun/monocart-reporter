@@ -57,7 +57,8 @@ module.exports = {
             },
             metadata: {
                 projectData: 'project level metadata',
-                owner: 'PO'
+                owner: 'PO',
+                link: 'https://github.com/cenfun/monocart-reporter'
             }
         }
     ],
