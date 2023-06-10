@@ -451,18 +451,6 @@ test.describe('suite title', () => {
  */
 const { test, expect } = require('@playwright/test');
 ```
-```js
-// for project (Can't use comments but use project level `metadata`)
-// playwright.config.js
-module.exports = {
-    projects: [{
-        name: 'Desktop Chromium',
-        metadata: {
-            owner: 'PO'
-        }
-    }]
-};  
-```
 
 ### Remove Secrets and Sensitive Data
 > The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the report data with the string replacement in `visitor` function.

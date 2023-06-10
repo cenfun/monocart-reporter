@@ -636,14 +636,12 @@ onActivated(() => {
             <IconLabel
               icon="link"
               :button="false"
-            >
-              {{ item.name }}
-            </IconLabel>
+            />
             <a
               :href="item.path"
+              :title="item.name + (item.global?' (global)':'')"
               target="_blank"
             >{{ item.title }}</a>
-            <span v-if="item.global">(global)</span>
           </VuiFlex>
         </VuiFlex>
       </div>

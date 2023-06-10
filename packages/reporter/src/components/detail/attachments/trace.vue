@@ -77,7 +77,7 @@ onMounted(() => {
             >Trace Viewer</a> manually.
           </dd>
           <dd class="mcr-item">
-            or customize a trace viewer url with option <code>traceViewerUrl: "{{ defaultUrl }}"</code>.
+            or customize a trace viewer url with option <code>traceViewerUrl: "{{ defaultUrl }}"</code>
           </dd>
         </dl>
       </details>
