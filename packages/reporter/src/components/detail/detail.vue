@@ -11,13 +11,13 @@ import 'github-markdown-css/github-markdown-light.css';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
-import {
-    tagFormatter, markdownFormatter, mergeAnnotations
-} from '../../modules/formatters.js';
+import { markdownFormatter, mergeAnnotations } from '../../modules/formatters.js';
 
 import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
 import DetailColumns from './detail-columns.vue';
+
+import RowTitle from './row-title.vue';
 
 const { VuiFlex, VuiSwitch } = components;
 
@@ -298,6 +298,11 @@ const onRowHeadClick = (item) => {
     initDataList();
 };
 
+const onStepsClick = (item) => {
+    item.collapsed = !item.collapsed;
+    initDataList();
+};
+
 const onStepCollapsedClick = (item) => {
     Util.forEach(item.subs, (step) => {
         if (step.subs) {
@@ -449,6 +454,9 @@ const initDataList = () => {
 
         const positionId = [item.id, 'title'].join('-');
         const stepGroup = item.type === 'step' && item.subs;
+        if (stepGroup) {
+            icon = '';
+        }
 
         if (lastItem && lastItem.tg_level > item.tg_level) {
             item.classLevel = 'mcr-detail-out';
@@ -539,27 +547,12 @@ const onFocus = (e) => {
           :icon="item.data.collapsed?'collapsed':'expanded'"
           @click="onRowHeadClick(item.data)"
         >
-          {{ item.data.title }}
+          <RowTitle :item="item" />
         </IconLabel>
-
-        <VuiFlex
+        <RowTitle
           v-else
-          gap="5px"
-        >
-          <IconLabel
-            :icon="item.icon"
-            :button="false"
-          />
-          <div
-            class="mcr-detail-title"
-            v-html="tagFormatter(item.data)"
-          />
-
-          <span
-            v-if="item.data.count"
-            class="mcr-num mcr-count"
-          >{{ item.data.count }}</span>
-        </VuiFlex>
+          :item="item"
+        />
 
         <SimpleColumns :list="item.simpleColumns" />
 
@@ -592,7 +585,7 @@ const onFocus = (e) => {
       >
         <IconLabel
           :icon="item.data.collapsed?'collapsed':'expanded'"
-          @click="onRowHeadClick(item.data)"
+          @click="onStepsClick(item.data)"
         >
           <b>Steps</b>
         </IconLabel>

@@ -11,6 +11,7 @@ import {
     renderGrid, updateGrid, hideFlyover
 } from '../../modules/grid.js';
 
+import MetadataList from '../metadata-list.vue';
 import IconLabel from '../icon-label.vue';
 import Pie from './pie.vue';
 import Timeline from './timeline.vue';
@@ -554,8 +555,8 @@ onActivated(() => {
         <VuiFlex
           v-if="report.tagList"
           gap="15px"
-          wrap
           padding="10px"
+          wrap
         >
           <div
             v-for="(item, i) in report.tagList"
@@ -593,32 +594,10 @@ onActivated(() => {
         </VuiFlex>
       </div>
       <div class="mcr-report-chart">
-        <VuiFlex
+        <MetadataList
           v-if="report.metadataList"
-          gap="10px"
-          padding="10px"
-          class="mcr-report-metadata"
-          wrap
-        >
-          <VuiFlex
-            v-for="(item, i) in report.metadataList"
-            :key="i"
-            gap="5px"
-          >
-            <IconLabel
-              :icon="item.icon"
-              :button="false"
-            >
-              <b>{{ item.name }}</b>
-            </IconLabel>
-            <a
-              v-if="item.isLink"
-              :href="item.value"
-              target="_blank"
-            >{{ item.value }}</a>
-            <span v-else>{{ item.value }}</span>
-          </VuiFlex>
-        </VuiFlex>
+          :list="report.metadataList"
+        />
       </div>
     </div>
 
@@ -646,11 +625,13 @@ onActivated(() => {
           padding="10px"
           class="mcr-report-artifacts"
           wrap
+          shrink
         >
           <VuiFlex
             v-for="(item, i) in report.artifacts"
             :key="i"
             gap="5px"
+            shrink
           >
             <IconLabel
               icon="triangle-right"
@@ -769,10 +750,6 @@ onActivated(() => {
 
 .mcr-report-chart {
     padding: 10px;
-
-    .vui-flex {
-        flex-shrink: 1;
-    }
 }
 
 .mcr-report-tag {
