@@ -2,6 +2,14 @@
 import { components } from 'vine-ui';
 import IconLabel from '../icon-label.vue';
 import Attachments from './attachments/attachments.vue';
+import ProjectMetadata from './project-metadata.vue';
+import HtmlContent from './html-content.vue';
+
+const columnComponents = {
+    attachments: Attachments,
+    metadata: ProjectMetadata,
+    html: HtmlContent
+};
 
 const { VuiFlex } = components;
 
@@ -30,26 +38,8 @@ const onColumnHeadClick = (column) => {
     column.collapsed = !column.collapsed;
 };
 
-const onCopyClick = (e, column) => {
-    const container = e.currentTarget && e.currentTarget.parentNode;
-    if (!container) {
-        return;
-    }
-    const elem = container.querySelector('.mcr-column-html');
-    if (!elem) {
-        return;
-    }
-    const text = elem.innerText;
-    try {
-        navigator.clipboard.writeText(text).then(() => {
-            column.copied = 'copied';
-            setTimeout(() => {
-                column.copied = '';
-            }, 1000);
-        });
-    } catch (err) {
-        //
-    }
+const getColumnComponent = (id) => {
+    return columnComponents[id] || columnComponents.html;
 };
 
 </script>
@@ -73,33 +63,16 @@ const onCopyClick = (e, column) => {
         class="mcr-column-head"
         @click="onColumnHeadClick(column)"
       >
-        <IconLabel
-          :icon="column.icon"
-          size="20px"
-        >
+        <IconLabel :icon="column.icon">
           {{ column.data.name }}
         </IconLabel>
       </IconLabel>
-      <div :class="columnContentClass(column)">
-        <Attachments
-          v-if="column.id==='attachments'"
-          :list="column.list"
-        />
-        <template v-else>
-          <div
-            class="mcr-column-html"
-            v-html="column.content"
-          />
-          <div
-            class="mcr-column-copy"
-            @click="onCopyClick($event, column)"
-          >
-            <IconLabel icon="copy">
-              {{ column.copied }}
-            </IconLabel>
-          </div>
-        </template>
-      </div>
+
+      <component
+        :is="getColumnComponent(column.id)"
+        :class="columnContentClass(column)"
+        :column="column"
+      />
     </div>
   </VuiFlex>
 </template>
@@ -130,28 +103,6 @@ const onCopyClick = (e, column) => {
     }
 
     &.mcr-column-expanded {
-        display: block;
-    }
-}
-
-.mcr-column-html {
-    position: relative;
-    padding: 10px;
-    overflow-x: auto;
-}
-
-.mcr-column-copy {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    display: none;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: #fff;
-}
-
-.mcr-column-content:hover {
-    .mcr-column-copy {
         display: block;
     }
 }

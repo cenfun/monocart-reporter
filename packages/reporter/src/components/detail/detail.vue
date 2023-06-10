@@ -83,11 +83,24 @@ const convertHtml = (str) => {
 
 const getColumns = (list, item, columns) => {
 
+    // metadata for project
+    if (item.type === 'suite' && item.suiteType === 'project') {
+        const result = getProjectMetadata(item);
+        if (result) {
+            // virtual column for project metadata
+            const column = {
+                id: 'metadata',
+                name: 'Metadata'
+            };
+            addResult(list, item, column, result);
+        }
+    }
+
     columns.forEach((column) => {
 
         const result = getColumn(item, column);
         if (result) {
-            list.push(result);
+            addResult(list, item, column, result);
         }
 
         if (Util.isList(column.subs)) {
@@ -96,6 +109,39 @@ const getColumns = (list, item, columns) => {
 
     });
 
+};
+
+const addResult = (list, item, column, result) => {
+    result.data = column;
+    result.positionId = [item.id, column.id].join('-');
+    result.positionType = column.id;
+    result = shallowReactive(result);
+
+    list.push(result);
+};
+
+const getProjectMetadata = (item) => {
+    const metadata = item.metadata;
+    if (!metadata || typeof metadata !== 'object') {
+        return;
+    }
+
+    const list = Object.keys(metadata).map((k) => {
+        return {
+            name: k,
+            value: metadata[k]
+        };
+    });
+
+    if (!list.length) {
+        return;
+    }
+
+    return {
+        id: 'metadata',
+        icon: 'metadata',
+        list
+    };
 };
 
 const getColumn = (item, column) => {
@@ -113,15 +159,7 @@ const getColumn = (item, column) => {
 
     const handler = defaultHandler[column.id] || getCustom;
 
-    let res = handler(item, column);
-    if (res) {
-        res.data = column;
-        res.positionId = [item.id, column.id].join('-');
-        res.positionType = column.id;
-        res = shallowReactive(res);
-    }
-
-    return res;
+    return handler(item, column);
 };
 
 // ===========================================================================

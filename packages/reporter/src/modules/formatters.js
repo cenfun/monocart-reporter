@@ -236,7 +236,7 @@ const formatters = {
 
     errors: function(value, rowItem) {
         if (rowItem.errorNum) {
-            return iconFormatter('error', '20px', true);
+            return iconFormatter('error', '16px', true);
         }
         return '';
     },
@@ -245,14 +245,14 @@ const formatters = {
         if (!value) {
             return '';
         }
-        return iconFormatter('log', '20px', true);
+        return iconFormatter('log', '16px', true);
     },
 
     attachments: function(value, rowItem) {
         if (!value) {
             return '';
         }
-        return iconFormatter('attachment', '20px', true);
+        return iconFormatter('attachment', '16px', true);
     }
 
 };

@@ -371,7 +371,7 @@ test.describe('suite group 2', () => {
         await delay(2000);
     });
 
-    test('random @passed or @failed or @flaky', () => {
+    test('random @passed    @failed@flaky', () => {
         expect(Math.random()).toBeLessThan(0.5);
     });
 

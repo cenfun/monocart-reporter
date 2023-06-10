@@ -19,9 +19,9 @@ import Comparison from './comparison.vue';
 const { VuiFlex } = components;
 
 const props = defineProps({
-    list: {
-        type: Array,
-        default: () => []
+    column: {
+        type: Object,
+        default: () => {}
     }
 });
 
@@ -79,6 +79,10 @@ const sortGroupList = (group) => {
 };
 
 const initList = (attachments) => {
+    if (!attachments) {
+        return;
+    }
+
     const list = [];
     let group;
     for (const attachment of attachments) {
@@ -127,7 +131,7 @@ const initList = (attachments) => {
 };
 
 watchEffect(() => {
-    data.list = initList(props.list);
+    data.list = initList(props.column.list);
 });
 
 </script>
