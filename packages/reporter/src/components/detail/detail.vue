@@ -323,13 +323,19 @@ const onStepFailedClick = (item) => {
 // ===========================================================================
 
 // wait for image loaded
-const updatePosition = debounce((position) => {
-
-    // console.log('position', position);
+const updatePosition = debounce(() => {
 
     if (!$el) {
         return;
     }
+
+    const position = state.position;
+    if (!position) {
+        return;
+    }
+    state.position = null;
+
+    // console.log('position', position);
 
     // check positionId first
     let found = true;
@@ -443,10 +449,8 @@ const initDataList = () => {
 
         const left = item.tg_level * 13;
         let icon = Util.getTypeIcon(item.suiteType, item.type);
-        let size = '16px';
         if (item.caseType) {
             icon = item.caseType;
-            size = '20px';
         }
 
         const positionId = [item.id, 'title'].join('-');
@@ -465,7 +469,6 @@ const initDataList = () => {
             stepGroup,
             style: `margin-left:${left}px;`,
             icon,
-            size,
             simpleColumns: item.tg_simpleColumns,
             detailColumns: item.tg_detailColumns
         };
@@ -490,8 +493,7 @@ const updateCase = microtask(() => {
 
 watch(() => state.position, (v) => {
     if (v) {
-        updatePosition(v);
-        state.position = null;
+        updatePosition();
     }
 });
 
@@ -503,6 +505,9 @@ watch(() => state.flyoverData, (v) => {
 
 onMounted(() => {
     $el = el.value;
+    if (state.position) {
+        updatePosition();
+    }
 });
 
 onActivated(() => {
@@ -549,7 +554,6 @@ const onFocus = (e) => {
         >
           <IconLabel
             :icon="item.icon"
-            :size="item.size"
             :button="false"
           />
           <div
@@ -647,14 +651,14 @@ const onFocus = (e) => {
 }
 
 .mcr-detail-body {
-    border-top: 1px dashed #eee;
+    border-top: 1px solid #eee;
     border-left: 1px solid #ccc;
 }
 
 .mcr-detail-steps {
     min-height: 35px;
     padding: 5px;
-    border-top: thin dashed #eee;
+    border-top: thin solid #eee;
     border-left: thin solid #ccc;
     user-select: none;
 }

@@ -137,22 +137,28 @@ watchEffect(() => {
 </script>
 
 <template>
-  <VuiFlex
-    direction="column"
-    padding="10px"
-    gap="10px"
-  >
-    <component
-      :is="item.component"
-      v-for="(item, i) of data.list"
-      :key="i"
-      :data="item.data"
-    />
-  </VuiFlex>
+  <div class="mcr-attachment-list">
+    <VuiFlex
+      direction="column"
+      padding="10px"
+      gap="10px"
+    >
+      <component
+        :is="item.component"
+        v-for="(item, i) of data.list"
+        :key="i"
+        :data="item.data"
+      />
+    </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
-.mcr-detail-attachments {
+.mcr-attachment-list {
+    details {
+        position: relative;
+    }
+
     summary {
         padding-left: 20px;
         background: url("../../../images/arrow-right.svg") left center no-repeat;

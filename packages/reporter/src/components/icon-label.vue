@@ -128,6 +128,10 @@ watch(() => props.icon, () => {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: var(--mcr-icon-size) var(--mcr-icon-size);
+
+    svg {
+        pointer-events: none;
+    }
 }
 
 .mcr-icon-label-button {
