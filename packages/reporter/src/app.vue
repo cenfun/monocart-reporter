@@ -509,7 +509,7 @@ window.addEventListener('message', (e) => {
             placeholder="keywords"
           />
           <IconLabel
-            icon="triangle-down"
+            icon="link"
             @click="onSearchDropdownClick($event)"
           />
         </VuiFlex>
@@ -754,14 +754,6 @@ icon
 
 .mcr-icon:hover {
     opacity: 1;
-}
-
-.mcr-icon-link {
-    padding-left: 18px;
-    background-image: url("./images/link.svg");
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: 16px 16px;
 }
 
 .mcr-header {

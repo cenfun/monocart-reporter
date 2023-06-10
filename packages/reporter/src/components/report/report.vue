@@ -634,7 +634,7 @@ onActivated(() => {
             shrink
           >
             <IconLabel
-              icon="triangle-right"
+              icon="link"
               :button="false"
             >
               {{ item.name }}

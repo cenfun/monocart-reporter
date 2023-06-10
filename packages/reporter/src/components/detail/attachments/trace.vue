@@ -51,7 +51,6 @@ onMounted(() => {
     <div class="mcr-attachment-body">
       <div>
         <a
-          class="mcr-icon-link"
           :href="d.viewerUrl"
           target="_blank"
         >View trace</a>
@@ -99,7 +98,7 @@ onMounted(() => {
 
         details {
             summary {
-                margin-left: 15px;
+                margin-left: 10px;
                 color: #666;
                 cursor: pointer;
                 user-select: none;
@@ -107,7 +106,7 @@ onMounted(() => {
 
             dl {
                 margin-top: 5px;
-                margin-left: 15px;
+                margin-left: 10px;
             }
 
             dd {
