@@ -56,7 +56,7 @@ module.exports = {
                 }
             },
             metadata: {
-                myMetaData: 'config-project-metadata',
+                projectData: 'project level metadata',
                 owner: 'PO'
             }
         }
