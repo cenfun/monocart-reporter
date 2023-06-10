@@ -237,6 +237,12 @@ test.describe('suite group 1 @beta', () => {
             await delay(10);
         });
 
+        /**
+         * @description Description Title <br/>
+description item 1 <br/>
+description item 2 <br/>
+description item 3
+         */
         test('@smoke case first', async () => {
             // ...
         });
