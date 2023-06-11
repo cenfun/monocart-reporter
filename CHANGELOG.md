@@ -1,7 +1,9 @@
 * 1.6.33
   - fixed tag row underline
   - added project metadata
+  - added line for frozen column
   - fixed group row underline
+  - improved search box
 
 * 1.6.32
   - fixed minor issues for image comparison

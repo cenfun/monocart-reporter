@@ -1,6 +1,6 @@
 <script setup>
 import {
-    watch, onMounted, reactive, computed
+    watch, onMounted, reactive
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import {
@@ -55,14 +55,6 @@ const dialog = reactive({
 const navItemClass = (item) => {
     return ['mcr-nav-item', item.classMap, item.id === state.caseType ? 'mcr-nav-selected' : ''];
 };
-
-const searchClass = computed(() => {
-    const ls = ['mcr-search'];
-    if (state.keywords) {
-        ls.push('mcr-search-keywords');
-    }
-    return ls;
-});
 
 // =================================================================================
 
@@ -246,6 +238,10 @@ const onNavItemClick = (item) => {
     }
 };
 
+const onSearchClearClick = (e) => {
+    state.keywords = '';
+};
+
 const onSearchDropdownClick = (e) => {
     state.searchDropdownVisible = true;
     state.searchDropdownTarget = e.target;
@@ -260,6 +256,7 @@ const onExportClick = () => {
     const grid = state.grid;
 
     const selectedRows = grid.getSelectedRows();
+
     if (!selectedRows.length) {
         dialog.message = 'No rows selected, nothing to export.';
         dialog.ok = 'Continue';
@@ -491,28 +488,32 @@ window.addEventListener('message', (e) => {
         </div>
       </div>
 
-      <div class="vui-flex-auto" />
+      <div class="mcr-search-holder vui-flex-auto">
+        <div class="mcr-search">
+          <VuiInput
+            v-model="state.keywords"
+            width="100%"
+            :class="state.keywords?'mcr-search-keywords':''"
+            placeholder="keywords"
+          />
+          <IconLabel
+            v-if="state.keywords"
+            class="mcr-search-clear"
+            icon="close"
+            @click="onSearchClearClick($event)"
+          />
+          <IconLabel
+            class="mcr-search-option"
+            icon="triangle-down"
+            @click="onSearchDropdownClick($event)"
+          />
+        </div>
+      </div>
 
       <VuiFlex
         shrink
         gap="10px"
       >
-        <VuiFlex
-          gap="2px"
-          padding="5px 0 5px 5px"
-          shrink
-        >
-          <VuiInput
-            v-model="state.keywords"
-            width="100%"
-            :class="searchClass"
-            placeholder="keywords"
-          />
-          <IconLabel
-            icon="triangle-down"
-            @click="onSearchDropdownClick($event)"
-          />
-        </VuiFlex>
         <VuiSwitch
           v-model="state.suiteVisible"
           :label-clickable="true"
@@ -875,14 +876,40 @@ icon
     }
 }
 
+.mcr-search-holder {
+    min-width: 150px;
+}
+
 .mcr-search {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    padding: 5px;
+
     input {
-        padding-right: 23px;
+        height: 30px;
+        padding-right: 50px;
+        padding-left: 30px;
+        border-radius: 10px;
         background-image: url("./images/search.svg");
         background-repeat: no-repeat;
-        background-position: 97% center;
+        background-position: 8px center;
         background-size: 16px;
     }
+}
+
+.mcr-search-clear {
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    transform: translate(0, -50%);
+}
+
+.mcr-search-option {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translate(0, -50%);
 }
 
 .mcr-search-keywords {
