@@ -1073,7 +1073,7 @@ a:not([href], [class]):hover {
 .mcr-search-icon {
     position: absolute;
     top: 50%;
-    left: 12px;
+    left: 13px;
     color: gray;
     transform: translate(0, -50%);
 }
@@ -1081,14 +1081,14 @@ a:not([href], [class]):hover {
 .mcr-search-clear {
     position: absolute;
     top: 50%;
-    right: 30px;
+    right: 33px;
     transform: translate(0, -50%);
 }
 
 .mcr-search-option {
     position: absolute;
     top: 50%;
-    right: 12px;
+    right: 13px;
     color: gray;
     transform: translate(0, -50%);
 }
