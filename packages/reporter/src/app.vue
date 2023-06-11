@@ -281,6 +281,7 @@ const onSearchFocus = (e) => {
     };
 
     state.searchHelperVisible = true;
+    state.flyoverVisible = false;
 
 };
 
