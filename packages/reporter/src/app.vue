@@ -238,6 +238,16 @@ const onNavItemClick = (item) => {
     }
 };
 
+// =================================================================================
+
+const onSearchFocus = (e) => {
+    // console.log(e.target);
+};
+
+const onSearchBlur = (e) => {
+    // console.log(e.target);
+};
+
 const onSearchClearClick = (e) => {
     state.keywords = '';
 };
@@ -246,6 +256,8 @@ const onSearchDropdownClick = (e) => {
     state.searchDropdownVisible = true;
     state.searchDropdownTarget = e.target;
 };
+
+// =================================================================================
 
 const onMenuClick = (e) => {
     hash.set('page', 'report');
@@ -494,18 +506,24 @@ window.addEventListener('message', (e) => {
             v-model="state.keywords"
             width="100%"
             :class="state.keywords?'mcr-search-keywords':''"
-            placeholder="keywords"
+            @focus="onSearchFocus"
+            @blur="onSearchBlur"
+          />
+          <IconLabel
+            class="mcr-search-icon"
+            icon="search"
+            :button="false"
           />
           <IconLabel
             v-if="state.keywords"
             class="mcr-search-clear"
             icon="close"
-            @click="onSearchClearClick($event)"
+            @click="onSearchClearClick"
           />
           <IconLabel
             class="mcr-search-option"
             icon="triangle-down"
-            @click="onSearchDropdownClick($event)"
+            @click="onSearchDropdownClick"
           />
         </div>
       </div>
@@ -891,11 +909,15 @@ icon
         padding-right: 50px;
         padding-left: 30px;
         border-radius: 10px;
-        background-image: url("./images/search.svg");
-        background-repeat: no-repeat;
-        background-position: 8px center;
-        background-size: 16px;
     }
+}
+
+.mcr-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    color: gray;
+    transform: translate(0, -50%);
 }
 
 .mcr-search-clear {
@@ -909,6 +931,7 @@ icon
     position: absolute;
     top: 50%;
     right: 12px;
+    color: gray;
     transform: translate(0, -50%);
 }
 
@@ -917,6 +940,12 @@ icon
         border-color: #80bdff;
         outline: 0;
         box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+    }
+}
+
+.mcr-search-keywords.vui-input:hover {
+    input {
+        border-color: #5dabfd;
     }
 }
 
