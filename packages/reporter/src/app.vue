@@ -912,6 +912,14 @@ icon
 }
 
 .mcr-grid {
+    .tg-pane.tg-frozen-line-v {
+        border-right: thin solid #ddd;
+    }
+
+    .tg-row-not-found .tg-frozen-line-v {
+        border-right: none;
+    }
+
     .tg-column-name {
         user-select: none;
     }
