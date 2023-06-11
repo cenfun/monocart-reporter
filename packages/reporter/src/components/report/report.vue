@@ -201,26 +201,9 @@ const onTagClick = (tag) => {
 };
 
 const tagsHandler = () => {
-    const tagMap = state.tagMap;
-    // tags and style
-    const tagList = [];
-    Object.keys(tagMap).forEach((tag) => {
-        tagList.push({
-            name: tag,
-            ... tagMap[tag]
-        });
-    });
-
-    if (!tagList.length) {
-        return;
+    if (state.tagList) {
+        report.tagList = state.tagList;
     }
-
-    tagList.sort((a, b) => {
-        return b.value - a.value;
-    });
-
-    report.tagList = tagList;
-
 };
 
 // ====================================================================================
@@ -754,10 +737,6 @@ onActivated(() => {
     position: relative;
     cursor: pointer;
 
-    &:hover {
-        opacity: 0.8;
-    }
-
     .mcr-tag {
         position: relative;
         margin-top: 10px;
@@ -769,6 +748,12 @@ onActivated(() => {
         margin-bottom: 10px;
         margin-left: -5px;
         vertical-align: middle;
+    }
+}
+
+.mcr-report-tag:hover {
+    .mcr-tag {
+        opacity: 0.9;
     }
 }
 

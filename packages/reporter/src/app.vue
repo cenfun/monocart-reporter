@@ -114,6 +114,28 @@ const stepHandler = (item) => {
     }
 };
 
+const initTagList = (tags) => {
+    state.tagMap = tags;
+    // tags and style
+    const tagList = [];
+    Object.keys(tags).forEach((tag) => {
+        tagList.push({
+            name: tag,
+            ... tags[tag]
+        });
+    });
+
+    if (!tagList.length) {
+        return;
+    }
+
+    tagList.sort((a, b) => {
+        return b.value - a.value;
+    });
+
+    state.tagList = tagList;
+};
+
 const initData = (reportData) => {
 
     const {
@@ -138,7 +160,7 @@ const initData = (reportData) => {
         summary.suites.icon = 'suite';
     });
 
-    state.tagMap = tags;
+    initTagList(tags);
 
     // summary.failed.value = 0;
     // summary.flaky.value = 0;
@@ -241,12 +263,32 @@ const onNavItemClick = (item) => {
 // =================================================================================
 
 const onSearchFocus = (e) => {
-    // console.log(e.target);
+
+
+    const br = e.target.getBoundingClientRect();
+
+    const left = `${br.left}px`;
+    const top = `${(br.top + br.height + 3)}px`;
+    const width = `${br.width}px`;
+
+    state.searchHelperStyle = {
+        left,
+        top,
+        width
+    };
+
+    state.searchHelperVisible = true;
+
 };
 
-const onSearchBlur = (e) => {
-    // console.log(e.target);
+const onTagClick = (item) => {
+    // console.log(item);
+    state.keywords = `@${item.name}`;
 };
+
+const onSearchBlur = debounce(() => {
+    state.searchHelperVisible = false;
+});
 
 const onSearchClearClick = (e) => {
     state.keywords = '';
@@ -553,6 +595,31 @@ window.addEventListener('message', (e) => {
 
     <Flyover />
 
+    <div
+      v-show="state.searchHelperVisible"
+      class="mcr-search-helper"
+      :style="state.searchHelperStyle"
+    >
+      <VuiFlex direction="column">
+        <VuiFlex
+          gap="10px"
+          padding="5px"
+          wrap
+          shrink
+        >
+          <div
+            v-for="(item, i) of state.tagList"
+            :key="i"
+            :style="item.style"
+            class="mcr-tag"
+            @mousedown="onTagClick(item)"
+          >
+            {{ item.name }}
+          </div>
+        </VuiFlex>
+      </VuiFlex>
+    </div>
+
     <VuiPopover
       v-model="state.searchDropdownVisible"
       :target="state.searchDropdownTarget"
@@ -755,9 +822,7 @@ a:not([href], [class]):hover {
     }
 }
 
-/*
-icon
-*/
+/* icon */
 
 .mcr-icon {
     display: block;
@@ -774,6 +839,31 @@ icon
 .mcr-icon:hover {
     opacity: 1;
 }
+
+/* tag */
+.mcr-tag {
+    display: inline-block;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    color: #fff;
+    font-weight: normal;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 5px;
+    background: gray;
+}
+
+.mcr-tag-before {
+    margin-left: 5px;
+}
+
+.mcr-tag-after {
+    margin-right: 5px;
+}
+
+/* header */
 
 .mcr-header {
     color: #fff;
@@ -943,6 +1033,23 @@ icon
     }
 }
 
+.mcr-search-helper {
+    position: absolute;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: #fff;
+    filter: drop-shadow(1px 2px 2px rgb(0 0 0 / 20%));
+
+    .mcr-tag {
+        cursor: pointer;
+    }
+
+    .mcr-tag:hover {
+        opacity: 0.9;
+    }
+}
+
 .mcr-search-keywords.vui-input:hover {
     input {
         border-color: #5dabfd;
@@ -1057,27 +1164,6 @@ icon
     width: var(--mcr-percent);
     height: 100%;
     background-color: #4d9221;
-}
-
-.mcr-tag {
-    display: inline-block;
-    min-width: 20px;
-    min-height: 20px;
-    padding: 0 5px;
-    color: #fff;
-    font-weight: normal;
-    line-height: 20px;
-    text-align: center;
-    border-radius: 5px;
-    background: gray;
-}
-
-.mcr-tag-before {
-    margin-left: 5px;
-}
-
-.mcr-tag-after {
-    margin-right: 5px;
 }
 
 .mcr-num {
