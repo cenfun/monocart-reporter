@@ -4,6 +4,7 @@
   - added line for frozen column
   - fixed group row underline
   - improved search box
+  - added search history
 
 * 1.6.32
   - fixed minor issues for image comparison

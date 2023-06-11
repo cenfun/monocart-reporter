@@ -264,6 +264,9 @@ const onNavItemClick = (item) => {
 
 const onSearchFocus = (e) => {
 
+    if (!state.tagList && !state.searchList) {
+        return;
+    }
 
     const br = e.target.getBoundingClientRect();
 
@@ -281,9 +284,20 @@ const onSearchFocus = (e) => {
 
 };
 
-const onTagClick = (item) => {
+const onTagItemClick = (item) => {
     // console.log(item);
+
+    // force to check title column
+    const titleColumn = searchable.columns.find((it) => it.id === 'title');
+    if (titleColumn) {
+        titleColumn.checked = true;
+    }
+
     state.keywords = `@${item.name}`;
+};
+
+const onSearchItemClick = (item) => {
+    state.keywords = item;
 };
 
 const onSearchBlur = debounce(() => {
@@ -401,9 +415,42 @@ onMounted(() => {
     init();
 });
 
+const updateSearchHistoryAsync = debounce(() => {
+    const v = state.keywords;
+    if (!v) {
+        return;
+    }
+    if (v.length < 3) {
+        return;
+    }
+    if (state.tagList) {
+        const hasTag = state.tagList.find((it) => {
+            return it.name === v || `@${it.name}` === v;
+        });
+        if (hasTag) {
+            return;
+        }
+    }
+
+    const elem = state.grid.find('.tg-body-message');
+    const display = elem.css('display');
+    if (display === 'block') {
+        return;
+    }
+
+    if (state.searchList) {
+        const ls = new Set(state.searchList.reverse());
+        ls.add(v);
+        state.searchList = Array.from(ls).reverse();
+    } else {
+        state.searchList = [v];
+    }
+}, 1000);
+
 const updateGridAsync = debounce(updateGrid, 200);
-watch(() => state.keywords, () => {
+watch(() => state.keywords, (v) => {
     updateGridAsync();
+    updateSearchHistoryAsync();
 });
 
 watch(() => searchable.columns, (v) => {
@@ -600,8 +647,28 @@ window.addEventListener('message', (e) => {
       class="mcr-search-helper"
       :style="state.searchHelperStyle"
     >
-      <VuiFlex direction="column">
+      <VuiFlex
+        direction="column"
+        gap="5px"
+      >
         <VuiFlex
+          v-if="state.searchList"
+          gap="10px"
+          padding="5px"
+          wrap
+          shrink
+        >
+          <div
+            v-for="(item, i) of state.searchList"
+            :key="i"
+            class="mcr-search-item"
+            @mousedown="onSearchItemClick(item)"
+          >
+            {{ item }}
+          </div>
+        </VuiFlex>
+        <VuiFlex
+          v-if="state.tagList"
           gap="10px"
           padding="5px"
           wrap
@@ -612,7 +679,7 @@ window.addEventListener('message', (e) => {
             :key="i"
             :style="item.style"
             class="mcr-tag"
-            @mousedown="onTagClick(item)"
+            @mousedown="onTagItemClick(item)"
           >
             {{ item.name }}
           </div>
@@ -1047,6 +1114,14 @@ a:not([href], [class]):hover {
 
     .mcr-tag:hover {
         opacity: 0.9;
+    }
+
+    .mcr-search-item {
+        cursor: pointer;
+    }
+
+    .mcr-search-item:hover {
+        text-decoration: underline;
     }
 }
 
