@@ -505,6 +505,7 @@ const getGridDataByType = (allData, caseType, suiteVisible, stepVisible) => {
     if (!stepVisible) {
         Util.forEachTree(allData.rows, function(item) {
             if (item.type === 'case') {
+                item.collapsed = false;
                 delete item.subs;
             }
         });
