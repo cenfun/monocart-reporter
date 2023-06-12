@@ -44,19 +44,22 @@ const itemHeadClass = (d) => {
 };
 
 const onLocationClick = (item) => {
-    if (!item.state.locationLabel) {
-        item.state.locationLabel = item.data.location;
-        return;
-    }
+    if (item.state.locationLabel) {
 
-    Util.copyText(item.data.location).then((res) => {
-        if (res) {
-            item.state.locationCopied = 'copied';
-            setTimeout(() => {
-                item.state.locationCopied = '';
-            }, 1000);
-        }
-    });
+        Util.copyText(item.data.location).then((res) => {
+            if (res) {
+                item.state.locationLabel = 'copied';
+                setTimeout(() => {
+                    item.state.locationLabel = '';
+                }, 1000);
+            } else {
+                item.state.locationLabel = '';
+            }
+        });
+
+    } else {
+        item.state.locationLabel = item.data.location;
+    }
 };
 
 // ===========================================================================
@@ -568,22 +571,14 @@ const onFocus = (e) => {
           {{ Util.TF(item.data.duration) }}
         </div>
 
-        <VuiFlex
+        <IconLabel
           v-if="item.data.location"
-          gap="3px"
+          icon="location"
+          :tooltip="item.data.location"
+          @click="onLocationClick(item)"
         >
-          <IconLabel
-            icon="location"
-            :tooltip="item.data.location"
-            @click="onLocationClick(item)"
-          />
-          <div v-if="item.state.locationLabel">
-            {{ item.state.locationLabel }}
-          </div>
-          <div v-if="item.state.locationCopied">
-            {{ item.state.locationCopied }}
-          </div>
-        </VuiFlex>
+          {{ item.state.locationLabel }}
+        </IconLabel>
       </VuiFlex>
       <DetailColumns
         class="mcr-detail-body"
