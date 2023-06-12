@@ -341,10 +341,17 @@ const initTitleWidthHandler = (grid) => {
     }
 
     const spaceWidth = containerWidth - columnsWidth;
+
+    const scrollbarWidth = grid.getScrollbarWidth();
+    if (spaceWidth < scrollbarWidth) {
+        return;
+    }
+
     // console.log(spaceWidth);
     const titleColumn = grid.getColumnItem('title');
     if (titleColumn.width < titleColumn.maxWidth) {
-        grid.setColumnWidth(titleColumn, titleColumn.width + spaceWidth);
+        const titleWidth = titleColumn.width + spaceWidth - scrollbarWidth;
+        grid.setColumnWidth(titleColumn, titleWidth);
     }
 
 };
