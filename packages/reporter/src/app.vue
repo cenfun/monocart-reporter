@@ -264,11 +264,15 @@ const onNavItemClick = (item) => {
 
 const onSearchFocus = (e) => {
 
+    state.flyoverVisible = false;
+
     if (!state.tagList && !state.searchList) {
         return;
     }
 
-    const br = e.target.getBoundingClientRect();
+    const target = e.target;
+
+    const br = target.getBoundingClientRect();
 
     const left = `${br.left}px`;
     const top = `${(br.top + br.height + 3)}px`;
@@ -280,10 +284,15 @@ const onSearchFocus = (e) => {
         width
     };
 
+    state.searchHelperTarget = target;
     state.searchHelperVisible = true;
-    state.flyoverVisible = false;
 
 };
+
+const onSearchBlur = debounce(() => {
+    state.searchHelperVisible = false;
+    state.searchHelperTarget = null;
+});
 
 const onTagItemClick = (item) => {
     // console.log(item);
@@ -294,16 +303,25 @@ const onTagItemClick = (item) => {
         titleColumn.checked = true;
     }
 
-    state.keywords = `@${item.name}`;
+    const tag = `@${item.name}`;
+    if (state.keywords) {
+
+        const target = state.searchHelperTarget;
+        if (target) {
+            target.setRangeText(tag);
+            state.keywords = target.value;
+            return;
+        }
+
+    }
+
+    state.keywords = tag;
 };
 
 const onSearchItemClick = (item) => {
     state.keywords = item;
 };
 
-const onSearchBlur = debounce(() => {
-    state.searchHelperVisible = false;
-});
 
 const onSearchClearClick = (e) => {
     state.keywords = '';
@@ -417,13 +435,13 @@ onMounted(() => {
 });
 
 const updateSearchHistoryAsync = debounce(() => {
-    const v = state.keywords;
-    if (!v) {
-        return;
-    }
+    const v = `${state.keywords}`.trim();
+    // do not store length < 3
     if (v.length < 3) {
         return;
     }
+
+    // already in tag list
     if (state.tagList) {
         const hasTag = state.tagList.find((it) => {
             return it.name === v || `@${it.name}` === v;
@@ -433,16 +451,25 @@ const updateSearchHistoryAsync = debounce(() => {
         }
     }
 
+    // not found results
     const elem = state.grid.find('.tg-body-message');
     const display = elem.css('display');
     if (display === 'block') {
         return;
     }
 
+    // store
     if (state.searchList) {
-        const ls = new Set(state.searchList.reverse());
-        ls.add(v);
-        state.searchList = Array.from(ls).reverse();
+        const st = new Set(state.searchList.reverse());
+        if (st.has(v)) {
+            st.delete(v);
+        }
+        st.add(v);
+        const ls = Array.from(st).reverse();
+        if (ls.length > 5) {
+            ls.length = 5;
+        }
+        state.searchList = ls;
     } else {
         state.searchList = [v];
     }
@@ -1118,6 +1145,9 @@ a:not([href], [class]):hover {
     }
 
     .mcr-search-item {
+        padding: 0.2em 0.4em;
+        border-radius: 6px;
+        background-color: rgb(175 184 193 / 20%);
         cursor: pointer;
     }
 
