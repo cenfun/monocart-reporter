@@ -135,7 +135,7 @@ const systemHandler = () => {
 
 const timelineHandler = () => {
     const system = state.system;
-    report.playwright = `Playwright v${system.playwright}`;
+    report.playwright = `Playwright Test v${system.playwright}`;
     report.usageList = [{
         icon: 'worker',
         name: 'Workers',
@@ -694,8 +694,8 @@ onActivated(() => {
             href="https://github.com/cenfun/monocart-reporter"
             target="_blank"
           ><IconLabel
-            icon="github"
-            size="20px"
+            icon="monocart"
+            size="16px"
           >
             {{ report.monocart }}
           </IconLabel>
