@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1600" viewBox="0 0 1600 1600">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #d2691e;
+        stroke: #000;
+        stroke-width: 1px;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="monocart.svg" class="cls-1" d="M300,0L257,302l192,98H600l50-49,150-50,150,50,50,49h149l195-98L1300,0l300,400L1300,601l201,99L1248,800l2,101-150,300,50,199-150,200H600L450,1400l51-199L350,901V800L101,700l200-99L0,400ZM500,550H600L800,650l200-100h100V850H1000V650L800,750,600,650V850H500V550Z"/>
+</svg>

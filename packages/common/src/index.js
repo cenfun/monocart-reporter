@@ -8,7 +8,7 @@ import hash from './hash.js';
 import store from './store.js';
 
 import decodeIcons from './icons.js';
-import faviconIcon from './images/favicon.svg';
+import faviconIcon from '../../reporter/src/images/icons/monocart.svg';
 
 // const context = require.context('./images/icons', true, /\.svg$/);
 // const icons = decodeIcons(context);
