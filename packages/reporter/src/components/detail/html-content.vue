@@ -1,4 +1,5 @@
 <script setup>
+import Util from '../../utils/util';
 import IconLabel from '../icon-label.vue';
 
 const props = defineProps({
@@ -17,17 +18,16 @@ const onCopyClick = (e, column) => {
     if (!elem) {
         return;
     }
-    const text = elem.innerText;
-    try {
-        navigator.clipboard.writeText(text).then(() => {
+
+    Util.copyText(elem.innerText).then((res) => {
+        if (res) {
             column.copied = 'copied';
             setTimeout(() => {
                 column.copied = '';
             }, 1000);
-        });
-    } catch (err) {
-        //
-    }
+        }
+    });
+
 };
 
 </script>

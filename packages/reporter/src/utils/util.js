@@ -49,6 +49,18 @@ const Util = {
         }
     },
 
+    copyText: (text) => {
+        return new Promise((resolve) => {
+            try {
+                navigator.clipboard.writeText(text).then(() => {
+                    resolve(true);
+                });
+            } catch (err) {
+                resolve(false);
+            }
+        });
+    },
+
     getMetadataList: (metadata) => {
         const metadataList = [];
         if (!metadata) {

@@ -44,16 +44,19 @@ const itemHeadClass = (d) => {
 };
 
 const onLocationClick = (item) => {
-    try {
-        navigator.clipboard.writeText(item.data.location).then(() => {
-            item.state.locationLabel = 'copied';
-            setTimeout(() => {
-                item.state.locationLabel = '';
-            }, 1000);
-        });
-    } catch (e) {
+    if (!item.state.locationLabel) {
         item.state.locationLabel = item.data.location;
+        return;
     }
+
+    Util.copyText(item.data.location).then((res) => {
+        if (res) {
+            item.state.locationCopied = 'copied';
+            setTimeout(() => {
+                item.state.locationCopied = '';
+            }, 1000);
+        }
+    });
 };
 
 // ===========================================================================
@@ -565,14 +568,22 @@ const onFocus = (e) => {
           {{ Util.TF(item.data.duration) }}
         </div>
 
-        <IconLabel
+        <VuiFlex
           v-if="item.data.location"
-          icon="location"
-          :tooltip="item.data.location"
-          @click="onLocationClick(item)"
+          gap="3px"
         >
-          {{ item.state.locationLabel }}
-        </IconLabel>
+          <IconLabel
+            icon="location"
+            :tooltip="item.data.location"
+            @click="onLocationClick(item)"
+          />
+          <div v-if="item.state.locationLabel">
+            {{ item.state.locationLabel }}
+          </div>
+          <div v-if="item.state.locationCopied">
+            {{ item.state.locationCopied }}
+          </div>
+        </VuiFlex>
       </VuiFlex>
       <DetailColumns
         class="mcr-detail-body"
