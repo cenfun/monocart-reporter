@@ -11,7 +11,7 @@ let page;
 test.describe('take Istanbul coverage report', () => {
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
-        await page.goto('http://localhost:8090/istanbul/');
+        await page.goto('http://localhost:8090/coverage/istanbul.html');
     });
 
     test('next, run test cases', async () => {
@@ -44,7 +44,7 @@ test.describe('take V8 js to Istanbul coverage report', () => {
     test('first, open page', async ({ browser }) => {
         page = await browser.newPage();
         await page.coverage.startJSCoverage();
-        await page.goto('http://localhost:8090/demo/');
+        await page.goto('http://localhost:8090/coverage/v8.html');
     });
 
     test('next, run test cases', async () => {
