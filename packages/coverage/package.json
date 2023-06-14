@@ -9,6 +9,7 @@
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
+        "@bcoe/v8-coverage": "^0.2.3",
         "convert-source-map": "^2.0.0",
         "istanbul-lib-coverage": "^3.2.0",
         "istanbul-lib-report": "^3.0.0",

@@ -4,7 +4,6 @@
  */
 
 const { test, expect } = require('@playwright/test');
-const { delay } = require('../common/util.js');
 const Util = require('../../lib/utils/util.js');
 
 test.describe('@util group', () => {
@@ -234,7 +233,9 @@ test.describe('suite group 1 @beta', () => {
 
         test.beforeEach(async () => {
             console.log('beforeEach delay 10');
-            await delay(10);
+            await new Promise((resolve) => {
+                setTimeout(resolve, 10);
+            });
         });
 
         /**
@@ -368,7 +369,9 @@ test.describe('suite group 2', () => {
 
     test('test timeout 1000', async () => {
         test.setTimeout(1000);
-        await delay(2000);
+        await new Promise((resolve) => {
+            setTimeout(resolve, 2000);
+        });
     });
 
     test('random @passed    @failed@flaky', () => {

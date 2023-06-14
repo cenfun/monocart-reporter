@@ -1,5 +1,4 @@
 const { expect } = require('@playwright/test');
-const Util = require('../common/util.js');
 
 const mockPageGoto = async (page, url) => {
     await page.setContent(`
@@ -63,7 +62,6 @@ class HomePage {
          * @title Open my home page and delay 1s
          */
         await mockPageGoto(this.page, url);
-        await Util.delay(1000);
 
         // for client script
         // console.log(`addInitScript: ${this.metadata.clientPath}`);
@@ -75,7 +73,6 @@ class HomePage {
         // await this.page.addInitScript({
         //     path: this.metadata.clientPath
         // });
-        // await Util.delay(500);
     }
 
     // async checkClientScript() {

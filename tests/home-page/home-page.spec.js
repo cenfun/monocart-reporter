@@ -2,7 +2,6 @@ const {
     test, expect, request
 } = require('@playwright/test');
 const EC = require('eight-colors');
-const { delay } = require('../common/util.js');
 
 // POM Page Object Model
 const HomePage = require('./home-page.js');
@@ -132,7 +131,9 @@ test('merge same steps - route.continue', async ({ page }) => {
         }
     });
 
-    await delay(100);
+    await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+    });
 
 });
 

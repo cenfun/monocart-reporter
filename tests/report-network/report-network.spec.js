@@ -2,15 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const { test } = require('@playwright/test');
 const { attachNetworkReport } = require('monocart-reporter');
-const { delay } = require('../common/util.js');
 
-test.describe.configure({
-    mode: 'serial'
-});
 
-let context;
-
-test.describe('attach network report 1', () => {
+test('attach network report 1', async ({ browser }) => {
 
     const harPath = path.resolve('.temp/network-report1.har');
     if (fs.existsSync(harPath)) {
@@ -18,69 +12,60 @@ test.describe('attach network report 1', () => {
         fs.rmSync(harPath);
     }
 
-    test('first, open page', async ({ browser }) => {
-        context = await browser.newContext({
-            recordHar: {
-                path: harPath
-            }
-        });
-        const page = await context.newPage();
-        await page.goto('http://localhost:8090/demo/', {
-            waitUntil: 'networkidle'
-        });
+    const context = await browser.newContext({
+        recordHar: {
+            path: harPath
+        }
+    });
+    const page = await context.newPage();
+    await page.goto('http://localhost:8090/demo/', {
+        waitUntil: 'networkidle'
     });
 
-    test('next, run test cases', async () => {
-        await delay(500);
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('finally, attach HAR', async () => {
+    // Close context to ensure HAR is saved to disk.
+    await context.close();
 
-        // Close context to ensure HAR is saved to disk.
-        await context.close();
-
-        await attachNetworkReport(harPath, test.info(), {
-            //  inline: true
-        });
-
+    await attachNetworkReport(harPath, test.info(), {
+        //  inline: true
     });
 
 });
 
 
-test.describe('attach network report 2', () => {
-
+test('attach network report 2', async ({ browser }) => {
     const harPath = path.resolve('.temp/network-report2.har');
     if (fs.existsSync(harPath)) {
         // remove previous
         fs.rmSync(harPath);
     }
 
-    test('first, open page', async ({ browser }) => {
-        context = await browser.newContext({
-            recordHar: {
-                path: harPath
-            }
-        });
-        const page = await context.newPage();
-        await page.goto('http://localhost:8090/istanbul/', {
-            waitUntil: 'networkidle'
-        });
-        await delay(500);
-
+    const context = await browser.newContext({
+        recordHar: {
+            path: harPath
+        }
+    });
+    const page = await context.newPage();
+    await page.goto('http://localhost:8090/coverage/', {
+        waitUntil: 'networkidle'
+    });
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('next, run test cases', async () => {
-        await delay(500);
+
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('finally, attach HAR', async () => {
 
-        // Close context to ensure HAR is saved to disk.
-        await context.close();
+    // Close context to ensure HAR is saved to disk.
+    await context.close();
 
-        await attachNetworkReport(harPath, test.info());
-
-    });
+    await attachNetworkReport(harPath, test.info());
 
 });
+

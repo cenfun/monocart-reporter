@@ -1,81 +1,79 @@
 const { test, expect } = require('@playwright/test');
 const { attachCoverageReport, addCoverageReport } = require('monocart-reporter');
-const { delay } = require('../common/util.js');
 
-test.describe.configure({
-    mode: 'serial'
-});
+test('Take Istanbul coverage report', async ({ page }) => {
 
-let page;
+    await page.goto('http://localhost:8090/coverage/istanbul.html');
 
-test.describe('take Istanbul coverage report', () => {
-    test('first, open page', async ({ browser }) => {
-        page = await browser.newPage();
-        await page.goto('http://localhost:8090/coverage/istanbul.html');
+    // delay for mock code execution
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('next, run test cases', async () => {
-        await delay(500);
+    // take Istanbul coverage
+    const coverageData = await page.evaluate(() => window.__coverage__);
+    await page.close();
+    expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
+
+    Object.keys(coverageData).forEach((k) => {
+        const d = coverageData[k];
+        delete coverageData[k];
+        const p = k.replace(/\\/g, '/');
+        coverageData[p] = d;
     });
 
-    test('finally, take coverage', async () => {
-        // take Istanbul coverage
-        const coverageData = await page.evaluate(() => window.__coverage__);
-        await page.close();
-        expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-
-        Object.keys(coverageData).forEach((k) => {
-            const d = coverageData[k];
-            delete coverageData[k];
-            const p = k.replace(/\\/g, '/');
-            coverageData[p] = d;
-        });
-
-        // coverage report
-        const report = await attachCoverageReport(coverageData, test.info(), {
-            lcov: true
-        });
-        console.log(report.summary);
+    // coverage report
+    const report = await attachCoverageReport(coverageData, test.info(), {
+        lcov: true
     });
-});
-
-test.describe('take V8 js to Istanbul coverage report', () => {
-
-    test('first, open page', async ({ browser }) => {
-        page = await browser.newPage();
-        await page.coverage.startJSCoverage();
-        await page.goto('http://localhost:8090/coverage/v8.html');
-    });
-
-    test('next, run test cases', async () => {
-        await delay(500);
-    });
-
-    test('finally, take coverage', async () => {
-        const jsCoverageList = await page.coverage.stopJSCoverage();
-        await page.close();
-
-        await addCoverageReport(jsCoverageList, test.info());
-
-        const report = await attachCoverageReport(jsCoverageList, test.info(), {
-            // unpackSourceMap: false,
-            // sourceFilter: (sourceName) => sourceName.indexOf('node_modules') === -1,
-            toIstanbul: true
-        });
-        console.log(report.summary);
-    });
+    console.log(report.summary);
 
 });
 
+test('Take V8 and Istanbul coverage report', async ({ page }) => {
 
-test.describe('take V8 anonymous js to Istanbul coverage report', () => {
-    test('first, open page', async ({ browser }) => {
-        page = await browser.newPage();
-        // JavaScript Coverage doesn't include anonymous scripts by default.
-        await page.coverage.startJSCoverage({
-            reportAnonymousScripts: true
-        });
-        await page.setContent(`<html>
+    await Promise.all([
+        page.coverage.startJSCoverage(),
+        page.coverage.startCSSCoverage()
+    ]);
+
+    await page.goto('http://localhost:8090/coverage/v8.html');
+
+    // delay for mock code execution
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
+    });
+
+    const [jsCoverage, cssCoverage] = await Promise.all([
+        page.coverage.stopJSCoverage(),
+        page.coverage.stopCSSCoverage()
+    ]);
+    await page.close();
+
+    const coverageList = [... jsCoverage, ... cssCoverage];
+
+    await addCoverageReport(coverageList, test.info());
+
+    const v8 = await attachCoverageReport(coverageList, test.info(), {
+        excludeDistFile: false
+    });
+    console.log(v8.summary);
+
+    const istanbul = await attachCoverageReport(coverageList, test.info(), {
+        // unpackSourceMap: false,
+        // sourceFilter: (sourceName) => sourceName.indexOf('node_modules') === -1,
+        toIstanbul: true
+    });
+    console.log(istanbul.summary);
+
+});
+
+test('Take anonymous scripts coverage report', async ({ page }) => {
+    // JavaScript Coverage doesn't include anonymous scripts by default.
+    await page.coverage.startJSCoverage({
+        reportAnonymousScripts: true
+    });
+    await page.setContent(`<html>
             <head>
                 <title>mock page anonymous</title>
             </head>
@@ -83,96 +81,65 @@ test.describe('take V8 anonymous js to Istanbul coverage report', () => {
                 mock page anonymous
             </body>
             </html>`);
+
+    // delay for mock code execution
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('next, run test cases', async () => {
-        await delay(500);
-    });
+    const jsCoverageList = await page.coverage.stopJSCoverage();
+    await page.close();
 
-    test('finally, take coverage', async () => {
-        const jsCoverageList = await page.coverage.stopJSCoverage();
-        await page.close();
-        const report = await attachCoverageReport(jsCoverageList, test.info(), {
-            toIstanbul: true
-        });
-        console.log(report.summary);
+    const v8 = await attachCoverageReport(jsCoverageList, test.info(), {
+        // inline: true
     });
+    console.log(v8.summary);
+
+    const istanbul = await attachCoverageReport(jsCoverageList, test.info(), {
+        toIstanbul: true
+    });
+    console.log(istanbul.summary);
+
 });
 
-test.describe('take V8 anonymous js coverage report', () => {
-    test('first, open page', async ({ browser }) => {
-        page = await browser.newPage();
-        // JavaScript Coverage doesn't include anonymous scripts by default.
-        await page.coverage.startJSCoverage({
-            reportAnonymousScripts: true
-        });
-        await page.setContent(`<html>
-            <head>
-                <title>mock page anonymous</title>
-            </head>
-            <body>
-                mock page anonymous
-            </body>
-            </html>`);
+
+test('Take V8 js and css coverage report', async ({ page }) => {
+    await Promise.all([
+        page.coverage.startJSCoverage(),
+        page.coverage.startCSSCoverage()
+    ]);
+
+    await page.goto('http://localhost:8090/demo/');
+    // delay for mock code execution
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('next, run test cases', async () => {
-        await delay(500);
+    const screenshot = await page.screenshot();
+    await test.info().attach('screenshot', {
+        body: screenshot,
+        contentType: 'image/png'
     });
 
-    test('finally, take coverage', async () => {
-        const jsCoverageList = await page.coverage.stopJSCoverage();
-        await page.close();
-        const report = await attachCoverageReport(jsCoverageList, test.info(), {
-            // inline: true
-        });
-        console.log(report.summary);
+    const [jsCoverage, cssCoverage] = await Promise.all([
+        page.coverage.stopJSCoverage(),
+        page.coverage.stopCSSCoverage()
+    ]);
+    await page.close();
+    const coverageList = [... jsCoverage, ... cssCoverage];
+    // filter file list
+    // coverageList = coverageList.filter((item) => {
+    //     if (item.url.endsWith('.js') || item.url.endsWith('.css')) {
+    //         return true;
+    //     }
+    // });
+
+    await addCoverageReport(coverageList, test.info());
+
+    const report = await attachCoverageReport(coverageList, test.info(), {
+        unpackSourceMap: true
     });
-});
-
-test.describe('take V8 js and css coverage report', () => {
-
-    test('first, open page', async ({ browser }) => {
-        page = await browser.newPage();
-        await Promise.all([
-            page.coverage.startJSCoverage(),
-            page.coverage.startCSSCoverage()
-        ]);
-
-        await page.goto('http://localhost:8090/demo/');
-    });
-
-    test('next, run test cases', async () => {
-        const screenshot = await page.screenshot();
-        await test.info().attach('screenshot', {
-            body: screenshot,
-            contentType: 'image/png'
-        });
-        await delay(500);
-    });
-
-    test('finally, take coverage', async () => {
-
-        const [jsCoverage, cssCoverage] = await Promise.all([
-            page.coverage.stopJSCoverage(),
-            page.coverage.stopCSSCoverage()
-        ]);
-        await page.close();
-        const coverageList = [... jsCoverage, ... cssCoverage];
-        // filter file list
-        // coverageList = coverageList.filter((item) => {
-        //     if (item.url.endsWith('.js') || item.url.endsWith('.css')) {
-        //         return true;
-        //     }
-        // });
-
-        await addCoverageReport(coverageList, test.info());
-
-        const report = await attachCoverageReport(coverageList, test.info(), {
-            unpackSourceMap: true
-        });
-        console.log(report.summary);
-    });
+    console.log(report.summary);
 
 });
 
