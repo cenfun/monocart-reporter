@@ -21,6 +21,8 @@ test('Take Istanbul coverage report', async ({ page }) => {
         lcov: true,
         sourcePath: (sourcePath) => {
             console.log(sourcePath);
+            // replace local windows \ to server /
+            sourcePath = sourcePath.replace(/\\/g, '/');
             const filename = path.basename(sourcePath);
             const redirectPath = path.resolve(__dirname, '../../scripts/mock/coverage/src', filename);
             console.log(redirectPath);
