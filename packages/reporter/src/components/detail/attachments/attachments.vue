@@ -127,6 +127,12 @@ const initList = (attachments) => {
         }
     }
 
+    // last group
+    if (group) {
+        sortGroupList(group);
+        list.push(group);
+    }
+
     return list;
 };
 
