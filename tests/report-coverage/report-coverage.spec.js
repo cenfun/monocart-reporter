@@ -19,7 +19,7 @@ test('Take Istanbul coverage report', async ({ page }) => {
     // coverage report
     const report = await attachCoverageReport(coverageData, test.info(), {
         lcov: true,
-        sourcePath: (sourcePath) => {
+        sourcePath: (sourcePath, fileSources) => {
             console.log(sourcePath);
             // replace local windows \ to server /
             sourcePath = sourcePath.replace(/\\/g, '/');
