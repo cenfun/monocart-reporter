@@ -322,11 +322,6 @@ const onSearchItemClick = (item) => {
     state.keywords = item;
 };
 
-
-const onSearchClearClick = (e) => {
-    state.keywords = '';
-};
-
 const onSearchDropdownClick = (e) => {
     state.searchDropdownVisible = true;
     state.searchDropdownTarget = e.target;
@@ -635,7 +630,7 @@ window.addEventListener('message', (e) => {
             v-if="state.keywords"
             class="mcr-search-clear"
             icon="close"
-            @click="onSearchClearClick"
+            @click="state.keywords = ''"
           />
           <IconLabel
             class="mcr-search-option"

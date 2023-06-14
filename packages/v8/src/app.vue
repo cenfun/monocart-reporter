@@ -1,6 +1,6 @@
 <script setup>
 import {
-    shallowReactive, onMounted, reactive, provide, watch, computed
+    shallowReactive, onMounted, reactive, provide, watch
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import {
@@ -11,6 +11,7 @@ import Util from './utils/util.js';
 
 import Flyover from './components/flyover.vue';
 import Report from './components/report.vue';
+import IconLabel from './components/icon-label.vue';
 
 const {
     VuiFlex,
@@ -60,14 +61,6 @@ const tooltip = reactive({
     target: null,
     text: '',
     html: false
-});
-
-const searchClass = computed(() => {
-    const ls = ['mcr-search'];
-    if (state.keywords) {
-        ls.push('mcr-search-keywords');
-    }
-    return ls;
 });
 
 
@@ -380,6 +373,8 @@ const getGridData = () => {
     const columns = [{
         id: 'name',
         name: 'File',
+        width: 350,
+        maxWidth: 1230,
         classMap: 'mcr-column-name'
     }, {
         id: 'pct',
@@ -500,6 +495,7 @@ const initGrid = () => {
         // sortField: 'uncovered',
         // sortAsc: false,
         // sortOnInit: true,
+        frozenColumn: 0,
         rowFilter: searchHandler,
         rowNumberVisible: true,
         rowNumberFilter: (rowItem) => {
@@ -689,22 +685,38 @@ window.addEventListener('message', (e) => {
       gap="10px"
       wrap
     >
-      <VuiInput
-        v-model="state.keywords"
-        width="100%"
-        :class="searchClass"
-        placeholder="keywords"
-      />
-
-      <VuiSwitch
-        v-model="state.group"
-        :label-clickable="true"
-        label-position="right"
-      >
-        Group
-      </VuiSwitch>
-
-      <div class="vui-flex-auto" />
+      <div class="mcr-search-holder vui-flex-auto">
+        <VuiFlex
+          gap="10px"
+          shrink
+        >
+          <div class="mcr-search">
+            <VuiInput
+              v-model="state.keywords"
+              width="100%"
+              :class="state.keywords?'mcr-search-keywords':''"
+            />
+            <IconLabel
+              class="mcr-search-icon"
+              icon="search"
+              :button="false"
+            />
+            <IconLabel
+              v-if="state.keywords"
+              class="mcr-search-clear"
+              icon="close"
+              @click="state.keywords = ''"
+            />
+          </div>
+          <VuiSwitch
+            v-model="state.group"
+            :label-clickable="true"
+            label-position="right"
+          >
+            Group
+          </VuiSwitch>
+        </VuiFlex>
+      </div>
 
       <VuiFlex class="mcr-watermarks">
         <VuiFlex
@@ -873,14 +885,37 @@ icon
     border-bottom: 1px solid #ddd;
 }
 
+.mcr-search-holder {
+    min-width: 150px;
+}
+
 .mcr-search {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    padding: 5px;
+
     input {
-        padding-right: 23px;
-        background-image: url("./images/search.svg");
-        background-repeat: no-repeat;
-        background-position: 97% center;
-        background-size: 16px;
+        height: 30px;
+        padding-right: 30px;
+        padding-left: 30px;
+        border-radius: 10px;
     }
+}
+
+.mcr-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 13px;
+    color: gray;
+    transform: translate(0, -50%);
+}
+
+.mcr-search-clear {
+    position: absolute;
+    top: 50%;
+    right: 13px;
+    transform: translate(0, -50%);
 }
 
 .mcr-search-keywords {
