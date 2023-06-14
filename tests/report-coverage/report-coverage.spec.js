@@ -1,3 +1,4 @@
+const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { attachCoverageReport, addCoverageReport } = require('monocart-reporter');
 
@@ -20,7 +21,10 @@ test('Take Istanbul coverage report', async ({ page }) => {
         lcov: true,
         sourcePath: (sourcePath) => {
             console.log(sourcePath);
-            // return sourcePath.replace(/\\/g, '/');
+            const filename = path.basename(sourcePath);
+            const redirectPath = path.resolve(__dirname, '../../scripts/mock/coverage/src', filename);
+            console.log(redirectPath);
+            return redirectPath;
         }
     });
     console.log(report.summary);

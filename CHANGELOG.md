@@ -3,6 +3,7 @@
   - updated search input #39  
   - fixed source type to use ext name
   - fixed image diff not shown #47
+  - added sourcePath handler for istanbul
 
 * 1.6.33
   - fixed tag row underline

@@ -627,6 +627,7 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
     - Istanbul only:
     - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report)
     - `lcov` (Boolean) Whether to create `lcov.info`
+    - `sourcePath` (Function) source path handler, return a new source path
     - V8 only:
     - `toIstanbul` (Boolean) Whether to convert to Istanbul report
     - `watermarks` (Array) Defaults to `[50, 80]` 
