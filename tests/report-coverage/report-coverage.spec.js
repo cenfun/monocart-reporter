@@ -15,16 +15,13 @@ test('Take Istanbul coverage report', async ({ page }) => {
     await page.close();
     expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
 
-    Object.keys(coverageData).forEach((k) => {
-        const d = coverageData[k];
-        delete coverageData[k];
-        const p = k.replace(/\\/g, '/');
-        coverageData[p] = d;
-    });
-
     // coverage report
     const report = await attachCoverageReport(coverageData, test.info(), {
-        lcov: true
+        lcov: true,
+        sourcePath: (sourcePath) => {
+            console.log(sourcePath);
+            // return sourcePath.replace(/\\/g, '/');
+        }
     });
     console.log(report.summary);
 
