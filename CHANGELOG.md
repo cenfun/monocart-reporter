@@ -1,3 +1,8 @@
+* 1.6.34
+  - fixed coverage issue #29
+  - updated search input #39  
+  - fixed source type to use ext name
+
 * 1.6.33
   - fixed tag row underline
   - added project metadata
