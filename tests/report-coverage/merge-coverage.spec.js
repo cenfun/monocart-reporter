@@ -1,10 +1,6 @@
 const { test } = require('@playwright/test');
 const { addCoverageReport } = require('monocart-reporter');
 
-test.describe.configure({
-    mode: 'serial'
-});
-
 test('take coverage for foo', async ({ page }) => {
     await page.coverage.startJSCoverage();
     await page.goto('http://localhost:8090/coverage/v8.html');

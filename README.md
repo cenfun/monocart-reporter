@@ -642,30 +642,27 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
 ```js
 import { test, expect } from '@playwright/test';
 import { attachCoverageReport } from 'monocart-reporter';
-test.describe.configure({
-    mode: 'serial'
-});
-let page;
-test.describe('take Istanbul coverage', () => {
-    test('first, open page', async ({ browser }) => {
-        page = await browser.newPage();
-        await page.goto(pageUrl);
+
+test('Take Istanbul coverage report', async ({ page }) => {
+
+    await page.goto('http://localhost:8090/coverage/istanbul.html');
+
+    // delay for mock code execution
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('next, run test cases', async () => {
-        await new Promise((resolve) => {
-            setTimeout(resolve, 500);
-        });
-    });
+    // take Istanbul coverage
+    const coverageData = await page.evaluate(() => window.__coverage__);
+    await page.close();
+    expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
 
-    test('finally, take coverage', async () => {
-        // take Istanbul coverage
-        const coverageData = await page.evaluate(() => window.__coverage__);
-        expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-        // coverage report
-        const report = await attachCoverageReport(coverageData, test.info());
-        console.log(report.summary);
+    // coverage report
+    const report = await attachCoverageReport(coverageData, test.info(), {
+        lcov: true
     });
+    console.log(report.summary);
+
 });
 ```
 
@@ -675,43 +672,34 @@ test.describe('take Istanbul coverage', () => {
 ```js
 import { test, expect } from '@playwright/test';
 import { attachCoverageReport } from 'monocart-reporter';
-test.describe.configure({
-    mode: 'serial'
-});
-let page;
-test.describe('take V8 coverage', () => {
-    test('first, open page', async ({ browser }) => {
-        page = await browser.newPage();
-        await Promise.all([
-            page.coverage.startJSCoverage(),
-            page.coverage.startCSSCoverage()
-        ]);
-        await page.goto(pageUrl);
+
+test('Take V8 and Istanbul coverage report', async ({ page }) => {
+
+    await Promise.all([
+        page.coverage.startJSCoverage(),
+        page.coverage.startCSSCoverage()
+    ]);
+
+    await page.goto('http://localhost:8090/coverage/v8.html');
+
+    // delay for mock code execution
+    await new Promise((resolve) => {
+        setTimeout(resolve, 500);
     });
 
-    test('next, run test cases', async () => {
-        await new Promise((resolve) => {
-            setTimeout(resolve, 500);
-        });
-    });
+    const [jsCoverage, cssCoverage] = await Promise.all([
+        page.coverage.stopJSCoverage(),
+        page.coverage.stopCSSCoverage()
+    ]);
+    await page.close();
 
-    test('finally, take coverage', async () => {
-        const [jsCoverage, cssCoverage] = await Promise.all([
-            page.coverage.stopJSCoverage(),
-            page.coverage.stopCSSCoverage()
-        ]);
-        const coverageList = [... jsCoverage, ... cssCoverage];
-        // filter file list
-        // coverageList = coverageList.filter((item) => {
-        //     if (item.url.endsWith('.js') || item.url.endsWith('.css')) {
-        //         return true;
-        //     }
-        // });
-        expect(coverageList.length).toBeGreaterThan(0);
-        // coverage report
-        const report = await attachCoverageReport(coverageList, test.info());
-        console.log(report.summary);
+    const coverageList = [... jsCoverage, ... cssCoverage];
+
+    const v8 = await attachCoverageReport(coverageList, test.info(), {
+        excludeDistFile: false
     });
+    console.log(v8.summary);
+
 });
 ```
 
