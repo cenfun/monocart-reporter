@@ -33,8 +33,12 @@ test('Take Istanbul coverage report', async ({ page }) => {
 test('Take V8 and Istanbul coverage report', async ({ page }) => {
 
     await Promise.all([
-        page.coverage.startJSCoverage(),
-        page.coverage.startCSSCoverage()
+        page.coverage.startJSCoverage({
+            resetOnNavigation: false
+        }),
+        page.coverage.startCSSCoverage({
+            resetOnNavigation: false
+        })
     ]);
 
     await page.goto('http://localhost:8090/coverage/v8.html');
@@ -71,7 +75,8 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 test('Take anonymous scripts coverage report', async ({ page }) => {
     // JavaScript Coverage doesn't include anonymous scripts by default.
     await page.coverage.startJSCoverage({
-        reportAnonymousScripts: true
+        reportAnonymousScripts: true,
+        resetOnNavigation: false
     });
     await page.setContent(`<html>
             <head>
@@ -105,8 +110,12 @@ test('Take anonymous scripts coverage report', async ({ page }) => {
 
 test('Take V8 js and css coverage report', async ({ page }) => {
     await Promise.all([
-        page.coverage.startJSCoverage(),
-        page.coverage.startCSSCoverage()
+        page.coverage.startJSCoverage({
+            resetOnNavigation: false
+        }),
+        page.coverage.startCSSCoverage({
+            resetOnNavigation: false
+        })
     ]);
 
     await page.goto('http://localhost:8090/demo/');

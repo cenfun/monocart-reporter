@@ -2,7 +2,9 @@ const { test } = require('@playwright/test');
 const { addCoverageReport } = require('monocart-reporter');
 
 test('take coverage for foo', async ({ page }) => {
-    await page.coverage.startJSCoverage();
+    await page.coverage.startJSCoverage({
+        resetOnNavigation: false
+    });
     await page.goto('http://localhost:8090/coverage/v8.html');
     await page.evaluate(() => {
         const { foo } = window['coverage-v8'];
@@ -13,7 +15,9 @@ test('take coverage for foo', async ({ page }) => {
 });
 
 test('take coverage for bar', async ({ page }) => {
-    await page.coverage.startJSCoverage();
+    await page.coverage.startJSCoverage({
+        resetOnNavigation: false
+    });
     await page.goto('http://localhost:8090/coverage/v8.html');
     await page.evaluate(() => {
         const { bar } = window['coverage-v8'];
@@ -24,7 +28,9 @@ test('take coverage for bar', async ({ page }) => {
 });
 
 test('take coverage for start', async ({ page }) => {
-    await page.coverage.startJSCoverage();
+    await page.coverage.startJSCoverage({
+        resetOnNavigation: false
+    });
     await page.goto('http://localhost:8090/coverage/v8.html');
     await page.evaluate(() => {
         const { start } = window['coverage-v8'];

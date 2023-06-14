@@ -676,8 +676,12 @@ import { attachCoverageReport } from 'monocart-reporter';
 test('Take V8 and Istanbul coverage report', async ({ page }) => {
 
     await Promise.all([
-        page.coverage.startJSCoverage(),
-        page.coverage.startCSSCoverage()
+        page.coverage.startJSCoverage({
+            resetOnNavigation: false
+        }),
+        page.coverage.startCSSCoverage({
+            resetOnNavigation: false
+        })
     ]);
 
     await page.goto('http://localhost:8090/coverage/v8.html');
