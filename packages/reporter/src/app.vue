@@ -618,6 +618,7 @@ window.addEventListener('message', (e) => {
             v-model="state.keywords"
             width="100%"
             :class="state.keywords?'mcr-search-keywords':''"
+            :select-on-focus="false"
             @focus="onSearchFocus"
             @blur="onSearchBlur"
           />

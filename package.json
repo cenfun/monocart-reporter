@@ -58,6 +58,6 @@
         "lighthouse": "^10.3.0",
         "stylelint": "^15.7.0",
         "stylelint-config-plus": "^1.0.3",
-        "vine-ui": "^3.1.11"
+        "vine-ui": "^3.1.12"
     }
 }
