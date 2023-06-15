@@ -303,8 +303,14 @@ const onTagItemClick = (item) => {
         titleColumn.checked = true;
     }
 
-    const tag = `@${item.name}`;
+    let tag = `@${item.name} `;
     if (state.keywords) {
+
+        // not ends with space
+        const regex = /\s$/;
+        if (!regex.test(state.keywords)) {
+            tag = ` @${item.name} `;
+        }
 
         const target = state.searchHelperTarget;
         if (target) {
