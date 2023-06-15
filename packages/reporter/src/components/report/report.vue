@@ -223,8 +223,25 @@ const artifactsHandler = () => {
 
     // console.log(artifacts);
 
-    report.artifacts = artifacts;
+    const num = 5;
 
+    if (artifacts.length > num) {
+        report.artifacts = artifacts.slice(0, num);
+        report.totalArtifacts = artifacts;
+        report.artifactsShowMore = true;
+
+    } else {
+        report.artifacts = artifacts;
+        report.totalArtifacts = null;
+        report.artifactsShowMore = false;
+    }
+};
+
+const onShowMoreClick = (e) => {
+    if (report.totalArtifacts) {
+        report.artifactsShowMore = false;
+        report.artifacts = report.totalArtifacts;
+    }
 };
 
 // ====================================================================================
@@ -627,6 +644,17 @@ onActivated(() => {
               target="_blank"
             >{{ item.title }}</a>
           </VuiFlex>
+        </VuiFlex>
+        <VuiFlex
+          v-if="report.artifactsShowMore"
+          padding="10px"
+        >
+          <IconLabel
+            icon="triangle-right"
+            @click="onShowMoreClick"
+          >
+            Show more ...
+          </IconLabel>
         </VuiFlex>
       </div>
     </div>

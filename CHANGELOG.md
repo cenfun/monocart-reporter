@@ -4,6 +4,7 @@
   - added retry for attachments
   - fixed retry id for all plugins
   - added global icon
+  - added artifacts show more button
 
 * 1.6.34
   - fixed coverage issue #29
