@@ -5,6 +5,7 @@
   - fixed retry id for all plugins
   - added global icon
   - added artifacts group and show more button
+  - added cli `npx monocart serve-report`
 
 * 1.6.34
   - fixed coverage issue #29

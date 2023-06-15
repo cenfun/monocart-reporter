@@ -18,8 +18,8 @@
     "scripts": {
         "link": "node ./scripts/link.js",
         "test": "npm run link && npx playwright test -c tests",
-        "test-coverage": "npx playwright test tests/report-coverage -c tests",
-        "test-network": "npx playwright test tests/report-network -c tests",
+        "test-coverage": "npm run link && npx playwright test tests/report-coverage -c tests",
+        "test-network": "npm run link && npx playwright test tests/report-network -c tests",
         "build": "sf lint && sf b -p",
         "dev": "sf d reporter -w .temp/monocart/index.json",
         "patch": "npm run build && sf publish patch -r",

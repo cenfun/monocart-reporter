@@ -159,7 +159,11 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 ## View Trace Online 
 > The [Trace Viewer](https://trace.playwright.dev/) requires that the trace file must be loaded over the http:// or https:// protocols without [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS) issue, try following start a local web server:
 ```sh
+# serve and open report
 npx monocart show-report <your-outputFile-path>
+
+# serve report
+npx monocart serve-report <your-outputFile-path>
 ```
 Or customize your own trace viewer url with option `traceViewerUrl` defaults to  `https://trace.playwright.dev/?trace={traceUrl}`
 
