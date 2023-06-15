@@ -222,17 +222,16 @@ const artifactsHandler = () => {
     }
 
     // console.log(artifacts);
+    report.totalArtifacts = artifacts;
 
-    const num = 5;
+    const pageSize = 5;
 
-    if (artifacts.length > num) {
-        report.artifacts = artifacts.slice(0, num);
-        report.totalArtifacts = artifacts;
+    if (artifacts.length > pageSize) {
+        report.artifacts = artifacts.slice(0, pageSize);
         report.artifactsShowMore = true;
 
     } else {
         report.artifacts = artifacts;
-        report.totalArtifacts = null;
         report.artifactsShowMore = false;
     }
 };
@@ -645,17 +644,14 @@ onActivated(() => {
             >{{ item.title }}</a>
           </VuiFlex>
         </VuiFlex>
-        <VuiFlex
+        <IconLabel
           v-if="report.artifactsShowMore"
-          padding="10px"
+          icon="triangle-right"
+          class="mcr-show-more"
+          @click="onShowMoreClick"
         >
-          <IconLabel
-            icon="triangle-right"
-            @click="onShowMoreClick"
-          >
-            Show more ...
-          </IconLabel>
-        </VuiFlex>
+          Show more ...
+        </IconLabel>
       </div>
     </div>
 
@@ -784,6 +780,10 @@ onActivated(() => {
     .mcr-tag {
         opacity: 0.9;
     }
+}
+
+.mcr-show-more {
+    margin-left: 10px;
 }
 
 </style>
