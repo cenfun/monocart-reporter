@@ -1,3 +1,9 @@
+* 1.6.35
+  - fixed monocart version issue #48
+  - fixed retry issue #47
+  - added retry for attachments
+  - 
+
 * 1.6.34
   - fixed coverage issue #29
   - updated search input #39  

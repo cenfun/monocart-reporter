@@ -78,14 +78,36 @@ const sortGroupList = (group) => {
     });
 };
 
+const existsGroupItem = (group, item) => {
+    const prev = group.data.list.find((it) => it.name === item.name);
+    if (prev) {
+        return true;
+    }
+    return false;
+};
+
+const createGroup = (item, name, extension, attachment) => {
+    return {
+        component: Comparison,
+        data: {
+            name: name + extension,
+            contentType: attachment.contentType,
+            retry: attachment.retry,
+            list: [item]
+        }
+    };
+};
+
 const initList = (attachments) => {
     if (!attachments) {
         return;
     }
 
+    attachments = attachments.filter((item) => typeof item.path === 'string' && typeof item.name === 'string');
+
     const list = [];
     let group;
-    for (const attachment of attachments) {
+    attachments.forEach((attachment) => {
         const match = attachment.name.match(/^(.*)-(expected|actual|diff|previous)(\.[^.]+)?$/);
         if (match) {
             const [, name, category, extension = ''] = match;
@@ -97,16 +119,19 @@ const initList = (attachments) => {
             };
 
             if (group) {
-                group.data.list.push(item);
+
+                // there are two connected groups if retry happened
+                if (existsGroupItem(group, item)) {
+                    sortGroupList(group);
+                    list.push(group);
+                    group = createGroup(item, name, extension, attachment);
+
+                } else {
+                    group.data.list.push(item);
+                }
+
             } else {
-                group = {
-                    component: Comparison,
-                    data: {
-                        name: name + extension,
-                        contentType: `${attachment.contentType}`,
-                        list: [item]
-                    }
-                };
+                group = createGroup(item, name, extension, attachment);
             }
 
         } else {
@@ -117,15 +142,13 @@ const initList = (attachments) => {
                 group = null;
             }
 
-            if (typeof attachment.path === 'string') {
-                list.push({
-                    component: getAttachmentComponent(attachment),
-                    data: attachment
-                });
-            }
+            list.push({
+                component: getAttachmentComponent(attachment),
+                data: attachment
+            });
 
         }
-    }
+    });
 
     // last group
     if (group) {
@@ -175,10 +198,6 @@ watchEffect(() => {
     details[open] > summary {
         background-image: url("../../../images/arrow-down.svg");
     }
-}
-
-.mcr-attachment-head {
-    position: relative;
 }
 
 .mcr-attachment-body {

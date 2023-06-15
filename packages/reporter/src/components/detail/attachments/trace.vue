@@ -3,6 +3,7 @@ import { onMounted, shallowReactive } from 'vue';
 
 import Util from '../../../utils/util.js';
 import state from '../../../modules/state.js';
+import AttachmentHead from './attachment-head.vue';
 
 const props = defineProps({
     data: {
@@ -42,12 +43,12 @@ onMounted(() => {
     class="mcr-attachment-trace"
     open
   >
-    <summary class="mcr-attachment-head">
+    <AttachmentHead :retry="props.data.retry">
       <a
         :href="props.data.path"
         target="_blank"
       >{{ props.data.name }}</a>
-    </summary>
+    </AttachmentHead>
     <div class="mcr-attachment-body">
       <div>
         <a

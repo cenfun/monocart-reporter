@@ -3,6 +3,7 @@ import { watchEffect, shallowReactive } from 'vue';
 import { components } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
+import AttachmentHead from './attachment-head.vue';
 
 const { VuiFlex } = components;
 
@@ -97,12 +98,12 @@ watchEffect(() => {
     class="mcr-attachment-coverage"
     open
   >
-    <summary class="mcr-attachment-head">
+    <AttachmentHead :retry="props.data.retry">
       <a
         :href="props.data.path"
         target="_blank"
       >{{ props.data.name }}</a>
-    </summary>
+    </AttachmentHead>
     <div class="mcr-attachment-body">
       <table>
         <tr>

@@ -6,6 +6,7 @@ import Util from '../../../utils/util.js';
 import state from '../../../modules/state.js';
 
 import IconLabel from '../../icon-label.vue';
+import AttachmentHead from './attachment-head.vue';
 
 const { VuiFlex, VuiTab } = components;
 
@@ -117,9 +118,9 @@ watchEffect(() => {
     class="mcr-attachment-comparison"
     open
   >
-    <summary class="mcr-attachment-head">
+    <AttachmentHead :retry="props.data.retry">
       <span v-if="d.list">image </span>mismatch: {{ props.data.name }}
-    </summary>
+    </AttachmentHead>
     <div class="mcr-attachment-body">
       <VuiTab
         v-if="d.list"
@@ -190,10 +191,6 @@ watchEffect(() => {
 
 <style lang="scss">
 .mcr-attachment-comparison {
-    .mcr-attachment-head {
-        cursor: default;
-    }
-
     .vui-tab-header {
         background: #f5f5f5;
     }

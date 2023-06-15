@@ -20,8 +20,7 @@ import Trend from './trend.vue';
 const { VuiFlex, VuiSelect } = components;
 
 const report = shallowReactive({
-    systemIndex: 0,
-    monocart: `Monocart Reporter v${window.VERSION}`
+    systemIndex: 0
 });
 
 // ====================================================================================
@@ -136,6 +135,7 @@ const systemHandler = () => {
 const timelineHandler = () => {
     const system = state.system;
     report.playwright = `Playwright Test v${system.playwright}`;
+    report.monocart = `Monocart Reporter v${system.monocart}`;
     report.usageList = [{
         icon: 'worker',
         name: 'Workers',
