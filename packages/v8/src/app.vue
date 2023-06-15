@@ -319,6 +319,27 @@ const getGroupRows = (summaryRows) => {
     return groups;
 };
 
+const getFlatRows = (summaryRows) => {
+    const flatRows = [];
+    summaryRows.forEach((item) => {
+        const sourcePath = item.sourcePath;
+        const pathList = sourcePath.split('/');
+
+        const lastName = pathList.pop();
+        const dir = pathList.pop();
+        if (item.type) {
+            item.name = lastName;
+        } else if (dir) {
+            item.name = `${dir}/${lastName}`;
+        }
+
+        flatRows.push(item);
+
+    });
+
+    return flatRows;
+};
+
 const getGridRows = () => {
     const key = ['grid', state.group].join('-');
     // console.log(key);
@@ -357,7 +378,7 @@ const getGridRows = () => {
     if (state.group) {
         rows = rows.concat(getGroupRows(summaryRows));
     } else {
-        rows = rows.concat(summaryRows);
+        rows = rows.concat(getFlatRows(summaryRows));
     }
 
     state.gridDataCache[key] = rows;

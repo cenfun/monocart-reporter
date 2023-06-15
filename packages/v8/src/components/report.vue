@@ -170,7 +170,7 @@ const renderReport = async () => {
 
     const report = await getReport(item);
     if (!report) {
-        console.log(`failed to format source: ${item.filename}`);
+        console.log(`failed to format source: ${item.sourcePath}`);
         data.list = [summary];
         return;
     }
