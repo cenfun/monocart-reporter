@@ -1,6 +1,6 @@
 {
     "name": "monocart-v8",
-    "version": "1.6.35",
+    "version": "1.6.36",
     "private": true,
     "main": "dist/monocart-v8.js",
     "files": [
@@ -9,7 +9,7 @@
     "license": "MIT",
     "dependencies": {
         "monocart-code-viewer": "1.0.6",
-        "monocart-common": "~1.6.35",
+        "monocart-common": "~1.6.36",
         "monocart-formatter": "1.0.5"
     },
     "devDependencies": {}
