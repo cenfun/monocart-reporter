@@ -166,7 +166,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-list">
+  <div class="mcr-details-summary">
     <VuiFlex
       direction="column"
       padding="10px"
@@ -183,23 +183,6 @@ watchEffect(() => {
 </template>
 
 <style lang="scss">
-.mcr-attachment-list {
-    details {
-        position: relative;
-    }
-
-    summary {
-        padding-left: 20px;
-        background: url("../../../images/arrow-right.svg") left center no-repeat;
-        background-size: 16px 16px;
-        list-style: none;
-    }
-
-    details[open] > summary {
-        background-image: url("../../../images/arrow-down.svg");
-    }
-}
-
 .mcr-attachment-body {
     margin-top: 5px;
     border: 1px solid #eee;

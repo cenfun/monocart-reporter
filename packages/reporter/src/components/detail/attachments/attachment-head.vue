@@ -11,7 +11,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <summary class="mcr-attachment-head">
+  <summary>
     <VuiFlex
       gap="10px"
       wrap
@@ -29,16 +29,6 @@ const props = defineProps({
 </template>
 
 <style lang="scss">
-.mcr-attachment-head {
-    position: relative;
-    padding: 3px 0;
-    cursor: default;
-}
-
-.mcr-attachment-head:hover {
-    background-color: #f8f8f8;
-}
-
 .mcr-attachment-retry {
     margin-right: 10px;
     color: var(--color-flaky);

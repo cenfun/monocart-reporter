@@ -222,25 +222,55 @@ const artifactsHandler = () => {
     }
 
     // console.log(artifacts);
-    report.totalArtifacts = artifacts;
+
+    // group artifacts
+    const globalGroup = {
+        name: 'global',
+        list: []
+    };
+
+    const groups = {};
+    artifacts.forEach((item) => {
+        if (item.global) {
+            globalGroup.list.push(item);
+            return;
+        }
+        const group = groups[item.name];
+        if (group) {
+            group.list.push(item);
+        } else {
+            groups[item.name] = shallowReactive({
+                name: item.name,
+                list: [item]
+            });
+        }
+    });
+
+    const artifactList = [];
+    if (globalGroup.list.length) {
+        artifactList.push(globalGroup);
+    }
 
     const pageSize = 5;
+    Object.values(groups).forEach((g) => {
+        const list = g.list;
+        if (list.length > pageSize) {
+            g.totalList = list;
+            g.list = list.slice(0, pageSize);
+            g.showMore = true;
+        } else {
+            g.showMore = false;
+        }
 
-    if (artifacts.length > pageSize) {
-        report.artifacts = artifacts.slice(0, pageSize);
-        report.artifactsShowMore = true;
+        artifactList.push(g);
+    });
 
-    } else {
-        report.artifacts = artifacts;
-        report.artifactsShowMore = false;
-    }
+    report.artifactList = artifactList;
 };
 
-const onShowMoreClick = (e) => {
-    if (report.totalArtifacts) {
-        report.artifactsShowMore = false;
-        report.artifacts = report.totalArtifacts;
-    }
+const onShowMoreClick = (group) => {
+    group.showMore = false;
+    group.list = group.totalList;
 };
 
 // ====================================================================================
@@ -601,7 +631,7 @@ onActivated(() => {
     </div>
 
     <div
-      v-if="report.artifacts"
+      v-if="report.artifactList"
       class="mcr-report-item"
     >
       <div class="mcr-report-head">
@@ -622,36 +652,49 @@ onActivated(() => {
         <VuiFlex
           gap="10px"
           padding="10px"
-          class="mcr-report-artifacts"
-          wrap
-          shrink
+          class="mcr-details-summary"
+          direction="column"
         >
-          <VuiFlex
-            v-for="(item, i) in report.artifacts"
+          <details
+            v-for="(group, i) in report.artifactList"
             :key="i"
-            gap="5px"
-            shrink
+            open
           >
-            <IconLabel
-              :icon="item.global?'global':'link'"
-              :title="item.global?'global':''"
-              :button="false"
-            />
-            <a
-              :href="item.path"
-              :title="item.name"
-              target="_blank"
-            >{{ item.title }}</a>
-          </VuiFlex>
+            <summary class="mcr-artifact-name">
+              {{ group.name }}
+            </summary>
+            <VuiFlex
+              class="mcr-artifact-list"
+              gap="5px"
+              wrap
+            >
+              <VuiFlex
+                v-for="(item, j) in group.list"
+                :key="j"
+                gap="5px"
+                shrink
+                class="mcr-artifact-item"
+              >
+                <IconLabel
+                  :icon="item.global?'global':'link'"
+                  :button="false"
+                />
+                <a
+                  :href="item.path"
+                  target="_blank"
+                >{{ item.title }}</a>
+              </VuiFlex>
+              <IconLabel
+                v-if="group.showMore"
+                icon="triangle-right"
+                class="mcr-show-more"
+                @click="onShowMoreClick(group)"
+              >
+                Show more ...
+              </IconLabel>
+            </VuiFlex>
+          </details>
         </VuiFlex>
-        <IconLabel
-          v-if="report.artifactsShowMore"
-          icon="triangle-right"
-          class="mcr-show-more"
-          @click="onShowMoreClick"
-        >
-          Show more ...
-        </IconLabel>
       </div>
     </div>
 
@@ -782,8 +825,19 @@ onActivated(() => {
     }
 }
 
-.mcr-show-more {
-    margin-left: 10px;
+.mcr-artifact-name {
+    text-transform: capitalize;
 }
 
+.mcr-artifact-list {
+    margin-top: 5px;
+
+    .mcr-artifact-item {
+        margin-right: 10px;
+    }
+
+    .mcr-show-more {
+        width: 100%;
+    }
+}
 </style>

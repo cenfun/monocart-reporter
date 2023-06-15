@@ -1267,6 +1267,30 @@ a:not([href], [class]):hover {
     background-color: #4d9221;
 }
 
+.mcr-details-summary {
+    details {
+        position: relative;
+    }
+
+    summary {
+        position: relative;
+        padding: 3px 0;
+        padding-left: 20px;
+        background: url("./images/arrow-right.svg") left center no-repeat;
+        background-size: 16px 16px;
+        list-style: none;
+        cursor: default;
+    }
+
+    summary:hover {
+        background-color: #f8f8f8;
+    }
+
+    details[open] > summary {
+        background-image: url("./images/arrow-down.svg");
+    }
+}
+
 .mcr-num {
     display: inline-block;
     min-width: 18px;
