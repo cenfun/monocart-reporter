@@ -89,6 +89,8 @@ module.exports = {
 
             coverage: {
                 // unpackSourceMap: false
+                // lcov: true,
+                // toIstanbul: true
             },
 
             trend: () => {
