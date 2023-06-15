@@ -617,12 +617,13 @@ onActivated(() => {
             shrink
           >
             <IconLabel
-              icon="link"
+              :icon="item.global?'global':'link'"
+              :title="item.global?'global':''"
               :button="false"
             />
             <a
               :href="item.path"
-              :title="item.name + (item.global?' (global)':'')"
+              :title="item.name"
               target="_blank"
             >{{ item.title }}</a>
           </VuiFlex>

@@ -2,7 +2,8 @@
   - fixed monocart version issue #48
   - fixed retry issue #47
   - added retry for attachments
-  - 
+  - fixed retry id for all plugins
+  - added global icon
 
 * 1.6.34
   - fixed coverage issue #29
