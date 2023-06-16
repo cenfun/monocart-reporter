@@ -34,8 +34,6 @@ export function addCoverageReport(
 
 export type CoverageReportOptions = {
 
-    debug?: boolean,
-
     title?: string,
     outputDir?: string,
     outputName?: string,
@@ -69,8 +67,9 @@ export type CoverageReportOptions = {
     },
 
     // Whether inline all scripts to the single HTML file.
-    inline?: boolean
+    inline?: boolean,
 
+    debug?: boolean
 };
 
 export function attachCoverageReport(

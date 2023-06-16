@@ -628,18 +628,17 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
 - `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 - `options` (Object)
-    - Istanbul only:
-    - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report)
-    - `lcov` (Boolean) Whether to create `lcov.info`
-    - `sourcePath` (Function) source path handler, return a new source path
-    - V8 only:
-    - `toIstanbul` (Boolean) Whether to convert to Istanbul report
-    - `watermarks` (Array) Defaults to `[50, 80]` 
+    - `title` (String) report title.
+    - `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list.
     - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
     - `unpackSourceMap` (Boolean) Whether to unpack all sources from the source map if a related source map file is found.
     - `excludeDistFile` (Boolean) Whether to exclude the dist file (usually minified) if the sources are successfully unpacked from the source map.
     - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
+    - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
+    - `lcov` (Boolean) Whether to create `lcov.info`. Istanbul only.
+    - `sourcePath` (Function) source path handler, return a new source path. Istanbul only.
     - `inline` (Boolean) Whether inline all scripts to the single HTML file.
+    - `debug` (Boolean) The temporary artifacts will not be removed.
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
 
