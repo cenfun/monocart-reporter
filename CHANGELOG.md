@@ -1,3 +1,9 @@
+* 1.6.37
+  - added types
+
+* 1.6.36
+  - fixed coverage filename
+
 * 1.6.35
   - fixed monocart version issue #48
   - fixed retry issue #47
