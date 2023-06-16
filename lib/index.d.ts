@@ -34,6 +34,8 @@ export function addCoverageReport(
 
 export type CoverageReportOptions = {
 
+    debug?: boolean,
+
     title?: string,
     outputDir?: string,
     outputName?: string,
