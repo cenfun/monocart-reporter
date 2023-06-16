@@ -1,10 +1,74 @@
 import { TestInfo } from "@playwright/test"
 
-export function merge(reportDataList: [], options?: object): Promise<void>;
+/**
+ * merge
+ */
+export function merge(
+    reportDataList: [],
+    options?: any
+): Promise<void>;
 
-export function attachAuditReport(runnerResult: object, testInfo: TestInfo, options?: object): Promise<object | void>;
+/**
+ * audit
+ */
+export type AuditReportOptions = {
+    title?: string,
+    outputDir?: string,
+    outputName?: string
+};
 
-export function addCoverageReport(v8list: object[], testInfo: TestInfo): Promise<object | void>;
-export function attachCoverageReport(coverageInput: object[] | object, testInfo: TestInfo, options?: object): Promise<object | void>;
+export function attachAuditReport(
+    runnerResult: any,
+    testInfo: TestInfo,
+    options?: AuditReportOptions
+): Promise<any>;
 
-export function attachNetworkReport(har: string | Buffer, testInfo: TestInfo, options?: object): Promise<object | void>;
+
+/**
+ * coverage
+ */
+export function addCoverageReport(
+    v8list: any[],
+    testInfo: TestInfo
+): Promise<any | void>;
+
+export type CoverageReportOptions = {
+
+    title?: string,
+    // outputDir?: string,
+    outputName?: string,
+
+    toIstanbul?: boolean,
+
+    entryFilter?: (entry: any) => boolean,
+
+    unpackSourceMap?: boolean,
+    excludeDistFile?: boolean,
+    sourceFilter?: (sourcePath: string) => boolean,
+
+    sourcePath?: (sourcePath: string) => string,
+
+    lcov?: boolean,
+
+    watermarks?: number[] | any,
+
+    inline?: boolean
+
+};
+
+export function attachCoverageReport(
+    coverage: any[] | any,
+    testInfo: TestInfo,
+    options?: CoverageReportOptions
+): Promise<any>;
+
+
+
+/**
+ * network
+ */
+export function attachNetworkReport(
+    har: string | Buffer,
+    testInfo: TestInfo,
+    options?: any
+): Promise<any>;
