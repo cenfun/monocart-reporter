@@ -97,7 +97,7 @@ module.exports = {
             // global state
             state: {
                 data: {
-                    count: 1,
+                    count: 0,
                     removeKey: ''
                 },
                 // https://github.com/websockets/ws/blob/master/doc/ws.md
