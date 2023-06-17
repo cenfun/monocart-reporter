@@ -102,7 +102,7 @@ module.exports = {
                 },
                 // https://github.com/websockets/ws/blob/master/doc/ws.md
                 server: {
-                    port: 8091
+
                 },
                 onClose: (data, config) => {
                     // console.log('state on close', data, config.metadata);

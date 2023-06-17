@@ -97,3 +97,15 @@ export function attachNetworkReport(
     testInfo: TestInfo,
     options?: NetworkReportOptions
 ): Promise<any>;
+
+
+/**
+ * state
+ */
+export type StateOptions = {
+    host?: string,
+    port?: number,
+    timeout?: number
+};
+
+export function useState(options?: StateOptions)
