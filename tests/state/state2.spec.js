@@ -15,4 +15,11 @@ test('state test 22', async () => {
     const count = await state.get('count');
     console.log('count', count);
     await state.set('count', count + 1);
+
+    console.log(await state.get());
+
+    await state.remove('removeKey');
+
+    console.log(await state.get());
+
 });
