@@ -97,11 +97,17 @@ module.exports = {
             // global state
             state: {
                 data: {
-                    count: 1
+                    count: 1,
+                    removeKey: ''
                 },
-                port: 8090,
-                onChange: (k, v, testInfo) => {
-                    console.log('state', k, v, testInfo.title);
+                // https://github.com/websockets/ws/blob/master/doc/ws.md
+                server: {
+                    port: 8091
+                },
+                onClose: (data, config) => {
+                    // console.log('state on close', data, config.metadata);
+                    // save state data to global metadata
+                    Object.assign(config.metadata, data);
                 }
             },
 
