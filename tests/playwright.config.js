@@ -87,10 +87,22 @@ module.exports = {
                 // return `https://cenfun.github.io/monocart-reporter/${relativePath}`;
             },
 
+            // global coverage
             coverage: {
                 // unpackSourceMap: false
                 // lcov: true,
                 // toIstanbul: true
+            },
+
+            // global state
+            state: {
+                data: {
+                    count: 1
+                },
+                port: 8090,
+                onChange: (k, v, testInfo) => {
+                    console.log('state', k, v, testInfo.title);
+                }
             },
 
             trend: () => {

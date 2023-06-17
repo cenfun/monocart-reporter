@@ -1,5 +1,8 @@
-* 1.6.37
+* 1.7.0
   - added types
+  
+
+---
 
 * 1.6.36
   - fixed coverage filename

@@ -46,6 +46,7 @@
         "koa": "^2.14.2",
         "koa-static-resolver": "^1.0.4",
         "lz-utils": "^2.0.1",
+        "nodemailer": "^6.9.3",
         "open": "^9.1.0",
         "source-map": "^0.7.4"
     },

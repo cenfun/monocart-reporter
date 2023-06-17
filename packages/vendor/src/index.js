@@ -1,11 +1,12 @@
 import StackUtils from 'stack-utils';
 import { codeFrameColumns } from '@babel/code-frame';
 import { parse } from '@babel/parser';
-import nodemailer from 'nodemailer';
+import WebSocket, { WebSocketServer } from 'ws';
 
 export {
     StackUtils,
     codeFrameColumns,
     parse,
-    nodemailer
+    WebSocket,
+    WebSocketServer
 };
