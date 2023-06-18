@@ -74,13 +74,16 @@ const convert = new Convert({
 
 const convertHtml = (str) => {
 
+    const reg = /\s$/;
+    const endsWithN = reg.test(str) ? '' : '<br/>';
+
     // link
     // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
     // str = str.replace(re, function(a) {
     //     return `<a href="${a}" target="_blank">${a}</a>`;
     // });
 
-    str = convert.toHtml(str);
+    str = convert.toHtml(str) + endsWithN;
 
     return str;
 };
@@ -173,11 +176,7 @@ const getErrors = (item, column) => {
     const list = errors.map((err) => {
         return convertHtml(err);
     });
-
     const content = list.join('');
-    if (!content) {
-        return;
-    }
 
     return {
         icon: 'error',
@@ -194,11 +193,7 @@ const getLogs = (item, column) => {
     const list = logs.map((log) => {
         return convertHtml(log);
     });
-
     const content = list.join('');
-    if (!content) {
-        return;
-    }
 
     return {
         icon: 'log',
