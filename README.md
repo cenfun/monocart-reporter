@@ -829,7 +829,7 @@ Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network
 
 
 ## Global State Management
-When tests are executed in [isolation mode](https://playwright.dev/docs/browser-contexts), we can start a local WebSocket server, and then use the `useState` API to read/write global state data. 
+When tests are executed in [isolation mode](https://playwright.dev/docs/browser-contexts), we can start a local WebSocket server to serve the global data, and read/write the global data with `useState` API.
 - setup global state
 ```js
 module.exports = {
@@ -854,7 +854,7 @@ module.exports = {
     ]
 };
 ```
-- get/set/remove global state
+- get/set/remove global data
 ```js
 const { test } = require('@playwright/test');
 const { useState } = require('monocart-reporter');
