@@ -16,10 +16,12 @@ test('state test 22', async () => {
     console.log('count', count);
     await state.set('count', count + 1);
 
+    console.log('before removed:');
     console.log(await state.get());
 
     await state.remove('removeKey');
 
+    console.log('after removed:');
     console.log(await state.get());
 
 });

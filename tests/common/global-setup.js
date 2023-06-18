@@ -7,6 +7,16 @@ module.exports = async (config) => {
     // https://github.com/motdotla/dotenv
     dotenv.config();
 
+    // console.log(process.env);
+
+    await state.set({
+        login: 'login-user',
+        group: 'QA Team',
+        npm_package_name: process.env.npm_package_name
+    }).catch((err) => {
+        console.error(err);
+    });
+
     const metadata = config.metadata;
 
     // if (metadata.baseURL) {
@@ -18,12 +28,7 @@ module.exports = async (config) => {
     // collect data in global setup and save to metadata
     const browser = await chromium.launch();
     const chromiumVersion = await browser.version();
-    console.log(chromiumVersion);
+    console.log('chromiumVersion', chromiumVersion);
     metadata.chromiumVersion = chromiumVersion;
-
-    await state.set({
-        login: 'login-user',
-        group: 'QA Team'
-    });
 
 };

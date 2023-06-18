@@ -1,15 +1,16 @@
 const { test } = require('@playwright/test');
 const { useState } = require('monocart-reporter');
 
-test('state test 31', async () => {
+test('state test hang up', async () => {
+
+    console.log('should failed');
 
     // wrong port
     const state = useState({
-        port: 8080
+        port: 8031
     });
 
     const count = await state.get('count');
-    console.log(count);
-
+    console.log('count', count);
 
 });
