@@ -12,11 +12,13 @@ test('state test 21', async ({ browserName }) => {
         someKey: 'some value'
     });
 
-    console.log(await state.get('browser', 'someKey'));
+    const [browser, someKey] = await state.get('browser', 'someKey');
+    console.log(browser, someKey);
 
     await state.remove('someKey');
 
-    console.log(await state.get());
+    const all = await state.get();
+    console.log(all);
 
 });
 
