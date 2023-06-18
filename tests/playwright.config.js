@@ -97,16 +97,16 @@ module.exports = {
             // global state
             state: {
                 data: {
-                    count: 0,
-                    removeKey: ''
+                    count: 0
                 },
                 // https://github.com/websockets/ws/blob/master/doc/ws.md
                 server: {
 
                 },
-                onMessage: (ws, message, next) => {
-                    // console.log(message);
-                    next();
+                // receive messages and send back response
+                onReceive: function(... args) {
+                    console.log('receive on server', args);
+                    return ['custom response', ... args];
                 },
                 onClose: (data, config) => {
                     // console.log('state on close', data, config.metadata);

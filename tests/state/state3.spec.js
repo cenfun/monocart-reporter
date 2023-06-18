@@ -14,3 +14,14 @@ test('state test hang up', async () => {
     console.log('count', count);
 
 });
+
+test('state test customize sending and receiving', async () => {
+
+    const state = useState();
+
+    // send messages
+    const res = await state.send('string data', {});
+    console.log('receive on client', res);
+
+});
+

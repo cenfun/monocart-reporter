@@ -1,6 +1,6 @@
 * 1.7.0
   - added types
-  
+  - added new feature Global State Management
 
 ---
 

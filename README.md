@@ -34,6 +34,7 @@
     - [Compare Istanbul, V8 and V8 to Istanbul](#compare-istanbul-v8-and-v8-to-istanbul)
     - [Global Coverage Report](#global-coverage-report) for Component Testing
 * [Attach Network Report](#attach-network-report)
+* [Global State Management](#global-state-management)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd hook](#onend-hook)
     - [Send Email](#send-email)
@@ -761,7 +762,6 @@ Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments
  Generate HAR with `recordHar` option in browser.newContext() (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js) preview [report](https://cenfun.github.io/monocart-reporter/network-1a18723ee59b36867898/index.html))
 
 ```js
-// CommonJS
 const fs = require('fs');
 const path = require('path');
 const { test } = require('@playwright/test');
@@ -826,6 +826,92 @@ test('finally, attach HAR', async () => {
 });
 ```
 Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network-38e613e8d93547bdb27f/index.html)
+
+
+## Global State Management
+When tests are executed in [isolation mode](https://playwright.dev/docs/browser-contexts), we can start a local WebSocket server, and then use the `useState` API to read/write global state data. 
+- setup global state
+```js
+module.exports = {
+    reporter: [
+        ['list'],
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            state: {
+                data: {
+                    count: 0
+                },
+                server: {
+                    // port: 8130
+                },
+                onClose: (data, config) => {
+                    // save state data to global metadata
+                    Object.assign(config.metadata, data);
+                }
+            }
+        }]
+    ]
+};
+```
+- get/set/remove global state
+```js
+const { test } = require('@playwright/test');
+const { useState } = require('monocart-reporter');
+test('state test', async ({ browserName }) => {
+    const state = useState({
+        // port: 8130
+    });
+
+    const count = await state.get('count');
+    console.log('count', count);
+
+    await state.set('count', count + 1);
+
+    await state.set({
+        browser: browserName,
+        someKey: 'some value'
+    });
+
+    console.log(await state.get('browser', 'someKey'));
+
+    await state.remove('someKey');
+
+    console.log(await state.get());
+});
+``` 
+- customize sending and receiving messages
+```js
+const { test } = require('@playwright/test');
+const { useState } = require('monocart-reporter');
+test('state test', async ({ browserName }) => {
+    const state = useState({
+        // port: 8130
+    });
+    // send messages
+    const res = await state.send('string data', {});
+    console.log('receive on client', res);
+});
+``` 
+```js
+module.exports = {
+    reporter: [
+        ['list'],
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            state: {
+                // receive messages and send back response
+                onReceive: function(... args) {
+                    console.log('receive on server', args);
+                    return ['custom response', ... args];
+                }
+            }
+        }]
+    ]
+};
+```
+
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:

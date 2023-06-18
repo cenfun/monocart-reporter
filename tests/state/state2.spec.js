@@ -7,7 +7,17 @@ test('state test 21', async ({ browserName }) => {
     console.log('count', count);
     await state.set('count', count + 1);
 
-    await state.set('browserName', browserName);
+    await state.set({
+        browser: browserName,
+        someKey: 'some value'
+    });
+
+    console.log(await state.get('browser', 'someKey'));
+
+    await state.remove('someKey');
+
+    console.log(await state.get());
+
 });
 
 test('state test 22', async () => {
@@ -15,13 +25,4 @@ test('state test 22', async () => {
     const count = await state.get('count');
     console.log('count', count);
     await state.set('count', count + 1);
-
-    console.log('before removed:');
-    console.log(await state.get());
-
-    await state.remove('removeKey');
-
-    console.log('after removed:');
-    console.log(await state.get());
-
 });
