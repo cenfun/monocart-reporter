@@ -882,18 +882,6 @@ test('state test', async ({ browserName }) => {
 ``` 
 - customize sending and receiving messages
 ```js
-const { test } = require('@playwright/test');
-const { useState } = require('monocart-reporter');
-test('state test', async ({ browserName }) => {
-    const state = useState({
-        // port: 8130
-    });
-    // send messages
-    const res = await state.send('string data', {});
-    console.log('receive on client', res);
-});
-``` 
-```js
 module.exports = {
     reporter: [
         ['list'],
@@ -911,6 +899,18 @@ module.exports = {
     ]
 };
 ```
+```js
+const { test } = require('@playwright/test');
+const { useState } = require('monocart-reporter');
+test('state test', async ({ browserName }) => {
+    const state = useState({
+        // port: 8130
+    });
+    // send messages
+    const res = await state.send('string data', {});
+    console.log('receive on client', res);
+});
+``` 
 
 
 ## Merge Shard Reports
