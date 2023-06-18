@@ -108,4 +108,19 @@ export type StateOptions = {
     timeout?: number
 };
 
-export function useState(options?: StateOptions)
+export type State = {
+    get: {
+        (key: string): Promise<any>,
+        (...args: string[]): Promise<any>
+    },
+    set: {
+        (key: string, value: any): Promise<void>,
+        (obj: object): Promise<void>
+    },
+    remove: {
+        (key: string): Promise<void>,
+        (...args: string[]): Promise<void>
+    }
+}
+
+export function useState(options?: StateOptions): State;

@@ -1,5 +1,7 @@
 const { chromium } = require('@playwright/test');
 const dotenv = require('dotenv');
+const { useState } = require('monocart-reporter');
+const state = useState();
 module.exports = async (config) => {
 
     // https://github.com/motdotla/dotenv
@@ -18,5 +20,10 @@ module.exports = async (config) => {
     const chromiumVersion = await browser.version();
     console.log(chromiumVersion);
     metadata.chromiumVersion = chromiumVersion;
+
+    await state.set({
+        login: 'login-user',
+        group: 'QA Team'
+    });
 
 };

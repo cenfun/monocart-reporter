@@ -8,9 +8,7 @@ test('state test 31', async () => {
         port: 8080
     });
 
-    const count = await state.get('count').catch((e) => {
-        console.log(e);
-    });
+    const count = await state.get('count');
     console.log(count);
 
 
