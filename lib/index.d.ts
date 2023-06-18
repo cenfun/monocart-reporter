@@ -111,7 +111,7 @@ export type StateOptions = {
 export type State = {
     get: {
         (key: string): Promise<any>,
-        (...args: string[]): Promise<any>
+        (...args: string[]): Promise<any[]>
     },
     set: {
         (key: string, value: any): Promise<void>,
