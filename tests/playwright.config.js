@@ -104,8 +104,8 @@ module.exports = {
                 server: {
 
                 },
-                onMessage: (ws, args, next) => {
-                    // console.log(args);
+                onMessage: (ws, message, next) => {
+                    // console.log(message);
                     next();
                 },
                 onClose: (data, config) => {
