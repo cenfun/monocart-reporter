@@ -120,7 +120,8 @@ export type State = {
     remove: {
         (key: string): Promise<void>,
         (...args: string[]): Promise<void>
-    }
+    },
+    send: (...args: any[]) => Promise<any>
 }
 
 export function useState(options?: StateOptions): State;

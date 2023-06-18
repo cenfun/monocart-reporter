@@ -104,8 +104,9 @@ module.exports = {
                 server: {
 
                 },
-                onMessage: (action, args) => {
-                    // console.log(action, args);
+                onMessage: (ws, args, next) => {
+                    // console.log(args);
+                    next();
                 },
                 onClose: (data, config) => {
                     // console.log('state on close', data, config.metadata);
