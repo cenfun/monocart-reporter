@@ -1,12 +1,11 @@
 {
     "name": "monocart-reporter",
-    "version": "1.6.36",
+    "version": "1.7.0",
     "description": "A playwright test reporter. Shows suites/cases/steps with tree style, markdown annotations, custom columns/formatters/data collection visitors, console logs, style tags, send email.",
     "main": "lib/index.js",
     "bin": {
         "monocart": "lib/cli.js"
     },
-    "types": "./lib/index.d.ts",
     "exports": {
         ".": {
             "types": "./lib/index.d.ts",
@@ -17,6 +16,7 @@
         "./cli": "./lib/cli.js",
         "./package.json": "./package.json"
     },
+    "types": "./lib/index.d.ts",
     "scripts": {
         "link": "node ./scripts/link.js",
         "test": "npm run link && npx playwright test -c tests",
@@ -52,14 +52,14 @@
         "source-map": "^0.7.4"
     },
     "devDependencies": {
-        "@playwright/test": "^1.35.0",
+        "@playwright/test": "^1.35.1",
         "axios": "^1.4.0",
-        "dotenv": "^16.1.4",
-        "eslint": "^8.42.0",
+        "dotenv": "^16.3.1",
+        "eslint": "^8.43.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",
-        "eslint-plugin-vue": "^9.14.1",
-        "stylelint": "^15.7.0",
+        "eslint-plugin-vue": "^9.15.0",
+        "stylelint": "^15.8.0",
         "stylelint-config-plus": "^1.0.3",
         "vine-ui": "^3.1.12"
     }

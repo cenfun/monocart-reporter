@@ -1,5 +1,5 @@
 * 1.7.0
-  - added types
+  - added types for package
   - added new feature Global State Management
 
 ---

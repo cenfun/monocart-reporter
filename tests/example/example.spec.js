@@ -168,7 +168,7 @@ test('@util v8 dedupeRanges', () => {
 });
 
 test('@smoke Test full report', () => {
-    expect(Math.random()).toBeLessThan(0.5);
+
 });
 
 /**
@@ -340,7 +340,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
         });
 
         test('case last', () => {
-            expect(Math.random()).toBeLessThan(0.5);
+
         });
     });
 
@@ -354,7 +354,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
     });
 
     test('case two', () => {
-        expect(Math.random()).toBeLessThan(0.5);
+
     });
 });
 
@@ -389,23 +389,23 @@ test.describe('suite group 2', () => {
     });
 
     test('@smoke @fast one', () => {
-        expect(Math.random()).toBeLessThan(0.5);
+
     });
 
     test('@sanity @critical two', () => {
-        expect(Math.random()).toBeLessThan(0.5);
+
     });
 
     test('same title', () => {
-        expect(Math.random()).toBeLessThan(0.5);
+
     });
 
 });
 
 test('same title', () => {
-    expect(Math.random()).toBeLessThan(0.5);
+
 });
 
 test('@smoke case after suite', () => {
-    expect(Math.random()).toBeLessThan(0.5);
+
 });
