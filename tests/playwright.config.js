@@ -104,6 +104,9 @@ module.exports = {
                 server: {
 
                 },
+                onMessage: (action, args) => {
+                    // console.log(action, args);
+                },
                 onClose: (data, config) => {
                     // console.log('state on close', data, config.metadata);
                     // save state data to global metadata
