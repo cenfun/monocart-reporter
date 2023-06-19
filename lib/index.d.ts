@@ -44,8 +44,6 @@ export type CoverageReportOptions = {
     // A filter function to execute for each element in the V8 list.
     entryFilter?: (entry: any) => boolean,
 
-    // Whether to unpack all sources from the source map if a related source map file is found.
-    unpackSourceMap?: boolean,
     // Whether to exclude the dist file (usually minified) if the sources are successfully unpacked from the source map.
     excludeDistFile?: boolean,
 

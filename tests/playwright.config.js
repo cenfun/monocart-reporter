@@ -89,9 +89,10 @@ module.exports = {
 
             // global coverage
             coverage: {
-                // unpackSourceMap: false
+
                 // lcov: true,
                 // toIstanbul: true
+                debug: true
             },
 
             // global state

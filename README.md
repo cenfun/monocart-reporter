@@ -123,7 +123,6 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     coverage: null,
     // coverage: {
     //     entryFilter: (entry) => true,
-    //     unpackSourceMap: true,
     //     excludeDistFile: true,
     //     sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
     // },
@@ -632,7 +631,6 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
     - `title` (String) report title.
     - `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list.
     - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
-    - `unpackSourceMap` (Boolean) Whether to unpack all sources from the source map if a related source map file is found.
     - `excludeDistFile` (Boolean) Whether to exclude the dist file (usually minified) if the sources are successfully unpacked from the source map.
     - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
     - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
@@ -745,7 +743,6 @@ module.exports = {
             // global coverage report options
             coverage: {
                 entryFilter: (entry) => true,
-                unpackSourceMap: true,
                 excludeDistFile: true,
                 sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
             }

@@ -67,7 +67,6 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
     console.log(v8.summary);
 
     const istanbul = await attachCoverageReport(coverageList, test.info(), {
-        // unpackSourceMap: false,
         // sourceFilter: (sourceName) => sourceName.indexOf('node_modules') === -1,
         toIstanbul: true
     });
@@ -149,7 +148,7 @@ test('Take V8 js and css coverage report', async ({ page }) => {
     await addCoverageReport(coverageList, test.info());
 
     const report = await attachCoverageReport(coverageList, test.info(), {
-        unpackSourceMap: true
+
     });
     console.log(report.summary);
 
