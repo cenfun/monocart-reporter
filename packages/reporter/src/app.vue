@@ -343,6 +343,16 @@ const onSearchDropdownClick = (e) => {
     state.searchDropdownTarget = e.target;
 };
 
+const resetGroups = () => {
+    Object.keys(state.groups).forEach((k) => {
+        if (k === 'step' || k === 'merge') {
+            state.groups[k] = false;
+        } else {
+            state.groups[k] = true;
+        }
+    });
+};
+
 // =================================================================================
 
 const onSuiteDropdownClick = (e) => {
@@ -803,18 +813,25 @@ window.addEventListener('message', (e) => {
           Step
         </VuiSwitch>
 
-        <div class="mcr-suite-merge">
-          <VuiSwitch
-            v-model="state.groups.merge"
-            :label-clickable="true"
-            label-position="right"
-            width="28px"
-            height="16px"
-            tooltip="Whether to merge groups by title when the parent group is hidden"
-          >
-            Merge Groups by Title
-          </VuiSwitch>
-        </div>
+        <div class="mcr-groups-line" />
+        <VuiSwitch
+          v-model="state.groups.merge"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+          tooltip="Whether to merge groups by title when the parent group is hidden"
+        >
+          Merge Groups by Title
+        </VuiSwitch>
+
+        <div class="mcr-groups-line" />
+        <IconLabel
+          icon="reload"
+          @click="resetGroups()"
+        >
+          Reset
+        </IconLabel>
       </VuiFlex>
     </VuiPopover>
 
@@ -1251,9 +1268,8 @@ a:not([href], [class]):hover {
     }
 }
 
-.mcr-suite-merge {
-    padding-top: 10px;
-    border-top: 1px solid #eee;
+.mcr-groups-line {
+    border-top: 1px solid #ccc;
 }
 
 .mcr-case-failed {
