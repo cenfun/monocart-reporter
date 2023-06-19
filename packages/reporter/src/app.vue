@@ -672,7 +672,7 @@ window.addEventListener('message', (e) => {
         </div>
       </div>
 
-      <VuiFlex gap="5px">
+      <VuiFlex gap="8px">
         <VuiSwitch
           v-model="state.groups.group"
           :label-clickable="true"
