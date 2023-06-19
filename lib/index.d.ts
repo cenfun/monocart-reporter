@@ -44,9 +44,6 @@ export type CoverageReportOptions = {
     // A filter function to execute for each element in the V8 list.
     entryFilter?: (entry: any) => boolean,
 
-    // Whether to exclude the dist file (usually minified) if the sources are successfully unpacked from the source map.
-    excludeDistFile?: boolean,
-
     // A filter function to execute for each element in the sources which unpacked from the source map.
     sourceFilter?: (sourcePath: string) => boolean,
 

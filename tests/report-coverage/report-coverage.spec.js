@@ -62,7 +62,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
     await addCoverageReport(coverageList, test.info());
 
     const v8 = await attachCoverageReport(coverageList, test.info(), {
-        excludeDistFile: false
+        debug: true
     });
     console.log(v8.summary);
 

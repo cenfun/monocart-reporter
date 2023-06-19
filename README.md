@@ -123,7 +123,6 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     coverage: null,
     // coverage: {
     //     entryFilter: (entry) => true,
-    //     excludeDistFile: true,
     //     sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
     // },
 
@@ -631,7 +630,6 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
     - `title` (String) report title.
     - `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list.
     - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
-    - `excludeDistFile` (Boolean) Whether to exclude the dist file (usually minified) if the sources are successfully unpacked from the source map.
     - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
     - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
     - `lcov` (Boolean) Whether to create `lcov.info`. Istanbul only.
@@ -703,7 +701,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
     const coverageList = [... jsCoverage, ... cssCoverage];
 
     const v8 = await attachCoverageReport(coverageList, test.info(), {
-        excludeDistFile: false
+        debug: true
     });
     console.log(v8.summary);
 
@@ -743,7 +741,6 @@ module.exports = {
             // global coverage report options
             coverage: {
                 entryFilter: (entry) => true,
-                excludeDistFile: true,
                 sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
             }
         }]

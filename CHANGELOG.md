@@ -1,6 +1,7 @@
 * 1.7.1
   - added group feature to replace the previous suite and step group
   - removed unpackSourceMap option, it should be true always
+  - removed excludeDistFile option, it should be replaced with debug option
   - updated istanbul report to html-spa
 
 
