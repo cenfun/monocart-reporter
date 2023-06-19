@@ -662,32 +662,18 @@ window.addEventListener('message', (e) => {
         </div>
       </div>
 
-      <VuiFlex
-        shrink
-        gap="10px"
-      >
-        <VuiFlex gap="5px">
-          <VuiSwitch
-            v-model="state.groups.suite"
-            :label-clickable="true"
-            label-position="right"
-          >
-            Suite
-          </VuiSwitch>
-          <IconLabel
-            v-if="state.groups.suite"
-            icon="triangle-down"
-            @click="onSuiteDropdownClick"
-          />
-        </VuiFlex>
-
+      <VuiFlex gap="5px">
         <VuiSwitch
-          v-model="state.groups.step"
+          v-model="state.groups.group"
           :label-clickable="true"
           label-position="right"
         >
-          Step
+          Group
         </VuiSwitch>
+        <IconLabel
+          icon="triangle-down"
+          @click="onSuiteDropdownClick"
+        />
       </VuiFlex>
     </VuiFlex>
 
@@ -761,7 +747,7 @@ window.addEventListener('message', (e) => {
       v-model="state.suiteDropdownVisible"
       :target="state.suiteDropdownTarget"
       positions="bottom"
-      title="Show Suite Levels"
+      title="Show Group Levels"
     >
       <VuiFlex
         direction="column"
@@ -797,14 +783,37 @@ window.addEventListener('message', (e) => {
         >
           File
         </VuiSwitch>
+        <VuiSwitch
+          v-model="state.groups.describe"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+        >
+          Describe
+        </VuiSwitch>
 
-        <div class="mcr-suite-merge">
+        <VuiSwitch
+          v-model="state.groups.step"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+        >
+          Step
+        </VuiSwitch>
+
+        <div
+          v-if="state.groups.describe"
+          class="mcr-suite-merge"
+        >
           <VuiSwitch
             v-model="state.groups.merge"
             :label-clickable="true"
             label-position="right"
             width="28px"
             height="16px"
+            tooltip="Whether to merge describes based on the describe title if the parent node is hidden"
           >
             Merge Describes
           </VuiSwitch>
@@ -823,7 +832,7 @@ window.addEventListener('message', (e) => {
         gap="10px"
         margin="10px 0"
       >
-        <template v-if="state.groups.suite">
+        <template v-if="state.groups.group">
           <IconLabel
             v-if="state.systemList"
             icon="shard"

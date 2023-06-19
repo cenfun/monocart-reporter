@@ -4,6 +4,7 @@ import Util from '../utils/util.js';
 import { formatters, matchedFormatter } from './formatters.js';
 import state from '../modules/state.js';
 import searchHandler from './search.js';
+import { getGridRows } from './grid-rows.js';
 
 const isNodeTruncated = (node) => {
     if (!node) {
@@ -444,16 +445,18 @@ const bindGridEvents = () => {
 };
 
 const getGridData = () => {
-    const key = [state.caseType, state.groups.suite, state.groups.step].join('_');
+
+    const gvs = Object.values(state.groups).map((v) => (v ? 1 : 0));
+    const key = [state.caseType, ... gvs].join('_');
     if (state.gridDataMap[key]) {
         return state.gridDataMap[key];
     }
-    // console.log(key);
-    const allData = JSON.parse(JSON.stringify(state.gridDataAll));
+    // console.log('cache key', key);
+    const data = JSON.parse(JSON.stringify(state.gridDataAll));
 
-    initCustomsFormatters(allData.columns, state.formatters);
+    initCustomsFormatters(data.columns, state.formatters);
 
-    const data = getGridDataByType(allData, state.caseType, state.groups.suite, state.groups.step);
+    data.rows = getGridRows(data.rows, state.caseType, state.groups);
 
     // console.log(key, data);
 
@@ -495,75 +498,6 @@ export const initCustomsFormatters = (list, customFormatters) => {
     });
 };
 
-const getGridDataByType = (allData, caseType, suiteVisible, stepVisible) => {
-
-    allData.rows = getFilteredRows(allData.rows, caseType);
-
-    if (!suiteVisible) {
-        const list = [];
-        Util.forEachTree(allData.rows, function(item) {
-            if (item.type === 'case') {
-                list.push(item);
-            }
-        });
-        allData.rows = list;
-    }
-
-    if (!stepVisible) {
-        Util.forEachTree(allData.rows, function(item) {
-            if (item.type === 'case') {
-                item.collapsed = false;
-                delete item.subs;
-            }
-        });
-    }
-
-    return allData;
-
-};
-
-const getFilteredRows = (rows, caseType) => {
-
-    if (caseType === 'tests') {
-        return rows;
-    }
-
-    rows = rows.filter((it) => {
-        if (it.type === 'case' && it.caseType !== caseType) {
-            return false;
-        }
-        return true;
-    });
-    rows.forEach((item) => {
-        if (item.subs) {
-            const subs = getFilteredRows(item.subs, caseType);
-            if (subs.length) {
-                item.subs = subs;
-                return;
-            }
-            delete item.subs;
-        }
-    });
-
-    rows = rows.filter((it) => {
-        if (it.type === 'suite' && !it.subs) {
-            return false;
-        }
-        return true;
-    });
-
-    // remove row classMap when caseType is skipped
-    if (caseType === 'skipped') {
-        rows.forEach((it) => {
-            if (it.caseType === 'skipped') {
-                it.classMap = '';
-            }
-        });
-    }
-
-    return rows;
-
-};
 
 const getRowNumberFilter = () => {
     let rowNumber = 1;

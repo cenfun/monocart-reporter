@@ -15,15 +15,15 @@ const state = shallowReactive({
     caseType: hash.get('caseType') || 'tests',
 
     groups: shallowReactive({
-        suite: true,
+        group: true,
 
         shard: true,
         project: true,
         file: true,
+        describe: true,
+        step: false,
 
-        merge: false,
-
-        step: false
+        merge: false
     }),
 
     windowWidth: window.innerWidth,
