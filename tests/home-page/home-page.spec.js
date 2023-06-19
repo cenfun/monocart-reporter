@@ -107,42 +107,47 @@ test('test with custom steps', async ({ page }, testInfo) => {
     });
 });
 
-test('merge same steps - route.continue', async ({ page }) => {
+test.describe('group', () => {
 
-    await page.route('**/*', (route) => {
-        const url = route.request().url();
-        // console.log(url);
-        if (url.includes('abort')) {
-            return route.abort();
-        }
-        return route.continue();
-    });
+    test('merge same steps - route.continue', async ({ page }) => {
 
-    // mock requests
-    await page.evaluate(() => {
-        for (let i = 0; i < 30; i++) {
-            const script = document.createElement('script');
-            if (i === 5) {
-                script.src = `http://localhost/${i}/abort.js`;
-            } else {
-                script.src = `http://localhost/${i}/continue.js`;
+        await page.route('**/*', (route) => {
+            const url = route.request().url();
+            // console.log(url);
+            if (url.includes('abort')) {
+                return route.abort();
             }
-            document.body.appendChild(script);
+            return route.continue();
+        });
+
+        // mock requests
+        await page.evaluate(() => {
+            for (let i = 0; i < 30; i++) {
+                const script = document.createElement('script');
+                if (i === 5) {
+                    script.src = `http://localhost/${i}/abort.js`;
+                } else {
+                    script.src = `http://localhost/${i}/continue.js`;
+                }
+                document.body.appendChild(script);
+            }
+        });
+
+        await new Promise((resolve) => {
+            setTimeout(resolve, 100);
+        });
+
+    });
+
+    test('merge same steps - for expect', () => {
+        for (let i = 1; i < 30; i++) {
+            // @title step title count ( i > 0 )
+            expect(i).toBeGreaterThan(0);
         }
     });
 
-    await new Promise((resolve) => {
-        setTimeout(resolve, 100);
-    });
-
 });
 
-test('merge same steps - for expect', () => {
-    for (let i = 1; i < 30; i++) {
-        // @title step title count ( i > 0 )
-        expect(i).toBeGreaterThan(0);
-    }
-});
 
 test('image comparison', async ({ page }) => {
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');

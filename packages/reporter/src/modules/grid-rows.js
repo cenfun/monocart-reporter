@@ -53,7 +53,7 @@ const removeSteps = (item) => {
     }
 };
 
-const forEachRow = (parentSubs, rows, groups) => {
+const getRowsByGroup = (parentSubs, rows, groups) => {
     rows.forEach((item) => {
 
         // suite
@@ -63,13 +63,13 @@ const forEachRow = (parentSubs, rows, groups) => {
             if (isShow) {
                 if (item.subs) {
                     const subs = [];
-                    forEachRow(subs, item.subs, groups);
+                    getRowsByGroup(subs, item.subs, groups);
                     item.subs = subs;
                 }
                 parentSubs.push(item);
             } else {
                 if (item.subs) {
-                    forEachRow(parentSubs, item.subs, groups);
+                    getRowsByGroup(parentSubs, item.subs, groups);
                 }
             }
 
@@ -86,6 +86,43 @@ const forEachRow = (parentSubs, rows, groups) => {
 
     });
 };
+
+const mergeRowsGroups = (rows) => {
+
+    const map = new Map();
+    const indexes = [];
+    rows.forEach((item, i) => {
+        if (item.type === 'suite' && item.subs) {
+
+            const title = item.title;
+
+            const prev = map.get(title);
+            if (prev) {
+                indexes.push(i);
+                // merge subs
+                prev.caseNum += item.caseNum;
+                prev.subs = prev.subs.concat(item.subs);
+                mergeRowsGroups(prev.subs);
+
+            } else {
+                map.set(title, item);
+                mergeRowsGroups(item.subs);
+            }
+
+        }
+    });
+
+    if (indexes.length) {
+        indexes.reverse();
+        indexes.forEach((i) => {
+            rows.splice(i, 1);
+        });
+    }
+
+    map.clear();
+
+};
+
 
 export const getGridRows = (allRows, caseType, groups) => {
     const rows = getRowsByCaseType(allRows, caseType);
@@ -104,9 +141,12 @@ export const getGridRows = (allRows, caseType, groups) => {
 
     // with group, tree list
     const list = [];
-    forEachRow(list, rows, groups);
+    getRowsByGroup(list, rows, groups);
 
     // merge group
+    if (groups.merge) {
+        mergeRowsGroups(list);
+    }
 
     return list;
 };

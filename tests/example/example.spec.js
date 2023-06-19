@@ -6,7 +6,7 @@
 const { test, expect } = require('@playwright/test');
 const Util = require('../../lib/utils/util.js');
 
-test.describe('@util group', () => {
+test.describe('group', () => {
 
     /**
  * add extra information for case
@@ -176,7 +176,7 @@ test('@smoke Test full report', () => {
  * @owner Mark
  * @jira MCR-16900
  */
-test.describe('suite group 1 @beta', () => {
+test.describe('parent group', () => {
 
     // https://playwright.dev/docs/test-fixtures
     // First argument must use the object destructuring pattern: fixtures
@@ -229,7 +229,7 @@ test.describe('suite group 1 @beta', () => {
 
     });
 
-    test.describe('suite sub group @beta', () => {
+    test.describe('child group', () => {
 
         test.beforeEach(async () => {
             console.log('beforeEach delay 10');
@@ -358,7 +358,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
     });
 });
 
-test.describe('suite group 2', () => {
+test.describe('next group', () => {
 
     test('flaky @todo', () => {
         const testInfo = test.info();
