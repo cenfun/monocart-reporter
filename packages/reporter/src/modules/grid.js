@@ -272,8 +272,8 @@ export const expandRowLevel = (type) => {
             const rowType = rowItem.type === 'suite' ? rowItem.suiteType : rowItem.type;
             rowItem.collapsed = !list.includes(rowType);
 
-            // Special case, if no describes in file level
-            if (rowType === 'file' && state.groups.describe) {
+            // Special case, sometimes no describes in a file level
+            if (type === 'describe' && rowType === 'file') {
                 if (!rowItem.subs.find((it) => it.suiteType === 'describe')) {
                     rowItem.collapsed = true;
                 }
