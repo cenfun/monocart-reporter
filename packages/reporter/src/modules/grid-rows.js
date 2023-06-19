@@ -53,27 +53,60 @@ const removeSteps = (item) => {
     }
 };
 
+const forEachRow = (parentSubs, rows, groups) => {
+    rows.forEach((item) => {
+
+        // suite
+        if (item.type === 'suite') {
+
+            const isShow = groups[item.suiteType];
+            if (isShow) {
+                if (item.subs) {
+                    const subs = [];
+                    forEachRow(subs, item.subs, groups);
+                    item.subs = subs;
+                }
+                parentSubs.push(item);
+            } else {
+                if (item.subs) {
+                    forEachRow(parentSubs, item.subs, groups);
+                }
+            }
+
+            return;
+        }
+
+        // case and step
+        if (item.type === 'case') {
+            if (!groups.step) {
+                removeSteps(item);
+            }
+            parentSubs.push(item);
+        }
+
+    });
+};
+
 export const getGridRows = (allRows, caseType, groups) => {
     const rows = getRowsByCaseType(allRows, caseType);
 
+    // no group, only case, flat list
     if (!groups.group) {
-        const list = [];
+        const caseList = [];
         Util.forEachTree(rows, function(item) {
             if (item.type === 'case') {
                 removeSteps(item);
-                list.push(item);
+                caseList.push(item);
             }
         });
-        return list;
+        return caseList;
     }
 
-    if (!groups.step) {
-        Util.forEachTree(rows, function(item) {
-            if (item.type === 'case') {
-                removeSteps(item);
-            }
-        });
-    }
+    // with group, tree list
+    const list = [];
+    forEachRow(list, rows, groups);
 
-    return rows;
+    // merge group
+
+    return list;
 };

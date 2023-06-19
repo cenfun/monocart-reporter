@@ -803,19 +803,16 @@ window.addEventListener('message', (e) => {
           Step
         </VuiSwitch>
 
-        <div
-          v-if="state.groups.describe"
-          class="mcr-suite-merge"
-        >
+        <div class="mcr-suite-merge">
           <VuiSwitch
             v-model="state.groups.merge"
             :label-clickable="true"
             label-position="right"
             width="28px"
             height="16px"
-            tooltip="Whether to merge describes based on the describe title if the parent node is hidden"
+            tooltip="Whether to merge groups by title when the parent group is hidden"
           >
-            Merge Describes
+            Merge Groups by Title
           </VuiSwitch>
         </div>
       </VuiFlex>
