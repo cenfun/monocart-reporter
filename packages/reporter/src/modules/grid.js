@@ -238,99 +238,50 @@ const clickTitleHandler = (d) => {
 
 };
 
-const expandParent = (row) => {
-    while (row.tg_parent) {
-        row = row.tg_parent;
-        row.collapsed = false;
-    }
-};
-
 export const expandRowLevel = (type) => {
     state.levelPopoverVisible = false;
     state.levelPopoverTarget = null;
 
     const grid = state.grid;
 
+    // step all expand
     if (type === 'step') {
         grid.expandAllRows();
         return;
     }
 
+    // shard all collapse
     if (type === 'shard') {
         grid.collapseAllRows();
         return;
     }
 
-    if (type === 'project') {
-        if (!state.systemList) {
-            grid.collapseAllRows();
-            return;
+    const levels = {
+        project: ['shard'],
+        file: ['shard', 'project'],
+        describe: ['shard', 'project', 'file'],
+        case: ['shard', 'project', 'file', 'describe']
+    };
+
+    const list = levels[type];
+    if (!list) {
+        return;
+    }
+    grid.forEachRow((rowItem) => {
+        if (rowItem.subs && rowItem.tg_subs_length) {
+            const rowType = rowItem.type === 'suite' ? rowItem.suiteType : rowItem.type;
+            rowItem.collapsed = !list.includes(rowType);
+
+            // Special case, if no describes in file level
+            if (rowType === 'file' && state.groups.describe) {
+                if (!rowItem.subs.find((it) => it.suiteType === 'describe')) {
+                    rowItem.collapsed = true;
+                }
+            }
+
         }
-        grid.forEachRow((rowItem) => {
-            if (rowItem.subs && rowItem.tg_subs_length) {
-                if (rowItem.suiteType === 'shard') {
-                    rowItem.collapsed = false;
-                } else {
-                    rowItem.collapsed = true;
-                }
-            }
-        });
-        grid.update();
-        return;
-    }
-
-    if (type === 'file') {
-        grid.forEachRow((rowItem) => {
-            if (rowItem.subs && rowItem.tg_subs_length) {
-                if (rowItem.suiteType === 'project') {
-                    rowItem.collapsed = false;
-                    expandParent(rowItem);
-                } else {
-                    rowItem.collapsed = true;
-                }
-            }
-        });
-        grid.update();
-        return;
-    }
-
-    if (type === 'suite') {
-        grid.forEachRow((rowItem) => {
-            if (rowItem.subs && rowItem.tg_subs_length) {
-                if (rowItem.type === 'suite') {
-
-                    const subSuite = rowItem.subs.find((it) => it.type === 'suite');
-                    if (!subSuite) {
-                        rowItem.collapsed = true;
-                        return;
-                    }
-
-                    rowItem.collapsed = false;
-                    expandParent(rowItem);
-
-                } else {
-                    rowItem.collapsed = true;
-                }
-            }
-        });
-        grid.update();
-        return;
-    }
-
-    if (type === 'case') {
-        grid.forEachRow((rowItem) => {
-            if (rowItem.subs && rowItem.tg_subs_length) {
-                if (rowItem.type === 'suite') {
-                    rowItem.collapsed = false;
-                    expandParent(rowItem);
-                } else {
-                    rowItem.collapsed = true;
-                }
-            }
-        });
-        grid.update();
-
-    }
+    });
+    grid.update();
 
 };
 

@@ -831,7 +831,7 @@ window.addEventListener('message', (e) => {
       >
         <template v-if="state.groups.group">
           <IconLabel
-            v-if="state.systemList"
+            v-if="state.groups.shard && state.systemList"
             icon="shard"
             @click="expandRowLevel('shard')"
           >
@@ -839,6 +839,7 @@ window.addEventListener('message', (e) => {
           </IconLabel>
 
           <IconLabel
+            v-if="state.groups.project"
             icon="project"
             @click="expandRowLevel('project')"
           >
@@ -846,6 +847,7 @@ window.addEventListener('message', (e) => {
           </IconLabel>
 
           <IconLabel
+            v-if="state.groups.file"
             icon="file"
             @click="expandRowLevel('file')"
           >
@@ -853,10 +855,11 @@ window.addEventListener('message', (e) => {
           </IconLabel>
 
           <IconLabel
+            v-if="state.groups.describe"
             icon="suite"
-            @click="expandRowLevel('suite')"
+            @click="expandRowLevel('describe')"
           >
-            Suite
+            Describe
           </IconLabel>
         </template>
         <IconLabel
