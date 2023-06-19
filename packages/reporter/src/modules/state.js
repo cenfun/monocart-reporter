@@ -1,6 +1,19 @@
 import { shallowReactive } from 'vue';
 import { hash } from 'monocart-common';
 
+
+export const defaultGroups = {
+    group: true,
+
+    shard: true,
+    project: true,
+    file: true,
+    describe: true,
+    step: false,
+
+    merge: false
+};
+
 // do not use reactive for grid data
 const state = shallowReactive({
     title: '',
@@ -15,15 +28,7 @@ const state = shallowReactive({
     caseType: hash.get('caseType') || 'tests',
 
     groups: shallowReactive({
-        group: true,
-
-        shard: true,
-        project: true,
-        file: true,
-        describe: true,
-        step: false,
-
-        merge: false
+        ... defaultGroups
     }),
 
     windowWidth: window.innerWidth,

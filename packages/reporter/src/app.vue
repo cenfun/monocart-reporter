@@ -1,6 +1,6 @@
 <script setup>
 import {
-    watch, onMounted, reactive
+    watch, onMounted, reactive, computed
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import {
@@ -15,7 +15,7 @@ import {
 import Flyover from './components/flyover.vue';
 import IconLabel from './components/icon-label.vue';
 
-import state from './modules/state.js';
+import state, { defaultGroups } from './modules/state.js';
 
 const {
     VuiInput,
@@ -343,15 +343,22 @@ const onSearchDropdownClick = (e) => {
     state.searchDropdownTarget = e.target;
 };
 
+
 const resetGroups = () => {
-    Object.keys(state.groups).forEach((k) => {
-        if (k === 'step' || k === 'merge') {
-            state.groups[k] = false;
-        } else {
-            state.groups[k] = true;
-        }
+    Object.keys(defaultGroups).forEach((k) => {
+        state.groups[k] = defaultGroups[k];
     });
 };
+
+const isGroupsChanged = computed(() => {
+    const keys = Object.keys(defaultGroups);
+    for (const k of keys) {
+        if (state.groups[k] !== defaultGroups[k]) {
+            return true;
+        }
+    }
+    return false;
+});
 
 // =================================================================================
 
@@ -813,25 +820,30 @@ window.addEventListener('message', (e) => {
           Step
         </VuiSwitch>
 
-        <div class="mcr-groups-line" />
-        <VuiSwitch
-          v-model="state.groups.merge"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
-          tooltip="Whether to merge groups by title when the parent group is hidden"
-        >
-          Merge Groups by Title
-        </VuiSwitch>
+        <div class="mcr-groups-line">
+          <VuiSwitch
+            v-model="state.groups.merge"
+            :label-clickable="true"
+            label-position="right"
+            width="28px"
+            height="16px"
+            tooltip="Whether to merge groups by title when the parent group is hidden"
+          >
+            Merge Groups by Title
+          </VuiSwitch>
+        </div>
 
-        <div class="mcr-groups-line" />
-        <IconLabel
-          icon="reload"
-          @click="resetGroups()"
+        <div
+          v-if="isGroupsChanged"
+          class="mcr-groups-line"
         >
-          Reset
-        </IconLabel>
+          <IconLabel
+            icon="reload"
+            @click="resetGroups()"
+          >
+            Reset
+          </IconLabel>
+        </div>
       </VuiFlex>
     </VuiPopover>
 
@@ -1269,6 +1281,7 @@ a:not([href], [class]):hover {
 }
 
 .mcr-groups-line {
+    padding-top: 10px;
     border-top: 1px solid #ccc;
 }
 
