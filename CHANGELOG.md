@@ -1,3 +1,7 @@
+* 1.7.1
+  - added group feature to replace the previous suite and step group
+
+
 * 1.7.0
   - added types for package
   - added new feature Global State Management
