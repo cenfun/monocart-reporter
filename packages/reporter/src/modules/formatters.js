@@ -73,7 +73,7 @@ const titleFormatter = (value) => {
                     return [
                         h('div', null, value),
                         h(IconLabel, {
-                            icon: 'arrow-down'
+                            icon: 'drop-down'
                         })
                     ];
                 }

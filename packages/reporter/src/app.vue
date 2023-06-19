@@ -681,7 +681,7 @@ window.addEventListener('message', (e) => {
           Group
         </VuiSwitch>
         <IconLabel
-          icon="triangle-down"
+          icon="drop-down"
           @click="onSuiteDropdownClick"
         />
       </VuiFlex>
