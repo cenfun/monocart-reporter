@@ -444,7 +444,7 @@ const bindGridEvents = () => {
 };
 
 const getGridData = () => {
-    const key = [state.caseType, state.suiteVisible, state.stepVisible].join('_');
+    const key = [state.caseType, state.groups.suite, state.groups.step].join('_');
     if (state.gridDataMap[key]) {
         return state.gridDataMap[key];
     }
@@ -453,7 +453,7 @@ const getGridData = () => {
 
     initCustomsFormatters(allData.columns, state.formatters);
 
-    const data = getGridDataByType(allData, state.caseType, state.suiteVisible, state.stepVisible);
+    const data = getGridDataByType(allData, state.caseType, state.groups.suite, state.groups.step);
 
     // console.log(key, data);
 

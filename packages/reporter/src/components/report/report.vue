@@ -298,13 +298,13 @@ const onSortClick = (caseType, sortField) => {
     state.keywords = '';
 
     // manual render when same value
-    if (state.suiteVisible === false && state.caseType === caseType) {
+    if (state.groups.suite === false && state.caseType === caseType) {
         renderGrid();
         return;
     }
 
     // auto renderGrid by watch state change
-    state.suiteVisible = false;
+    state.groups.suite = false;
     state.caseType = caseType;
 
 };

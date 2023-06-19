@@ -59,16 +59,20 @@ const navItemClass = (item) => {
 // =================================================================================
 
 const initStore = () => {
-    const booleans = {
-        'true': true,
-        'false': false
-    };
-    ['suiteVisible', 'stepVisible'].forEach((item) => {
-        const visible = booleans[store.get(item)];
-        if (typeof visible === 'boolean') {
-            state[item] = visible;
-        }
+    const groupsStr = store.get('groups');
+    if (!groupsStr) {
+        return;
+    }
+
+    const groups = JSON.parse(groupsStr);
+    if (!groups) {
+        return;
+    }
+
+    Object.keys(groups).forEach((k) => {
+        state.groups[k] = groups[k];
     });
+
 };
 
 const initSearchableColumns = (columns) => {
@@ -341,6 +345,13 @@ const onSearchDropdownClick = (e) => {
 
 // =================================================================================
 
+const onSuiteDropdownClick = (e) => {
+    state.suiteDropdownVisible = true;
+    state.suiteDropdownTarget = e.target;
+};
+
+// =================================================================================
+
 const onMenuClick = (e) => {
     hash.set('page', 'report');
 };
@@ -507,13 +518,11 @@ watch(() => state.caseType, (v) => {
     renderGrid();
 });
 
-watch([
-    () => state.suiteVisible,
-    () => state.stepVisible
-], () => {
-    store.set('suiteVisible', state.suiteVisible);
-    store.set('stepVisible', state.stepVisible);
+watch(() => state.groups, (v) => {
+    store.set('groups', JSON.stringify(state.groups));
     renderGrid();
+}, {
+    deep: true
 });
 
 watch([
@@ -657,15 +666,23 @@ window.addEventListener('message', (e) => {
         shrink
         gap="10px"
       >
+        <VuiFlex gap="5px">
+          <VuiSwitch
+            v-model="state.groups.suite"
+            :label-clickable="true"
+            label-position="right"
+          >
+            Suite
+          </VuiSwitch>
+          <IconLabel
+            v-if="state.groups.suite"
+            icon="triangle-down"
+            @click="onSuiteDropdownClick"
+          />
+        </VuiFlex>
+
         <VuiSwitch
-          v-model="state.suiteVisible"
-          :label-clickable="true"
-          label-position="right"
-        >
-          Suite
-        </VuiSwitch>
-        <VuiSwitch
-          v-model="state.stepVisible"
+          v-model="state.groups.step"
           :label-clickable="true"
           label-position="right"
         >
@@ -728,7 +745,6 @@ window.addEventListener('message', (e) => {
       :target="state.searchDropdownTarget"
       positions="bottom"
       title="Searchable Fields"
-      width="150px"
     >
       <VuiFlex direction="column">
         <VuiCheckbox
@@ -742,17 +758,72 @@ window.addEventListener('message', (e) => {
     </VuiPopover>
 
     <VuiPopover
+      v-model="state.suiteDropdownVisible"
+      :target="state.suiteDropdownTarget"
+      positions="bottom"
+      title="Show Suite Levels"
+    >
+      <VuiFlex
+        direction="column"
+        gap="10px"
+        padding="5px 0px"
+      >
+        <VuiSwitch
+          v-if="state.systemList"
+          v-model="state.groups.shard"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+        >
+          Shard
+        </VuiSwitch>
+
+        <VuiSwitch
+          v-model="state.groups.project"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+        >
+          Project
+        </VuiSwitch>
+        <VuiSwitch
+          v-model="state.groups.file"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+        >
+          File
+        </VuiSwitch>
+
+        <div class="mcr-suite-merge">
+          <VuiSwitch
+            v-model="state.groups.merge"
+            :label-clickable="true"
+            label-position="right"
+            width="28px"
+            height="16px"
+          >
+            Merge Describes
+          </VuiSwitch>
+        </div>
+      </VuiFlex>
+    </VuiPopover>
+
+    <VuiPopover
       v-model="state.levelPopoverVisible"
       :target="state.levelPopoverTarget"
-      title="Expand Levels"
-      width="150px"
+      :positions="['bottom','right']"
+      title="Expand to Level"
     >
       <VuiFlex
         direction="column"
         gap="10px"
         margin="10px 0"
       >
-        <template v-if="state.suiteVisible">
+        <template v-if="state.groups.suite">
           <IconLabel
             v-if="state.systemList"
             icon="shard"
@@ -789,7 +860,7 @@ window.addEventListener('message', (e) => {
           Case
         </IconLabel>
         <IconLabel
-          v-if="state.stepVisible"
+          v-if="state.groups.step"
           icon="step"
           @click="expandRowLevel('step')"
         >
@@ -973,6 +1044,7 @@ a:not([href], [class]):hover {
     background-color: #24292f;
 
     .mcr-title {
+        height: 22px;
         font-size: 18px;
         line-height: 22px;
         white-space: nowrap;
@@ -1168,6 +1240,11 @@ a:not([href], [class]):hover {
     input {
         border-color: #5dabfd;
     }
+}
+
+.mcr-suite-merge {
+    padding-top: 10px;
+    border-top: 1px solid #eee;
 }
 
 .mcr-case-failed {

@@ -13,8 +13,18 @@ const state = shallowReactive({
     searchableKeys: [],
 
     caseType: hash.get('caseType') || 'tests',
-    suiteVisible: true,
-    stepVisible: false,
+
+    groups: shallowReactive({
+        suite: true,
+
+        shard: true,
+        project: true,
+        file: true,
+
+        merge: false,
+
+        step: false
+    }),
 
     windowWidth: window.innerWidth,
 
