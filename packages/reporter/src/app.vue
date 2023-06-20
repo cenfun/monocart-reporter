@@ -839,10 +839,15 @@ window.addEventListener('message', (e) => {
             label-position="right"
             width="28px"
             height="16px"
-            tooltip="Whether to merge groups by title when the parent group is hidden"
             class="mcr-groups-item"
           >
-            Merge Groups by Title
+            <VuiFlex gap="10px">
+              <div>Merge Groups</div>
+              <IconLabel
+                icon="help"
+                tooltip="Whether to merge groups by title when the parent group is hidden"
+              />
+            </VuiFlex>
           </VuiSwitch>
         </div>
 

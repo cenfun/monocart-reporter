@@ -133,9 +133,7 @@ watchEffect(() => {
             @mouseenter="showHelp($event, true)"
             @mouseleave="showHelp($event, false)"
           >
-            <IconLabel
-              icon="help"
-            />
+            <IconLabel icon="help" />
             <div hidden>
               <div class="mcr-readme">
                 For quick comparison of the image, click and hold on the image. Depending on which tab you are on, the image will swap to a different one.
