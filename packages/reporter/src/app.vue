@@ -9,7 +9,7 @@ import {
 
 import Util from './utils/util.js';
 import {
-    createGrid, renderGrid, updateGrid, initCustomsFormatters, displayFlyoverWithHash, expandRowLevel
+    createGrid, renderGrid, updateGrid, removeSort, initCustomsFormatters, displayFlyoverWithHash, expandRowLevel
 } from './modules/grid.js';
 
 import Flyover from './components/flyover.vue';
@@ -23,7 +23,6 @@ const {
     VuiSwitch,
     VuiPopover,
     VuiTooltip,
-    VuiCheckbox,
     VuiButton,
     VuiDialog,
     VuiLoading
@@ -345,6 +344,7 @@ const onSearchDropdownClick = (e) => {
 
 
 const resetGroups = () => {
+    removeSort();
     Object.keys(defaultGroups).forEach((k) => {
         state.groups[k] = defaultGroups[k];
     });
@@ -749,14 +749,22 @@ window.addEventListener('message', (e) => {
       positions="bottom"
       title="Searchable Fields"
     >
-      <VuiFlex direction="column">
-        <VuiCheckbox
+      <VuiFlex
+        direction="column"
+        class="mcr-searchable-list"
+      >
+        <VuiSwitch
           v-for="(item, i) in searchable.columns"
           :key="i"
           v-model="item.checked"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+          class="mcr-searchable-item"
         >
           {{ item.name }}
-        </VuiCheckbox>
+        </VuiSwitch>
       </VuiFlex>
     </VuiPopover>
 
@@ -768,8 +776,7 @@ window.addEventListener('message', (e) => {
     >
       <VuiFlex
         direction="column"
-        gap="10px"
-        padding="5px 0px"
+        class="mcr-groups-list"
       >
         <VuiSwitch
           v-if="state.systemList"
@@ -778,6 +785,7 @@ window.addEventListener('message', (e) => {
           label-position="right"
           width="28px"
           height="16px"
+          class="mcr-groups-item"
         >
           Shard
         </VuiSwitch>
@@ -788,6 +796,7 @@ window.addEventListener('message', (e) => {
           label-position="right"
           width="28px"
           height="16px"
+          class="mcr-groups-item"
         >
           Project
         </VuiSwitch>
@@ -797,6 +806,7 @@ window.addEventListener('message', (e) => {
           label-position="right"
           width="28px"
           height="16px"
+          class="mcr-groups-item"
         >
           File
         </VuiSwitch>
@@ -806,6 +816,7 @@ window.addEventListener('message', (e) => {
           label-position="right"
           width="28px"
           height="16px"
+          class="mcr-groups-item"
         >
           Describe
         </VuiSwitch>
@@ -816,6 +827,7 @@ window.addEventListener('message', (e) => {
           label-position="right"
           width="28px"
           height="16px"
+          class="mcr-groups-item"
         >
           Step
         </VuiSwitch>
@@ -828,6 +840,7 @@ window.addEventListener('message', (e) => {
             width="28px"
             height="16px"
             tooltip="Whether to merge groups by title when the parent group is hidden"
+            class="mcr-groups-item"
           >
             Merge Groups by Title
           </VuiSwitch>
@@ -839,6 +852,7 @@ window.addEventListener('message', (e) => {
         >
           <IconLabel
             icon="reload"
+            class="mcr-groups-item"
             @click="resetGroups()"
           >
             Reset
@@ -855,13 +869,13 @@ window.addEventListener('message', (e) => {
     >
       <VuiFlex
         direction="column"
-        gap="10px"
-        margin="10px 0"
+        class="mcr-expand-list"
       >
         <template v-if="state.groups.group">
           <IconLabel
             v-if="state.groups.shard && state.systemList"
             icon="shard"
+            class="mcr-expand-item"
             @click="expandRowLevel('shard')"
           >
             Shard
@@ -870,6 +884,7 @@ window.addEventListener('message', (e) => {
           <IconLabel
             v-if="state.groups.project"
             icon="project"
+            class="mcr-expand-item"
             @click="expandRowLevel('project')"
           >
             Project
@@ -878,6 +893,7 @@ window.addEventListener('message', (e) => {
           <IconLabel
             v-if="state.groups.file"
             icon="file"
+            class="mcr-expand-item"
             @click="expandRowLevel('file')"
           >
             File
@@ -886,6 +902,7 @@ window.addEventListener('message', (e) => {
           <IconLabel
             v-if="state.groups.describe"
             icon="suite"
+            class="mcr-expand-item"
             @click="expandRowLevel('describe')"
           >
             Describe
@@ -893,6 +910,7 @@ window.addEventListener('message', (e) => {
         </template>
         <IconLabel
           icon="case"
+          class="mcr-expand-item"
           @click="expandRowLevel('case')"
         >
           Case
@@ -900,6 +918,7 @@ window.addEventListener('message', (e) => {
         <IconLabel
           v-if="state.groups.step"
           icon="step"
+          class="mcr-expand-item"
           @click="expandRowLevel('step')"
         >
           Step
@@ -1280,9 +1299,40 @@ a:not([href], [class]):hover {
     }
 }
 
-.mcr-groups-line {
-    padding-top: 10px;
-    border-top: 1px solid #ccc;
+.mcr-groups-list {
+    .mcr-groups-line {
+        margin-top: 5px;
+        padding-top: 5px;
+        border-top: 1px solid #ccc;
+    }
+
+    .mcr-groups-item {
+        padding: 5px 0;
+    }
+
+    .mcr-groups-item:hover {
+        background-color: #f8f8f8;
+    }
+}
+
+.mcr-searchable-list {
+    .mcr-searchable-item {
+        padding: 5px 0;
+    }
+
+    .mcr-searchable-item:hover {
+        background-color: #f8f8f8;
+    }
+}
+
+.mcr-expand-list {
+    .mcr-expand-item {
+        padding: 5px 0;
+    }
+
+    .mcr-expand-item:hover {
+        background-color: #f8f8f8;
+    }
 }
 
 .mcr-case-failed {

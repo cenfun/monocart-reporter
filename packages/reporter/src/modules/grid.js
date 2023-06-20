@@ -543,6 +543,15 @@ const getGridOption = () => {
     return options;
 };
 
+export const removeSort = () => {
+    const grid = state.grid;
+    if (!grid) {
+        return;
+    }
+    grid.removeSortColumn();
+    state.sortField = '';
+};
+
 export const createGrid = () => {
     const grid = new Grid('.mcr-grid');
     state.grid = grid;
