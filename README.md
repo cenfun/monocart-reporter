@@ -634,8 +634,8 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
     - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
     - `lcov` (Boolean) Whether to create `lcov.info`. Istanbul only.
     - `sourcePath` (Function) source path handler, return a new source path. Istanbul only.
-    - `inline` (Boolean) Whether inline all scripts to the single HTML file.
-    - `debug` (Boolean) The temporary artifacts will not be removed.
+    - `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
+    - `debug` (Boolean) The dist file which has source map will be included, and the temporary artifacts will not be removed.
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
 
