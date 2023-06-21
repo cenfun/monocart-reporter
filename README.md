@@ -123,7 +123,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     coverage: null,
     // coverage: {
     //     entryFilter: (entry) => true,
-    //     sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
+    //     sourceFilter: (sourcePath) => sourcePath.search(/src\/.+/) !== -1,
     // },
 
     // trend data handler
@@ -741,7 +741,7 @@ module.exports = {
             // global coverage report options
             coverage: {
                 entryFilter: (entry) => true,
-                sourceFilter: (sourceName) => sourceName.search(/src\/.+/) !== -1,
+                sourceFilter: (sourcePath) => sourcePath.search(/src\/.+/) !== -1,
             }
         }]
     ]
