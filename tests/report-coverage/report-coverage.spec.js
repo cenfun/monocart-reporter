@@ -68,6 +68,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 
     const istanbul = await attachCoverageReport(coverageList, test.info(), {
         // sourceFilter: (sourceName) => sourceName.indexOf('node_modules') === -1,
+        lcov: true,
         toIstanbul: true
     });
     console.log(istanbul.summary);
@@ -103,6 +104,7 @@ test('Take anonymous scripts coverage report', async ({ page }) => {
     console.log(v8.summary);
 
     const istanbul = await attachCoverageReport(jsCoverageList, test.info(), {
+        lcov: true,
         toIstanbul: true
     });
     console.log(istanbul.summary);
