@@ -137,7 +137,7 @@ test.describe('group', () => {
 
 test('@util v8 dedupeRanges', () => {
 
-    const { dedupeRanges } = require('../../lib/plugins/coverage/v8/dedupe.js');
+    const { dedupeRanges } = require('../../lib/plugins/coverage/converter/dedupe.js');
 
     const ranges = [{
         start: 0, end: 10
