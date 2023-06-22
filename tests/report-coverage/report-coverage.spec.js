@@ -19,6 +19,8 @@ test('Take Istanbul coverage report', async ({ page }) => {
     // coverage report
     const report = await attachCoverageReport(coverageData, test.info(), {
         lcov: true,
+        // default is html-spa
+        // toIstanbul: 'html',
         sourcePath: (sourcePath, fileSources) => {
             console.log(sourcePath);
             // replace local windows \ to server /

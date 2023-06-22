@@ -281,8 +281,7 @@ module.exports = {
                     align: 'right'
                 }, {
                     id: 'name',
-                    name: 'Runtime File',
-                    maxWidth: 200
+                    name: 'Runtime File'
                 }, {
                     id: 'size',
                     name: 'Size',
