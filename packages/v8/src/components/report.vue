@@ -20,7 +20,7 @@ const {
 const state = inject('state');
 
 const data = shallowReactive({
-
+    formatted: false
 });
 
 const el = ref(null);
@@ -70,8 +70,7 @@ const updateTopExecutions = () => {
         return b.count - a.count;
     });
 
-    const maxNumber = parseInt(state.topNumber) || 3;
-
+    const maxNumber = 5;
     if (list.length > maxNumber) {
         list.length = maxNumber;
     }
@@ -270,8 +269,6 @@ const showReport = () => {
     summary.uncoveredTooltip = `Uncovered ${Util.BSF(summary.uncovered)}`;
     summary.uncoveredClass = summary.uncovered > 0 ? 'mcr-uncovered' : '';
 
-    data.formatted = !item.distFile;
-
     renderReportAsync();
 };
 
@@ -282,10 +279,6 @@ watch(() => state.flyoverData, (v) => {
 
 watch(() => data.formatted, (v) => {
     renderReportAsync();
-});
-
-watch(() => state.topNumber, (v) => {
-    updateTopExecutions();
 });
 
 onMounted(() => {
@@ -348,25 +341,6 @@ onMounted(() => {
       </VuiFlex>
 
       <VuiFlex
-        gap="10px"
-        padding="5px"
-        wrap
-        class="mcr-report-item"
-      >
-        <VuiFlex gap="5px">
-          <b>Formatted</b>
-          <VuiSwitch
-            v-model="data.formatted"
-            tooltip="Will automatically turn off formatting if the file was unpacked from a source map file"
-          />
-        </VuiFlex>
-
-        <span v-if="data.distFile">
-          <b>Dist File</b> {{ data.distFile }}
-        </span>
-      </VuiFlex>
-
-      <VuiFlex
         v-if="data.topExecutions"
         gap="10px"
         padding="5px"
@@ -374,15 +348,6 @@ onMounted(() => {
         class="mcr-report-item"
       >
         <div><b>Top Executions</b></div>
-        <VuiSelect
-          v-model="state.topNumber"
-          class="mcr-top-number"
-        >
-          <option>3</option>
-          <option>5</option>
-          <option>10</option>
-        </VuiSelect>
-
         <VuiFlex
           v-for="(item, i) in data.topExecutions"
           :key="i"
@@ -397,6 +362,24 @@ onMounted(() => {
             x{{ item.count }}
           </div>
         </VuiFlex>
+      </VuiFlex>
+
+      <VuiFlex
+        gap="10px"
+        padding="5px"
+        wrap
+        class="mcr-report-item"
+      >
+        <VuiSwitch
+          v-model="data.formatted"
+          :label-clickable="true"
+        >
+          <b>Pretty Print</b>
+        </VuiSwitch>
+
+        <span v-if="data.distFile">
+          <b>From Dist File</b> {{ data.distFile }}
+        </span>
       </VuiFlex>
     </VuiFlex>
     <div
