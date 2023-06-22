@@ -90,7 +90,7 @@ module.exports = {
             // global coverage
             coverage: {
 
-                // lcov: true,
+                lcov: true,
                 // toIstanbul: true
                 debug: true
             },
