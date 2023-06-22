@@ -250,6 +250,23 @@ module.exports = {
 
             });
 
+            let total = 0;
+            rows.forEach((it) => {
+                if (it.size) {
+                    total += it.size;
+                }
+            });
+
+            rows.push({
+                innerBorder: true
+            });
+            rows.push({
+                total: true,
+                index: '',
+                name: 'Total',
+                size: total
+            });
+
             EC.log('runtime files:');
 
             const overSizeColors = {
@@ -272,6 +289,9 @@ module.exports = {
                     align: 'right',
                     formatter: function(v, rowData) {
                         const sizeH = Util.BF(v);
+                        if (rowData.total) {
+                            return sizeH;
+                        }
                         if (v > overSizeColors.red) {
                             return Util.addColor(sizeH, 'red');
                         }
