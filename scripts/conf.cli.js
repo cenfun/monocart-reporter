@@ -154,7 +154,7 @@ module.exports = {
             return 0;
         },
 
-        afterAll: (results) => {
+        afterAll: (results, Util) => {
 
             const production = results.jobList[0].production;
             if (!production) {
@@ -179,50 +179,112 @@ module.exports = {
                 fs.mkdirSync(toPath);
             }
 
-            const moduleFiles = {};
+            const distList = [];
+            let code = 0;
 
+            EC.log('get workspace packages dist files ...');
             // sometimes only on job
-            results.jobList.forEach((item) => {
-
-                Object.assign(moduleFiles, item.dependencies.moduleFiles);
-
-                const filename = `${item.fullName}.js`;
-                // copy dist file to lib
-                const fromJs = path.resolve(item.buildPath, filename);
-                if (!fs.existsSync(fromJs)) {
-                    EC.logRed(`ERROR: Not found dist: ${fromJs}`);
-                    return 1;
+            results.jobList.forEach((job) => {
+                const distPath = path.resolve(job.buildPath, `${job.fullName}.js`);
+                if (!fs.existsSync(distPath)) {
+                    EC.logRed(`ERROR: Not found dist: ${distPath}`);
+                    code = 1;
+                    return;
                 }
-
-                const toJs = path.resolve(toPath, filename);
-                // console.log(fromJs, toJs);
-                fs.cpSync(fromJs, toJs);
-
-                EC.logGreen(`runtime file copied: ${filename}`);
-
+                distList.push(distPath);
             });
 
+            distList.push('');
+
+            EC.log('get common dependencies dist files ...');
             // copy common components
-            const list = [];
-            Object.values(moduleFiles).forEach((ls) => {
-                ls.forEach((f) => {
-                    list.push(f);
+            const moduleList = ['monocart-code-viewer', 'monocart-formatter'];
+            moduleList.forEach((moduleName) => {
+                const fromDir = path.resolve(__dirname, `../node_modules/${moduleName}/dist`);
+                if (!fs.existsSync(fromDir)) {
+                    EC.logRed(`ERROR: Not found dist dir: ${fromDir}`);
+                    code = 1;
+                    return;
+                }
+                const files = fs.readdirSync(fromDir);
+                if (!files.length) {
+                    EC.logRed(`ERROR: Not found any dist files: ${fromDir}`);
+                    code = 1;
+                    return;
+                }
+                files.forEach((file) => {
+                    distList.push(path.resolve(fromDir, file));
                 });
             });
-            list.forEach((fp) => {
-                const filename = path.basename(fp);
-                const fromJs = path.resolve(fp);
-                if (!fs.existsSync(fromJs)) {
-                    EC.logRed(`ERROR: Not found dist: ${fromJs}`);
-                    return 1;
+
+            if (code) {
+                return code;
+            }
+
+            let index = 1;
+            const rows = [];
+
+            distList.forEach((distPath) => {
+
+                if (!distPath) {
+
+                    rows.push({
+                        innerBorder: true
+                    });
+
+                    return;
                 }
+
+                const stat = fs.statSync(distPath);
+
+                const filename = path.basename(distPath);
                 const toJs = path.resolve(toPath, filename);
-                // console.log(fromJs, toJs);
-                fs.cpSync(fromJs, toJs);
-                EC.logGreen(`runtime file copied: ${filename}`);
+                fs.cpSync(distPath, toJs);
+
+                rows.push({
+                    index,
+                    name: EC.green(filename),
+                    size: stat.size
+                });
+                index += 1;
+
             });
 
-            return 0;
+            EC.log('runtime files:');
+
+            const overSizeColors = {
+                red: 500 * 1024,
+                orange: 200 * 1024
+            };
+
+            Util.CG({
+                columns: [{
+                    id: 'index',
+                    name: 'No.',
+                    align: 'right'
+                }, {
+                    id: 'name',
+                    name: 'Runtime File',
+                    maxWidth: 200
+                }, {
+                    id: 'size',
+                    name: 'Size',
+                    align: 'right',
+                    formatter: function(v, rowData) {
+                        const sizeH = Util.BF(v);
+                        if (v > overSizeColors.red) {
+                            return Util.addColor(sizeH, 'red');
+                        }
+                        if (v > overSizeColors.orange) {
+                            return Util.addColor(sizeH, 'orange');
+                        }
+                        return sizeH;
+                    }
+                }],
+                rows: rows
+            });
+
+            return code;
         }
 
     },
