@@ -200,21 +200,13 @@ module.exports = {
             // copy common components
             const moduleList = ['monocart-code-viewer', 'monocart-formatter'];
             moduleList.forEach((moduleName) => {
-                const fromDir = path.resolve(__dirname, `../node_modules/${moduleName}/dist`);
-                if (!fs.existsSync(fromDir)) {
-                    EC.logRed(`ERROR: Not found dist dir: ${fromDir}`);
+                const distPath = path.resolve(__dirname, `../node_modules/${moduleName}/dist/${moduleName}.js`);
+                if (!fs.existsSync(distPath)) {
+                    EC.logRed(`ERROR: Not found dist: ${distPath}`);
                     code = 1;
                     return;
                 }
-                const files = fs.readdirSync(fromDir);
-                if (!files.length) {
-                    EC.logRed(`ERROR: Not found any dist files: ${fromDir}`);
-                    code = 1;
-                    return;
-                }
-                files.forEach((file) => {
-                    distList.push(path.resolve(fromDir, file));
-                });
+                distList.push(distPath);
             });
 
             if (code) {
