@@ -14,7 +14,7 @@ import Util from '../utils/util.js';
 import { getCoverage } from '../utils/coverage.js';
 
 const {
-    VuiFlex, VuiSelect, VuiSwitch, VuiLoading
+    VuiFlex, VuiSwitch, VuiLoading
 } = components;
 
 const state = inject('state');
