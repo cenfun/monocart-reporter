@@ -24,8 +24,28 @@ export function privateFunction() {
     console.log('this id privateFunction');
 }
 
-function init() {
+function init(stop) {
     console.log('this is init');
+    start();
+
+    if (stop) {
+        console.log('stop in init');
+        return;
+    }
+
+    const inline = (a) => {
+        console.log('this is inline');
+        if (a) {
+            console.log('covered inline argument');
+        }
+    };
+
+    const list = [inline];
+
+    list.forEach((i) => {
+        i();
+    });
+
 }
 
-init();
+init(window._my_stop_key);
