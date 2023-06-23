@@ -48,4 +48,15 @@ function init(stop) {
 
 }
 
+const onload = (something) => {
+    console.log('this is onload');
+    if (something) {
+        console.log('stop with something');
+        return;
+    }
+    console.log('on loaded');
+};
+
 init(window._my_stop_key);
+
+onload(window._my_something);
