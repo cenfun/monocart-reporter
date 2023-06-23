@@ -39,7 +39,7 @@ export type CoverageReportOptions = {
     outputName?: string,
 
     // Whether to convert to Istanbul report
-    toIstanbul?: boolean,
+    toIstanbul?: boolean | string,
 
     // A filter function to execute for each element in the V8 list.
     entryFilter?: (entry: any) => boolean,
