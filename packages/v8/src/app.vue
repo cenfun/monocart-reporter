@@ -28,7 +28,7 @@ const state = shallowReactive({
     summary: {},
 
     group: true,
-    topNumber: '3',
+    formatted: false,
 
     keywords: '',
 
@@ -591,9 +591,10 @@ const initStore = () => {
         'true': true,
         'false': false
     };
-    ['group', 'topNumber'].forEach((item) => {
+    ['group', 'formatted'].forEach((item) => {
         // default empty string
         const v = store.get(item);
+        console.log(item, v);
         if (!v) {
             return;
         }
@@ -601,6 +602,7 @@ const initStore = () => {
             state[item] = mapping[v];
             return;
         }
+        console.log(item, v);
         state[item] = v;
     });
 };
@@ -640,8 +642,8 @@ watch(() => state.group, (v) => {
     renderGrid();
 });
 
-watch(() => state.topNumber, (v) => {
-    store.set('topNumber', v);
+watch(() => state.formatted, (v) => {
+    store.set('formatted', v);
 });
 
 const updateGridAsync = debounce(updateGrid, 200);

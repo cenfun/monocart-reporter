@@ -20,7 +20,7 @@ const {
 const state = inject('state');
 
 const data = shallowReactive({
-    formatted: false
+
 });
 
 const el = ref(null);
@@ -101,10 +101,10 @@ const autoDetectType = (item) => {
 const formatSource = (item) => {
     const source = item.source;
 
-    // console.log('formatSource', data.formatted);
+    // console.log('formatSource', state.formatted);
 
     // no format for distFile item, may vue format or others
-    if (!data.formatted) {
+    if (!state.formatted) {
         // codemirror will replace all \r\n to \n, so end position will be mismatched
         // just replace all \r\n with \n
         const formattedContent = source.replace(Util.lineBreakPattern, '\n');
@@ -126,7 +126,7 @@ const formatSource = (item) => {
 
 const getReport = async (item) => {
 
-    const cacheKey = ['report', 'formatted', data.formatted].join('_');
+    const cacheKey = ['report', 'formatted', state.formatted].join('_');
 
     if (item[cacheKey]) {
         return new Promise((resolve) => {
@@ -151,7 +151,6 @@ const getReport = async (item) => {
     // console.log([content]);
 
     const report = {
-        formatted: data.formatted,
         coverage,
         content
     };
@@ -277,7 +276,11 @@ watch(() => state.flyoverData, (v) => {
     showReport();
 });
 
-watch(() => data.formatted, (v) => {
+watch(() => state.formatted, (v) => {
+    if (!state.flyoverData) {
+        return;
+    }
+
     renderReportAsync();
 });
 
@@ -371,7 +374,7 @@ onMounted(() => {
         class="mcr-report-item"
       >
         <VuiSwitch
-          v-model="data.formatted"
+          v-model="state.formatted"
           :label-clickable="true"
         >
           <b>Pretty Print</b>
