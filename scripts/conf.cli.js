@@ -82,8 +82,10 @@ const beforeReporter = (item, Util) => {
 const beforeV8 = (item, Util) => {
 
     const EC = require('eight-colors');
+
+    // using global coverage data
     const dataFile = 'coverage-data.js';
-    const jsDataPath = path.resolve(__dirname, `../.temp/${dataFile}`);
+    const jsDataPath = path.resolve(__dirname, `../.temp/monocart/coverage/${dataFile}`);
     if (!fs.existsSync(jsDataPath)) {
         EC.logRed(`ERROR: Not found: ${jsDataPath}`);
         return 0;
