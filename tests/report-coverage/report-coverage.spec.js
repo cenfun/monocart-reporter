@@ -157,6 +157,7 @@ test('Take V8 js and css coverage report', async ({ page }) => {
     await addCoverageReport(coverageList, test.info());
 
     const report = await attachCoverageReport(coverageList, test.info(), {
+        // debug: true
         lcov: true
     });
     console.log(report.summary);

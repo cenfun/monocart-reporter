@@ -15,8 +15,7 @@
     <h3 class="red inline-used and-used">
       Mock Coverage
     </h3>
-    <div class="grid"></div>
-    <div class="fps-detector"></div>
+
     <script src="with-map/fps-detector.js"></script>
 
     <script src="demo.js"></script>
@@ -33,7 +32,9 @@
        console.log('body');
        const FPSDetector = window['fps-detector'].FPSDetector;
 
-       new FPSDetector('.fps-detector');
+       const div = document.createElement('div');
+       document.body.appendChild(div);
+       new FPSDetector(div);
 
     </script>
 
