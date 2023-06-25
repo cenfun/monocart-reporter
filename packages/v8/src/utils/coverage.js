@@ -139,6 +139,8 @@ class CoverageParser {
     }
 
     setUncoveredPieces(line, value) {
+
+        // console.log('setUncoveredPieces', line, value);
         const prevList = this.uncoveredPieces[line];
         if (prevList) {
             prevList.push(value);
@@ -163,12 +165,8 @@ class CoverageParser {
             return;
         }
 
-        // already uncovered/comment/blank, should not be partial
-        const prev = this.setUncoveredLine(sLoc.line, 'partial');
-        if (prev) {
-            // console.log(sLoc.line, prev);
-            return;
-        }
+        // should be multiple partials in a line, like minified js
+        this.setUncoveredLine(sLoc.line, 'partial');
 
         // set pieces for partial, only js
         this.setUncoveredPieces(sLoc.line, {
@@ -201,6 +199,9 @@ class CoverageParser {
     // ====================================================================================================
 
     setRangeLines(start, end) {
+
+        // console.log('setRangeLines', start, end);
+
         const mapping = this.mapping;
         const skipIndent = true;
         const sLoc = mapping.getFormattedLocation(start, skipIndent);

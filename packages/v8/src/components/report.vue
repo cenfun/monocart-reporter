@@ -145,7 +145,8 @@ const getReport = async (item) => {
 
     const coverage = getCoverage(item, content, mapping);
 
-    // console.log(cacheKey, coverage);
+    // console.log(cacheKey, item.sourcePath);
+    // console.log(coverage);
     // console.log([item.source]);
     // console.log([content]);
 
