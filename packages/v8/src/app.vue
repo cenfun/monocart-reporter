@@ -594,7 +594,7 @@ const initStore = () => {
     ['group', 'formatted'].forEach((item) => {
         // default empty string
         const v = store.get(item);
-        console.log(item, v);
+        // console.log(item, v);
         if (!v) {
             return;
         }

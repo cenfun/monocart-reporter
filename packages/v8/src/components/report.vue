@@ -79,21 +79,20 @@ const updateTopExecutions = () => {
 };
 
 const autoDetectType = (item) => {
-    const { type, source } = item;
+    const {
+        type, source, originalType
+    } = item;
 
-    const src = source.trim();
-    if (src.startsWith('<') && src.endsWith('>')) {
+    if (originalType) {
+        return originalType;
+    }
+
+    const regS = /^\s*</;
+    const regE = />\s*$/;
+    if (regS.test(source) && regE.test(source)) {
         item.originalType = 'html';
         return 'html';
     }
-
-    // const lastDot = item.sourcePath.lastIndexOf('.');
-    // if (lastDot !== -1) {
-    //     const ext = item.sourcePath.slice(lastDot);
-    //     if (ext === '.vue') {
-    //         return 'html';
-    //     }
-    // }
 
     return type;
 };
@@ -117,7 +116,7 @@ const formatSource = (item) => {
     }
 
     let type = item.type;
-    if (item.distFile && type === 'js') {
+    if (item.distFile) {
         type = autoDetectType(item);
     }
 
