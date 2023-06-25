@@ -51,7 +51,8 @@ class CoverageParser {
             codeLines: formattedLines.length - commentedLines.length - blankLines.length,
             uncoveredLines: this.uncoveredLines,
             uncoveredPieces: this.uncoveredPieces,
-            executionCounts: this.executionCounts
+            executionCounts: this.executionCounts,
+            sourcePath: item.sourcePath
         };
 
     }
