@@ -635,7 +635,7 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
     - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
     - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
     - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
-    - `lcov` (Boolean) Whether to create `lcov.info`. Istanbul only.
+    - `lcov` (Boolean) Whether to create `lcov.info`.
     - `sourcePath` (Function) source path handler, return a new source path. Istanbul only.
     - `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
 
@@ -712,7 +712,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 
 ![](/docs/v8.gif)
 
-- [V8 to Istanbul](https://github.com/istanbuljs/v8-to-istanbul) Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
+- `V8 to Istanbul` Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
 const report = await attachCoverageReport(coverageList, test.info(), {
     toIstanbul: true
