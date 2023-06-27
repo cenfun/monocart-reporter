@@ -1,4 +1,12 @@
 * 1.7.1
+  - added logging option 
+  - rewrote the source mappings for coverage report
+  - fixed coverage multiple bgs in a line
+  - fixed lcov works for v8
+  - fixed reporter dir no init in next running
+  - updated document title when open the item
+
+* 1.7.1
   - added group feature to replace the previous suite and step group
   - removed unpackSourceMap option, it should be true always
   - removed excludeDistFile option, it should be replaced with debug option
