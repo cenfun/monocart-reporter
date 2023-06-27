@@ -1,6 +1,6 @@
 <script setup>
 import {
-    shallowReactive, onMounted, reactive, provide, watch
+    shallowReactive, onMounted, reactive, provide, watch, watchEffect
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import {
@@ -63,6 +63,9 @@ const tooltip = reactive({
     html: false
 });
 
+watchEffect(() => {
+    document.title = state.flyoverVisible ? state.flyoverTitle : state.title;
+});
 
 // =================================================================================
 

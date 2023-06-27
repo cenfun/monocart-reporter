@@ -1,6 +1,6 @@
 <script setup>
 import {
-    watch, onMounted, reactive, computed
+    watch, onMounted, reactive, computed, watchEffect
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 import {
@@ -47,6 +47,10 @@ const dialog = reactive({
     visible: false,
     message: '',
     ok: 'OK'
+});
+
+watchEffect(() => {
+    document.title = state.flyoverVisible ? state.flyoverTitle : state.title;
 });
 
 // =================================================================================
