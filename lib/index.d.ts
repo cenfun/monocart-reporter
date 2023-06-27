@@ -62,9 +62,7 @@ export type CoverageReportOptions = {
     },
 
     // Whether inline all scripts to the single HTML file.
-    inline?: boolean,
-
-    debug?: boolean
+    inline?: boolean
 };
 
 export function attachCoverageReport(

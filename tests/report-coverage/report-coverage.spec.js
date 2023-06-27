@@ -64,13 +64,11 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
     await addCoverageReport(coverageList, test.info());
 
     const v8 = await attachCoverageReport(coverageList, test.info(), {
-        // debug: true,
         lcov: true
     });
     console.log(v8.summary);
 
     const istanbul = await attachCoverageReport(coverageList, test.info(), {
-        // debug: true,
         // sourceFilter: (sourcePath) => sourcePath.indexOf('node_modules') === -1,
         lcov: true,
         toIstanbul: true
@@ -103,14 +101,12 @@ test('Take anonymous scripts coverage report', async ({ page }) => {
     await page.close();
 
     const v8 = await attachCoverageReport(jsCoverageList, test.info(), {
-        // debug: true,
         // inline: true,
         lcov: true
     });
     console.log(v8.summary);
 
     const istanbul = await attachCoverageReport(jsCoverageList, test.info(), {
-        // debug: true,
         lcov: true,
         toIstanbul: true
     });
@@ -157,7 +153,6 @@ test('Take V8 js and css coverage report', async ({ page }) => {
     await addCoverageReport(coverageList, test.info());
 
     const report = await attachCoverageReport(coverageList, test.info(), {
-        // debug: true
         lcov: true
     });
     console.log(report.summary);
