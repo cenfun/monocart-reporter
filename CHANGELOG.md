@@ -1,4 +1,4 @@
-* 1.7.1
+* 1.7.2
   - added logging option 
   - rewrote the source mappings for coverage report
   - fixed coverage multiple bgs in a line
