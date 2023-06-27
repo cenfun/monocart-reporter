@@ -92,8 +92,13 @@ module.exports = {
             // global coverage
             coverage: {
 
+                // sourcePath: (sp) => {
+                //     return `pre-dir/${sp}`;
+                // },
+
+                // toIstanbul: true,
                 lcov: true
-                // toIstanbul: true
+
             },
 
             // global state
