@@ -56,7 +56,11 @@ const popover = shallowReactive({
 });
 
 watchEffect(() => {
-    document.title = state.flyoverVisible ? state.flyoverTitle : state.title;
+    let t = state.title;
+    if (state.flyoverVisible) {
+        t = `${state.flyoverTitle} - ${t}`;
+    }
+    document.title = t;
 });
 
 // =================================================================================

@@ -64,7 +64,11 @@ const tooltip = reactive({
 });
 
 watchEffect(() => {
-    document.title = state.flyoverVisible ? state.flyoverTitle : state.title;
+    let t = state.title;
+    if (state.flyoverVisible) {
+        t = `${Util.getSourceName(state.flyoverTitle)} - ${t}`;
+    }
+    document.title = t;
 });
 
 // =================================================================================
@@ -325,19 +329,8 @@ const getGroupRows = (summaryRows) => {
 const getFlatRows = (summaryRows) => {
     const flatRows = [];
     summaryRows.forEach((item) => {
-        const sourcePath = item.sourcePath;
-        const pathList = sourcePath.split('/');
-
-        const lastName = pathList.pop();
-        const dir = pathList.pop();
-        if (item.type) {
-            item.name = lastName;
-        } else if (dir) {
-            item.name = `${dir}/${lastName}`;
-        }
-
+        item.name = Util.getSourceName(item.sourcePath);
         flatRows.push(item);
-
     });
 
     return flatRows;
