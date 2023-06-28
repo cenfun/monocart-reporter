@@ -26,10 +26,11 @@ const d = shallowReactive({
 const initImageComparison = () => {
     d.list = null;
     const {
-        contentType, list, message
+        contentType, list, message, position
     } = props.data;
 
     d.message = message;
+    d.position = position;
 
     if (contentType && contentType.startsWith('image')) {
         const titles = {
@@ -62,6 +63,12 @@ const initImageComparison = () => {
             d.tabIndex = d.indexes.diff;
         }
 
+    }
+};
+
+const onErrorClick = () => {
+    if (d.position) {
+        state.position = d.position;
     }
 };
 
@@ -196,9 +203,12 @@ watchEffect(() => {
           wrap
           shirk
         >
-          <div>
+          <IconLabel
+            icon="error"
+            @click="onErrorClick"
+          >
             {{ d.message }}
-          </div>
+          </IconLabel>
           <div v-if="d.size">
             ({{ d.size }})
           </div>

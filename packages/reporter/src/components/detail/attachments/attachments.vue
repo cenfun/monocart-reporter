@@ -93,6 +93,7 @@ const createGroup = (item, name, extension, attachment) => {
             name: name + extension,
             contentType: attachment.contentType,
             message: attachment.message,
+            position: attachment.position,
             retry: attachment.retry,
             list: [item]
         }

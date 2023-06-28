@@ -122,9 +122,13 @@ const getColumns = (list, item, columns) => {
 
 };
 
+const getPositionId = (rowId, columnId) => {
+    return [rowId, columnId].join('-');
+};
+
 const addResult = (list, item, column, result) => {
     result.data = column;
-    result.positionId = [item.id, column.id].join('-');
+    result.positionId = getPositionId(item.id, column.id);
     result.positionType = column.id;
     result = shallowReactive(result);
 
@@ -175,9 +179,16 @@ const getErrors = (item, column) => {
         return;
     }
 
-    const list = errors.map((err) => {
-        data.errors.push(err);
-        return convertHtml(err);
+    const position = {
+        rowId: item.id,
+        columnId: column.id
+    };
+    const list = errors.map((error) => {
+        data.errors.push({
+            error,
+            position
+        });
+        return convertHtml(error);
     });
     const content = list.join('');
 
@@ -346,7 +357,7 @@ const updatePosition = debounce(() => {
 
     // check positionId first
     let found = true;
-    const positionId = [position.rowId, position.columnId].join('-');
+    const positionId = getPositionId(position.rowId, position.columnId);
     let elem = $el.querySelector(`[position-id="${positionId}"]`);
     if (!elem) {
         found = false;
@@ -438,12 +449,21 @@ const collectErrorForAttachment = () => {
         }
     });
 
+    if (!list.length) {
+        return;
+    }
+
     let index = 0;
-    errors.forEach((err) => {
-        const match = err.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
+    errors.forEach((item) => {
+        const { error, position } = item;
+        const match = error.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
         if (match) {
-            list[index].message = match[0];
-            index += 1;
+            const attachment = list[index];
+            if (attachment) {
+                attachment.message = match[0];
+                attachment.position = position;
+                index += 1;
+            }
         }
     });
 
@@ -494,7 +514,7 @@ const initDataList = () => {
             icon = item.caseType;
         }
 
-        const positionId = [item.id, 'title'].join('-');
+        const positionId = getPositionId(item.id, 'title');
         const stepGroup = item.type === 'step' && item.subs;
         if (stepGroup) {
             icon = '';
@@ -572,6 +592,7 @@ const onFocus = (e) => {
     class="mcr-detail"
     tabindex="0"
     @focus="onFocus"
+    @click="onFocus"
   >
     <div
       v-for="item, ik in data.list"

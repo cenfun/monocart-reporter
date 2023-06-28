@@ -208,8 +208,8 @@ const getClickPosition = (columnItem, rowItem) => {
         rowId = rowItem.errorId;
     }
     return {
-        columnId,
-        rowId
+        rowId,
+        columnId
     };
 };
 
