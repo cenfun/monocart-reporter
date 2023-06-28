@@ -636,7 +636,7 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
     - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
     - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
     - `lcov` (Boolean) Whether to create `lcov.info`. (for Sonar coverage)
-    - `sourcePath` (Function) source path handler, return a new source path. (#53)
+    - `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53))
     - `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
