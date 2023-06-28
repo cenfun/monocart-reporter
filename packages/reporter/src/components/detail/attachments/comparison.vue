@@ -25,7 +25,12 @@ const d = shallowReactive({
 
 const initImageComparison = () => {
     d.list = null;
-    const { contentType, list } = props.data;
+    const {
+        contentType, list, message
+    } = props.data;
+
+    d.message = message;
+
     if (contentType && contentType.startsWith('image')) {
         const titles = {
             diff: 'Diff',
@@ -81,6 +86,13 @@ const onMouseDown = (e) => {
 
 const onMouseUp = (e) => {
     d.tabIndex = d.tempIndex;
+};
+
+const onImgLoad = (e) => {
+    const img = e.target;
+    if (img && !d.size) {
+        d.size = `${img.naturalWidth} x ${img.naturalHeight}`;
+    }
 };
 
 const showHelp = (e, visible) => {
@@ -164,6 +176,7 @@ watchEffect(() => {
             <img
               :src="item.path"
               :alt="item.name"
+              @load="onImgLoad"
             >
           </div>
         </template>
@@ -171,17 +184,36 @@ watchEffect(() => {
 
       <VuiFlex
         direction="column"
-        gap="5px"
+        gap="10px"
         padding="10px"
-        class="mcr-comparison-list"
       >
-        <a
-          v-for="(item, i) of props.data.list"
-          :key="i"
-          :href="item.path"
-          target="_blank"
-          class="mcr-item"
-        >{{ item.name }}</a>
+        <VuiFlex
+          gap="10px"
+          wrap
+          shirk
+        >
+          <div v-if="d.size">
+            {{ d.size }}
+          </div>
+          <div
+            v-if="d.message"
+            class="mcr-comparison-message"
+          >
+            {{ d.message }}
+          </div>
+        </VuiFlex>
+        <VuiFlex
+          gap="10px"
+          wrap
+        >
+          <a
+            v-for="(item, i) of props.data.list"
+            :key="i"
+            :href="item.path"
+            target="_blank"
+            class="mcr-item"
+          >{{ item.name }}</a>
+        </VuiFlex>
       </VuiFlex>
     </div>
   </details>
@@ -227,6 +259,10 @@ watchEffect(() => {
             max-width: 100%;
             box-shadow: var(--image-shadow);
         }
+    }
+
+    .mcr-comparison-message {
+        color: red;
     }
 }
 </style>

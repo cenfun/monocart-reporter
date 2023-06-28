@@ -25,7 +25,9 @@ const data = shallowReactive({
     list: [],
     stepCollapsedDisabled: false,
     stepFailedOnly: false,
-    stepSubs: false
+    stepSubs: false,
+    errors: [],
+    attachments: []
 });
 
 const el = ref(null);
@@ -174,6 +176,7 @@ const getErrors = (item, column) => {
     }
 
     const list = errors.map((err) => {
+        data.errors.push(err);
         return convertHtml(err);
     });
     const content = list.join('');
@@ -253,6 +256,10 @@ const getAttachments = (item, column) => {
     if (!Util.isList(attachments)) {
         return;
     }
+
+    attachments.forEach((it) => {
+        data.attachments.push(it);
+    });
 
     return {
         id: column.id,
@@ -412,6 +419,36 @@ const initDataColumns = (item) => {
     item.tg_detailColumns = detailColumns;
 };
 
+const collectErrorForAttachment = () => {
+    const { errors, attachments } = data;
+    data.errors = [];
+    data.attachments = [];
+
+    if (!attachments.length || !errors.length) {
+        return;
+    }
+
+    const list = attachments.filter((attachment) => {
+        if (attachment.name) {
+            // first one is expected
+            const match = attachment.name.match(/^(.*)-expected(\.[^.]+)?$/);
+            if (match) {
+                return true;
+            }
+        }
+    });
+
+    let index = 0;
+    errors.forEach((err) => {
+        const match = err.match(/\d+ pixels \(.*\) are different/);
+        if (match) {
+            list[index].message = match[0];
+            index += 1;
+        }
+    });
+
+};
+
 const initDataList = () => {
 
     const caseItem = state.detailMap[data.caseId];
@@ -441,6 +478,10 @@ const initDataList = () => {
     } else {
         data.stepCollapsedDisabled = false;
     }
+
+    // temp list for errors match to attachments
+    data.errors = [];
+    data.attachments = [];
 
     let lastItem;
     data.list = list.map((item) => {
@@ -476,6 +517,8 @@ const initDataList = () => {
             detailColumns: item.tg_detailColumns
         };
     });
+
+    collectErrorForAttachment();
 
 };
 
