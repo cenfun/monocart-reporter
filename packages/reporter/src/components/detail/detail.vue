@@ -440,7 +440,7 @@ const collectErrorForAttachment = () => {
 
     let index = 0;
     errors.forEach((err) => {
-        const match = err.match(/\d+ pixels \(.*\) are different/);
+        const match = err.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
         if (match) {
             list[index].message = match[0];
             index += 1;

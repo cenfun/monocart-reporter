@@ -1,3 +1,7 @@
+* 1.7.3
+  - added error message and size for the image comparison
+  - fixed sourcePath option for istanbul data
+
 * 1.7.2
   - added logging option 
   - rewrote the source mappings for coverage report

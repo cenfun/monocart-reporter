@@ -91,7 +91,10 @@ const onMouseUp = (e) => {
 const onImgLoad = (e) => {
     const img = e.target;
     if (img && !d.size) {
-        d.size = `${img.naturalWidth} x ${img.naturalHeight}`;
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        const t = (w * h).toLocaleString();
+        d.size = `${w} x ${h} = ${t} total pixels`;
     }
 };
 
@@ -188,18 +191,16 @@ watchEffect(() => {
         padding="10px"
       >
         <VuiFlex
+          v-if="d.message"
           gap="10px"
           wrap
           shirk
         >
-          <div v-if="d.size">
-            {{ d.size }}
-          </div>
-          <div
-            v-if="d.message"
-            class="mcr-comparison-message"
-          >
+          <div>
             {{ d.message }}
+          </div>
+          <div v-if="d.size">
+            ({{ d.size }})
           </div>
         </VuiFlex>
         <VuiFlex
@@ -259,10 +260,6 @@ watchEffect(() => {
             max-width: 100%;
             box-shadow: var(--image-shadow);
         }
-    }
-
-    .mcr-comparison-message {
-        color: red;
     }
 }
 </style>
