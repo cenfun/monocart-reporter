@@ -112,10 +112,12 @@ module.exports = {
                 },
                 // receive messages and send back response
                 onReceive: function(... args) {
+                    console.log('current test onReceive ============ ', this.test.title);
                     console.log('receive on server', args);
                     return ['custom response', ... args];
                 },
-                onClose: (data, config) => {
+                onClose: function(data, config) {
+                    console.log('current test onClose ============ ', this.test.title);
                     // console.log('state on close', data, config.metadata);
                     // save state data to global metadata
                     Object.assign(config.metadata, data);
