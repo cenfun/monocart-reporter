@@ -111,13 +111,26 @@ module.exports = {
 
                 },
                 // receive messages and send back response
-                onReceive: function(... args) {
-                    console.log('current test onReceive ============ ', this.test.title);
-                    console.log('receive on server', args);
-                    return ['custom response', ... args];
+                onReceive: function(message) {
+
+                    const test = this.getTest(message.testId);
+                    // console.log('get from map', test.title, this.testMap.size);
+                    // console.log('get from map');
+
+                    if (test) {
+                        console.log('onReceive test ============ ', test.title);
+                        test.my_custom_data = message.data;
+                    }
+
+                    console.log('receive on server', message);
+
+                    return {
+                        lastTest: this.lastTest.title,
+                        data: 'response data'
+                    };
                 },
                 onClose: function(data, config) {
-                    console.log('current test onClose ============ ', this.test.title);
+                    // console.log('current test onClose ============ ', this.currentTest.title);
                     // console.log('state on close', data, config.metadata);
                     // save state data to global metadata
                     Object.assign(config.metadata, data);

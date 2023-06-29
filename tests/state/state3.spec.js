@@ -20,7 +20,11 @@ test('state test customize sending and receiving', async () => {
     const state = useState();
 
     // send messages
-    const res = await state.send('string data', {});
+    const res = await state.send({
+        testId: test.info().testId,
+        data: 'my custom state data'
+    });
+
     console.log('receive on client', res);
 
 });
