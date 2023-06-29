@@ -118,8 +118,8 @@ module.exports = {
                     // console.log('get from map');
 
                     if (test) {
+                        // test level data handler
                         console.log('onReceive test ============ ', test.title);
-                        test.my_custom_data = message.data;
                     }
 
                     console.log('receive on server', message);
