@@ -1,4 +1,5 @@
 * 1.7.3
+  - added css coverage to lcov
   - added error message and size for the image comparison
   - fixed sourcePath option for istanbul data
   - fixed onReceive arguments
