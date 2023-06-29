@@ -1,6 +1,6 @@
 {
     "name": "monocart-vendor",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "private": true,
     "main": "dist/monocart-vendor.js",
     "files": [

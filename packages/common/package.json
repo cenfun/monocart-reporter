@@ -1,6 +1,6 @@
 {
     "name": "monocart-common",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "main": "dist/monocart-common.js",
     "files": [
         "dist"
