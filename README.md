@@ -631,12 +631,12 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 - `options` (Object)
     - `title` (String) report title.
-    - `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) or using `html` report 
-    - `entryFilter` (Function) A filter function to execute for each element in the V8 list.
-    - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map.
+    - `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) or using `html` report. V8 only. 
+    - `entryFilter` (Function) A filter function to execute for each element in the V8 list. V8 only.
+    - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map. Sourcemap only.
     - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
     - `lcov` (Boolean) Whether to create `lcov.info`. (for Sonar coverage)
-    - `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53))
+    - `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53)).
     - `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
