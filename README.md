@@ -1043,11 +1043,6 @@ module.exports = {
 - [weixin-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/weixin-webhook)
 - [feishu-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/feishu-webhook)
 
-## Dependencies
- - UI Framework [Vue 3](https://github.com/vuejs/core)
- - Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
- - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
- - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
 
 ## Contributing
 ```sh
@@ -1057,3 +1052,8 @@ npm run test
 npm run build
 npm run dev
 ```
+## Dependencies
+ - UI Framework [Vue 3](https://github.com/vuejs/core)
+ - Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
+ - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
+ - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
