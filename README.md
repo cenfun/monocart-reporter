@@ -30,7 +30,7 @@
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
 * [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
-* [Attach Code Coverage Report](#attach-code-coverage-report)
+* [Code Coverage Report](#code-coverage-report)
     - [Coverage Options](#coverage-options)
     - [Istanbul](#istanbul)
     - [V8](#v8)
@@ -632,11 +632,14 @@ test('attach lighthouse audit report', async () => {
 ```
 Preview [Audit HTML Report](https://cenfun.github.io/monocart-reporter/audit-78a0a1cc4420ee9da113/index.html)
 
-## Attach Code Coverage Report
-Attach a code coverage report with API `attachCoverageReport(data, testInfo, options)`. Arguments:
-- `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
-- `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
-- `options` (Object) see [Coverage Options](#coverage-options)
+## Code Coverage Report
+There are two APIs for code coverage report:
+- `attachCoverageReport(data, testInfo, options)`
+Attach a code coverage report to a test. Arguments:
+    - `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
+    - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
+    - `options` (Object) see [Coverage Options](#coverage-options)
+- `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
 
 ### Coverage Options
 - `title` (String) report title.
@@ -647,8 +650,6 @@ Attach a code coverage report with API `attachCoverageReport(data, testInfo, opt
 - `lcov` (Boolean) Whether to create `lcov.info`. (for Sonar coverage)
 - `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53)).
 - `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
-
- (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
 
 ### [Istanbul](https://github.com/istanbuljs) 
 Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
