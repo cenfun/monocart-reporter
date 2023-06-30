@@ -31,6 +31,10 @@
 * [Trend Chart](#trend-chart)
 * [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
 * [Attach Code Coverage Report](#attach-code-coverage-report)
+    - [Coverage Options](#coverage-options)
+    - [Istanbul](#istanbul)
+    - [V8](#v8)
+    - [V8 to Istanbul](#v8-to-istanbul)
     - [Compare Istanbul, V8 and V8 to Istanbul](#compare-istanbul-v8-and-v8-to-istanbul)
     - [Global Coverage Report](#global-coverage-report) for Component Testing
 * [Attach Network Report](#attach-network-report)
@@ -632,19 +636,22 @@ Preview [Audit HTML Report](https://cenfun.github.io/monocart-reporter/audit-78a
 Attach a code coverage report with API `attachCoverageReport(data, testInfo, options)`. Arguments:
 - `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
-- `options` (Object)
-    - `title` (String) report title.
-    - `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) or using `html` report. V8 only. 
-    - `entryFilter` (Function) A filter function to execute for each element in the V8 list. V8 only.
-    - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map. Sourcemap only.
-    - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
-    - `lcov` (Boolean) Whether to create `lcov.info`. (for Sonar coverage)
-    - `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53)).
-    - `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
+- `options` (Object) see [Coverage Options](#coverage-options)
+
+### Coverage Options
+- `title` (String) report title.
+- `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) or using `html` report. V8 only. 
+- `entryFilter` (Function) A filter function to execute for each element in the V8 list. V8 only.
+- `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map. Sourcemap only.
+- `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
+- `lcov` (Boolean) Whether to create `lcov.info`. (for Sonar coverage)
+- `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53)).
+- `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
 
  (see example: [report-coverage.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-coverage/report-coverage.spec.js))
 
-- [Istanbul](https://github.com/istanbuljs) Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
+### [Istanbul](https://github.com/istanbuljs) 
+Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
 ```js
 import { test, expect } from '@playwright/test';
 import { attachCoverageReport } from 'monocart-reporter';
@@ -674,7 +681,8 @@ test('Take Istanbul coverage report', async ({ page }) => {
 
 ![](/docs/istanbul.png)
 
-- [V8](https://v8.dev/blog/javascript-code-coverage) ([Chromium-based only](https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#type-ScriptCoverage)) Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, the V8 HTML report will be generated.
+### [V8](https://v8.dev/blog/javascript-code-coverage)
+Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, so it is [Chromium-based only](https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#type-ScriptCoverage), the V8 HTML report will be generated.
 ```js
 import { test, expect } from '@playwright/test';
 import { attachCoverageReport } from 'monocart-reporter';
@@ -715,7 +723,8 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 
 ![](/docs/v8.gif)
 
-- `V8 to Istanbul` Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
+### V8 to Istanbul
+Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
 const report = await attachCoverageReport(coverageList, test.info(), {
     toIstanbul: true
@@ -735,7 +744,12 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | Code formatting | N/A | ✅ | ❌ |
 
 ### Global Coverage Report
-The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. The API is `addCoverageReport(v8list, testInfo)`, currently supported `V8` only. Here is an example for Playwright Component Testing [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue).
+The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. The API is `addCoverageReport(v8list, testInfo)`, currently supported `V8` only. 
+- The global coverage options see [Coverage Options](#coverage-options)
+- The coverage examples for Playwright component testing:
+    - [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue)
+    - [playwright-ct-react](https://github.com/cenfun/playwright-ct-react)
+    - [playwright-ct-svelte](https://github.com/cenfun/playwright-ct-svelte)
 ```js
 // playwright.config.js
 module.exports = {
