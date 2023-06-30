@@ -87,7 +87,7 @@ module.exports = {
                 // return `https://cenfun.github.io/monocart-reporter/${relativePath}`;
             },
 
-            logging: 'debug',
+            // logging: 'debug',
 
             // global coverage
             coverage: {
