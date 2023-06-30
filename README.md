@@ -723,7 +723,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 ![](/docs/v8.gif)
 
 ### V8 to Istanbul
-Take V8 coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, then the V8 coverage format will be converted to Istanbul's coverage format. The Istanbul HTML report will be generated. 
+Take V8 coverage data and convert it to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
 const report = await attachCoverageReport(coverageList, test.info(), {
     toIstanbul: true
