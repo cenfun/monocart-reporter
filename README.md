@@ -652,7 +652,7 @@ Attach a code coverage report to a test. Arguments:
 - `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
 
 ### [Istanbul](https://github.com/istanbuljs) 
-Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
+Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config-istanbul.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config-istanbul.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
 ```js
 import { test, expect } from '@playwright/test';
 import { attachCoverageReport } from 'monocart-reporter';
