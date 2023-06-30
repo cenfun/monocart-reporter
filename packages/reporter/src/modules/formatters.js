@@ -51,12 +51,13 @@ const annotationTypeFormatter = (list) => {
 
 // ===========================================================================
 
-const iconFormatter = (icon, size = '16px', button = false) => {
+const iconFormatter = (options) => {
     const div = document.createElement('div');
     const props = {
-        icon,
-        size,
-        button
+        icon: '',
+        size: '16px',
+        button: false,
+        ... options
     };
     createApp(IconLabel, props).mount(div);
     return div;
@@ -175,7 +176,10 @@ const formatters = {
         if (!value) {
             return '';
         }
-        return iconFormatter(value, '20px');
+        return iconFormatter({
+            icon: value,
+            size: '20px'
+        });
     },
 
     iconType: function(value, rowItem, columnItem, cellNode) {
@@ -183,7 +187,10 @@ const formatters = {
         if (!icon) {
             return '';
         }
-        return iconFormatter(icon);
+        return iconFormatter({
+            icon,
+            tooltip: icon
+        });
     },
 
     tree: function(value, rowItem, columnItem, cellNode) {
@@ -236,7 +243,10 @@ const formatters = {
 
     errors: function(value, rowItem) {
         if (rowItem.errorNum) {
-            return iconFormatter('error', '16px', true);
+            return iconFormatter({
+                icon: 'error',
+                button: true
+            });
         }
         return '';
     },
@@ -245,14 +255,20 @@ const formatters = {
         if (!value) {
             return '';
         }
-        return iconFormatter('log', '16px', true);
+        return iconFormatter({
+            icon: 'log',
+            button: true
+        });
     },
 
     attachments: function(value, rowItem) {
         if (!value) {
             return '';
         }
-        return iconFormatter('attachment', '16px', true);
+        return iconFormatter({
+            icon: 'attachment',
+            button: true
+        });
     }
 
 };
