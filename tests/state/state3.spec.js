@@ -15,17 +15,17 @@ test('state test hang up', async () => {
 
 });
 
-test('state test customize sending and receiving', async () => {
+test('state test send message', async () => {
 
     const state = useState();
 
-    // send messages
-    const res = await state.send({
+    // send message and receive response from a test (child process)
+    const response = await state.send({
         testId: test.info().testId,
-        data: 'my custom state data'
+        data: 'my test data'
     });
 
-    console.log('receive on client', res);
+    console.log('receive response on client', response);
 
 });
 

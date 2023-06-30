@@ -110,7 +110,8 @@ module.exports = {
                 server: {
 
                 },
-                // receive messages and send back response
+
+                // receive message and send response from global state (main process)
                 onReceive: function(message) {
 
                     const test = this.getTest(message.testId);
@@ -122,11 +123,10 @@ module.exports = {
                         console.log('onReceive test ============ ', test.title);
                     }
 
-                    console.log('receive on server', message);
+                    console.log('receive message on server', message);
 
                     return {
-                        lastTest: this.lastTest.title,
-                        data: 'response data'
+                        data: 'my response data'
                     };
                 },
                 onClose: function(data, config) {

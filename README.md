@@ -35,6 +35,9 @@
     - [Global Coverage Report](#global-coverage-report) for Component Testing
 * [Attach Network Report](#attach-network-report)
 * [Global State Management](#global-state-management)
+    - [Setup Global State](#setup-global-state)
+    - [Get, Set, and Remove Global Data](#get-set-and-remove-global-data)
+    - [Send and Receive Messages between Processes](#send-and-receive-messages-between-processes)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd hook](#onend-hook)
     - [Send Email](#send-email)
@@ -826,7 +829,7 @@ Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network
 
 ## Global State Management
 When tests are executed in [isolation](https://playwright.dev/docs/browser-contexts) mode, the reporter and each test may run in a different process, they cannot share data with each other. we can start a local WebSocket server to serve the global data, and read/write the global data with `useState` API from a test.
-- setup global state
+### Setup Global State
 ```js
 module.exports = {
     reporter: [
@@ -850,7 +853,7 @@ module.exports = {
     ]
 };
 ```
-- get/set/remove global data
+### Get, Set, and Remove Global Data
 ```js
 const { test } = require('@playwright/test');
 const { useState } = require('monocart-reporter');
@@ -878,7 +881,23 @@ test('state test', async ({ browserName }) => {
     console.log(all);
 });
 ``` 
-- customize sending and receiving messages
+### Send and Receive Messages between Processes
+- send message and receive response from a test (child process)
+```js
+const { test } = require('@playwright/test');
+const { useState } = require('monocart-reporter');
+test('state test send message', async () => {
+    const state = useState({
+        // port: 8130
+    });
+    const response = await state.send({
+        testId: test.info().testId,
+        data: 'my test data'
+    });
+    console.log('receive response on client', response);
+});
+``` 
+- receive message and send response from global state (main process)
 ```js
 module.exports = {
     reporter: [
@@ -887,28 +906,23 @@ module.exports = {
             name: "My Test Report",
             outputFile: './test-results/report.html',
             state: {
-                // receive messages and send back response
-                onReceive: function(... args) {
-                    console.log('receive on server', args);
-                    return ['custom response', ... args];
+                onReceive: function(message) {
+                    const test = this.getTest(message.testId);
+                    if (test) {
+                        // current test
+                    }
+
+                    console.log('receive message on server', message);
+
+                    return {
+                        data: 'my response data'
+                    };
                 }
             }
         }]
     ]
 };
 ```
-```js
-const { test } = require('@playwright/test');
-const { useState } = require('monocart-reporter');
-test('state test', async ({ browserName }) => {
-    const state = useState({
-        // port: 8130
-    });
-    // send messages
-    const res = await state.send('string data', {});
-    console.log('receive on client', res);
-});
-``` 
 
 
 ## Merge Shard Reports
