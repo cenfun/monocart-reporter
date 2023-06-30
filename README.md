@@ -53,7 +53,7 @@
     - [Teams Integration](#teams-integration)
     - [Dingtalk/Weixin/Feishu Integration](#dingtalkweixinfeishu-integration)
 * [Contributing](#contributing)
-* [Changelog](#changelog)
+* [Changelog](CHANGELOG.md)
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
@@ -680,8 +680,6 @@ test('Take Istanbul coverage report', async ({ page }) => {
 });
 ```
 
-![](/docs/istanbul.png)
-
 ### [V8](https://v8.dev/blog/javascript-code-coverage)
 Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, so it is [Chromium-based only](https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#type-ScriptCoverage), the V8 HTML report will be generated.
 ```js
@@ -973,7 +971,7 @@ await merge(reportDataList, {
 ```
 Preview [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
 
-## onEnd hook
+## onEnd Hook
 The `onEnd` function will be executed after report generated. Arguments:
 - `reportData` all report data, properties:
     - `name` (String) report name 
@@ -1012,41 +1010,26 @@ module.exports = {
 ## Send Email
 Simply send email with [nodemailer](https://nodemailer.com), check example: [send-email](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/send-email)
 
-![](/docs/email.png)
-
-
 ## Testrail Integration
-Send test results to your Testrail, check example: [testrail](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/testrail)
-
-![](/docs/testrail.png)
+Send test results to your [Testrail](https://www.testrail.com/), check example: [testrail](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/testrail)
 
 ## Jira + Zephyr Scale Integration
 Create test cycle and executions with [zephyr-scale-api](https://support.smartbear.com/zephyr-scale-cloud/api-docs/), check example: [zephyr-scale](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/zephyr-scale)
-
-![](/docs/zephyr.png)
 
 ## Jira + Xray Integration
 - Import test execution results with [Xray REST API](https://docs.getxray.app/display/XRAYCLOUD/REST+API)
 - Update Jira issue status with [Jira Transition API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-transitions-post)
 check example: [xray](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/xray)
 
-![](/docs/xray.png)
-
 ## Slack Integration
 1. Simply send message with [@slack/webhook](https://github.com/slackapi/node-slack-sdk), example: [slack-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/slack-webhook)
 2. Recommended: Post chat message and upload image with [@slack/web-api](https://github.com/slackapi/node-slack-sdk), example: [slack-web-api](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/slack-web-api)
 
-![](/docs/slack.png)
-
 ## Discord Integration
 Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels. check example: [discord-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/discord-webhook)
 
-![](/docs/discord.png)
-
 ## Teams Integration
 Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. check example: [teams-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/teams-webhook)
-
-![](/docs/teams.png)
 
 ## Dingtalk/Weixin/Feishu Integration
 - [dingtalk-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/dingtalk-webhook)
@@ -1067,5 +1050,3 @@ npm run test
 npm run build
 npm run dev
 ```
-## CHANGELOG
-- [CHANGELOG.md](CHANGELOG.md)
