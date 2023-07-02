@@ -39,29 +39,32 @@ const test = testBase.extend({
     }]
 });
 
-const pageUrl = 'http://localhost:8090/coverage/v8.html';
+module.exports = () => {
 
-test('take coverage for foo', async ({ page }) => {
-    await page.goto(pageUrl);
-    await page.evaluate(() => {
-        const { foo } = window['coverage-v8'];
-        foo();
+    const pageUrl = 'http://localhost:8090/coverage/v8.html';
+
+    test('take coverage for foo', async ({ page }) => {
+        await page.goto(pageUrl);
+        await page.evaluate(() => {
+            const { foo } = window['coverage-v8'];
+            foo();
+        });
     });
-});
 
-test('take coverage for bar', async ({ page }) => {
-    await page.goto(pageUrl);
-    await page.evaluate(() => {
-        const { bar } = window['coverage-v8'];
-        bar();
+    test('take coverage for bar', async ({ page }) => {
+        await page.goto(pageUrl);
+        await page.evaluate(() => {
+            const { bar } = window['coverage-v8'];
+            bar();
+        });
     });
-});
 
-test('take coverage for start', async ({ page }) => {
-    await page.goto(pageUrl);
-    await page.evaluate(() => {
-        const { start } = window['coverage-v8'];
-        start();
+    test('take coverage for start', async ({ page }) => {
+        await page.goto(pageUrl);
+        await page.evaluate(() => {
+            const { start } = window['coverage-v8'];
+            start();
+        });
     });
-});
 
+};

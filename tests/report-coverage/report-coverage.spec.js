@@ -2,6 +2,9 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { attachCoverageReport, addCoverageReport } = require('monocart-reporter');
 
+const v8Tests = require('./add-coverage-v8.js');
+v8Tests();
+
 test('Take Istanbul coverage report', async ({ page }) => {
 
     await page.goto('http://localhost:8090/coverage/istanbul.html');
@@ -158,4 +161,3 @@ test('Take V8 js and css coverage report', async ({ page }) => {
     console.log(report.summary);
 
 });
-
