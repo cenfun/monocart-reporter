@@ -633,9 +633,9 @@ test('attach lighthouse audit report', async () => {
 Preview [Audit HTML Report](https://cenfun.github.io/monocart-reporter/audit-78a0a1cc4420ee9da113/index.html)
 
 ## Code Coverage Report
-There are two APIs for code coverage report:
+There are two APIs for coverage report:
 - `attachCoverageReport(data, testInfo, options)`
-Attach a code coverage report to a test. Arguments:
+Attach a coverage report to a test. Arguments:
     - `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
     - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
     - `options` (Object) see [Coverage Options](#coverage-options)
@@ -745,10 +745,6 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 ### Global Coverage Report
 The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. 
 - The global coverage options see [Coverage Options](#coverage-options)
-- The coverage examples for Playwright component testing:
-    - [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue)
-    - [playwright-ct-react](https://github.com/cenfun/playwright-ct-react)
-    - [playwright-ct-svelte](https://github.com/cenfun/playwright-ct-svelte)
 ```js
 // playwright.config.js
 module.exports = {
@@ -765,6 +761,54 @@ module.exports = {
     ]
 };
 ```
+- It is recommended to use [automatic fixtures](https://playwright.dev/docs/test-fixtures#automatic-fixtures) to add coverage for each test:
+```js
+// fixtures.js for v8
+import { test as testBase, expect } from '@playwright/test';
+import { addCoverageReport } from 'monocart-reporter';
+
+const test = testBase.extend({
+    autoTestFixture: [async ({ page }, use) => {
+
+        const isChromium = test.info().project.name === 'Desktop Chromium';
+
+        // console.log('autoTestFixture setup...');
+        // coverage API is chromium only
+        if (isChromium) {
+            await Promise.all([
+                page.coverage.startJSCoverage({
+                    resetOnNavigation: false
+                }),
+                page.coverage.startCSSCoverage({
+                    resetOnNavigation: false
+                })
+            ]);
+        }
+
+        await use('autoTestFixture');
+
+        // console.log('autoTestFixture teardown...');
+        if (isChromium) {
+            const [jsCoverage, cssCoverage] = await Promise.all([
+                page.coverage.stopJSCoverage(),
+                page.coverage.stopCSSCoverage()
+            ]);
+            const coverageList = [... jsCoverage, ... cssCoverage];
+            // console.log(coverageList.map((item) => item.url));
+            await addCoverageReport(coverageList, test.info());
+        }
+
+    }, {
+        scope: 'test',
+        auto: true
+    }]
+});
+export { test, expect };
+```
+- The coverage examples for Playwright component testing:
+    - [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue)
+    - [playwright-ct-react](https://github.com/cenfun/playwright-ct-react)
+    - [playwright-ct-svelte](https://github.com/cenfun/playwright-ct-svelte)
 
 ## Attach Network Report
 Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments:

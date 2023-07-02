@@ -1,3 +1,6 @@
+* 1.7.4
+  - added istanbul support for global coverage report
+
 * 1.7.3
   - added css coverage to lcov
   - added error message and size for the image comparison
