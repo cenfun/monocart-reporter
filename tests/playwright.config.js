@@ -92,6 +92,8 @@ module.exports = {
             // global coverage
             coverage: {
 
+                sourceFilter: (sourcePath) => sourcePath.search(/src\//) !== -1,
+
                 // sourcePath: (sp) => {
                 //     return `pre-dir/${sp}`;
                 // },

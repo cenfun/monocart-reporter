@@ -743,7 +743,7 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | Code formatting | N/A | ✅ | ❌ |
 
 ### Global Coverage Report
-The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. The API is `addCoverageReport(v8list, testInfo)`, currently supported `V8` only. 
+The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. 
 - The global coverage options see [Coverage Options](#coverage-options)
 - The coverage examples for Playwright component testing:
     - [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue)

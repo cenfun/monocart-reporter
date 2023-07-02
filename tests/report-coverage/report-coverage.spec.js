@@ -2,6 +2,9 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { attachCoverageReport, addCoverageReport } = require('monocart-reporter');
 
+// const istanbulTests = require('./add-coverage-istanbul.js');
+// istanbulTests();
+
 const v8Tests = require('./add-coverage-v8.js');
 v8Tests();
 
@@ -18,6 +21,8 @@ test('Take Istanbul coverage report', async ({ page }) => {
     const coverageData = await page.evaluate(() => window.__coverage__);
     await page.close();
     expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
+
+    // await addCoverageReport(coverageData, test.info());
 
     // coverage report
     const report = await attachCoverageReport(coverageData, test.info(), {
@@ -153,7 +158,7 @@ test('Take V8 js and css coverage report', async ({ page }) => {
     //     }
     // });
 
-    await addCoverageReport(coverageList, test.info());
+    // await addCoverageReport(coverageList, test.info());
 
     const report = await attachCoverageReport(coverageList, test.info(), {
         lcov: true
