@@ -72,6 +72,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
     await addCoverageReport(coverageList, test.info());
 
     const v8 = await attachCoverageReport(coverageList, test.info(), {
+        sourceFilter: (sourcePath) => sourcePath.search(/src\//) !== -1,
         lcov: true
     });
     console.log(v8.summary);
