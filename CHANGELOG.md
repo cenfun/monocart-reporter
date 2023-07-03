@@ -1,5 +1,8 @@
+
+
 * 1.7.4
   - added istanbul support for global coverage report
+  - fixed issue #54
 
 * 1.7.3
   - added css coverage to lcov
