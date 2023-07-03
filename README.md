@@ -980,7 +980,7 @@ module.exports = {
     ]
 };
 ```
-
+see example: [Allows specified test cases to run in sequence mode with lock/unlock state](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/global-state)
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
