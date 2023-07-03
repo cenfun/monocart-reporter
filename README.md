@@ -881,8 +881,7 @@ test('finally, attach HAR', async () => {
     await attachNetworkReport(harPath, test.info());
 });
 ```
-Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network-38e613e8d93547bdb27f/index.html)
-
+Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network-da7f5b4cceb1e6280782/index.html)
 
 ## Global State Management
 When tests are executed in [isolation](https://playwright.dev/docs/browser-contexts) mode, the reporter and each test may run in a different process, they cannot share data with each other. we can start a local WebSocket server to serve the global data, and read/write the global data with `useState` API from a test.
@@ -968,9 +967,7 @@ module.exports = {
                     if (test) {
                         // current test
                     }
-
                     console.log('receive message on server', message);
-
                     return {
                         data: 'my response data'
                     };
@@ -980,7 +977,7 @@ module.exports = {
     ]
 };
 ```
-see example: [Allows specified test cases to run in sequence mode with lock/unlock state](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/global-state)
+see example: [Allow specified test cases to run in sequence mode with lock/unlock state](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/global-state)
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
