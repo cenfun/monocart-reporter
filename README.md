@@ -636,7 +636,7 @@ Preview [Audit HTML Report](https://cenfun.github.io/monocart-reporter/audit-78a
 There are two APIs for coverage report:
 - `attachCoverageReport(data, testInfo, options)`
 Attach a coverage report to a test. Arguments:
-    - `data` There are two supported data inputs `Istanbul` (Object) or `V8` (Array)
+    - `data` There are two supported data inputs: [Istanbul](#istanbul) (Object) or [V8](#v8) (Array)
     - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
     - `options` (Object) see [Coverage Options](#coverage-options)
 - `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
