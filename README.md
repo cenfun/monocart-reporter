@@ -735,12 +735,13 @@ const report = await attachCoverageReport(coverageList, test.info(), {
 | :--------------| :------ | :------ | :----------------------  |
 | Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
 | Output | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-77aa6f37601a97417803/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/coverage/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-01eebe0ebc796534d759-1/index.html) |
-| Indicators | Covered Lines, Branches, Statements and Functions, Execution Counts | Covered Bytes, Lines❔(after formatted) Execution Counts | Covered Lines, Branches❔, Statements❔ and Functions, Execution Counts |
+| Indicators | Covered Lines, Branches, Statements and Functions, Execution Counts | Covered Bytes, Lines❔, Execution Counts | Covered Lines, Branches❔, Statements and Functions, Execution Counts |
 | Source code without [instrumentation](https://github.com/istanbuljs/babel-plugin-istanbul) | ❌ | ✅ | ✅ |
 | CSS coverage | ❌ | ✅ | ✅ |
 | Minified code | N/A | ✅ | ❌ |
 | Code formatting | N/A | ✅ | ❌ |
-❔ - Partial support
+
+❔ - Partial or conditional support
 ### Global Coverage Report
 The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. 
 - The global coverage options see [Coverage Options](#coverage-options)
