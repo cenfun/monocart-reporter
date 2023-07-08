@@ -154,10 +154,13 @@ const appendStatusResults = (item, results) => {
     const tests = item[`${ns}tests`];
     // console.log(tests);
 
+    const growth = item.growth;
+
     results.push({
         icon: 'case',
         name: summary.tests.name,
-        value: tests
+        value: tests,
+        growth: growth >= 0 ? `+${growth}` : growth
     });
 
     // asc caseTypes
@@ -455,10 +458,15 @@ const initTrendList = (trendList) => {
         trendMax[k] = 1;
     });
 
+    let prevItem;
     trendList.forEach((item) => {
         trendTypes.forEach((k) => {
             trendMax[k] = Math.max(trendMax[k], item[k]);
         });
+        if (prevItem) {
+            item.growth = item.tests - prevItem.tests;
+        }
+        prevItem = item;
     });
 
     chart.trendMax = trendMax;
@@ -609,6 +617,10 @@ onMounted(() => {
             class="mcr-num"
           >{{ item.value }}</span>
           <span v-if="item.percent">{{ item.percent }}</span>
+          <span
+            v-if="item.growth"
+            class="mcr-num"
+          >{{ item.growth }}</span>
         </VuiFlex>
       </VuiFlex>
     </VuiPopover>
