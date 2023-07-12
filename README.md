@@ -43,7 +43,7 @@
     - [Get, Set, and Remove Global Data](#get-set-and-remove-global-data)
     - [Send and Receive Messages between Processes](#send-and-receive-messages-between-processes)
 * [Merge Shard Reports](#merge-shard-reports)
-* [onEnd hook](#onend-hook)
+* [onEnd Hook](#onend-hook)
     - [Send Email](#send-email)
     - [Testrail Integration](#testrail-integration)
     - [Jira + Zephyr Scale Integration](#jira--zephyr-scale-integration)
