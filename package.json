@@ -43,22 +43,22 @@
     "dependencies": {
         "console-grid": "^2.0.1",
         "eight-colors": "^1.0.3",
-        "istanbul-reports": "^3.1.5",
+        "istanbul-reports": "^3.1.6",
         "koa": "^2.14.2",
         "koa-static-resolver": "^1.0.4",
         "lz-utils": "^2.0.1",
-        "nodemailer": "^6.9.3",
+        "nodemailer": "^6.9.4",
         "open": "^9.1.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.36.0",
+        "@playwright/test": "^1.36.2",
         "axios": "^1.4.0",
         "dotenv": "^16.3.1",
-        "eslint": "^8.44.0",
+        "eslint": "^8.46.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-vue": "^9.15.1",
-        "stylelint": "^15.10.1",
+        "stylelint": "^15.10.2",
         "stylelint-config-plus": "^1.0.4",
         "vine-ui": "^3.1.12"
     }

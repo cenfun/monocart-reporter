@@ -14,7 +14,7 @@
     "devDependencies": {
         "ansi-to-html": "^0.7.2",
         "github-markdown-css": "^5.2.0",
-        "marked": "^5.1.1"
+        "marked": "^5.1.2"
     },
     "link": false
 }
