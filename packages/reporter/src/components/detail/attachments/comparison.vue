@@ -144,9 +144,8 @@ watchEffect(() => {
       <IconLabel
         v-if="d.list"
         icon="image"
-      >
-        image
-      </IconLabel>
+        :button="false"
+      />
       <div>mismatch: {{ props.data.name }}</div>
     </AttachmentHead>
     <div class="mcr-attachment-body">
