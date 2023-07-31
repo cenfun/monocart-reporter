@@ -16,7 +16,9 @@ const props = defineProps({
       gap="10px"
       wrap
     >
-      <div><slot /></div>
+      <VuiFlex gap="5px">
+        <slot />
+      </VuiFlex>
       <div class="vui-flex-auto" />
       <div
         v-if="props.retry"

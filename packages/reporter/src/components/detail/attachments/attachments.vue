@@ -78,19 +78,18 @@ const sortGroupList = (group) => {
     });
 };
 
-const existsGroupItem = (group, item) => {
-    const prev = group.data.list.find((it) => it.name === item.name);
-    if (prev) {
+const existsGroupItem = (group, groupName, retry) => {
+    if (group.data.name === groupName && group.data.retry === retry) {
         return true;
     }
     return false;
 };
 
-const createGroup = (item, name, extension, attachment) => {
+const createGroup = (item, groupName, attachment) => {
     return {
         component: Comparison,
         data: {
-            name: name + extension,
+            name: groupName,
             contentType: attachment.contentType,
             message: attachment.message,
             position: attachment.position,
@@ -120,24 +119,29 @@ const initList = (attachments) => {
                 category
             };
 
+            // multiple soft comparisons in one test, name with number
+            // multiple-soft-comparisons-1.png
+            // multiple-soft-comparisons-2.png
+            const groupName = name + extension;
+
             if (group) {
 
                 // there are two connected groups if retry happened
-                if (existsGroupItem(group, item)) {
+                if (existsGroupItem(group, groupName, attachment.retry)) {
+                    group.data.list.push(item);
+                } else {
                     sortGroupList(group);
                     list.push(group);
-                    group = createGroup(item, name, extension, attachment);
-
-                } else {
-                    group.data.list.push(item);
+                    group = createGroup(item, groupName, attachment);
                 }
 
             } else {
-                group = createGroup(item, name, extension, attachment);
+                group = createGroup(item, groupName, attachment);
             }
 
         } else {
 
+            // last one
             if (group) {
                 sortGroupList(group);
                 list.push(group);

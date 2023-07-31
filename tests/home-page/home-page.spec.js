@@ -154,6 +154,13 @@ test('image comparison', async ({ page }) => {
     await expect(page).toHaveScreenshot();
 });
 
+test('multiple soft comparisons', async ({ page }) => {
+    await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter/pulls');
+    await expect.soft(page).toHaveScreenshot();
+    await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter/issues');
+    await expect.soft(page).toHaveScreenshot();
+});
+
 test('text comparison', async ({ page }) => {
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
     expect(await page.textContent('.page-url')).toMatchSnapshot();

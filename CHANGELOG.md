@@ -1,4 +1,5 @@
-
+* 1.7.5
+  - fixed issue #56 (multiple soft comparisons)
 
 * 1.7.4
   - added istanbul support for global coverage report

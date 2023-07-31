@@ -141,7 +141,13 @@ watchEffect(() => {
     open
   >
     <AttachmentHead :retry="props.data.retry">
-      <span v-if="d.list">image </span>mismatch: {{ props.data.name }}
+      <IconLabel
+        v-if="d.list"
+        icon="image"
+      >
+        image
+      </IconLabel>
+      <div>mismatch: {{ props.data.name }}</div>
     </AttachmentHead>
     <div class="mcr-attachment-body">
       <VuiTab
