@@ -20,7 +20,9 @@ const props = defineProps({
 
 const d = shallowReactive({
     tabIndex: 0,
-    tempIndex: 0
+    tempIndex: 0,
+    mousedown: false,
+    startX: 0
 });
 
 const initImageComparison = () => {
@@ -72,27 +74,65 @@ const onErrorClick = () => {
     }
 };
 
-const switchTo = (e, category) => {
-    if (Util.hasOwn(d.indexes, category)) {
-        e.preventDefault();
-        d.tabIndex = d.indexes[category];
-    }
-};
+const switchTo = (e, offset = 0) => {
+    const category = d.categories[d.tempIndex];
+    let target;
 
-const onMouseDown = (e) => {
-    d.tempIndex = d.tabIndex;
-    const category = d.categories[d.tabIndex];
-    if (category === 'actual') {
-        switchTo(e, 'expected');
+    if (category === 'diff') {
+        target = offset > 0 ? 'expected' : 'actual';
+    } else if (category === 'actual') {
+        target = offset < 0 ? 'diff' : 'expected';
     } else if (category === 'expected') {
-        switchTo(e, 'actual');
-    } else if (category === 'diff') {
-        switchTo(e, 'actual');
+        target = offset < 0 ? 'diff' : 'actual';
+    }
+
+    if (Util.hasOwn(d.indexes, target)) {
+        e.preventDefault();
+        d.tabIndex = d.indexes[target];
     }
 };
 
 const onMouseUp = (e) => {
+    d.mousedown = false;
     d.tabIndex = d.tempIndex;
+    Util.unbindEvents(windowEvents);
+};
+
+const onMouseMove = (e) => {
+    if (!d.mousedown) {
+        return;
+    }
+    const offsetX = e.pageX - d.startX;
+    if (Math.abs(offsetX) < 10) {
+        return;
+    }
+    switchTo(e, offsetX);
+    d.startX = e.pageX;
+};
+
+const windowEvents = {
+    mousemove: {
+        handler: (e) => {
+            onMouseMove(e);
+        },
+        options: true
+    },
+    mouseup: {
+        handler: (e) => {
+            onMouseUp(e);
+        },
+        options: {
+            once: true
+        }
+    }
+};
+
+const onMouseDown = (e) => {
+    d.mousedown = true;
+    d.startX = e.pageX;
+    d.tempIndex = d.tabIndex;
+    switchTo(e, 0);
+    Util.bindEvents(windowEvents, window);
 };
 
 const onImgLoad = (e) => {
@@ -186,7 +226,6 @@ watchEffect(() => {
             :key="i"
             class="mcr-comparison-image"
             @mousedown="onMouseDown"
-            @mouseup="onMouseUp"
           >
             <img
               :src="item.path"
