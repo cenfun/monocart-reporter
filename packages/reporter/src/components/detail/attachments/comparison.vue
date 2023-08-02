@@ -203,11 +203,16 @@ watchEffect(() => {
             <IconLabel icon="help" />
             <div hidden>
               <div class="mcr-readme">
-                For quick comparison of the image, click and hold on the image. Depending on which tab you are on, the image will swap to a different one.
-                <p>For example: </p>
-                To compare the actual image with the expected one, select the <code>Actual</code> tab, click and hold the mouse on the image and it will show the image from the <code>Expected</code> tab.
-                <br>
-                Releasing the mouse will swap back to the image from the <code>Actual</code> tab.
+                <div>On the Image:</div>
+                <li class="mcr-item">
+                  Mouse Down/Up: Switch view with neighbor
+                </li>
+                <li class="mcr-item">
+                  Mouse Down + Move to Left/Right: Switch view between others
+                </li>
+                <li class="mcr-item">
+                  Mouse Wheel: Zoom in/out
+                </li>
               </div>
             </div>
           </div>
