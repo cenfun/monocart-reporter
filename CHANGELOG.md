@@ -1,3 +1,6 @@
+* 1.7.6
+  - added zoom in/out for screenshot comparison view
+
 * 1.7.5
   - fixed issue #56 (multiple soft comparisons)
 
