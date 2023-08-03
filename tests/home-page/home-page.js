@@ -6,6 +6,12 @@ const mockPageGoto = async (page, url) => {
         <head>
             <title>monocart-reporter - npm</title>
             <style>
+            body {
+                background-size: 100px 100px;
+                background-image:
+                    linear-gradient(to right, grey 1px, transparent 1px),
+                    linear-gradient(to bottom, grey 1px, transparent 1px);
+            }
             table {
                 border-collapse: collapse;
                 min-width: 500px;

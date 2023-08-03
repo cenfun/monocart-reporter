@@ -40,6 +40,8 @@ const state = shallowReactive({
     flyoverComponent: '',
     flyoverData: null,
 
+    imageZoom: false,
+
     position: 0,
 
     // grid data

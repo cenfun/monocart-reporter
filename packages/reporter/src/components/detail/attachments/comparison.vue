@@ -1,6 +1,9 @@
 <script setup>
-import { watchEffect, shallowReactive } from 'vue';
+import {
+    watch, watchEffect, shallowReactive, onUnmounted
+} from 'vue';
 import { components } from 'vine-ui';
+import { microtask } from 'monocart-common';
 
 import Util from '../../../utils/util.js';
 import state from '../../../modules/state.js';
@@ -8,7 +11,9 @@ import state from '../../../modules/state.js';
 import IconLabel from '../../icon-label.vue';
 import AttachmentHead from './attachment-head.vue';
 
-const { VuiFlex, VuiTab } = components;
+const {
+    VuiFlex, VuiTab, VuiSwitch
+} = components;
 
 
 const props = defineProps({
@@ -19,10 +24,14 @@ const props = defineProps({
 });
 
 const d = shallowReactive({
+    touch: Util.isTouchDevice(),
     tabIndex: 0,
     tempIndex: 0,
-    mousedown: false,
-    startX: 0
+    startX: 0,
+    imageTop: 0,
+    imageLeft: 0,
+    imageStyle: '',
+    containerStyle: ''
 });
 
 const initImageComparison = () => {
@@ -93,16 +102,31 @@ const switchTo = (e, offset = 0) => {
 };
 
 const onMouseUp = (e) => {
-    d.mousedown = false;
     d.tabIndex = d.tempIndex;
     Util.unbindEvents(windowEvents);
 };
 
 const onMouseMove = (e) => {
-    if (!d.mousedown) {
+    const offsetX = e.pageX - d.startX;
+    const offsetY = e.pageY - d.startY;
+
+    // pan if zoom
+    if (d.percent > d.minPercent && d.container) {
+        const minWidth = getMinWidth();
+        const minHeight = Math.round(d.hw * minWidth);
+        const w = d.imageWidth;
+        const h = Math.round(d.hw * w);
+
+        const l = d.startL + offsetX;
+        const t = d.startT + offsetY;
+
+        updateImage(l, t, w, h, minWidth, minHeight, true);
+
         return;
     }
-    const offsetX = e.pageX - d.startX;
+
+
+    // switch the third one
     if (Math.abs(offsetX) < 10) {
         return;
     }
@@ -128,20 +152,162 @@ const windowEvents = {
 };
 
 const onMouseDown = (e) => {
-    d.mousedown = true;
     d.startX = e.pageX;
+    d.startY = e.pageY;
+    d.startL = d.imageLeft;
+    d.startT = d.imageTop;
     d.tempIndex = d.tabIndex;
     switchTo(e, 0);
     Util.bindEvents(windowEvents, window);
+    // console.log(e.offsetX, e.offsetY);
+};
+
+const getMinWidth = () => {
+    const padding = 10 * 2;
+    const minWidth = d.container.clientWidth - padding;
+    return Math.min(minWidth, d.maxWidth);
+};
+
+const updateImage = (l, t, w, h, minWidth, minHeight, dragging) => {
+
+    const maxL = w - minWidth;
+    const maxT = h - minHeight;
+    // console.log(l, t, maxL, maxT);
+
+    l = Util.clamp(l, -maxL, 0);
+    t = Util.clamp(t, -maxT, 0);
+
+    const ls = ['max-width: none;'];
+    ls.push(`left: ${l}px;`);
+    ls.push(`top: ${t}px;`);
+    ls.push(`width: ${w}px;`);
+    if (dragging) {
+        ls.push('transition: none;');
+    }
+
+    d.imageStyle = ls.join(' ');
+
+    d.imageLeft = l;
+    d.imageTop = t;
+    d.imageWidth = w;
+
+    d.percent = Math.round(w / d.maxWidth * 100);
+};
+
+const zoomTo = (e, percent) => {
+    if (!d.container) {
+        return;
+    }
+    const minWidth = getMinWidth();
+    const v = Math.round(d.maxWidth * percent * 0.01);
+    const w = Math.min(Math.max(v, minWidth), d.maxWidth * 2);
+    if (d.imageWidth === w) {
+        return;
+    }
+
+    const br = d.container.getBoundingClientRect();
+    const ox = Math.round(e.pageX - br.left - 10);
+    const oy = Math.round(e.pageY - br.top - 10);
+
+    // console.log(ox, oy);
+
+    const imageHeight = d.hw * d.imageWidth;
+    const sx = (-d.imageLeft + ox) / d.imageWidth;
+    const sy = (-d.imageTop + oy) / imageHeight;
+
+    const h = Math.round(d.hw * w);
+    const l = -Math.round(w * sx - ox);
+    const t = -Math.round(h * sy - oy);
+    // console.log(l, t);
+
+
+    const minHeight = Math.round(d.hw * minWidth);
+    const padding = 10 * 2;
+    const ch = minHeight + padding;
+    d.containerStyle = `height: ${ch}px`;
+
+    // console.log(l, t);
+
+    updateImage(l, t, w, h, minWidth, minHeight);
+
+};
+
+
+const onDblClick = (e) => {
+    state.imageZoom = true;
+    // console.log('onDblClick');
+    setTimeout(() => {
+        if (d.percent === 100) {
+            zoomTo(e, d.minPercent - 1);
+            return;
+        }
+        zoomTo(e, 100);
+    });
+};
+
+const onMouseWheel = (e) => {
+    if (!state.imageZoom) {
+        return;
+    }
+
+    const deltaY = e.deltaY;
+    const delta = deltaY > 0 ? -1 : 1;
+    const percent = d.percent + 10 * delta;
+
+    e.preventDefault();
+
+    zoomTo(e, percent);
+
+};
+
+const onContainerResize = microtask(() => {
+    if (!d.container) {
+        return;
+    }
+    const minWidth = getMinWidth();
+    d.imageWidth = minWidth;
+    d.imageLeft = 0;
+    d.imageTop = 0;
+    d.imageStyle = `left: 0; top: 0; transition: none; width: ${minWidth}px;`;
+    d.containerStyle = '';
+    // init percent
+    d.minPercent = Math.round(minWidth / d.maxWidth * 100);
+    d.percent = d.minPercent;
+});
+
+
+const containerEvents = {
+    mousedown: {
+        handler: (e) => {
+            onMouseDown(e);
+        }
+    },
+    wheel: {
+        handler: (e) => {
+            onMouseWheel(e);
+        }
+    },
+    dblclick: {
+        handler: (e) => {
+            onDblClick(e);
+        }
+    }
 };
 
 const onImgLoad = (e) => {
     const img = e.target;
     if (img && !d.size) {
+        const container = img.parentNode.parentNode;
         const w = img.naturalWidth;
         const h = img.naturalHeight;
         const t = (w * h).toLocaleString();
         d.size = `${w} x ${h} = ${t} total pixels`;
+        d.maxWidth = w;
+        d.maxHeight = h;
+        d.hw = h / w;
+        d.container = container;
+        Util.bindEvents(containerEvents, container);
+        onContainerResize();
     }
 };
 
@@ -173,6 +339,20 @@ watchEffect(() => {
     initImageComparison();
 });
 
+watch([
+    () => state.flyoverWidth,
+    () => state.windowWidth,
+    () => state.imageZoom
+], () => {
+    onContainerResize();
+});
+
+onUnmounted(() => {
+    d.container = null;
+    Util.unbindEvents(windowEvents);
+    Util.unbindEvents(containerEvents);
+});
+
 </script>
 
 <template>
@@ -195,6 +375,19 @@ watchEffect(() => {
         class="mcr-comparison-tab"
       >
         <template #right>
+          <div class="mcr-comparison-zoom">
+            <VuiSwitch
+              v-if="!d.touch"
+              v-model="state.imageZoom"
+              width="28px"
+              height="16px"
+              :label-clickable="true"
+              label-position="right"
+            >
+              Zoom
+              {{ d.percent }}%
+            </VuiSwitch>
+          </div>
           <div
             class="mcr-comparison-note"
             @mouseenter="showHelp($event, true)"
@@ -202,16 +395,19 @@ watchEffect(() => {
           >
             <IconLabel icon="help" />
             <div hidden>
-              <div class="mcr-readme">
-                <div>On the Image:</div>
+              <div class="mcr-readme mcr-comparison-help">
+                <h3>Help on the image:</h3>
                 <li class="mcr-item">
-                  Mouse Down/Up: Switch view with neighbor
+                  Mouse Down/Up: switch view with neighbor
                 </li>
                 <li class="mcr-item">
-                  Mouse Down + Move to Left/Right: Switch view between others
+                  Double Click: zoom to 100% or reset
                 </li>
                 <li class="mcr-item">
-                  Mouse Wheel: Zoom in/out
+                  Mouse Wheel: zoom in/out
+                </li>
+                <li class="mcr-item">
+                  Mouse Drag: switch view or pan
                 </li>
               </div>
             </div>
@@ -230,11 +426,12 @@ watchEffect(() => {
             v-for="(item, i) of d.list"
             :key="i"
             class="mcr-comparison-image"
-            @mousedown="onMouseDown"
+            :style="d.containerStyle"
           >
             <img
               :src="item.path"
               :alt="item.name"
+              :style="d.imageStyle"
               @load="onImgLoad"
             >
           </div>
@@ -312,13 +509,27 @@ watchEffect(() => {
     .mcr-comparison-image {
         padding: 10px;
         cursor: default;
+        overflow: hidden;
         user-select: none;
 
         img {
+            position: relative;
             display: block;
             max-width: 100%;
             box-shadow: var(--image-shadow);
+            transition: all 0.1s ease-out;
         }
+    }
+}
+
+/**
+in tooltip, out of component
+*/
+.mcr-comparison-help {
+    min-width: 300px;
+
+    h3 {
+        margin: 5px 0;
     }
 }
 </style>

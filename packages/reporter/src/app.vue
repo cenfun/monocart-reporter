@@ -66,6 +66,12 @@ const navItemClass = (item) => {
 // =================================================================================
 
 const initStore = () => {
+
+    const imageZoom = store.get('imageZoom');
+    if (imageZoom === 'true') {
+        state.imageZoom = true;
+    }
+
     const groupsStr = store.get('groups');
     if (!groupsStr) {
         return;
@@ -548,6 +554,12 @@ watch(() => state.groups, (v) => {
     renderGrid();
 }, {
     deep: true
+});
+
+watch([
+    () => state.imageZoom
+], () => {
+    store.set('imageZoom', state.imageZoom);
 });
 
 watch([
