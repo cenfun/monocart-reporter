@@ -48,18 +48,18 @@
         "koa": "^2.14.2",
         "koa-static-resolver": "^1.0.4",
         "lz-utils": "^2.0.1",
-        "nodemailer": "^6.9.4",
+        "nodemailer": "^6.9.5",
         "open": "^9.1.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.36.2",
-        "axios": "^1.4.0",
+        "@playwright/test": "^1.37.1",
+        "axios": "^1.5.0",
         "dotenv": "^16.3.1",
-        "eslint": "^8.46.0",
+        "eslint": "^8.48.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",
-        "eslint-plugin-vue": "^9.16.1",
-        "stylelint": "^15.10.2",
+        "eslint-plugin-vue": "^9.17.0",
+        "stylelint": "^15.10.3",
         "stylelint-config-plus": "^1.0.4",
         "vine-ui": "^3.1.12"
     }
