@@ -22,6 +22,7 @@ const props = defineProps({
     <div class="mcr-attachment-body">
       <video
         controls
+        :src="props.data.path"
       ><source
         :src="props.data.path"
         :type="props.data.contentType"
