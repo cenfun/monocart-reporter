@@ -1,3 +1,6 @@
+* 1.7.7
+  - fixed #57 (dynamic video src)
+
 * 1.7.6
   - added zoom in/out for screenshot comparison view
 
