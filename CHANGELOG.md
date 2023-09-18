@@ -1,3 +1,6 @@
+* 1.7.8
+  - fixed #58 (load text content for comparison)
+
 * 1.7.7
   - fixed #57 (dynamic video src)
 

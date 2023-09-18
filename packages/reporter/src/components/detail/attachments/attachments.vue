@@ -116,6 +116,8 @@ const initList = (attachments) => {
             const item = {
                 name: attachment.name,
                 path: attachment.path,
+                // content for text
+                content: attachment.content,
                 category
             };
 

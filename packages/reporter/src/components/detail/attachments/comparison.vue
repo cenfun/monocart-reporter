@@ -34,8 +34,49 @@ const d = shallowReactive({
     containerStyle: ''
 });
 
-const initImageComparison = () => {
-    d.list = null;
+
+const initImageComparison = (list) => {
+    const titles = {
+        diff: 'Diff',
+        actual: 'Actual',
+        expected: 'Expected',
+        previous: 'Previous'
+    };
+
+    d.indexes = {};
+    d.categories = [];
+
+    d.imageList = list.map((it, i) => {
+
+        const {
+            category, name, path
+        } = it;
+
+        d.indexes[category] = i;
+        d.categories.push(category);
+
+        return {
+            title: titles[category],
+            name,
+            path
+        };
+    });
+
+    if (Util.hasOwn(d.indexes, 'diff')) {
+        d.tabIndex = d.indexes.diff;
+    }
+};
+
+const initTextComparison = (list) => {
+
+    // list[0].content = ['<script>', 'alert(1);', '<', '/', 'script>', '</code>', 'next'].join('');
+
+    d.textList = list;
+};
+
+const initComparison = () => {
+    d.imageList = null;
+    d.textList = null;
     const {
         contentType, list, message, position
     } = props.data;
@@ -44,37 +85,19 @@ const initImageComparison = () => {
     d.position = position;
 
     if (contentType && contentType.startsWith('image')) {
-        const titles = {
-            diff: 'Diff',
-            actual: 'Actual',
-            expected: 'Expected',
-            previous: 'Previous'
-        };
-
-        d.indexes = {};
-        d.categories = [];
-
-        d.list = list.map((it, i) => {
-
-            const {
-                category, name, path
-            } = it;
-
-            d.indexes[category] = i;
-            d.categories.push(category);
-
-            return {
-                title: titles[category],
-                name,
-                path
-            };
-        });
-
-        if (Util.hasOwn(d.indexes, 'diff')) {
-            d.tabIndex = d.indexes.diff;
-        }
-
+        initImageComparison(list);
+        return;
     }
+
+    // text/plain
+    if (contentType && contentType.startsWith('text')) {
+        initTextComparison(list);
+        // return;
+    }
+
+    // console.log(contentType);
+
+
 };
 
 const onErrorClick = () => {
@@ -336,7 +359,7 @@ const showHelp = (e, visible) => {
 };
 
 watchEffect(() => {
-    initImageComparison();
+    initComparison();
 });
 
 watch([
@@ -362,7 +385,7 @@ onUnmounted(() => {
   >
     <AttachmentHead :retry="props.data.retry">
       <IconLabel
-        v-if="d.list"
+        v-if="d.imageList"
         icon="image"
         :button="false"
       />
@@ -370,7 +393,7 @@ onUnmounted(() => {
     </AttachmentHead>
     <div class="mcr-attachment-body">
       <VuiTab
-        v-if="d.list"
+        v-if="d.imageList"
         v-model="d.tabIndex"
         class="mcr-comparison-tab"
       >
@@ -415,7 +438,7 @@ onUnmounted(() => {
         </template>
         <template #tabs>
           <div
-            v-for="(item, i) of d.list"
+            v-for="(item, i) of d.imageList"
             :key="i"
           >
             {{ item.title }}
@@ -423,7 +446,7 @@ onUnmounted(() => {
         </template>
         <template #panes>
           <div
-            v-for="(item, i) of d.list"
+            v-for="(item, i) of d.imageList"
             :key="i"
             class="mcr-comparison-image"
             :style="d.containerStyle"
@@ -437,6 +460,27 @@ onUnmounted(() => {
           </div>
         </template>
       </VuiTab>
+
+      <VuiFlex
+        v-if="d.textList"
+        gap="10px"
+        padding="10px"
+        width="100%"
+        align-items="start"
+        shirk
+        wrap
+      >
+        <div
+          v-for="(item, i) of d.textList"
+          :key="i"
+          class="mcr-text-item"
+        >
+          <div class="mcr-text-head">
+            {{ item.category }}
+          </div>
+          <pre><code>{{ item.content }}</code></pre>
+        </div>
+      </VuiFlex>
 
       <VuiFlex
         direction="column"
@@ -459,6 +503,7 @@ onUnmounted(() => {
             ({{ d.size }})
           </div>
         </VuiFlex>
+
         <VuiFlex
           gap="10px"
           wrap
@@ -478,6 +523,30 @@ onUnmounted(() => {
 
 <style lang="scss">
 .mcr-attachment-comparison {
+    .mcr-text-item {
+        position: relative;
+        max-width: 100%;
+        overflow: hidden;
+
+        pre {
+            margin: 0;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f8f8f8;
+            overflow-x: auto;
+        }
+
+        code {
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    .mcr-text-head {
+        margin-bottom: 5px;
+    }
+
     .vui-tab-header {
         background: #f5f5f5;
     }
