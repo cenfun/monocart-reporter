@@ -52,10 +52,10 @@
         "open": "^9.1.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.37.1",
+        "@playwright/test": "^1.38.0",
         "axios": "^1.5.0",
         "dotenv": "^16.3.1",
-        "eslint": "^8.48.0",
+        "eslint": "^8.49.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-vue": "^9.17.0",
