@@ -545,6 +545,7 @@ onUnmounted(() => {
 
     .mcr-text-head {
         margin-bottom: 5px;
+        text-transform: capitalize;
     }
 
     .vui-tab-header {
