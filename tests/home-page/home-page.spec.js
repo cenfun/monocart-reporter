@@ -162,6 +162,17 @@ test('multiple soft comparisons', async ({ page }) => {
 });
 
 test('text comparison', async ({ page }) => {
+
+    test.info().attach('application/json: ', {
+        contentType: 'application/json',
+        body: '{ "Name": "cenfun", "Rank": 1 }'
+    });
+    test.info().attach('text/plain: ', {
+        contentType: 'text/plain',
+        body: 'monocart reporter'
+    });
+
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
     expect(await page.textContent('.page-url')).toMatchSnapshot();
+
 });

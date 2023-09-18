@@ -11,6 +11,7 @@
     "devDependencies": {
         "@babel/code-frame": "^7.22.13",
         "@babel/parser": "^7.22.16",
+        "sanitize-filename": "^1.6.3",
         "stack-utils": "^2.0.6",
         "ws": "^8.14.1"
     },

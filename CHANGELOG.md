@@ -1,3 +1,6 @@
+* 1.7.9
+  - sanitize filename for attachments
+
 * 1.7.8
   - fixed #58 (load text content for comparison)
 
