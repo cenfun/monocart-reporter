@@ -163,13 +163,44 @@ test('multiple soft comparisons', async ({ page }) => {
 
 test('text comparison', async ({ page }) => {
 
-    test.info().attach('application/json: ', {
+    // invalid
+    // test.info().attach('application/json:', {
+    //     contentType: 'application/json',
+    //     body: {
+    //         'Name': 'cenfun',
+    //         'Rank': 1
+    //     }
+    // });
+
+    test.info().attach('application/json stringify:', {
         contentType: 'application/json',
-        body: '{ "Name": "cenfun", "Rank": 1 }'
+        body: JSON.stringify({
+            Name: 'cenfun',
+            Text: 'long text long text long text long text long text long text'
+        }, null, 4)
     });
-    test.info().attach('text/plain: ', {
+
+    test.info().attach('json:', {
+        contentType: 'application/json',
+        body: '{ "Name": "cenfun", Text: "long text long text long text long text long text long text" }'
+    });
+
+    test.info().attach('text:', {
         contentType: 'text/plain',
-        body: 'monocart reporter'
+        body: 'long text long text long text long text long text long text'
+    });
+
+    test.info().attach('text/plain:', {
+        contentType: 'text/plain',
+        body: `monocart reporter,
+        playwright test reporter`
+    });
+
+    test.info().attach('text/markdown:', {
+        contentType: 'text/markdown',
+        body: `### monocart reporter
+        - playwright test reporter
+        - html reporter`
     });
 
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
