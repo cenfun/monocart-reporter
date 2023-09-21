@@ -1,6 +1,7 @@
 
 * 1.7.10
   - added option "timezoneOffset"
+  - added text/json attachment view
 
 * 1.7.9
   - sanitize filename for attachments

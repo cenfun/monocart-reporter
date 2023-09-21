@@ -12,6 +12,7 @@ import Audit from './audit.vue';
 import Coverage from './coverage.vue';
 import Network from './network.vue';
 
+import Content from './content.vue';
 import Link from './link.vue';
 
 import Comparison from './comparison.vue';
@@ -29,22 +30,7 @@ const data = shallowReactive({
     list: []
 });
 
-const getAttachmentComponent = (item) => {
-    // contentType 'application/json' 'image/png' 'video/webm'
-    const { contentType, name } = item;
-
-    if (contentType.startsWith('image')) {
-        return Image;
-    }
-
-    if (contentType.startsWith('video')) {
-        return Video;
-    }
-
-    if (name === 'trace' && contentType === 'application/zip') {
-        return Trace;
-    }
-
+const getPluginComponent = (contentType, name) => {
     const {
         audit, coverage, network
     } = Util.attachments;
@@ -64,6 +50,35 @@ const getAttachmentComponent = (item) => {
         if (name === definition.name && contentType === definition.contentType) {
             return definition.component;
         }
+    }
+
+};
+
+const getAttachmentComponent = (item) => {
+    // contentType 'application/json' 'image/png' 'video/webm'
+    const {
+        contentType, name, content
+    } = item;
+
+    if (contentType.startsWith('image')) {
+        return Image;
+    }
+
+    if (contentType.startsWith('video')) {
+        return Video;
+    }
+
+    if (name === 'trace' && contentType === 'application/zip') {
+        return Trace;
+    }
+
+    const pc = getPluginComponent(contentType, name);
+    if (pc) {
+        return pc;
+    }
+
+    if (content) {
+        return Content;
     }
 
     return Link;
@@ -104,7 +119,7 @@ const initList = (attachments) => {
         return;
     }
 
-    attachments = attachments.filter((item) => typeof item.path === 'string' && typeof item.name === 'string');
+    attachments = attachments.filter((item) => typeof item.name === 'string');
 
     const list = [];
     let group;
