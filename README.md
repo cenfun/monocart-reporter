@@ -129,6 +129,9 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     // logging levels: off, error, info, debug
     logging: 'info',
 
+    // timezone offset in minutes, GMT+0800 = -480
+    timezoneOffset: 0,
+
     // global coverage settings for addCoverageReport API
     coverage: null,
     // coverage: {

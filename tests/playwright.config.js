@@ -89,6 +89,8 @@ module.exports = {
 
             // logging: 'debug',
 
+            timezoneOffset: 0,
+
             // global coverage
             coverage: {
 
