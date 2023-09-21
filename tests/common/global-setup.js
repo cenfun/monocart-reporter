@@ -31,4 +31,8 @@ module.exports = async (config) => {
     console.log('chromiumVersion', chromiumVersion);
     metadata.chromiumVersion = chromiumVersion;
 
+    // await state.send({
+    //     reportName: 'My new report name'
+    // });
+
 };

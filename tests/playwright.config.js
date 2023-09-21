@@ -118,6 +118,11 @@ module.exports = {
                 // receive message and send response from global state (main process)
                 onReceive: function(message) {
 
+                    // if (message && message.reportName) {
+                    //     this.options.name = message.reportName;
+                    //     return;
+                    // }
+
                     const test = this.getTest(message.testId);
                     // console.log('get from map', test.title, this.testMap.size);
                     // console.log('get from map');
