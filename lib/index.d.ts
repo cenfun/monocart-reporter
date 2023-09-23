@@ -27,16 +27,6 @@ export function attachAuditReport(
 /**
  * coverage
  */
-export function addCoverageReport(
-    v8list: any[],
-    testInfo: TestInfo
-): Promise<any | void>;
-
-// exporting for other test runner (issue #61)
-export function addGlobalCoverageReport(
-    dataList: any[],
-    reporterOptions: any
-): Promise<any>;
 
 export type CoverageReportOptions = {
 
@@ -68,8 +58,21 @@ export type CoverageReportOptions = {
     },
 
     // Whether inline all scripts to the single HTML file.
-    inline?: boolean
+    inline?: boolean,
+
+    logging?: string
 };
+
+export function addCoverageReport(
+    v8list: any[],
+    testInfo: TestInfo,
+    options?: CoverageReportOptions
+): Promise<any | void>;
+
+export function addGlobalCoverageReport(
+    dataList: any[],
+    options: CoverageReportOptions
+): Promise<any>;
 
 export function attachCoverageReport(
     coverage: any[] | any,

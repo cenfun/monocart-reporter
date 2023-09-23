@@ -1,6 +1,9 @@
+* 1.7.12
+  - improved public API options
+  - added public API addGlobalCoverageReport
+
 * 1.7.11
   - fixed #62
-  - added public API addGlobalCoverageReport
 
 * 1.7.10
   - added option "timezoneOffset"
