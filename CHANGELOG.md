@@ -1,3 +1,6 @@
+* 1.7.11
+  - fixed #62
+
 
 * 1.7.10
   - added option "timezoneOffset"

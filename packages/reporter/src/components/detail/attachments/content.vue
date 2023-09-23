@@ -1,5 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import {
+    onMounted, ref, watch
+} from 'vue';
 import AttachmentHead from './attachment-head.vue';
 
 import Util from '../../../utils/util.js';
@@ -15,8 +17,10 @@ const props = defineProps({
 const el = ref(null);
 let $el;
 
-onMounted(() => {
-    $el = el.value;
+const showContent = () => {
+    if (!$el) {
+        return;
+    }
 
     const { contentType, content } = props.data;
 
@@ -31,9 +35,17 @@ onMounted(() => {
     // }
 
     $el.innerHTML = `<pre><code>${content}</code></pre>`;
+};
 
+onMounted(() => {
+    $el = el.value;
+    showContent();
 });
 
+
+watch(() => props.data, () => {
+    showContent();
+});
 
 </script>
 
