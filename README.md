@@ -646,7 +646,7 @@ Attach a coverage report to a test. Arguments:
 
 ### Coverage Options
 - `title` (String) report title.
-- `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) or using `html` report. V8 only. 
+- `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) report name | (Array) multiple reports. V8 only. 
 - `entryFilter` (Function) A filter function to execute for each element in the V8 list. V8 only.
 - `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map. Sourcemap only.
 - `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.

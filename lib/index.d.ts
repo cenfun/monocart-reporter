@@ -28,6 +28,11 @@ export function attachAuditReport(
  * coverage
  */
 
+export type IstanbulReportConfig = {
+    name: string,
+    options: any
+}
+
 export type CoverageReportOptions = {
 
     title?: string,
@@ -35,7 +40,7 @@ export type CoverageReportOptions = {
     outputName?: string,
 
     // Whether to convert to Istanbul report
-    toIstanbul?: boolean | string,
+    toIstanbul?: boolean | string | string[] | IstanbulReportConfig[],
 
     // A filter function to execute for each element in the V8 list.
     entryFilter?: (entry: any) => boolean,

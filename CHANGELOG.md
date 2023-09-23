@@ -1,3 +1,6 @@
+* 1.7.13
+  - supported multiple istanbul reports
+
 * 1.7.12
   - improved public API options
   - added public API addGlobalCoverageReport

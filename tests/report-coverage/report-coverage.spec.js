@@ -117,7 +117,12 @@ test('Take anonymous scripts coverage report', async ({ page }) => {
 
     const istanbul = await attachCoverageReport(jsCoverageList, test.info(), {
         lcov: true,
-        toIstanbul: true
+        toIstanbul: ['html', 'json', {
+            name: 'json',
+            options: {
+                file: 'my-json-file-name.json'
+            }
+        }]
     });
     console.log(istanbul.summary);
 
