@@ -1,6 +1,6 @@
 {
     "name": "monocart-coverage",
-    "version": "1.7.11",
+    "version": "1.7.12",
     "private": true,
     "main": "dist/monocart-coverage.js",
     "files": [
