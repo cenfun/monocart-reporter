@@ -32,6 +32,12 @@ export function addCoverageReport(
     testInfo: TestInfo
 ): Promise<any | void>;
 
+// exporting for other test runner (issue #61)
+export function addGlobalCoverageReport(
+    dataList: any[],
+    reporterOptions: any
+): Promise<any>;
+
 export type CoverageReportOptions = {
 
     title?: string,
