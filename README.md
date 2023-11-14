@@ -644,6 +644,9 @@ Attach a coverage report to a test. Arguments:
     - `options` (Object) see [Coverage Options](#coverage-options)
 - `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
 
+### Coverage Discussions
+- [Is it possible to use it with other runners?](https://github.com/cenfun/monocart-reporter/issues/61)
+
 ### Coverage Options
 - `title` (String) report title.
 - `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) report name | (Array) multiple reports. V8 only. 

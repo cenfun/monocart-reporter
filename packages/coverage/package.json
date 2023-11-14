@@ -12,7 +12,7 @@
         "@bcoe/v8-coverage": "^0.2.3",
         "@jridgewell/sourcemap-codec": "^1.4.15",
         "convert-source-map": "^2.0.0",
-        "istanbul-lib-coverage": "^3.2.0",
+        "istanbul-lib-coverage": "^3.2.2",
         "istanbul-lib-report": "^3.0.1"
     },
     "platform": "node"
