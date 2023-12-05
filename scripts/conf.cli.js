@@ -82,10 +82,20 @@ const beforeReporter = (item, Util) => {
 const beforeNetwork = (item, Util) => {
 
     const EC = require('eight-colors');
+
     const dataFile = 'network-data.js';
-    const jsDataPath = path.resolve(__dirname, `../.temp/${dataFile}`);
-    if (!fs.existsSync(jsDataPath)) {
-        EC.logRed(`ERROR: Not found: ${jsDataPath}`);
+
+    let jsDataPath;
+    const reporterDir = path.resolve(__dirname, '../.temp/monocart');
+    if (fs.existsSync(reporterDir)) {
+        const networkDir = fs.readdirSync(reporterDir).find((it) => it.startsWith('network-'));
+        if (networkDir) {
+            jsDataPath = path.resolve(reporterDir, networkDir, dataFile);
+        }
+    }
+
+    if (!jsDataPath) {
+        EC.logRed(`ERROR: Not found ${dataFile} in ${reporterDir}`);
         return 0;
     }
 
