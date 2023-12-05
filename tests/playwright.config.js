@@ -148,7 +148,7 @@ module.exports = {
 
             trend: () => {
                 return new Promise((resolve) => {
-                    const { axios } = require('../lib/runtime/monocart-coverage.js');
+                    const axios = require('axios');
                     axios.get('https://cenfun.github.io/monocart-reporter/index.json').then((res) => {
                         const json = res.data;
                         // mock data
@@ -164,6 +164,8 @@ module.exports = {
                         //     json.trends.unshift(item);
                         // }
                         resolve(json);
+                    }).catch((e) => {
+                        resolve();
                     });
 
                 });
