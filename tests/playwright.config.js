@@ -166,6 +166,8 @@ module.exports = {
                         //     json.trends.unshift(item);
                         // }
                         resolve(json);
+                    }).catch((e) => {
+                        resolve();
                     });
 
                 });
