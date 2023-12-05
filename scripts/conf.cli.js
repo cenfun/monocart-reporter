@@ -79,29 +79,6 @@ const beforeReporter = (item, Util) => {
     return 0;
 };
 
-const beforeV8 = (item, Util) => {
-
-    const EC = require('eight-colors');
-
-    // using global coverage data
-    const dataFile = 'coverage-data.js';
-    const jsDataPath = path.resolve(__dirname, `../.temp/monocart/coverage/${dataFile}`);
-    if (!fs.existsSync(jsDataPath)) {
-        EC.logRed(`ERROR: Not found: ${jsDataPath}`);
-        return 0;
-    }
-
-    const jsPath = path.resolve(item.buildPath, dataFile);
-    fs.copyFileSync(jsDataPath, jsPath);
-    EC.logGreen(`coverage data file copied: ${dataFile}`);
-
-    if (!item.dependencies.files.includes(jsPath)) {
-        item.dependencies.files.unshift(jsPath);
-    }
-
-    return 0;
-};
-
 const beforeNetwork = (item, Util) => {
 
     const EC = require('eight-colors');
@@ -133,7 +110,7 @@ module.exports = {
 
     build: {
 
-        vendors: ['common', 'reporter', 'v8', 'network'],
+        vendors: ['common', 'reporter', 'network'],
 
         before: (item, Util) => {
 
@@ -143,10 +120,6 @@ module.exports = {
 
             if (item.name === 'reporter') {
                 return beforeReporter(item, Util);
-            }
-
-            if (item.name === 'v8') {
-                return beforeV8(item, Util);
             }
 
             if (item.name === 'network') {
@@ -165,7 +138,7 @@ module.exports = {
 
             const EC = require('eight-colors');
 
-            const toPath = path.resolve(__dirname, '../lib/runtime');
+            const toPath = path.resolve(__dirname, '../lib/packages');
 
             // only clean if build all
             const totalComponents = fs.readdirSync(path.resolve(__dirname, '../packages'));
@@ -188,21 +161,6 @@ module.exports = {
             // sometimes only on job
             results.jobList.forEach((job) => {
                 const distPath = path.resolve(job.buildPath, `${job.fullName}.js`);
-                if (!fs.existsSync(distPath)) {
-                    EC.logRed(`ERROR: Not found dist: ${distPath}`);
-                    code = 1;
-                    return;
-                }
-                distList.push(distPath);
-            });
-
-            distList.push('');
-
-            EC.log('get common dependencies dist files ...');
-            // copy common components
-            const moduleList = ['monocart-code-viewer', 'monocart-formatter'];
-            moduleList.forEach((moduleName) => {
-                const distPath = path.resolve(__dirname, `../node_modules/${moduleName}/dist/${moduleName}.js`);
                 if (!fs.existsSync(distPath)) {
                     EC.logRed(`ERROR: Not found dist: ${distPath}`);
                     code = 1;

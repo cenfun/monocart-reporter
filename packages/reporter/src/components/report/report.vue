@@ -223,6 +223,8 @@ const artifactsHandler = () => {
 
     // console.log(artifacts);
 
+    // props: type/name/path
+
     // group artifacts
     const globalGroup = {
         name: 'global',
@@ -235,12 +237,12 @@ const artifactsHandler = () => {
             globalGroup.list.push(item);
             return;
         }
-        const group = groups[item.name];
+        const group = groups[item.type];
         if (group) {
             group.list.push(item);
         } else {
-            groups[item.name] = shallowReactive({
-                name: item.name,
+            groups[item.type] = shallowReactive({
+                name: item.type,
                 list: [item]
             });
         }
@@ -682,7 +684,7 @@ onActivated(() => {
                 <a
                   :href="item.path"
                   target="_blank"
-                >{{ item.title }}</a>
+                >{{ item.name }}</a>
               </VuiFlex>
               <IconLabel
                 v-if="group.showMore"

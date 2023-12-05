@@ -70,14 +70,8 @@ export type CoverageReportOptions = {
 
 export function addCoverageReport(
     v8list: any[],
-    testInfo: TestInfo,
-    options?: CoverageReportOptions
+    testInfo: TestInfo
 ): Promise<any | void>;
-
-export function addGlobalCoverageReport(
-    dataList: any[],
-    options: CoverageReportOptions
-): Promise<any>;
 
 export function attachCoverageReport(
     coverage: any[] | any,

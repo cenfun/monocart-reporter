@@ -11,6 +11,6 @@
         "async-tick": "^1.0.0",
         "file-saver": "^2.0.5",
         "nice-ticks": "^1.0.2",
-        "turbogrid": "^3.0.9"
+        "turbogrid": "^3.0.10"
     }
 }

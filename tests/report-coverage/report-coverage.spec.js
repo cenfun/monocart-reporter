@@ -30,12 +30,12 @@ test('Take Istanbul coverage report', async ({ page }) => {
         // default is html-spa
         // toIstanbul: 'html',
         sourcePath: (sourcePath, fileSources) => {
-            console.log(sourcePath);
+            console.log('sourcePath', sourcePath);
             // replace local windows \ to server /
             sourcePath = sourcePath.replace(/\\/g, '/');
             const filename = path.basename(sourcePath);
             const redirectPath = path.resolve(__dirname, '../../scripts/mock/coverage/src', filename);
-            console.log(redirectPath);
+            console.log('redirectPath', redirectPath);
             return redirectPath;
         }
     });

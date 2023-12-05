@@ -1,3 +1,0 @@
-# monocart-coverage
-
-## Getting Started
