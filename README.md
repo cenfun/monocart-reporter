@@ -648,14 +648,8 @@ Attach a coverage report to a test. Arguments:
 - [Is it possible to use it with other runners?](https://github.com/cenfun/monocart-reporter/issues/61)  - [cucumber.js](https://github.com/cucumber/cucumber-js)
 
 ### Coverage Options
-- `title` (String) report title.
-- `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) report name | (Array) multiple reports. V8 only. 
-- `entryFilter` (Function) A filter function to execute for each element in the V8 list. V8 only.
-- `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map. Sourcemap only.
-- `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
-- `lcov` (Boolean) Whether to create `lcov.info`. (for Sonar coverage)
-- `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53)).
-- `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
+- [options.js](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
+
 
 ### [Istanbul](https://github.com/istanbuljs) 
 Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config-istanbul.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config-istanbul.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
@@ -732,7 +726,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 Take V8 coverage data and convert it to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
 const report = await attachCoverageReport(coverageList, test.info(), {
-    toIstanbul: true
+    reports: "html"
 });
 ```
 

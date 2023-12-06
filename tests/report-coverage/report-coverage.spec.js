@@ -28,8 +28,8 @@ test('Take Istanbul coverage report', async ({ page }) => {
     const report = await attachCoverageReport(coverageData, test.info(), {
         lcov: true,
         // default is html-spa
-        // toIstanbul: 'html',
-        sourcePath: (sourcePath, fileSources) => {
+        // reports: 'html',
+        sourcePath: (sourcePath) => {
             console.log('sourcePath', sourcePath);
             // replace local windows \ to server /
             sourcePath = sourcePath.replace(/\\/g, '/');
@@ -80,7 +80,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
     const istanbul = await attachCoverageReport(coverageList, test.info(), {
         sourceFilter: (sourcePath) => sourcePath.search(/src\//) !== -1,
         lcov: true,
-        toIstanbul: true
+        reports: 'html'
     });
     console.log(istanbul.summary);
 
@@ -117,12 +117,13 @@ test('Take anonymous scripts coverage report', async ({ page }) => {
 
     const istanbul = await attachCoverageReport(jsCoverageList, test.info(), {
         lcov: true,
-        toIstanbul: ['html', 'json', {
-            name: 'json',
-            options: {
+        reports: [
+            ['html'],
+            ['json'],
+            ['json', {
                 file: 'my-json-file-name.json'
-            }
-        }]
+            }]
+        ]
     });
     console.log(istanbul.summary);
 

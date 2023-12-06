@@ -102,7 +102,7 @@ module.exports = {
                 //     return `pre-dir/${sp}`;
                 // },
 
-                // toIstanbul: true,
+                // reports: 'html',
                 lcov: true
 
             },
