@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter",
-    "version": "1.7.13",
+    "version": "2.0.0",
     "description": "A playwright test reporter. Shows suites/cases/steps with tree style, markdown annotations, custom columns/formatters/data collection visitors, console logs, style tags, send email.",
     "main": "lib/index.js",
     "bin": {
@@ -48,7 +48,7 @@
         "koa": "^2.14.2",
         "koa-static-resolver": "^1.0.4",
         "lz-utils": "^2.0.1",
-        "monocart-coverage-reports": "^1.0.2",
+        "monocart-coverage-reports": "^1.0.3",
         "nodemailer": "^6.9.7",
         "open": "^9.1.0"
     },
