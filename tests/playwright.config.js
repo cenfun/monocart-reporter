@@ -91,6 +91,8 @@ module.exports = {
 
             timezoneOffset: 0,
 
+            // inline: false,
+
             // global coverage
             coverage: {
 
@@ -100,7 +102,7 @@ module.exports = {
                 //     return `pre-dir/${sp}`;
                 // },
 
-                // toIstanbul: true,
+                // reports: 'html',
                 lcov: true
 
             },

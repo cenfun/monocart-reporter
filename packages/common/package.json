@@ -1,16 +1,17 @@
 {
     "name": "monocart-common",
-    "version": "1.7.13",
+    "version": "2.0.0",
     "main": "dist/monocart-common.js",
     "files": [
         "dist"
     ],
     "license": "MIT",
-    "dependencies": {},
+    "dependencies": {
+        "turbogrid": "^3.0.10"
+    },
     "devDependencies": {
         "async-tick": "^1.0.0",
         "file-saver": "^2.0.5",
-        "nice-ticks": "^1.0.2",
-        "turbogrid": "^3.0.9"
+        "nice-ticks": "^1.0.2"
     }
 }

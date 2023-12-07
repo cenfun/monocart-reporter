@@ -4,9 +4,9 @@ import {
 } from 'vue';
 import { components, generateTooltips } from 'vine-ui';
 
-import {
-    Grid, inflate, setFavicon
-} from 'monocart-common';
+import { Grid } from 'turbogrid';
+
+import { inflate, setFavicon } from 'monocart-common';
 
 import Util from './utils/util.js';
 

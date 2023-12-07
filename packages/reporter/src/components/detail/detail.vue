@@ -688,8 +688,7 @@ const onFocus = (e) => {
     width: 100%;
     height: 100%;
     padding: 0 0 5px 5px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
 }
 
 .mcr-detail-item {

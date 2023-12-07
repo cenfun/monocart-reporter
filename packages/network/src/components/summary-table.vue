@@ -5,16 +5,6 @@ const data = shallowReactive({
     columns: []
 });
 
-watchEffect(() => {
-    const keys = {};
-    props.list.forEach((item) => {
-        Object.keys(item).forEach((k) => {
-            keys[k] = true;
-        });
-    });
-    data.columns = Object.keys(keys);
-});
-
 const props = defineProps({
     title: {
         type: String,
@@ -26,6 +16,16 @@ const props = defineProps({
             return [];
         }
     }
+});
+
+watchEffect(() => {
+    const keys = {};
+    props.list.forEach((item) => {
+        Object.keys(item).forEach((k) => {
+            keys[k] = true;
+        });
+    });
+    data.columns = Object.keys(keys);
 });
 
 </script>

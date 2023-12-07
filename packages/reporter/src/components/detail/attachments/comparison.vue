@@ -46,20 +46,36 @@ const initImageComparison = (list) => {
     d.indexes = {};
     d.categories = [];
 
+    let filePath;
+
     d.imageList = list.map((it, i) => {
 
         const {
             category, name, path
         } = it;
 
+        let imagePath = path;
+
+        // fixed expected image path
+        if (category === 'expected' && filePath) {
+            const ls = filePath.split('/');
+            ls.pop();
+            ls.push(name);
+            imagePath = ls.join('/');
+        } else {
+            filePath = path;
+        }
+
         d.indexes[category] = i;
         d.categories.push(category);
 
         return {
             title: titles[category],
+            category,
             name,
-            path
+            path: imagePath
         };
+
     });
 
     if (Util.hasOwn(d.indexes, 'diff')) {
@@ -334,6 +350,10 @@ const onImgLoad = (e) => {
     }
 };
 
+const onImgError = (e, item) => {
+    // console.log(item);
+};
+
 const showHelp = (e, visible) => {
 
     const tooltip = state.tooltip;
@@ -456,6 +476,7 @@ onUnmounted(() => {
               :alt="item.name"
               :style="d.imageStyle"
               @load="onImgLoad"
+              @error="onImgError($event, item)"
             >
           </div>
         </template>

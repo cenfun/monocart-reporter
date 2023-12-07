@@ -1,5 +1,7 @@
 import { TestInfo } from "@playwright/test"
 
+import type { CoverageReportOptions } from "monocart-coverage-reports";
+
 /**
  * merge
  */
@@ -27,64 +29,16 @@ export function attachAuditReport(
 /**
  * coverage
  */
-
-export type IstanbulReportConfig = {
-    name: string,
-    options: any
-}
-
-export type CoverageReportOptions = {
-
-    title?: string,
-    outputDir?: string,
-    outputName?: string,
-
-    // Whether to convert to Istanbul report
-    toIstanbul?: boolean | string | string[] | IstanbulReportConfig[],
-
-    // A filter function to execute for each element in the V8 list.
-    entryFilter?: (entry: any) => boolean,
-
-    // A filter function to execute for each element in the sources which unpacked from the source map.
-    sourceFilter?: (sourcePath: string) => boolean,
-
-    sourcePath?: (sourcePath: string) => string,
-
-    sourceFinder?: (filePath: string) => string,
-
-    // Whether to create `lcov.info`
-    lcov?: boolean,
-
-    watermarks?: [number, number] | {
-        statements: [number, number],
-        functions: [number, number],
-        branches: [number, number],
-        lines: [number, number]
-    },
-
-    // Whether inline all scripts to the single HTML file.
-    inline?: boolean,
-
-    logging?: string
-};
-
 export function addCoverageReport(
-    v8list: any[],
-    testInfo: TestInfo,
-    options?: CoverageReportOptions
+    coverageData: any[] | any,
+    testInfo: TestInfo
 ): Promise<any | void>;
 
-export function addGlobalCoverageReport(
-    dataList: any[],
-    options: CoverageReportOptions
-): Promise<any>;
-
 export function attachCoverageReport(
-    coverage: any[] | any,
+    coverageData: any[] | any,
     testInfo: TestInfo,
     options?: CoverageReportOptions
 ): Promise<any>;
-
 
 
 /**

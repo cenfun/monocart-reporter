@@ -35,7 +35,7 @@
     - [Istanbul](#istanbul)
     - [V8](#v8)
     - [V8 to Istanbul](#v8-to-istanbul)
-    - [Compare Istanbul, V8 and V8 to Istanbul](#compare-istanbul-v8-and-v8-to-istanbul)
+    - [Istanbul vs V8](#istanbul-vs-v8)
     - [Global Coverage Report](#global-coverage-report) for Component Testing
 * [Attach Network Report](#attach-network-report)
 * [Global State Management](#global-state-management)
@@ -633,29 +633,18 @@ test('attach lighthouse audit report', async () => {
 });
 
 ```
-Preview [Audit HTML Report](https://cenfun.github.io/monocart-reporter/audit-78a0a1cc4420ee9da113/index.html)
 
 ## Code Coverage Report
-There are two APIs for coverage report:
-- `attachCoverageReport(data, testInfo, options)`
-Attach a coverage report to a test. Arguments:
+The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports) for coverage reports, there are two APIs:
+- `attachCoverageReport(data, testInfo, options)` Attach a coverage report to a test. Arguments:
     - `data` There are two supported data inputs: [Istanbul](#istanbul) (Object) or [V8](#v8) (Array)
     - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
     - `options` (Object) see [Coverage Options](#coverage-options)
 - `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
 
-### Coverage Discussions
-- [Is it possible to use it with other runners?](https://github.com/cenfun/monocart-reporter/issues/61)  - [cucumber.js](https://github.com/cucumber/cucumber-js)
-
 ### Coverage Options
-- `title` (String) report title.
-- `toIstanbul` (Boolean) Whether to convert to Istanbul report from V8 list. Defaults to `html-spa` report | (String) report name | (Array) multiple reports. V8 only. 
-- `entryFilter` (Function) A filter function to execute for each element in the V8 list. V8 only.
-- `sourceFilter` (Function) A filter function to execute for each element in the sources which unpacked from the source map. Sourcemap only.
-- `watermarks` (Object) Istanbul watermarks, see [here](https://github.com/istanbuljs/istanbuljs/tree/master/packages/istanbul-lib-report) | (Array) V8 watermarks, Defaults to `[50, 80]`.
-- `lcov` (Boolean) Whether to create `lcov.info`. (for Sonar coverage)
-- `sourcePath` (Function) source path handler, return a new source path. ([issue#53](https://github.com/cenfun/monocart-reporter/issues/53)).
-- `inline` (Boolean) Whether inline all scripts to the single HTML file. V8 only.
+- Default [options](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
+- More examples [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
 
 ### [Istanbul](https://github.com/istanbuljs) 
 Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config-istanbul.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config-istanbul.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
@@ -732,22 +721,14 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 Take V8 coverage data and convert it to Istanbul's coverage format. The Istanbul HTML report will be generated. 
 ```js
 const report = await attachCoverageReport(coverageList, test.info(), {
-    toIstanbul: true
+    reports: "html"
 });
 ```
 
-### Compare Istanbul, V8 and V8 to Istanbul
-| | Istanbul | V8 | V8 to Istanbul |
-| :--------------| :------ | :------ | :----------------------  |
-| Input data format | Istanbul (Object) | V8 (Array) | V8 (Array) |
-| Output | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-77aa6f37601a97417803/index.html) | [V8 HTML report](https://cenfun.github.io/monocart-reporter/coverage/index.html)  | [Istanbul HTML report](https://cenfun.github.io/monocart-reporter/coverage-01eebe0ebc796534d759-1/index.html) |
-| Indicators | Covered Lines, Branches, Statements and Functions, Execution Counts | Covered Bytes, Lines❔, Execution Counts | Covered Lines, Branches❔, Statements and Functions, Execution Counts |
-| Source code without [instrumentation](https://github.com/istanbuljs/babel-plugin-istanbul) | ❌ | ✅ | ✅ |
-| CSS coverage | ❌ | ✅ | ✅ |
-| Minified code | N/A | ✅ | ❌ |
-| Code formatting | N/A | ✅ | ❌ |
+### Istanbul vs V8
+- [Compare Istanbul, V8 and V8 to Istanbul Reports](https://github.com/cenfun/monocart-coverage-reports#compare-reports)
+- [Compare Istanbul and V8 Workflows](https://github.com/cenfun/monocart-coverage-reports#compare-workflows)
 
-❔ - Partial or conditional support
 ### Global Coverage Report
 The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. 
 - The global coverage options see [Coverage Options](#coverage-options)
