@@ -1,4 +1,5 @@
-import { Grid, hash } from 'monocart-common';
+import { Grid } from 'turbogrid';
+import { hash } from 'monocart-common';
 
 import Util from '../utils/util.js';
 import { formatters, matchedFormatter } from './formatters.js';

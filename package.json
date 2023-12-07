@@ -50,7 +50,8 @@
         "lz-utils": "^2.0.1",
         "monocart-coverage-reports": "^1.0.4",
         "nodemailer": "^6.9.7",
-        "open": "^9.1.0"
+        "open": "^9.1.0",
+        "turbogrid": "^3.0.10"
     },
     "devDependencies": {
         "@playwright/test": "^1.40.1",

@@ -6,11 +6,12 @@
         "dist"
     ],
     "license": "MIT",
-    "dependencies": {},
+    "dependencies": {
+        "turbogrid": "^3.0.10"
+    },
     "devDependencies": {
         "async-tick": "^1.0.0",
         "file-saver": "^2.0.5",
-        "nice-ticks": "^1.0.2",
-        "turbogrid": "^3.0.10"
+        "nice-ticks": "^1.0.2"
     }
 }

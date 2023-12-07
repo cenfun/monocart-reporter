@@ -1,4 +1,3 @@
-import { Grid } from 'turbogrid';
 import { microtask, debounce } from 'async-tick';
 import inflate from 'lz-utils/inflate';
 import niceTicks from 'nice-ticks';
@@ -23,7 +22,6 @@ const setFavicon = () => {
 import CommonUtil from './util.js';
 
 export {
-    Grid,
     microtask,
     debounce,
     inflate,
