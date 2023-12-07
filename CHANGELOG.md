@@ -1,3 +1,8 @@
+
+* 2.0.0
+  - (BREAKING CHANGES) integrated [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
+  - fixed expected image path
+
 * 1.7.13
   - supported multiple istanbul reports
 
