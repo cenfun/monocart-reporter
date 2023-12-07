@@ -635,7 +635,7 @@ test('attach lighthouse audit report', async () => {
 ```
 
 ## Code Coverage Report
-The coverage reports integrates [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports), there are two APIs:
+The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports) for coverage reports, there are two APIs:
 - `attachCoverageReport(data, testInfo, options)` Attach a coverage report to a test. Arguments:
     - `data` There are two supported data inputs: [Istanbul](#istanbul) (Object) or [V8](#v8) (Array)
     - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
