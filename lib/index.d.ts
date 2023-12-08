@@ -1,6 +1,80 @@
 import { TestInfo } from "@playwright/test"
 
 import type { CoverageReportOptions } from "monocart-coverage-reports";
+export * from 'monocart-coverage-reports';
+
+export type MonocartReporterOptions = {
+    // the report name
+    name?: string,
+
+    // the output file path (relative process.cwd)
+    outputFile?: string,
+
+    // attachment path handler
+    attachmentPath?: (currentPath: string, extras: any) => string,
+    // attachmentPath: (currentPath, extras) => `https://cenfun.github.io/monocart-reporter/${currentPath}`,
+
+    traceViewerUrl?: string,
+
+    // logging levels: off, error, info, debug
+    logging?: string,
+
+    // timezone offset in minutes, GMT+0800 = -480
+    timezoneOffset?: number,
+
+    // global coverage settings for addCoverageReport API
+    coverage?: CoverageReportOptions,
+    // coverage: {
+    //     entryFilter: (entry) => true,
+    //     sourceFilter: (sourcePath) => sourcePath.search(/src\/.+/) !== -1,
+    // },
+
+    state?: {
+        data?: any,
+        server?: {
+            host?: string,
+            port?: number
+        }
+        onReceive?: (...args: any[]) => any,
+        onClose?: (data: any, config: any) => void
+    },
+
+    // trend data handler
+    trend?: string | (() => Promise<string | object>),
+    // trend: () => './test-results/report.json',
+
+    // custom tags style
+    tags?: object,
+    // tags: {
+    //     smoke: {
+    //         'background': '#6F9913'
+    //     },
+    //     sanity: {
+    //         'background': '#178F43'
+    //     }
+    // },
+
+    // columns data handler
+    columns?: (defaultColumns: object[]) => void,
+    // columns: (defaultColumns) => {},
+
+    // rows data handler (suite, case and step)
+    visitor?: (data: any, metadata: any, collect: {
+        //ParserOptions https://github.com/babel/babel/blob/main/packages/babel-parser/typings/babel-parser.d.ts
+        comments?: (parserOptions: any) => void
+    }) => void,
+    // visitor: (data, metadata, collect) => {},
+
+    // onEnd hook
+    onEnd?: (reportData: object, capability: {
+        sendEmail?: (emailOptions: {
+            transport: object,
+            message: object
+        }) => Promise<void>,
+        forEach?: (callback: function) => void
+    }) => Promise<void>
+    // onEnd: async (reportData, capability) => {}
+}
 
 /**
  * merge
@@ -29,6 +103,7 @@ export function attachAuditReport(
 /**
  * coverage
  */
+
 export function addCoverageReport(
     coverageData: any[] | any,
     testInfo: TestInfo
