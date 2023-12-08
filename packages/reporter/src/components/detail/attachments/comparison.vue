@@ -46,25 +46,11 @@ const initImageComparison = (list) => {
     d.indexes = {};
     d.categories = [];
 
-    let filePath;
-
     d.imageList = list.map((it, i) => {
 
         const {
             category, name, path
         } = it;
-
-        let imagePath = path;
-
-        // fixed expected image path
-        if (category === 'expected' && filePath) {
-            const ls = filePath.split('/');
-            ls.pop();
-            ls.push(name);
-            imagePath = ls.join('/');
-        } else {
-            filePath = path;
-        }
 
         d.indexes[category] = i;
         d.categories.push(category);
@@ -73,7 +59,7 @@ const initImageComparison = (list) => {
             title: titles[category],
             category,
             name,
-            path: imagePath
+            path
         };
 
     });

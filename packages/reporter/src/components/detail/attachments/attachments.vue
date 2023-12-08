@@ -84,13 +84,33 @@ const getAttachmentComponent = (item) => {
     return Link;
 };
 
-const sortGroupList = (group) => {
+const initGroupList = (group) => {
+
     const ordering = ['diff', 'actual', 'expected'];
     group.data.list.sort((a, b) => {
         const ai = ordering.indexOf(a.category);
         const bi = ordering.indexOf(b.category);
         return ai - bi;
     });
+
+    let filePath;
+    group.data.list.forEach((it) => {
+        const {
+            category, name, path
+        } = it;
+
+        // fixed expected image path
+        if (category === 'expected' && filePath) {
+            const ls = filePath.split('/');
+            ls.pop();
+            ls.push(name);
+            it.path = ls.join('/');
+        } else {
+            filePath = path;
+        }
+
+    });
+
 };
 
 const existsGroupItem = (group, groupName, retry) => {
@@ -147,7 +167,7 @@ const initList = (attachments) => {
                 if (existsGroupItem(group, groupName, attachment.retry)) {
                     group.data.list.push(item);
                 } else {
-                    sortGroupList(group);
+                    initGroupList(group);
                     list.push(group);
                     group = createGroup(item, groupName, attachment);
                 }
@@ -160,7 +180,7 @@ const initList = (attachments) => {
 
             // last one
             if (group) {
-                sortGroupList(group);
+                initGroupList(group);
                 list.push(group);
                 group = null;
             }
@@ -175,7 +195,7 @@ const initList = (attachments) => {
 
     // last group
     if (group) {
-        sortGroupList(group);
+        initGroupList(group);
         list.push(group);
     }
 
