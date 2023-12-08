@@ -1,3 +1,6 @@
+* 2.0.1
+  - fixed reportPath issue
+  - added type MonocartReporterOptions
 
 * 2.0.0
   - (BREAKING CHANGES) integrated [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
