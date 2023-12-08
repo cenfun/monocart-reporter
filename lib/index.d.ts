@@ -71,7 +71,7 @@ export type MonocartReporterOptions = {
             transport: object,
             message: object
         }) => Promise<void>,
-        forEach?: (callback: function) => void
+        forEach?: (callback: ((item: any) => void)) => void
     }) => Promise<void>
     // onEnd: async (reportData, capability) => {}
 }
