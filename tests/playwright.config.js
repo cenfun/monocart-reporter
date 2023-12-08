@@ -102,6 +102,9 @@ module.exports = {
                 //     return `pre-dir/${sp}`;
                 // },
 
+                // do not show the report link
+                // reportPath: '',
+
                 // reports: 'html',
                 lcov: true
 
