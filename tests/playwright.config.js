@@ -105,6 +105,8 @@ module.exports = {
                 // do not show the report link
                 // reportPath: '',
 
+                name: 'My global coverage report name',
+
                 // reports: 'html',
                 lcov: true
 
