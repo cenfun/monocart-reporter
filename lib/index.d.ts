@@ -80,8 +80,8 @@ export type MonocartReporterOptions = {
  * merge
  */
 export function merge(
-    reportDataList: [],
-    options?: any
+    reportDataList: any[],
+    options?: MonocartReporterOptions
 ): Promise<void>;
 
 /**
