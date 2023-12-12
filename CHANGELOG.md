@@ -1,3 +1,6 @@
+* 2.0.2
+  - fixed pnpm issue
+
 * 2.0.1
   - fixed reportPath issue
   - added type MonocartReporterOptions
