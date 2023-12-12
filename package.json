@@ -42,16 +42,16 @@
         "url": "git+https://github.com/cenfun/monocart-reporter.git"
     },
     "dependencies": {
-        "console-grid": "^2.0.1",
-        "eight-colors": "^1.0.3",
-        "istanbul-reports": "^3.1.6",
-        "koa": "^2.14.2",
-        "koa-static-resolver": "^1.0.4",
-        "lz-utils": "^2.0.1",
-        "monocart-coverage-reports": "^1.0.9",
-        "nodemailer": "^6.9.7",
-        "open": "^9.1.0",
-        "turbogrid": "^3.0.10"
+        "console-grid": "~2.0.1",
+        "eight-colors": "~1.0.3",
+        "istanbul-reports": "~3.1.6",
+        "koa": "~2.14.2",
+        "koa-static-resolver": "~1.0.4",
+        "lz-utils": "~2.0.1",
+        "monocart-coverage-reports": "~1.1.0",
+        "nodemailer": "~6.9.7",
+        "open": "~9.1.0",
+        "turbogrid": "~3.0.10"
     },
     "devDependencies": {
         "@playwright/test": "^1.40.1",

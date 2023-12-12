@@ -108,8 +108,11 @@ module.exports = {
                 name: 'My global coverage report name',
 
                 // reports: 'html',
-                lcov: true
+                lcov: true,
 
+                onEnd: (coverageResults) => {
+                    console.log(coverageResults.summary);
+                }
             },
 
             // global state

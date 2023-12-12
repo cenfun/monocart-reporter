@@ -1,3 +1,6 @@
+* 2.0.3
+  - added onEnd hook for coverage
+
 * 2.0.2
   - fixed pnpm issue
 
