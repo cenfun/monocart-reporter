@@ -48,7 +48,7 @@
         "koa": "^2.14.2",
         "koa-static-resolver": "^1.0.4",
         "lz-utils": "^2.0.1",
-        "monocart-coverage-reports": "^1.0.7",
+        "monocart-coverage-reports": "^1.0.8",
         "nodemailer": "^6.9.7",
         "open": "^9.1.0",
         "turbogrid": "^3.0.10"
@@ -61,7 +61,7 @@
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-vue": "^9.19.2",
-        "stylelint": "^15.11.0",
+        "stylelint": "^16.0.2",
         "stylelint-config-plus": "^1.0.4",
         "vine-ui": "^3.1.12"
     }
