@@ -1,3 +1,7 @@
+* 2.0.4
+  - fixed ordering for onEnd hook and showResults
+  - fixed playwright version undefined if merging shards 
+
 * 2.0.3
   - added onEnd hook for coverage
 
