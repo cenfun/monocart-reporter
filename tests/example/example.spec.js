@@ -18,8 +18,8 @@ test.describe('group', () => {
         const TF = Util.TF;
 
         // @title expect(TF(0)).toBe('0ms');
-        expect(TF(0)).toBe('0ms');
-        expect(TF(100)).toBe('100ms');
+        expect(TF(0), '0 to be 0ms').toBe('0ms');
+        expect(TF(100), 'time format 100 to be 100ms').toBe('100ms');
 
         expect(TF(1000)).toBe('1s');
         expect(TF(1001)).toBe('1s');
@@ -128,8 +128,8 @@ test.describe('group', () => {
             }
             res.push(item);
         });
-        expect(count).toBe(14);
-        expect(res.join('')).toBe('01234578910111213');
+        expect(count, 'count to be 14').toBe(14);
+        expect(res.join(''), 'results to be 01234578910111213').toBe('01234578910111213');
 
     });
 
@@ -159,7 +159,7 @@ test.describe('parent group', () => {
          * @title my custom assert step title
          * @annotations important
          */
-        expect(test.info()).toBeTruthy();
+        expect(test.info(), 'info to be truthy').toBeTruthy();
 
     });
 
