@@ -36,7 +36,8 @@
     - [V8](#v8)
     - [V8 to Istanbul](#v8-to-istanbul)
     - [Istanbul vs V8](#istanbul-vs-v8)
-    - [Global Coverage Report](#global-coverage-report) for Component Testing
+    - [Global Coverage Report](#global-coverage-report)
+    - [Coverage Examples](#coverage-examples)
 * [Attach Network Report](#attach-network-report)
 * [Global State Management](#global-state-management)
     - [Setup Global State](#setup-global-state)
@@ -792,10 +793,14 @@ const test = testBase.extend({
 });
 export { test, expect };
 ```
-- The coverage examples for Playwright component testing:
+
+### Coverage Examples
+- For Playwright component testing:
     - [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue)
     - [playwright-ct-react](https://github.com/cenfun/playwright-ct-react)
     - [playwright-ct-svelte](https://github.com/cenfun/playwright-ct-svelte)
+- [playwright-nextjs-coverage-example](https://github.com/michaelhays/playwright-nextjs-coverage-example)
+- [code-coverage-with-monocart-reporter](https://github.com/edumserrano/playwright-adventures/blob/main/demos/code-coverage-with-monocart-reporter/) 
 
 ## Attach Network Report
 Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments:
