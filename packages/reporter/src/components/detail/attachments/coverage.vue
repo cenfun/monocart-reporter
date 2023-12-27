@@ -18,16 +18,8 @@ const d = shallowReactive({
     list: []
 });
 
-const getIstanbulSummary = (report, list) => {
+const getSummary = (summary, map, list) => {
 
-    const map = {
-        statements: 'Statements',
-        branches: 'Branches',
-        functions: 'Functions',
-        lines: 'Lines'
-    };
-
-    const summary = report.summary;
     // console.log(summary);
 
     Object.keys(map).forEach((k) => {
@@ -52,28 +44,32 @@ const getIstanbulSummary = (report, list) => {
         list.push(item);
 
     });
+};
 
+const getIstanbulSummary = (report, list) => {
+
+    const map = {
+        statements: 'Statements',
+        functions: 'Functions',
+        branches: 'Branches',
+        lines: 'Lines'
+    };
+
+    getSummary(report.summary, map, list);
 
 };
 
 
 const getV8Summary = (report, list) => {
 
-    const item = report.summary;
+    const map = {
+        bytes: 'Bytes',
+        functions: 'Functions',
+        branches: 'Branches',
+        lines: 'Lines'
+    };
 
-    item.name = 'Bytes';
-    item.totalTitle = `Total ${Util.BSF(item.total)}`;
-
-    item.coveredTitle = `Covered ${Util.BSF(item.covered)}`;
-    item.coveredClass = item.covered > 0 ? 'mcr-covered' : '';
-
-    item.uncoveredTitle = `Uncovered ${Util.BSF(item.uncovered)}`;
-    item.uncoveredClass = item.uncovered > 0 ? 'mcr-uncovered' : '';
-
-    item.percentChart = Util.generatePercentChart(item.pct);
-
-    list.push(item);
-
+    getSummary(report.summary, map, list);
 
 };
 
@@ -110,11 +106,11 @@ watchEffect(() => {
           <td class="mcr-column-left">
             Name
           </td>
-          <td>Total</td>
-          <td>Covered</td>
-          <td>Uncovered</td>
           <td>Coverage</td>
           <td />
+          <td>Covered</td>
+          <td>Uncovered</td>
+          <td>Total</td>
         </tr>
         <tr
           v-for="(item, i) of d.list"
@@ -123,25 +119,26 @@ watchEffect(() => {
           <td class="mcr-column-left">
             <b>{{ item.name }}</b>
           </td>
-          <td :title="item.totalTitle">
-            {{ Util.NF(item.total) }}
+          <td
+            style="padding: 0 5px;"
+            :class="'mcr-'+item.status"
+          >
+            {{ Util.PF(item.pct, 100, 2) }}
           </td>
+          <td
+            style="min-width: 100px;"
+            v-html="item.percentChart"
+          />
+
           <td :title="item.coveredTitle">
             <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
           </td>
           <td :title="item.uncoveredTitle">
             <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
           </td>
-          <td
-            style="padding: 0 5px;"
-            :class="'mcr-'+item.status"
-          >
-            {{ Util.PF(item.pct, 100) }}
+          <td :title="item.totalTitle">
+            {{ Util.NF(item.total) }}
           </td>
-          <td
-            style="min-width: 100px;"
-            v-html="item.percentChart"
-          />
         </tr>
       </table>
       <VuiFlex
