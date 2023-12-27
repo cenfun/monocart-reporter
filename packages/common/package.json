@@ -7,7 +7,7 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "turbogrid": "^3.0.10"
+        "turbogrid": "^3.0.12"
     },
     "devDependencies": {
         "async-tick": "^1.0.0",

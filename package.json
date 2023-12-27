@@ -48,21 +48,21 @@
         "koa": "~2.14.2",
         "koa-static-resolver": "~1.0.4",
         "lz-utils": "~2.0.1",
-        "monocart-coverage-reports": "~1.1.0",
+        "monocart-coverage-reports": "~2.0.0",
         "nodemailer": "~6.9.7",
-        "open": "~9.1.0",
-        "turbogrid": "~3.0.10"
+        "open": "~10.0.1",
+        "turbogrid": "^3.0.12"
     },
     "devDependencies": {
         "@playwright/test": "^1.40.1",
-        "axios": "^1.6.2",
+        "axios": "^1.6.3",
         "dotenv": "^16.3.1",
-        "eslint": "^8.55.0",
+        "eslint": "^8.56.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-vue": "^9.19.2",
         "stylelint": "^16.0.2",
         "stylelint-config-plus": "^1.0.4",
-        "vine-ui": "^3.1.12"
+        "vine-ui": "^3.1.13"
     }
 }
