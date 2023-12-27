@@ -1,3 +1,6 @@
+* 2.1.0
+  - updated monocart-coverage-reports to v2.0.0
+
 * 2.0.4
   - fixed ordering for onEnd hook and showResults
   - fixed playwright version undefined if merging shards 
