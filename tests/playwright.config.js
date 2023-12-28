@@ -1,6 +1,7 @@
 module.exports = {
 
     globalSetup: './common/global-setup.js',
+    globalTeardown: './common/global-teardown.js',
 
     use: {
         // test attachments
