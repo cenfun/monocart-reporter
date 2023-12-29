@@ -44,12 +44,12 @@
     "dependencies": {
         "console-grid": "~2.0.1",
         "eight-colors": "~1.0.3",
-        "koa": "~2.14.2",
+        "koa": "~2.15.0",
         "koa-static-resolver": "~1.0.4",
         "lz-utils": "~2.0.1",
-        "monocart-coverage-reports": "~2.0.0",
+        "monocart-coverage-reports": "~2.0.4",
         "nodemailer": "~6.9.7",
-        "open": "~10.0.1",
+        "open": "~10.0.2",
         "turbogrid": "^3.0.12"
     },
     "devDependencies": {
