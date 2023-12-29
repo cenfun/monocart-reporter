@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "monocart-reporter",
     "private": true,
     "main": "dist/monocart-reporter.js",
@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "dependencies": {
-        "monocart-common": "~2.1.0",
+        "monocart-common": "~2.1.1",
         "turbogrid": "^3.0.12"
     },
     "devDependencies": {
