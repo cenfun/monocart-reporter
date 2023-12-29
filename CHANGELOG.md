@@ -1,3 +1,7 @@
+
+* 2.1.1
+  - fixed logs undefined issue
+
 * 2.1.0
   - updated monocart-coverage-reports to v2.0.0
 
