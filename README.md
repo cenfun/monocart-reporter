@@ -18,14 +18,15 @@
 * [Output](#output) HTML and JSON
 * [Reporter Options](#reporter-options)
 * [View Trace Online](#view-trace-online)
-* [Custom Columns](#custom-columns) (Extra properties for suite/case/step)
-    - [Custom Formatter](#custom-formatter)
-    - [Searchable Fields](#searchable-fields)
-* [Custom Data Visitor](#custom-data-visitor) (Extra data collection for suite/case/step)
-    - [Collect Data from the Title](#collect-data-from-the-title)
-    - [Collect Data from the Annotations](#collect-data-from-the-annotations)
-    - [Collect Data from the Comments](#collect-data-from-the-comments) (Recommended)
-    - [Remove Secrets and Sensitive Data](#remove-secrets-and-sensitive-data)
+* [Custom Fields Report](#custom-fields-report)
+    * [Custom Columns](#custom-columns) (Extra properties for suite/case/step)
+        - [Column Formatter](#column-formatter)
+        - [Searchable Fields](#searchable-fields)
+    * [Custom Data Visitor](#custom-data-visitor) (Extra data collection for suite/case/step)
+        - [Collect Data from the Title](#collect-data-from-the-title)
+        - [Collect Data from the Annotations](#collect-data-from-the-annotations)
+        - [Collect Data from the Comments](#collect-data-from-the-comments) (Recommended)
+        - [Remove Secrets and Sensitive Data](#remove-secrets-and-sensitive-data)
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
@@ -180,7 +181,12 @@ npx monocart serve-report <your-outputFile-path>
 ```
 Or customize your own trace viewer url with option `traceViewerUrl` defaults to  `https://trace.playwright.dev/?trace={traceUrl}`
 
-## Custom Columns
+## Custom Fields Report
+You can add custom fields to the report. for example: Owner, JIRA Key etc.
+- First, you need to add [custom columns](#custom-columns) for the fields.
+- Then, collect data for these fields with [custom data visitor](#custom-data-visitor)
+
+### Custom Columns
 The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties following:
 - `id` (String) Column id (required)
 - `name` (String) Column name, shows in grid header
@@ -235,7 +241,7 @@ module.exports = {
     ]
 };
 ```
-### Custom Formatter
+#### Column Formatter
 > Note: The `formatter` function will be serialized into string via JSON, so closures, contexts, etc. will not work!
 ```js
 // playwright.config.js
@@ -274,7 +280,7 @@ module.exports = {
 };
 ```
 
-### Searchable Fields
+#### Searchable Fields
 ```js
 // playwright.config.js
 module.exports = {
@@ -291,13 +297,13 @@ module.exports = {
 };
 ```
 
-## Custom Data Visitor
+### Custom Data Visitor
 The `visitor` function will be executed for each row item (suite, case and step). Arguments:
 - `data` data item (suite/case/step) for reporter, you can rewrite some of its properties or add more
 - `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
 - `collect` see [collect data from the comments](#collect-data-from-the-comments)
 
-### Collect Data from the Title
+#### Collect Data from the Title
 For example, we want to parse out the jira key from the title:
 ```js
 test('[MCR-123] collect data from the title', () => {
@@ -325,7 +331,7 @@ module.exports = {
 ```
 multiple matches example: [collect-data](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/collect-data)
 
-### Collect Data from the Annotations
+#### Collect Data from the Annotations
 It should be easier than getting from title. see [custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) via `test.info().annotations`
 ```js
 test('collect data from the annotations', () => {
@@ -356,7 +362,7 @@ module.exports = {
 };
 ```
 
-### Collect Data from the Comments
+#### Collect Data from the Comments
 > The code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. 
 - First, add the collection of comments in the visitor. 
 > Note: If there are any parsing error messages in red lines, try other parser options like `sourceType: 'module'` or `plugins: ['typescript']` according to your situation.
@@ -469,7 +475,7 @@ test.describe('suite title', () => {
 const { test, expect } = require('@playwright/test');
 ```
 
-### Remove Secrets and Sensitive Data
+#### Remove Secrets and Sensitive Data
 > The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the report data with the string replacement in `visitor` function.
 ```js
 // playwright.config.js
