@@ -44,7 +44,6 @@
     "dependencies": {
         "console-grid": "~2.0.1",
         "eight-colors": "~1.0.3",
-        "istanbul-reports": "~3.1.6",
         "koa": "~2.14.2",
         "koa-static-resolver": "~1.0.4",
         "lz-utils": "~2.0.1",
