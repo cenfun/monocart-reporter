@@ -3,6 +3,8 @@
 [![](https://img.shields.io/npm/v/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
 [![](https://badgen.net/npm/dw/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
+![](https://img.shields.io/github/actions/workflow/status/cenfun/monocart-reporter/static.yml)
+
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
     - Shows Test Report in A `Tree Grid`
