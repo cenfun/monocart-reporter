@@ -41,7 +41,7 @@ const test = testBase.extend({
 
 module.exports = () => {
 
-    const pageUrl = 'http://localhost:8090/coverage/v8.html';
+    const pageUrl = 'http://localhost:8090/v8/';
 
     test('take coverage for foo', async ({ page }) => {
         await page.goto(pageUrl);

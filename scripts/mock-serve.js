@@ -4,6 +4,8 @@ const EC = require('eight-colors');
 const KSR = require('koa-static-resolver');
 const Koa = require('koa');
 
+// copy from monocart-coverage-reports/test/mock for github actions
+// index.html for playwright detection when is ready
 const outputDir = path.resolve(__dirname, './mock');
 
 console.log('serve dir', outputDir);

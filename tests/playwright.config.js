@@ -112,7 +112,7 @@ module.exports = {
                 lcov: true,
 
                 onEnd: (coverageResults) => {
-                    console.log(coverageResults.summary);
+                    // console.log(coverageResults.summary);
                 }
             },
 
@@ -140,10 +140,10 @@ module.exports = {
 
                     if (test) {
                         // test level data handler
-                        console.log('onReceive test ============ ', test.title);
+                        // console.log('onReceive test ============ ', test.title);
                     }
 
-                    console.log('receive message on server', message);
+                    // console.log('receive message on server', message);
 
                     return {
                         data: 'my response data'

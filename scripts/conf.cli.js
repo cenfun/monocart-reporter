@@ -14,19 +14,19 @@ const beforeReporter = (item, Util) => {
     const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
 
     // typescript
-    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/typescript/index.json');
+    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-examples/docs/typescript/index.json');
 
     // coverage
-    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/coverage/index.json');
+    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-examples/docs/coverage/index.json');
 
     // network
-    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/network/index.json');
+    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-examples/docs/network/index.json');
 
     // merge
-    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/merged/index.json');
+    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-examples/docs/merged/index.json');
 
     // ten-minutes
-    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-test/docs/ten-minutes/index.json');
+    // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-examples/docs/ten-minutes/index.json');
 
     if (!fs.existsSync(jsonPath)) {
         EC.logRed(`ERROR: Not found test json: ${jsonPath}`);

@@ -61,7 +61,7 @@
 
 ![](/docs/cli.png)
 
-[More Test Reports](https://github.com/cenfun/monocart-reporter-test)
+[More Examples](https://github.com/cenfun/monocart-reporter-examples)
 
 ## Install
 ```sh
@@ -86,7 +86,7 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 
 ## Examples
 - [tests](/tests/)
-- [more](https://github.com/cenfun/monocart-reporter-test/tree/main/tests) 
+- [more](https://github.com/cenfun/monocart-reporter-examples/tree/main/tests) 
 ## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
@@ -420,7 +420,7 @@ module.exports = {
     ]
 };
 ```
-multiple matches example: [collect-data](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/collect-data)
+multiple matches example: [collect-data](https://github.com/cenfun/monocart-reporter-examples/tree/main/tests/collect-data)
 
 #### Collect Data from the Annotations
 It should be easier than getting from title. see [custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) via `test.info().annotations`
@@ -481,7 +481,7 @@ module.exports = {
     ]
 };
 ```
-see example: [remove-secrets](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/remove-secrets)
+see example: [remove-secrets](https://github.com/cenfun/monocart-reporter-examples/tree/main/tests/remove-secrets)
 
 ## Style Tags
 * Add tag to test/describe title ( starts with `@` )
@@ -875,7 +875,7 @@ module.exports = {
     ]
 };
 ```
-see example: [Allow specified test cases to run in sequence mode with lock/unlock state](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/global-state)
+see example: [Allow specified test cases to run in sequence mode with lock/unlock state](https://github.com/cenfun/monocart-reporter-examples/tree/main/tests/global-state)
 
 ## Merge Shard Reports
 There will be multiple reports to be generated if Playwright test executes in sharding mode. for example:
@@ -908,7 +908,7 @@ await merge(reportDataList, {
     }
 });
 ```
-see example [merge.js](https://github.com/cenfun/monocart-reporter-test/blob/main/scripts/merge.js)
+see example [merge.js](https://github.com/cenfun/monocart-reporter-examples/blob/main/scripts/merge.js)
 
 ## onEnd Hook
 The `onEnd` function will be executed after report generated. Arguments:
@@ -948,39 +948,39 @@ module.exports = {
 ```
 ## Send Email
 - Simply send email with [nodemailer](https://nodemailer.com)
-- Example: [send-email](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/send-email)
+- Example: [send-email](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/send-email)
 
 ## Testrail Integration
 - Send test results to your [Testrail](https://www.testrail.com/)
-- Example: [testrail](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/testrail)
+- Example: [testrail](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/testrail)
 
 ## Jira + Zephyr Scale Integration
 - Create test cycle and executions with [zephyr-scale-api](https://support.smartbear.com/zephyr-scale-cloud/api-docs/)
-- Example: [zephyr-scale](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/zephyr-scale)
+- Example: [zephyr-scale](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/zephyr-scale)
 
 ## Jira + Xray Integration
 - Import test execution results with [Xray REST API](https://docs.getxray.app/display/XRAYCLOUD/REST+API)
 - Update Jira issue status with [Jira Transition API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-transitions-post)
-- Example: [xray](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/xray)
+- Example: [xray](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/xray)
 
 ## Slack Integration
 - Simply send message with [@slack/webhook](https://github.com/slackapi/node-slack-sdk) 
-- Example: [slack-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/slack-webhook)
+- Example: [slack-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/slack-webhook)
 - Post chat message and upload image with [@slack/web-api](https://github.com/slackapi/node-slack-sdk) 
-- Example: [slack-web-api](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/slack-web-api)
+- Example: [slack-web-api](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/slack-web-api)
 
 ## Discord Integration
 - Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels.
-- Example: [discord-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/discord-webhook)
+- Example: [discord-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/discord-webhook)
 
 ## Teams Integration
 - Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. 
-- Example: [teams-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/teams-webhook)
+- Example: [teams-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/teams-webhook)
 
 ## Dingtalk/Weixin/Feishu Integration
-- [dingtalk-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/dingtalk-webhook)
-- [weixin-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/weixin-webhook)
-- [feishu-webhook](https://github.com/cenfun/monocart-reporter-test/tree/main/integrations/feishu-webhook)
+- [dingtalk-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/dingtalk-webhook)
+- [weixin-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/weixin-webhook)
+- [feishu-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/feishu-webhook)
 
 
 ## Contributing

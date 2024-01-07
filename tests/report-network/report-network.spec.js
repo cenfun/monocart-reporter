@@ -18,7 +18,7 @@ test('attach network report 1', async ({ browser }) => {
         }
     });
     const page = await context.newPage();
-    await page.goto('http://localhost:8090/demo/', {
+    await page.goto('http://localhost:8090/minify/', {
         waitUntil: 'networkidle'
     });
 
@@ -49,7 +49,7 @@ test('attach network report 2', async ({ browser }) => {
         }
     });
     const page = await context.newPage();
-    await page.goto('http://localhost:8090/coverage/', {
+    await page.goto('http://localhost:8090/v8/', {
         waitUntil: 'networkidle'
     });
     await new Promise((resolve) => {

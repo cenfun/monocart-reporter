@@ -1,4 +1,6 @@
+const fs = require('fs');
 const path = require('path');
+const EC = require('eight-colors');
 const { test, expect } = require('@playwright/test');
 const { attachCoverageReport, addCoverageReport } = require('monocart-reporter');
 
@@ -10,7 +12,7 @@ v8Tests();
 
 test('Take Istanbul coverage report', async ({ page }) => {
 
-    await page.goto('http://localhost:8090/coverage/istanbul.html');
+    await page.goto('http://localhost:8090/istanbul/');
 
     // delay for mock code execution
     await new Promise((resolve) => {
@@ -25,21 +27,24 @@ test('Take Istanbul coverage report', async ({ page }) => {
     // await addCoverageReport(coverageData, test.info());
 
     // coverage report
-    const report = await attachCoverageReport(coverageData, test.info(), {
+    await attachCoverageReport(coverageData, test.info(), {
         lcov: true,
         // default is html-spa
         // reports: 'html',
         sourcePath: (sourcePath) => {
-            console.log('sourcePath', sourcePath);
+            // console.log('sourcePath', sourcePath);
             // replace local windows \ to server /
             sourcePath = sourcePath.replace(/\\/g, '/');
-            const filename = path.basename(sourcePath);
-            const redirectPath = path.resolve(__dirname, '../../scripts/mock/coverage/src', filename);
-            console.log('redirectPath', redirectPath);
+            const filePath = sourcePath.split('/mock/')[1];
+            const redirectPath = path.resolve(__dirname, '../../scripts/mock', filePath);
+
+            if (!fs.existsSync(redirectPath)) {
+                console.log('not found redirectPath', EC.red(redirectPath));
+            }
+
             return redirectPath;
         }
     });
-    console.log(report.summary);
 
 });
 
@@ -54,7 +59,7 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
         })
     ]);
 
-    await page.goto('http://localhost:8090/coverage/v8.html');
+    await page.goto('http://localhost:8090/v8/');
 
     // delay for mock code execution
     await new Promise((resolve) => {
@@ -71,18 +76,18 @@ test('Take V8 and Istanbul coverage report', async ({ page }) => {
 
     await addCoverageReport(coverageList, test.info());
 
-    const v8 = await attachCoverageReport(coverageList, test.info(), {
+    await attachCoverageReport(coverageList, test.info(), {
         sourceFilter: (sourcePath) => sourcePath.search(/src\//) !== -1,
         lcov: true
     });
-    console.log(v8.summary);
+    // console.log(v8.summary);
 
-    const istanbul = await attachCoverageReport(coverageList, test.info(), {
+    await attachCoverageReport(coverageList, test.info(), {
         sourceFilter: (sourcePath) => sourcePath.search(/src\//) !== -1,
         lcov: true,
         reports: 'html'
     });
-    console.log(istanbul.summary);
+    // console.log(istanbul.summary);
 
 });
 
@@ -109,13 +114,13 @@ test('Take anonymous scripts coverage report', async ({ page }) => {
     const jsCoverageList = await page.coverage.stopJSCoverage();
     await page.close();
 
-    const v8 = await attachCoverageReport(jsCoverageList, test.info(), {
+    await attachCoverageReport(jsCoverageList, test.info(), {
         // inline: true,
         lcov: true
     });
-    console.log(v8.summary);
+    // console.log(v8.summary);
 
-    const istanbul = await attachCoverageReport(jsCoverageList, test.info(), {
+    await attachCoverageReport(jsCoverageList, test.info(), {
         lcov: true,
         reports: [
             ['html'],
@@ -125,7 +130,7 @@ test('Take anonymous scripts coverage report', async ({ page }) => {
             }]
         ]
     });
-    console.log(istanbul.summary);
+    // console.log(istanbul.summary);
 
 });
 
@@ -140,7 +145,7 @@ test('Take V8 js and css coverage report', async ({ page }) => {
         })
     ]);
 
-    await page.goto('http://localhost:8090/demo/');
+    await page.goto('http://localhost:8090/minify/');
     // delay for mock code execution
     await new Promise((resolve) => {
         setTimeout(resolve, 500);
@@ -167,9 +172,9 @@ test('Take V8 js and css coverage report', async ({ page }) => {
 
     // await addCoverageReport(coverageList, test.info());
 
-    const report = await attachCoverageReport(coverageList, test.info(), {
+    await attachCoverageReport(coverageList, test.info(), {
         lcov: true
     });
-    console.log(report.summary);
+    // console.log(report.summary);
 
 });

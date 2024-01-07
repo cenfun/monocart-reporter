@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+.red {
+    color: red;
+}
+
+.unused,.and-used {
+    position: relative;
+}
+
+/* comments */
+.inline-unused{font-size:medium;}.inline-used {position:relative;}.next-unused{color:none}
+
+
+.uncovered-css {
+	/* comments in */
+	color: red; /* comments after */
+}
+
+@media (min-width:1200px) {
+
+    .h2,
+    h2 {
+        font-size: 2rem
+    }
+
+	.h3,
+    h3 {
+        font-size: 1.5rem
+    }
+}
+
+@keyframes progress-bar-stripes {
+    0% {
+        background-position-x: 1rem
+    }
+}
+
+@color-profile --swop5c {
+  src: url("https://example.org/SWOP2006_Coated5v2.icc");
+}
+
+@container (width > 400px) {
+  h2 {
+    font-size: 1.5em;
+  }
+}
+
+@counter-style thumbs {
+  system: cyclic;
+  symbols: "\1F44D";
+  suffix: " ";
+}
+
+@font-face {
+  font-family: "Trickster";
+  src:
+    local("Trickster"),
+    url("trickster-COLRv1.otf") format("opentype") tech(color-COLRv1),
+    url("trickster-outline.otf") format("opentype"),
+    url("trickster-outline.woff") format("woff");
+}
+
+@import url("my-imported-styles.css");
+
+
+@supports (display: flex) {
+  .flex-container > * {
+    text-shadow: 0 0 2px blue;
+    float: none;
+  }
+
+  .flex-container {
+    display: flex;
+  }
+}
+
+@property --property-name {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #c0ffee;
+}

@@ -55,7 +55,7 @@ class HomePage {
         this.page = page;
         this.context = context;
         this.metadata = metadata;
-        console.log('metadata', metadata);
+        // console.log('metadata', metadata);
     }
 
     async init() {

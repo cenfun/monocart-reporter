@@ -3,10 +3,16 @@ function callback() {
 
 }
 
+/*
+    block comment
+*/
+
+// v8 ignore next 3
 function other() {
 
 }
 
+/* inline block */
 function method(v) {
     // console.log("method", v);
     if (v === 2) {
@@ -43,11 +49,13 @@ const main = () => {
         console.log('never covered');
     }
 
-    const { compress, decompress } = window['lz-utils'];
-
     const str = '📙 Emoji — 😃 💁👌🎍😍';
 
-    console.assert(str === decompress(compress(str)));
+    const lz = window['lz-utils'];
+    if (lz) {
+        const { compress, decompress } = lz;
+        console.assert(str === decompress(compress(str)));
+    }
 
 };
 

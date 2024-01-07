@@ -151,7 +151,7 @@ const main = async () => {
 
     // copy istanbul folder
     copyDir(
-        path.resolve(__dirname, '../../monocart-reporter-test/packages/coverage/public'),
+        path.resolve(__dirname, '../../monocart-reporter-examples/packages/coverage/public'),
         path.resolve(outputDir, 'istanbul')
     );
 

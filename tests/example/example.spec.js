@@ -286,7 +286,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
             console.log('');
             console.info('console.info');
 
-            console.log(test.info().config.reporter);
+            // console.log(test.info().config.reporter);
 
             expect('passed').toBe('failed');
         });
