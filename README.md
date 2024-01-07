@@ -36,7 +36,6 @@
 * [Code Coverage Report](#code-coverage-report)
     - [Global Coverage Report](#global-coverage-report)
     - [Coverage Options](#coverage-options)
-    - [Istanbul vs V8](#istanbul-vs-v8)
     - [Coverage Examples](#coverage-examples)
 * [Attach Network Report](#attach-network-report)
 * [Global State Management](#global-state-management)
@@ -623,7 +622,7 @@ test('attach lighthouse audit report', async () => {
 ## Code Coverage Report
 The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports) for coverage reports, there are two APIs:
 - `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
-    - `data` There are two supported data inputs: [Istanbul](#istanbul) (Object) or [V8](#v8) (Array)
+    - `data` There are two supported data inputs: [Istanbul](https://github.com/cenfun/monocart-coverage-reports?#collecting-istanbul-coverage-data) (Object) or [V8](https://github.com/cenfun/monocart-coverage-reports?#collecting-v8-coverage-data) (Array)
     - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 - `attachCoverageReport(data, testInfo, options)` Attach a coverage report to a test. Arguments:
     - `data` same as above
@@ -700,10 +699,6 @@ export { test, expect };
 ### Coverage Options
 - Default [options](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
 - More Introduction [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
-
-### Istanbul vs V8
-- [Compare Istanbul, V8 and V8 to Istanbul Reports](https://github.com/cenfun/monocart-coverage-reports#compare-reports)
-- [Compare Istanbul and V8 Workflows](https://github.com/cenfun/monocart-coverage-reports#compare-workflows)
 
 ### Coverage Examples
 - For Playwright component testing:
