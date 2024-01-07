@@ -908,7 +908,7 @@ await merge(reportDataList, {
     }
 });
 ```
-Preview [merged report](https://cenfun.github.io/monocart-reporter-test/merged)
+see example [merge.js](https://github.com/cenfun/monocart-reporter-test/blob/main/scripts/merge.js)
 
 ## onEnd Hook
 The `onEnd` function will be executed after report generated. Arguments:
