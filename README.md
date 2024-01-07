@@ -691,18 +691,47 @@ const test = testBase.extend({
 export { test, expect };
 ```
 - Take coverage on global teardown. 
+> It can be used to add the server side coverage report. For example, a Node.js web server start at the beginning of the test with the env `ODE_V8_COVERAGE=dir`, the V8 coverage data will be saved to `dir` with calling API `v8.takeCoverage()` manually or terminating server gracefully. On global teardown, reading all from `dir` and adding them to global coverage report. For Node.js, the coverage data requires appending source manually. 
 ```js
 // global-teardown.js
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import EC from 'eight-colors';
 import { addCoverageReport } from 'monocart-reporter';
 
 export default async (config) => {
-    const coverageData = await getYourCoverageData();
 
-    // there is no test info on teardown, simply mock it with required config
-    const mockTestInfo = {
-        config
-    };
-    await addCoverageReport(coverageData, mockTestInfo);
+    const dir = "your-v8-coverage-data-dir";
+    const files = fs.readdirSync(dir);
+    for (const filename of files) {
+        const content = fs.readFileSync(path.resolve(dir, filename)).toString('utf-8');
+        const json = JSON.parse(content);
+        let coverageList = json.result;
+
+        // filter node internal files
+        coverageList = coverageList.filter((entry) => entry.url && entry.url.startsWith('file:'));
+
+        if (!coverageList.length) {
+            continue;
+        }
+
+        // appending source content
+        coverageList.forEach((entry) => {
+            const filePath = fileURLToPath(entry.url);
+            if (fs.existsSync(filePath)) {
+                entry.source = fs.readFileSync(filePath).toString('utf8');
+            } else {
+                EC.logRed('not found file', filePath);
+            }
+        });
+
+        // there is no test info on teardown, just mock one with required config
+        const mockTestInfo = {
+            config
+        };
+        await addCoverageReport(coverageList, mockTestInfo);
+    }
 }
 ```
 
