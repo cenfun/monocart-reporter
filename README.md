@@ -627,7 +627,7 @@ The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/mo
 ![](/docs/v8.gif)
 
 ### Global Coverage Report
-The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. 
+The global coverage report will merge all coverages into one global report after all the tests are finished. 
 - The global coverage options see [Coverage Options](#coverage-options)
 ```js
 // playwright.config.js
@@ -645,7 +645,7 @@ module.exports = {
     ]
 };
 ```
-- Using [automatic fixtures](https://playwright.dev/docs/test-fixtures#automatic-fixtures) to add coverage for each test:
+- Adding coverage data for each test with [automatic fixtures](https://playwright.dev/docs/test-fixtures#automatic-fixtures)
 ```js
 // fixtures.js for v8 coverage
 import { test as testBase, expect } from '@playwright/test';
@@ -690,7 +690,7 @@ const test = testBase.extend({
 });
 export { test, expect };
 ```
-- Take server side coverage on global teardown
+- Adding server side coverage on global teardown
 > For example, a Node.js web server start at the beginning of the test with the env `NODE_V8_COVERAGE=dir`, the V8 coverage data will be saved to `dir` with calling API `v8.takeCoverage()` manually or terminating server gracefully. On global teardown, reading all from `dir` and adding them to global coverage report. For Node.js, the V8 coverage data requires appending source manually.
 ```js
 // global-teardown.js
@@ -723,9 +723,13 @@ export default async (config) => {
     }
 }
 ```
+see [Node.js V8 Coverage Report for Server Side](https://github.com/cenfun/monocart-coverage-reports?#nodejs-v8-coverage-report-for-server-side)
 
 ### Coverage Options
 - Default [options](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
+- [Available Reports](https://github.com/cenfun/monocart-coverage-reports?#available-reports)
+- [Using entryFilter and sourceFilter to filter the results for V8 report](https://github.com/cenfun/monocart-coverage-reports?#using-entryfilter-and-sourcefilter-to-filter-the-results-for-v8-report)
+- Checking thresholds with [onEnd Hook](https://github.com/cenfun/monocart-coverage-reports?#onend-hook)
 - More Introduction [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
 
 ### Coverage Examples
