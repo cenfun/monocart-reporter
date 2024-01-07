@@ -697,33 +697,23 @@ export { test, expect };
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import EC from 'eight-colors';
 import { addCoverageReport } from 'monocart-reporter';
 
 export default async (config) => {
 
     const dir = "your-v8-coverage-data-dir";
+
     const files = fs.readdirSync(dir);
     for (const filename of files) {
         const content = fs.readFileSync(path.resolve(dir, filename)).toString('utf-8');
         const json = JSON.parse(content);
         let coverageList = json.result;
-
-        // filter node internal files
         coverageList = coverageList.filter((entry) => entry.url && entry.url.startsWith('file:'));
-
-        if (!coverageList.length) {
-            continue;
-        }
 
         // appending source content
         coverageList.forEach((entry) => {
             const filePath = fileURLToPath(entry.url);
-            if (fs.existsSync(filePath)) {
-                entry.source = fs.readFileSync(filePath).toString('utf8');
-            } else {
-                EC.logRed('not found file', filePath);
-            }
+            entry.source = fs.readFileSync(filePath).toString('utf8');
         });
 
         // there is no test info on teardown, just mock one with required config
