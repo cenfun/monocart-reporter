@@ -690,6 +690,21 @@ const test = testBase.extend({
 });
 export { test, expect };
 ```
+- Take coverage on global teardown. 
+```js
+// global-teardown.js
+import { addCoverageReport } from 'monocart-reporter';
+
+export default async (config) => {
+    const coverageData = await getYourCoverageData();
+
+    // there is no test info on teardown, simply mock it with required config
+    const mockTestInfo = {
+        config
+    };
+    await addCoverageReport(coverageData, mockTestInfo);
+}
+```
 
 ### Coverage Options
 - Default [options](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
