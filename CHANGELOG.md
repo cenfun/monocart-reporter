@@ -1,10 +1,10 @@
 * 2.2.0
-  - (Breaking Change) new option `customFieldsInComments: true/false` instead of calling API `collect.comments(parserOptions)` in `visitor`. Migration: 
+  - (Breaking) new option `customFieldsInComments: true/false` instead of calling API `collect.comments(parserOptions)` in `visitor`. Migration: 
     ```js
     {
       customFieldsInComments: true,
 
-      // remove following, no need anymore
+      /* remove following, no need anymore
       visitor: (data, metadata, collect) => {
         const parserOptions = {
         };
@@ -13,6 +13,7 @@
             Object.assign(data, comments);
         }
       }
+      */
 
     }
     ```

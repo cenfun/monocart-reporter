@@ -303,6 +303,8 @@ module.exports = {
 
             },
 
+            customFieldsInComments: true,
+
             // async hook after report data generated
             onEnd: async (reportData, capability) => {
                 // console.log('onEnd hook start');
