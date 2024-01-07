@@ -120,7 +120,7 @@ module.exports = {
 
     build: {
 
-        vendors: ['common', 'reporter', 'network'],
+        vendors: ['common', 'app', 'network'],
 
         before: (item, Util) => {
 
@@ -128,7 +128,7 @@ module.exports = {
                 item.devtool = false;
             }
 
-            if (item.name === 'reporter') {
+            if (item.name === 'app') {
                 return beforeReporter(item, Util);
             }
 
