@@ -61,8 +61,6 @@
 
 ![](/docs/cli.png)
 
-[More Examples](https://github.com/cenfun/monocart-reporter-examples)
-
 ## Install
 ```sh
 npm i -D monocart-reporter
@@ -86,7 +84,8 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 
 ## Examples
 - [tests](/tests/)
-- [more](https://github.com/cenfun/monocart-reporter-examples/tree/main/tests) 
+- More Examples [monocart-reporter-examples](https://github.com/cenfun/monocart-reporter-examples)
+
 ## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
