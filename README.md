@@ -318,6 +318,12 @@ module.exports = {
 For example, adding `owner` and `jira` to the cases, steps, and suites. or updating the value if the field exists like `title`
 ```js
 /**
+ * for file (comment file in the first line)
+ * @owner FO
+ */
+const { test, expect } = require('@playwright/test');
+
+/**
  * for case
  * @owner Kevin
  * @jira MCR-16888
@@ -336,20 +342,27 @@ test('case description', () => {
 
 });
 
-```
-```js
-test('case title', ({ browserName }, testInfo) => {
+/**
+ * for describe suite
+ * @owner Mark
+ * @jira MCR-16900
+ */
+test.describe('suite title', () => {
 
-    /**
-     * rewrite assert step title "expect.toBe" to
-     * @title my custom assert step title
-     * @annotations important
-     */
-    expect(testInfo).toBe(test.info());
+    test('case title', ({ browserName }, testInfo) => {
 
-    // @owner Steve
-    await test.step('step title', () => {
-       
+        /**
+         * rewrite assert step title "expect.toBe" to
+         * @title my custom assert step title
+         * @annotations important
+         */
+        expect(testInfo).toBe(test.info());
+
+        // @owner Steve
+        await test.step('step title', () => {
+        
+        });
+
     });
 
 });
@@ -369,23 +382,6 @@ test.beforeAll(() => {
 test.beforeEach(() => { 
     
 });
-```
-```js
-/**
- * for describe
- * @owner Mark
- * @jira MCR-16900
- */
-test.describe('suite title', () => {
-
-});
-```
-```js
-/**
- * for file (comment file in the first line)
- * @owner FO
- */
-const { test, expect } = require('@playwright/test');
 ```
 
 ### Custom Data Visitor
