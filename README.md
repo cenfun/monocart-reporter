@@ -188,8 +188,8 @@ Or customize your own trace viewer url with option `traceViewerUrl` defaults to 
 
 ## Custom Fields Report
 You can add custom fields to the report. for example: Owner, JIRA Key etc.
-- First, you need to add [custom columns](#custom-columns) for the fields.
-- Then, collect data for these fields with [custom data visitor](#custom-data-visitor)
+- First, you need to add [Custom Columns](#custom-columns) for the fields.
+- Then, collect data for these fields with [Custom Fields in Comments](#custom-fields-in-comments) or [Custom Data Visitor](#custom-data-visitor)
 
 ### Custom Columns
 The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties following:
@@ -317,7 +317,7 @@ module.exports = {
 };
 ```
 
-- Then, add comments to your tests
+- Then, add comments for the tests
 > Note: Each comment item must start with `@` which is similar to [JSDoc](https://jsdoc.app/).
 
 For example, adding `owner` and `jira` to the cases, steps, and suites. or updating the value if the field exists like `title`
@@ -456,8 +456,6 @@ module.exports = {
     ]
 };
 ```
-
-
 
 #### Remove Secrets and Sensitive Data
 > The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the report data with the string replacement in `visitor` function.
