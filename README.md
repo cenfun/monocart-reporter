@@ -691,7 +691,7 @@ const test = testBase.extend({
 export { test, expect };
 ```
 - Take coverage on global teardown. 
-> It can be used to add the server side coverage report. For example, a Node.js web server start at the beginning of the test with the env `ODE_V8_COVERAGE=dir`, the V8 coverage data will be saved to `dir` with calling API `v8.takeCoverage()` manually or terminating server gracefully. On global teardown, reading all from `dir` and adding them to global coverage report. For Node.js, the coverage data requires appending source manually. 
+> It can be used to add the server side coverage report. For example, a Node.js web server start at the beginning of the test with the env `NODE_V8_COVERAGE=dir`, the V8 coverage data will be saved to `dir` with calling API `v8.takeCoverage()` manually or terminating server gracefully. On global teardown, reading all from `dir` and adding them to global coverage report. For Node.js, the coverage data requires appending source manually. 
 ```js
 // global-teardown.js
 import fs from 'fs';
