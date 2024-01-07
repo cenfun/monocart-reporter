@@ -17,15 +17,15 @@
 * [Install](#install)
 * [Playwright Config](#playwright-config)
 * [Examples](#examples)
-* [Output](#output) HTML and JSON
+* [Output](#output)
 * [Reporter Options](#reporter-options)
 * [View Trace Online](#view-trace-online)
 * [Custom Fields Report](#custom-fields-report)
-    * [Custom Columns](#custom-columns) (Extra properties for suite/case/step)
+    * [Custom Columns](#custom-columns)
         - [Column Formatter](#column-formatter)
         - [Searchable Fields](#searchable-fields)
     * [Custom Fields in Comments](#custom-fields-in-comments)
-    * [Custom Data Visitor](#custom-data-visitor) (Extra data collection for suite/case/step)
+    * [Custom Data Visitor](#custom-data-visitor)
         - [Collect Data from the Title](#collect-data-from-the-title)
         - [Collect Data from the Annotations](#collect-data-from-the-annotations)
         - [Remove Secrets and Sensitive Data](#remove-secrets-and-sensitive-data)
@@ -34,12 +34,9 @@
 * [Trend Chart](#trend-chart)
 * [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
 * [Code Coverage Report](#code-coverage-report)
-    - [Coverage Options](#coverage-options)
-    - [Istanbul](#istanbul)
-    - [V8](#v8)
-    - [V8 to Istanbul](#v8-to-istanbul)
-    - [Istanbul vs V8](#istanbul-vs-v8)
     - [Global Coverage Report](#global-coverage-report)
+    - [Coverage Options](#coverage-options)
+    - [Istanbul vs V8](#istanbul-vs-v8)
     - [Coverage Examples](#coverage-examples)
 * [Attach Network Report](#attach-network-report)
 * [Global State Management](#global-state-management)
@@ -625,98 +622,15 @@ test('attach lighthouse audit report', async () => {
 
 ## Code Coverage Report
 The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports) for coverage reports, there are two APIs:
-- `attachCoverageReport(data, testInfo, options)` Attach a coverage report to a test. Arguments:
+- `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
     - `data` There are two supported data inputs: [Istanbul](#istanbul) (Object) or [V8](#v8) (Array)
     - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
+- `attachCoverageReport(data, testInfo, options)` Attach a coverage report to a test. Arguments:
+    - `data` same as above
+    - `testInfo` same as above
     - `options` (Object) see [Coverage Options](#coverage-options)
-- `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
-
-### Coverage Options
-- Default [options](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
-- More examples [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
-
-### [Istanbul](https://github.com/istanbuljs) 
-Requires your source code is instrumented. Usually we can use the tool [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to build instrumenting code. (see example: [webpack.config-istanbul.js](https://github.com/cenfun/monocart-reporter-test/blob/main/packages/coverage/webpack.config-istanbul.js)) The instrumented code will automatically generate coverage data and save it on `window.__coverage__`. The Istanbul HTML report will be generated and attached to the test report as an attachment.
-```js
-import { test, expect } from '@playwright/test';
-import { attachCoverageReport } from 'monocart-reporter';
-
-test('Take Istanbul coverage report', async ({ page }) => {
-
-    await page.goto('http://localhost:8090/coverage/istanbul.html');
-
-    // delay for mock code execution
-    await new Promise((resolve) => {
-        setTimeout(resolve, 500);
-    });
-
-    // take Istanbul coverage
-    const coverageData = await page.evaluate(() => window.__coverage__);
-    await page.close();
-    expect(coverageData, 'expect found Istanbul data: __coverage__').toBeTruthy();
-
-    // coverage report
-    const report = await attachCoverageReport(coverageData, test.info(), {
-        lcov: true
-    });
-    console.log(report.summary);
-
-});
-```
-
-### [V8](https://v8.dev/blog/javascript-code-coverage)
-Simply take coverage data with  [class-coverage](https://playwright.dev/docs/api/class-coverage) APIs, so it is [Chromium-based only](https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#type-ScriptCoverage), the V8 HTML report will be generated.
-```js
-import { test, expect } from '@playwright/test';
-import { attachCoverageReport } from 'monocart-reporter';
-
-test('Take V8 and Istanbul coverage report', async ({ page }) => {
-
-    await Promise.all([
-        page.coverage.startJSCoverage({
-            resetOnNavigation: false
-        }),
-        page.coverage.startCSSCoverage({
-            resetOnNavigation: false
-        })
-    ]);
-
-    await page.goto('http://localhost:8090/coverage/v8.html');
-
-    // delay for mock code execution
-    await new Promise((resolve) => {
-        setTimeout(resolve, 500);
-    });
-
-    const [jsCoverage, cssCoverage] = await Promise.all([
-        page.coverage.stopJSCoverage(),
-        page.coverage.stopCSSCoverage()
-    ]);
-    await page.close();
-
-    const coverageList = [... jsCoverage, ... cssCoverage];
-
-    const v8 = await attachCoverageReport(coverageList, test.info(), {
-        
-    });
-    console.log(v8.summary);
-
-});
-```
 
 ![](/docs/v8.gif)
-
-### V8 to Istanbul
-Take V8 coverage data and convert it to Istanbul's coverage format. The Istanbul HTML report will be generated. 
-```js
-const report = await attachCoverageReport(coverageList, test.info(), {
-    reports: "html"
-});
-```
-
-### Istanbul vs V8
-- [Compare Istanbul, V8 and V8 to Istanbul Reports](https://github.com/cenfun/monocart-coverage-reports#compare-reports)
-- [Compare Istanbul and V8 Workflows](https://github.com/cenfun/monocart-coverage-reports#compare-workflows)
 
 ### Global Coverage Report
 The global coverage report will not be attached to any test case, but will merge all coverages into one global report after all the tests are finished. 
@@ -739,13 +653,14 @@ module.exports = {
 ```
 - It is recommended to use [automatic fixtures](https://playwright.dev/docs/test-fixtures#automatic-fixtures) to add coverage for each test:
 ```js
-// fixtures.js for v8
+// fixtures.js for v8 coverage
 import { test as testBase, expect } from '@playwright/test';
 import { addCoverageReport } from 'monocart-reporter';
 
 const test = testBase.extend({
     autoTestFixture: [async ({ page }, use) => {
 
+        // NOTE: it depends on your project name
         const isChromium = test.info().project.name === 'Desktop Chromium';
 
         // console.log('autoTestFixture setup...');
@@ -782,12 +697,20 @@ const test = testBase.extend({
 export { test, expect };
 ```
 
+### Coverage Options
+- Default [options](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
+- More Introduction [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
+
+### Istanbul vs V8
+- [Compare Istanbul, V8 and V8 to Istanbul Reports](https://github.com/cenfun/monocart-coverage-reports#compare-reports)
+- [Compare Istanbul and V8 Workflows](https://github.com/cenfun/monocart-coverage-reports#compare-workflows)
+
 ### Coverage Examples
 - For Playwright component testing:
     - [playwright-ct-vue](https://github.com/cenfun/playwright-ct-vue)
     - [playwright-ct-react](https://github.com/cenfun/playwright-ct-react)
     - [playwright-ct-svelte](https://github.com/cenfun/playwright-ct-svelte)
-- [playwright-nextjs-coverage-example](https://github.com/michaelhays/playwright-nextjs-coverage-example)
+- [nextjs-with-playwright](https://github.com/cenfun/nextjs-with-playwright)
 - [code-coverage-with-monocart-reporter](https://github.com/edumserrano/playwright-adventures/blob/main/demos/code-coverage-with-monocart-reporter/) 
 
 ## Attach Network Report
