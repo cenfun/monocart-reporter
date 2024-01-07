@@ -24,10 +24,10 @@
     * [Custom Columns](#custom-columns) (Extra properties for suite/case/step)
         - [Column Formatter](#column-formatter)
         - [Searchable Fields](#searchable-fields)
+    * [Custom Fields in Comments](#custom-fields-in-comments)
     * [Custom Data Visitor](#custom-data-visitor) (Extra data collection for suite/case/step)
         - [Collect Data from the Title](#collect-data-from-the-title)
         - [Collect Data from the Annotations](#collect-data-from-the-annotations)
-        - [Collect Data from the Comments](#collect-data-from-the-comments) (Recommended)
         - [Remove Secrets and Sensitive Data](#remove-secrets-and-sensitive-data)
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
@@ -164,7 +164,10 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 
     // rows data handler (suite, case and step)
     visitor: null,
-    // visitor: (data, metadata, collect) => {},
+    // visitor: (data, metadata) => {},
+
+    // enable/disable custom fields in comments. Defaults to true.
+    customFieldsInComments: true,
 
     // onEnd hook
     onEnd: null
@@ -299,103 +302,16 @@ module.exports = {
 };
 ```
 
-### Custom Data Visitor
-The `visitor` function will be executed for each row item (suite, case and step). Arguments:
-- `data` data item (suite/case/step) for reporter, you can rewrite some of its properties or add more
-- `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
-- `collect` see [collect data from the comments](#collect-data-from-the-comments)
-
-#### Collect Data from the Title
-For example, we want to parse out the jira key from the title:
-```js
-test('[MCR-123] collect data from the title', () => {
-
-});
-```
-You can simply use regular expressions to parse and get jira key:
-```js
-// playwright.config.js
-module.exports = {
-    reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            visitor: (data, metadata, collect) => {
-                // [MCR-123] collect data from the title
-                const matchResult = metadata.title.match(/\[(.+)\]/);
-                if (matchResult && matchResult[1]) {
-                    data.jira = matchResult[1];
-                }
-            }
-        }]
-    ]
-};
-```
-multiple matches example: [collect-data](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/collect-data)
-
-#### Collect Data from the Annotations
-It should be easier than getting from title. see [custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) via `test.info().annotations`
-```js
-test('collect data from the annotations', () => {
-    test.info().annotations.push({
-        type: "jira",
-        description: "MCR-123"
-    })
-});
-```
-```js
-// playwright.config.js
-module.exports = {
-    reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            visitor: (data, metadata, collect) => {
-                // collect data from the annotations
-                if (metadata.annotations) {
-                    const jiraItem = metadata.annotations.find((item) => item.type === 'jira');
-                    if (jiraItem && jiraItem.description) {
-                        data.jira = jiraItem.description;
-                    }
-                }
-            }
-        }]
-    ]
-};
-```
-
-#### Collect Data from the Comments
+### Custom Fields in Comments
 > The code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. 
-- First, add the collection of comments in the visitor. 
-> Note: If there are any parsing error messages in red lines, try other parser options like `sourceType: 'module'` or `plugins: ['typescript']` according to your situation.
+- First, enable option `customFieldsInComments` to `true`
 ```js
 // playwright.config.js
 module.exports = {
     reporter: [
         ['monocart-reporter', {  
-            name: "My Test Report",
-            outputFile: './test-results/report.html',
-            // additional custom visitor for columns
-            visitor: (data, metadata, collect) => {
-                
-                // auto collect data from the comments
-                const parserOptions = {
-                    // Indicate the mode the code should be parsed in.
-                    // Can be one of "script", "module", or "unambiguous". Defaults to "script".
-                    // sourceType: 'module',
-
-                    // enable typescript syntax.
-                    // plugins: ['typescript']
-
-                    // more https://babeljs.io/docs/babel-parser
-                };
-                const comments = collect.comments(parserOptions);
-                if (comments) {
-                    // Append all collected comments data to report data
-                    Object.assign(data, comments);
-                }
-
-            }
+            // enable/disable custom fields in comments. Defaults to true.
+            customFieldsInComments: true
         }]
     ]
 };
@@ -404,7 +320,7 @@ module.exports = {
 - Then, add comments to your tests
 > Note: Each comment item must start with `@` which is similar to [JSDoc](https://jsdoc.app/).
 
-For example, we want to add `owner` and `jira` or others for the cases, steps, and suites, or rewrite the step `title`
+For example, adding `owner` and `jira` to the cases, steps, and suites. or updating the value if the field exists like `title`
 ```js
 /**
  * for case
@@ -477,6 +393,72 @@ test.describe('suite title', () => {
 const { test, expect } = require('@playwright/test');
 ```
 
+### Custom Data Visitor
+The `visitor` function will be executed for each row item (suite, case and step). Arguments:
+- `data` data item (suite/case/step) for reporter, you can rewrite some of its properties or add more
+- `metadata` original data object from Playwright test, could be one of [Suite](https://playwright.dev/docs/api/class-suite), [TestCase](https://playwright.dev/docs/api/class-testcase) or [TestStep](https://playwright.dev/docs/api/class-teststep)
+
+#### Collect Data from the Title
+For example, we want to parse out the jira key from the title:
+```js
+test('[MCR-123] collect data from the title', () => {
+
+});
+```
+You can simply use regular expressions to parse and get jira key:
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            visitor: (data, metadata) => {
+                // [MCR-123] collect data from the title
+                const matchResult = metadata.title.match(/\[(.+)\]/);
+                if (matchResult && matchResult[1]) {
+                    data.jira = matchResult[1];
+                }
+            }
+        }]
+    ]
+};
+```
+multiple matches example: [collect-data](https://github.com/cenfun/monocart-reporter-test/tree/main/tests/collect-data)
+
+#### Collect Data from the Annotations
+It should be easier than getting from title. see [custom annotations](https://playwright.dev/docs/test-annotations#custom-annotations) via `test.info().annotations`
+```js
+test('collect data from the annotations', () => {
+    test.info().annotations.push({
+        type: "jira",
+        description: "MCR-123"
+    })
+});
+```
+```js
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            visitor: (data, metadata) => {
+                // collect data from the annotations
+                if (metadata.annotations) {
+                    const jiraItem = metadata.annotations.find((item) => item.type === 'jira');
+                    if (jiraItem && jiraItem.description) {
+                        data.jira = jiraItem.description;
+                    }
+                }
+            }
+        }]
+    ]
+};
+```
+
+
+
 #### Remove Secrets and Sensitive Data
 > The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the report data with the string replacement in `visitor` function.
 ```js
@@ -486,7 +468,7 @@ module.exports = {
         ['monocart-reporter', {  
             name: "My Test Report",
             outputFile: './test-results/report.html',
-            visitor: (data, metadata, collect) => {
+            visitor: (data, metadata) => {
                 const mySecrets = [process.env.PASSWORD, process.env.TOKEN];
                 mySecrets.forEach((secret) => {
                     // remove from title

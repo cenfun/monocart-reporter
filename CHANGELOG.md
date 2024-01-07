@@ -1,3 +1,21 @@
+* 2.2.0
+  - (Breaking Change) new option `customFieldsInComments: true/false` instead of calling API `collect.comments(parserOptions)` in `visitor`. Migration: 
+    ```js
+    {
+      customFieldsInComments: true,
+
+      // remove following, no need anymore
+      visitor: (data, metadata, collect) => {
+        const parserOptions = {
+        };
+        const comments = collect.comments(parserOptions);
+        if (comments) {
+            Object.assign(data, comments);
+        }
+      }
+
+    }
+    ```
 
 * 2.1.1
   - fixed logs undefined issue

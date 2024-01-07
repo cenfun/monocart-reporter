@@ -59,11 +59,11 @@ export type MonocartReporterOptions = {
     // columns: (defaultColumns) => {},
 
     // rows data handler (suite, case and step)
-    visitor?: (data: any, metadata: any, collect: {
-        //ParserOptions https://github.com/babel/babel/blob/main/packages/babel-parser/typings/babel-parser.d.ts
-        comments?: (parserOptions: any) => void
-    }) => void,
-    // visitor: (data, metadata, collect) => {},
+    visitor?: (data: any, metadata: any) => void,
+    // visitor: (data, metadata) => {},
+
+    // enable/disable custom fields in comments. Defaults to true.
+    customFieldsInComments?: boolean,
 
     // onEnd hook
     onEnd?: (reportData: object, capability: {

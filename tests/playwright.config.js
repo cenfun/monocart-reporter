@@ -280,23 +280,7 @@ module.exports = {
             },
 
             // additional custom visitor for columns
-            visitor: (data, metadata, collect) => {
-                // auto collect data from the comments
-                const parserOptions = {
-                    // Indicate the mode the code should be parsed in.
-                    // Can be one of "script", "module", or "unambiguous". Defaults to "script".
-                    // sourceType: 'module',
-
-                    // enable typescript syntax.
-                    // plugins: ['typescript']
-
-                    // more https://babeljs.io/docs/babel-parser
-                };
-                const comments = collect.comments(parserOptions);
-                if (comments) {
-                    // Append all collected comments data to report data
-                    Object.assign(data, comments);
-                }
+            visitor: (data, metadata) => {
 
                 // remove secrets and sensitive data
                 if (data.type === 'step') {
