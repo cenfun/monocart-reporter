@@ -645,7 +645,7 @@ module.exports = {
     ]
 };
 ```
-- It is recommended to use [automatic fixtures](https://playwright.dev/docs/test-fixtures#automatic-fixtures) to add coverage for each test:
+- Using [automatic fixtures](https://playwright.dev/docs/test-fixtures#automatic-fixtures) to add coverage for each test:
 ```js
 // fixtures.js for v8 coverage
 import { test as testBase, expect } from '@playwright/test';
@@ -690,8 +690,8 @@ const test = testBase.extend({
 });
 export { test, expect };
 ```
-- Take coverage on global teardown. 
-> It can be used to add the server side coverage report. For example, a Node.js web server start at the beginning of the test with the env `NODE_V8_COVERAGE=dir`, the V8 coverage data will be saved to `dir` with calling API `v8.takeCoverage()` manually or terminating server gracefully. On global teardown, reading all from `dir` and adding them to global coverage report. For Node.js, the coverage data requires appending source manually. 
+- Take server side coverage on global teardown
+> For example, a Node.js web server start at the beginning of the test with the env `NODE_V8_COVERAGE=dir`, the V8 coverage data will be saved to `dir` with calling API `v8.takeCoverage()` manually or terminating server gracefully. On global teardown, reading all from `dir` and adding them to global coverage report. For Node.js, the V8 coverage data requires appending source manually.
 ```js
 // global-teardown.js
 import fs from 'fs';
@@ -710,10 +710,9 @@ export default async (config) => {
         let coverageList = json.result;
         coverageList = coverageList.filter((entry) => entry.url && entry.url.startsWith('file:'));
 
-        // appending source content
+        // appending source
         coverageList.forEach((entry) => {
-            const filePath = fileURLToPath(entry.url);
-            entry.source = fs.readFileSync(filePath).toString('utf8');
+            entry.source = fs.readFileSync(fileURLToPath(entry.url)).toString('utf8');
         });
 
         // there is no test info on teardown, just mock one with required config
