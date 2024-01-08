@@ -1,3 +1,6 @@
+* 2.2.1
+  - updated dependencies
+
 * 2.2.0
   - (Breaking) new option `customFieldsInComments: true/false` instead of calling API `collect.comments(parserOptions)` in `visitor`. Migration: 
     ```js

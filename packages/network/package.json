@@ -9,7 +9,7 @@
     "dependencies": {
         "monocart-code-viewer": "1.0.13",
         "monocart-common": "~2.2.0",
-        "monocart-formatter": "^2.2.1",
+        "monocart-formatter": "^2.3.0",
         "turbogrid": "^3.0.12"
     },
     "devDependencies": {}

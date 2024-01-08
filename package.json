@@ -47,11 +47,11 @@
         "koa": "~2.15.0",
         "koa-static-resolver": "~1.0.4",
         "lz-utils": "~2.0.1",
-        "monocart-coverage-reports": "~2.0.9",
-        "monocart-formatter": "^2.2.1",
+        "monocart-coverage-reports": "~2.0.10",
+        "monocart-formatter": "~2.3.0",
         "nodemailer": "~6.9.8",
-        "open": "~10.0.2",
-        "turbogrid": "^3.0.12"
+        "open": "~10.0.3",
+        "turbogrid": "~3.0.12"
     },
     "devDependencies": {
         "@playwright/test": "^1.40.1",
