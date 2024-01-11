@@ -1,13 +1,5 @@
 import type { TestInfo } from "@playwright/test"
-import type { Reporter } from '@playwright/test/reporter';
-
 import type {
-    CoverageReportOptions,
-    CoverageResults,
-    AddedResults
-} from "monocart-coverage-reports";
-
-export type {
     CoverageReportOptions,
     ReportDescription,
     V8CoverageEntry,
@@ -18,9 +10,22 @@ export type {
     CoverageFile,
     CoverageRange,
     AddedResults
-} from 'monocart-coverage-reports';
+} from "monocart-coverage-reports";
 
-export default class MonocartReporter implements Reporter { }
+export type {
+    TestInfo,
+
+    CoverageReportOptions,
+    ReportDescription,
+    V8CoverageEntry,
+    Watermarks,
+    CoverageResults,
+    CoverageSummary,
+    MetricsSummary,
+    CoverageFile,
+    CoverageRange,
+    AddedResults
+}
 
 export type MonocartReporterOptions = {
     // the report name
