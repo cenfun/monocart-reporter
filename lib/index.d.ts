@@ -1,7 +1,26 @@
-import { TestInfo } from "@playwright/test"
+import type { TestInfo } from "@playwright/test"
+import type { Reporter } from '@playwright/test/reporter';
 
-import type { CoverageReportOptions } from "monocart-coverage-reports";
-export * from 'monocart-coverage-reports';
+import type {
+    CoverageReportOptions,
+    CoverageResults,
+    AddedResults
+} from "monocart-coverage-reports";
+
+export type {
+    CoverageReportOptions,
+    ReportDescription,
+    V8CoverageEntry,
+    Watermarks,
+    CoverageResults,
+    CoverageSummary,
+    MetricsSummary,
+    CoverageFile,
+    CoverageRange,
+    AddedResults
+} from 'monocart-coverage-reports';
+
+export default class MonocartReporter implements Reporter { }
 
 export type MonocartReporterOptions = {
     // the report name
@@ -107,13 +126,13 @@ export function attachAuditReport(
 export function addCoverageReport(
     coverageData: any[] | any,
     testInfo: TestInfo
-): Promise<any | void>;
+): Promise<AddedResults>;
 
 export function attachCoverageReport(
     coverageData: any[] | any,
     testInfo: TestInfo,
     options?: CoverageReportOptions
-): Promise<any>;
+): Promise<CoverageResults>;
 
 
 /**
