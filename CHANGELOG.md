@@ -1,3 +1,6 @@
+* 2.2.2
+  - updated types
+
 * 2.2.1
   - updated dependencies
 
