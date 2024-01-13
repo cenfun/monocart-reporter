@@ -174,12 +174,27 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 > The [Trace Viewer](https://trace.playwright.dev/) requires that the trace file must be loaded over the http:// or https:// protocols without [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS) issue, try following start a local web server:
 ```sh
 # serve and open report
-npx monocart show-report <your-outputFile-path>
+npx monocart show-report <path-to-report>
 
 # serve report
-npx monocart serve-report <your-outputFile-path>
+npx monocart serve-report <path-to-report>
 ```
-Or customize your own trace viewer url with option `traceViewerUrl` defaults to  `https://trace.playwright.dev/?trace={traceUrl}`
+It works with `http://localhost:port/` or `http://127.0.0.1:port/`
+But to successfully load from `IP` or `domain`, you must start web server with `https`:
+```sh
+npx monocart show-report <path-to-report> --ssl <path-to-key,path-to-cert>
+# For local debug, you can create and install local CA with 'mkcert', see: https://mkcert.dev
+```
+Or customize your own trace viewer url with option `traceViewerUrl`
+```js
+// reporter options
+{
+    name: "My Test Report",
+    outputFile: './test-results/report.html',
+    // defaults to 'https://trace.playwright.dev/?trace={traceUrl}'
+    traceViewerUrl: 'https://your-own-trace-viewer-url/?trace={traceUrl}'
+}
+```
 
 ## Custom Fields Report
 You can add custom fields to the report. for example: Owner, JIRA Key etc.

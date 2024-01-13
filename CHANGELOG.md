@@ -1,3 +1,6 @@
+* 2.2.3
+  - supports https for monocart CLI
+
 * 2.2.2
   - updated types
 
