@@ -60,7 +60,7 @@
         "eslint": "^8.56.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^7.1.0",
-        "eslint-plugin-vue": "^9.20.0",
+        "eslint-plugin-vue": "^9.20.1",
         "stylelint": "^15.11.0",
         "stylelint-config-plus": "^1.0.4",
         "vine-ui": "^3.1.13"
