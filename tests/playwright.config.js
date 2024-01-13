@@ -1,3 +1,7 @@
+// for local test
+process.env.PASSWORD = 'my-password';
+process.env.TOKEN = 'my-token';
+
 module.exports = {
 
     globalSetup: './common/global-setup.js',

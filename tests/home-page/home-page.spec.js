@@ -81,7 +81,7 @@ test('test locator fill', async ({ page }, testInfo) => {
 
 test('secrets and sensitive data', async ({ page }, testInfo) => {
     await HomePage.mockPageGoto(page, 'https://www.npmjs.com/login');
-    await page.locator('input[type=password]').type(process.env.PASSWORD);
+    await page.locator('input[type=password]').fill(process.env.PASSWORD);
 
     const screenshot = await page.screenshot();
     await testInfo.attach('screenshot', {
