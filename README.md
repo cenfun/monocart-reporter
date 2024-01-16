@@ -179,11 +179,11 @@ npx monocart show-report <path-to-report>
 # serve report
 npx monocart serve-report <path-to-report>
 ```
-It works with `http://localhost:port/` or `http://127.0.0.1:port/`
-But to successfully load from other `IP` or `domain`, you must start web server with `https`:
+It works with `http://localhost:port/` or `http://127.0.0.1:port/`, but to successfully load from other `IP` or `domain`, you must start web server with `https`:
 ```sh
 npx monocart show-report <path-to-report> --ssl <path-to-key,path-to-cert>
-# For local debug, you can create and install local CA with 'mkcert', see: https://mkcert.dev
+# For example: npx monocart show-report test-results/index.html --ssl ssl/key.pem,ssl/cert.pem
+# You can create and install local CA with 'mkcert', see: https://mkcert.dev
 ```
 Or customize your own trace viewer url with option `traceViewerUrl`
 ```js
