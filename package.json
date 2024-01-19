@@ -51,10 +51,10 @@
         "monocart-formatter": "~2.3.0",
         "nodemailer": "~6.9.8",
         "open": "~10.0.3",
-        "turbogrid": "~3.0.12"
+        "turbogrid": "^3.0.13"
     },
     "devDependencies": {
-        "@playwright/test": "^1.40.1",
+        "@playwright/test": "^1.41.0",
         "axios": "^1.6.5",
         "dotenv": "^16.3.1",
         "eslint": "^8.56.0",
