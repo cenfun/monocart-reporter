@@ -76,7 +76,7 @@ const getV8Summary = (report, list) => {
 watchEffect(() => {
     const report = props.data.report;
     if (report && report.files && report.summary) {
-        d.files = Util.NF(report.files.length);
+        d.files = Util.NF(report.files);
         d.type = report.type;
         const list = [];
         if (report.type === 'istanbul') {
@@ -99,6 +99,8 @@ watchEffect(() => {
         :href="props.data.path"
         target="_blank"
       >{{ props.data.name }}</a>
+
+      <span class="mcr-coverage-type">{{ d.type }}</span>
     </AttachmentHead>
     <div class="mcr-attachment-body">
       <table>
@@ -153,6 +155,12 @@ watchEffect(() => {
 
 <style lang="scss">
 .mcr-attachment-coverage {
+    .mcr-coverage-type {
+        padding: 0 3px;
+        border-radius: 3px;
+        background-color: #eee;
+    }
+
     table {
         border-bottom: 1px solid #eee;
     }
