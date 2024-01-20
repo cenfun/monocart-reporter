@@ -1,3 +1,8 @@
+
+* 2.2.4
+  - updated dependencies
+  - fixed json report issue
+
 * 2.2.3
   - supports https for monocart CLI
 

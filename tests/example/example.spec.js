@@ -163,6 +163,9 @@ test.describe('parent group', () => {
 
     });
 
+    /**
+     * @verify failed
+     */
     test('@sanity case steps @slow', async () => {
 
         const result1 = await test.step('step 1', async () => {
@@ -274,6 +277,7 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
         /**
          * @owner Mark
          * @jira MCR-16936
+         * @verify failed
          */
 
 
@@ -291,11 +295,17 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
             expect('passed').toBe('failed');
         });
 
+        /**
+         * @verify failed
+         */
         test('throw string error', () => {
             // eslint-disable-next-line no-throw-literal
             throw 'Invalid error';
         });
 
+        /**
+         * @verify failed
+         */
         test('case fail - not yet ready', () => {
 
             test.fail();
@@ -328,6 +338,9 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
 
 test.describe('next group', () => {
 
+    /**
+     * @verify flaky
+     */
     test('flaky @todo', () => {
         const testInfo = test.info();
         console.log(`retry: ${testInfo.retry}`);
@@ -335,6 +348,9 @@ test.describe('next group', () => {
 
     });
 
+    /**
+     * @verify failed
+     */
     test('test timeout 1000', async () => {
         test.setTimeout(1000);
         await new Promise((resolve) => {
@@ -342,14 +358,23 @@ test.describe('next group', () => {
         });
     });
 
+    /**
+     * @verify random
+     */
     test('random @passed    @failed@flaky', () => {
         expect(Math.random()).toBeLessThan(0.5);
     });
 
+    /**
+     * @verify random
+     */
     test('random @passed or @flaky', () => {
         expect(test.info().retry).toBe(Math.random() > 0.5 ? 1 : 0);
     });
 
+    /**
+     * @verify random
+     */
     test('random @passed or @skipped', () => {
         if (Math.random() > 0.5) {
             test.skip();

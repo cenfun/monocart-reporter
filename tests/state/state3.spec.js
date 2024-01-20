@@ -1,6 +1,9 @@
 const { test } = require('@playwright/test');
 const { useState } = require('monocart-reporter');
 
+/**
+ * @verify failed
+ */
 test('state test hang up', async () => {
 
     console.log('should failed');

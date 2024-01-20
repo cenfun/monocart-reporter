@@ -63,6 +63,7 @@ test('test home page', async ({ page, context }, testInfo) => {
 /**
  * @owner 大强
  * @annotations TODO
+ * @verify failed
  */
 test('test screenshot and video', async ({ page, context }, testInfo) => {
     const metadata = testInfo.config.metadata;
@@ -148,12 +149,17 @@ test.describe('group', () => {
 
 });
 
-
+/**
+ * @verify failed
+ */
 test('image comparison', async ({ page }) => {
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
     await expect(page).toHaveScreenshot();
 });
 
+/**
+ * @verify failed
+ */
 test('multiple soft comparisons', async ({ page }) => {
 
     test.info().attach('text/markdown:', {
@@ -169,6 +175,9 @@ test('multiple soft comparisons', async ({ page }) => {
     await expect.soft(page).toHaveScreenshot();
 });
 
+/**
+ * @verify failed
+ */
 test('text comparison', async ({ page }) => {
 
     // invalid

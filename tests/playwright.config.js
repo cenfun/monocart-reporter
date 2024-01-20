@@ -1,3 +1,5 @@
+const EC = require('eight-colors');
+
 // for local test
 process.env.PASSWORD = 'my-password';
 process.env.TOKEN = 'my-token';
@@ -310,7 +312,7 @@ module.exports = {
             customFieldsInComments: true,
 
             // async hook after report data generated
-            onEnd: async (reportData, capability) => {
+            onEnd: (reportData, capability) => {
                 // console.log('onEnd hook start');
 
                 // rename report filename
@@ -322,6 +324,25 @@ module.exports = {
                 // );
 
                 // console.log(reportData.summary);
+
+                console.log('check test ...');
+
+                const errMsg = [];
+                capability.forEach((row) => {
+                    if (row.type === 'case' && ['failed', 'flaky'].includes(row.caseType)) {
+                        if (row.verify === 'random') {
+                            return;
+                        }
+                        if (row.caseType !== row.verify) {
+                            errMsg.push(`Failed to verify: ${row.caseType} => ${row.verify} for test "${row.title}"`);
+                        }
+                    }
+                });
+
+                if (errMsg.length) {
+                    EC.logRed(errMsg.join('\n'));
+                    process.exit(1);
+                }
 
             }
         }]
