@@ -467,6 +467,7 @@ const init = async () => {
     state.title = reportData.name;
     state.date = reportData.dateH;
     state.duration = reportData.durationH;
+    state.mermaid = reportData.mermaid;
 
     initFlyoverSize();
 

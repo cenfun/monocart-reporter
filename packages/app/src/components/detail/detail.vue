@@ -542,6 +542,45 @@ const initDataList = () => {
 
 };
 
+const renderMermaid = async () => {
+    // console.log('renderMermaid');
+    await window.mermaid.run();
+};
+
+const loadMermaid = microtask(() => {
+    // console.log('loadMermaid');
+
+    const mermaidScript = document.querySelector("script[id='mermaid']");
+    if (mermaidScript) {
+        renderMermaid();
+        return;
+    }
+
+    const mermaidOptions = state.mermaid;
+    if (!mermaidOptions) {
+        return;
+    }
+
+    const scriptSrc = mermaidOptions.scriptSrc;
+    if (!scriptSrc) {
+        return;
+    }
+
+    const config = {
+        ... mermaidOptions.config
+    };
+    // console.log(config);
+
+    const script = document.createElement('script');
+    script.src = scriptSrc;
+    script.onload = () => {
+        script.setAttribute('id', 'mermaid');
+        window.mermaid.initialize(config);
+        renderMermaid();
+    };
+    document.body.appendChild(script);
+});
+
 const updateCase = microtask(() => {
     const caseItem = state.flyoverData;
 
@@ -552,6 +591,10 @@ const updateCase = microtask(() => {
     data.caseId = caseItem.id;
 
     initDataList();
+
+    if (state.mermaidEnabled) {
+        loadMermaid();
+    }
 
 });
 

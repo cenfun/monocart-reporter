@@ -85,14 +85,24 @@ const titleFormatter = (value) => {
 };
 
 // ===========================================================================
-// annotations markdown html
+// markdown html
 
 // add target="_blank" for link
 const renderer = new marked.Renderer();
-renderer.link = function(href, title, text) {
-    const link = marked.Renderer.prototype.link.apply(this, arguments);
-    return link.replace('<a', '<a target="_blank"');
+renderer.link = function() {
+    const html = marked.Renderer.prototype.link.apply(this, arguments);
+    return html.replace('<a', '<a target="_blank"');
 };
+
+renderer.code = function(code, language) {
+    if (state.mermaid && language === 'mermaid') {
+        state.mermaidEnabled = true;
+        return `<pre class="mermaid">${code}</pre>`;
+    }
+    const html = marked.Renderer.prototype.code.apply(this, arguments);
+    return html;
+};
+
 marked.setOptions({
     renderer: renderer
 });

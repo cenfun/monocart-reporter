@@ -25,7 +25,7 @@
         "test-network": "npm run link && npx playwright test tests/report-network -c tests",
         "test-state": "npm run link && npx playwright test tests/state -c tests",
         "build": "sf lint && sf b -p",
-        "dev": "sf d reporter -w .temp/monocart/index.json",
+        "dev": "sf d app -w .temp/monocart/index.json",
         "patch": "npm run build && sf publish patch -r",
         "mock-download": "node ./scripts/mock-download.js",
         "mock-serve": "node ./scripts/mock-serve.js"

@@ -1,6 +1,18 @@
 /**
  * add extra information for file
  * @owner FO
+ * @description ## Gantt diagram for Monocart Reporter
+```mermaid
+gantt
+dateFormat  YYYY-MM-DD
+title Adding GANTT diagram to mermaid
+excludes weekdays 2014-01-10
+section A section
+Completed task            :done,    des1, 2014-01-06,2014-01-08
+Active task               :active,  des2, 2014-01-09, 3d
+Future task               :         des3, after des2, 5d
+Future task2               :         des4, after des3, 5d
+```
  */
 
 const { test, expect } = require('@playwright/test');
@@ -207,6 +219,26 @@ test.describe('parent group', () => {
             await new Promise((resolve) => {
                 setTimeout(resolve, 10);
             });
+        });
+
+        /**
+         * @description ## Sequence diagram for Monocart Reporter
+```mermaid
+flowchart LR
+
+A[Hard] -->|Text| B(Round)
+B --> C{Decision}
+C -->|One| D[Result 1]
+C -->|Two| E[Result 2]
+```
+```js
+const a = 1;
+console.log(a);
+// default mermaid cdn: https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js
+```
+         */
+        test('@markdown Description with mermaid', async () => {
+
         });
 
         /**

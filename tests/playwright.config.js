@@ -96,6 +96,14 @@ module.exports = {
 
             // logging: 'debug',
 
+            mermaid: {
+                scriptSrc: 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
+                // mermaid config https://mermaid.js.org/config/schema-docs/config.html
+                config: {
+                    startOnLoad: false
+                }
+            },
+
             timezoneOffset: 0,
 
             // inline: false,
