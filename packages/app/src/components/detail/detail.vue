@@ -807,4 +807,11 @@ const onFocus = (e) => {
     }
 }
 
+.markdown-body {
+    margin: 0;
+
+    .mermaid {
+        margin: 0;
+    }
+}
 </style>

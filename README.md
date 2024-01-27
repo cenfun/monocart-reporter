@@ -25,6 +25,7 @@
         - [Column Formatter](#column-formatter)
         - [Searchable Fields](#searchable-fields)
     * [Custom Fields in Comments](#custom-fields-in-comments)
+        - [Create Diagrams and Visualizations with Mermaid](#create-diagrams-and-visualizations-with-mermaid)
     * [Custom Data Visitor](#custom-data-visitor)
         - [Collect Data from the Title](#collect-data-from-the-title)
         - [Collect Data from the Annotations](#collect-data-from-the-annotations)
@@ -401,6 +402,46 @@ test.beforeEach(() => {
     
 });
 ```
+
+#### Create Diagrams and Visualizations with [Mermaid](https://mermaid.js.org/)
+- Enable Mermaid 
+```js
+// playwright.config.js
+module.exports = {
+     reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            mermaid: {
+                // mermaid script url, using mermaid CDN: https://www.jsdelivr.com/package/npm/mermaid
+                scriptSrc: 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
+                // mermaid config: https://mermaid.js.org/config/schema-docs/config.html
+                config: {
+                    startOnLoad: false
+                }
+            }
+        }]
+    ]
+};
+```
+- Write Mermaid code in markdown:
+````js
+/**
+ * @description Sequence diagram for Monocart Reporter
+```mermaid
+flowchart LR
+
+A[Hard] -->|Text| B(Round)
+B --> C{Decision}
+C -->|One| D[Result 1]
+C -->|Two| E[Result 2]
+```
+*/
+test('case description', () => {
+
+});
+````
+
 
 ### Custom Data Visitor
 The `visitor` function will be executed for each row item (suite, case and step). Arguments:

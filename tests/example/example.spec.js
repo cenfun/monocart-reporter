@@ -1,11 +1,11 @@
 /**
  * add extra information for file
  * @owner FO
- * @description ## Gantt diagram for Monocart Reporter
+ * @description
 ```mermaid
 gantt
 dateFormat  YYYY-MM-DD
-title Adding GANTT diagram to mermaid
+title Gantt diagram for Monocart Reporter
 excludes weekdays 2014-01-10
 section A section
 Completed task            :done,    des1, 2014-01-06,2014-01-08
@@ -222,7 +222,7 @@ test.describe('parent group', () => {
         });
 
         /**
-         * @description ## Sequence diagram for Monocart Reporter
+         * @description Sequence diagram for Monocart Reporter
 ```mermaid
 flowchart LR
 
