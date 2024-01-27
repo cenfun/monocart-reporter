@@ -1,3 +1,6 @@
+* 2.3.0
+  - supports mermaid
+
 * 2.2.5
   - updated dependencies
 
