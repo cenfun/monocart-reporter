@@ -1,3 +1,6 @@
+* 2.3.1
+  - updated coverage reports
+
 * 2.3.0
   - supports mermaid
 
