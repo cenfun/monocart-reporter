@@ -1,6 +1,6 @@
 {
     "name": "monocart-network",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "main": "dist/monocart-network.js",
     "files": [
         "dist"
@@ -8,7 +8,7 @@
     "license": "MIT",
     "dependencies": {
         "monocart-code-viewer": "~1.1.0",
-        "monocart-common": "~2.3.0",
+        "monocart-common": "~2.3.1",
         "monocart-formatter": "~2.3.1",
         "turbogrid": "~3.0.13"
     },
