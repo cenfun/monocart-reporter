@@ -47,7 +47,7 @@
         "koa": "~2.15.0",
         "koa-static-resolver": "~1.0.5",
         "lz-utils": "~2.0.2",
-        "monocart-coverage-reports": "~2.4.1",
+        "monocart-coverage-reports": "~2.4.2",
         "monocart-formatter": "~2.3.1",
         "nodemailer": "~6.9.9",
         "open": "~10.0.3",
