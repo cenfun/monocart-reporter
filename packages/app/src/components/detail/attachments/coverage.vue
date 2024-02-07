@@ -64,6 +64,7 @@ const getV8Summary = (report, list) => {
 
     const map = {
         bytes: 'Bytes',
+        statements: 'Statements',
         functions: 'Functions',
         branches: 'Branches',
         lines: 'Lines'
