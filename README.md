@@ -569,7 +569,7 @@ module.exports = {
 ```
 
 ## Metadata
-* add `metadata` to config
+* add global `metadata` to config
 ```js
 // playwright.config.js
 module.exports = {
@@ -602,6 +602,25 @@ export default async (config) => {
     const chromiumVersion = await browser.version();
     metadata.chromiumVersion = chromiumVersion;
 };
+```
+* Project level `metadata`
+```js
+// playwright.config.js
+module.exports = {
+    projects: [
+        {
+            name: 'Desktop Chromium',
+            use: {
+                browserName: 'chromium'
+            },
+            metadata: {
+                projectData: 'project level metadata',
+                owner: 'PO',
+                link: 'https://github.com/cenfun/monocart-reporter'
+            }
+        }
+    ]
+}
 ```
 
 ## Trend Chart
