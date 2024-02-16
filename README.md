@@ -569,7 +569,8 @@ module.exports = {
 ```
 
 ## Metadata
-* add global `metadata` to config
+> All metadata will be listed in the report in a key/value format.
+- Global level `metadata`
 ```js
 // playwright.config.js
 module.exports = {
@@ -591,19 +592,8 @@ module.exports = {
     ]
 };
 ```
-* collect metadata in global setup
-```js
-// ./common/global-setup.js
-import { chromium } from '@playwright/test';
-export default async (config) => {
-    const metadata = config.metadata;
-    // collect data and save to metadata
-    const browser = await chromium.launch();
-    const chromiumVersion = await browser.version();
-    metadata.chromiumVersion = chromiumVersion;
-};
-```
-* Project level `metadata`
+
+- Project level `metadata`
 ```js
 // playwright.config.js
 module.exports = {
@@ -622,6 +612,38 @@ module.exports = {
     ]
 }
 ```
+
+- Collect metadata in [global setup or teardown](https://playwright.dev/docs/test-global-setup-teardown)
+```js
+// ./common/global-setup.js
+import { chromium } from '@playwright/test';
+export default async (config) => {
+    const metadata = config.metadata;
+    // collect data and save to global metadata
+    const browser = await chromium.launch();
+    const chromiumVersion = await browser.version();
+    metadata.chromiumVersion = chromiumVersion;
+};
+```
+
+- Collect metadata in a test
+    > Playwright Test runs tests in [parallel](https://playwright.dev/docs/test-parallel) with isolate test data by default, so we need to utilize [global state management](#global-state-management) to collect metadata in a test.
+
+    - Enable global state, see [Setup Global State](#setup-global-state)
+    - Update global state in a test
+    ```js
+    const { test } = require('@playwright/test');
+    const { useState } = require('monocart-reporter');
+
+    const state = useState({
+        // port: 8130
+    });
+
+    test('test metadata url', async ({ page }) => {
+        const url = await page.evaluate(() => window.location.href);
+        await state.set('url', url);
+    });
+    ```
 
 ## Trend Chart
 > Note: The trend chart requires historical data generally stored in the server database. There is a serverless solution which is connecting and collecting historical trend data from previous report data before test every time.
