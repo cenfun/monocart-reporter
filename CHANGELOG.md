@@ -1,3 +1,6 @@
+* 2.3.2
+  - added warning for old collection comments
+
 * 2.3.1
   - updated coverage reports
 

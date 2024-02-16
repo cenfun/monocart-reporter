@@ -294,7 +294,7 @@ module.exports = {
             },
 
             // additional custom visitor for columns
-            visitor: (data, metadata) => {
+            visitor: (data, metadata, collect) => {
 
                 // remove secrets and sensitive data
                 if (data.type === 'step') {
@@ -312,6 +312,12 @@ module.exports = {
                     // locator.type(input[type=password], ***)
                     // apiRequestContext.get(https://api.npmjs.org/?token=***)
 
+                }
+
+                // test issue #91
+                const comments = collect.comments();
+                if (comments) {
+                    Object.assign(data, comments);
                 }
 
 
