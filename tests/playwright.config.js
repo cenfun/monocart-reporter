@@ -356,6 +356,8 @@ module.exports = {
                 if (errMsg.length) {
                     EC.logRed(errMsg.join('\n'));
                     process.exit(1);
+                } else {
+                    EC.logGreen('check test done');
                 }
 
             }
