@@ -1,3 +1,6 @@
+* 2.3.3
+  - updated dependencies
+
 * 2.3.2
   - added warning for old collection comments
 
