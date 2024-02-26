@@ -1,5 +1,6 @@
 * 2.3.4
   - fixed dependency `open` to support Node 16
+  - updated `mcr` version to support `all` for adding empty coverage for all files
 
 * 2.3.3
   - updated dependencies

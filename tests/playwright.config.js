@@ -111,16 +111,25 @@ module.exports = {
             // global coverage
             coverage: {
 
+                name: 'My global coverage report name',
+
                 sourceFilter: (sourcePath) => sourcePath.search(/src\//) !== -1,
 
                 // sourcePath: (sp) => {
                 //     return `pre-dir/${sp}`;
                 // },
 
+                sourcePath: {
+                    'localhost-8090/': 'scripts/mock/',
+                    'coverage-v8/test/': 'scripts/'
+                },
+
+                all: {
+                    dir: ['scripts/mock/src']
+                },
+
                 // do not show the report link
                 // reportPath: '',
-
-                name: 'My global coverage report name',
 
                 // reports: 'html',
                 lcov: true,
