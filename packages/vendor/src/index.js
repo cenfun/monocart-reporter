@@ -3,6 +3,7 @@ import { codeFrameColumns } from '@babel/code-frame';
 import WebSocket, { WebSocketServer } from 'ws';
 import sanitize from 'sanitize-filename';
 import { program } from 'commander';
+import open from 'open';
 
 export {
     StackUtils,
@@ -10,5 +11,6 @@ export {
     WebSocket,
     WebSocketServer,
     sanitize,
-    program
+    program,
+    open
 };

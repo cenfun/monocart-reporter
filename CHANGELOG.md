@@ -1,3 +1,6 @@
+* 2.3.4
+  - fixed dependency `open` to support Node 16
+
 * 2.3.3
   - updated dependencies
 

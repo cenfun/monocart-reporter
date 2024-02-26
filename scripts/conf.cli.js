@@ -118,6 +118,13 @@ module.exports = {
         enable: 'lint + build'
     },
 
+    outdate: {
+        exclude: [
+            'stylelint',
+            'open'
+        ]
+    },
+
     build: {
 
         vendors: ['common', 'app', 'network'],

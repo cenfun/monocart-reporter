@@ -5,3 +5,4 @@
 /lib/packages
 /.env
 /scripts/mock/demo/dist/
+/packages/*/node_modules
