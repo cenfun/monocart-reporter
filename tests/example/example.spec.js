@@ -427,6 +427,48 @@ test.describe('next group', () => {
 
 });
 
+test.describe('new syntax for tag and annotation in playwright v1.42.0', {
+    // tag all tests in a group
+    tag: '@report',
+    // annotate all tests in a group
+    annotation: {
+        type: 'category', description: 'report'
+    }
+}, () => {
+
+    // Note that tags must start with @ symbol.
+    test('test @inline tag', {
+        tag: '@fast'
+    }, () => {});
+
+    test('test @inline tags', {
+        tag: ['@slow', '@new']
+    }, () => {});
+
+    // Annotate tests
+    test('test annotation', {
+        annotation: {
+            type: 'issue', description: 'https://github.com/microsoft/playwright/issues/23180'
+        }
+    }, ({ page, browser }) => {
+        // Runtime annotations
+        test.info().annotations.push({
+            type: 'browser version',
+            description: browser.version()
+        });
+
+    });
+
+    test('test annotations', {
+        annotation: [{
+            type: 'issue', description: 'https://github.com/microsoft/playwright/issues/23180'
+        }, {
+            type: 'performance', description: 'very slow test!'
+        }]
+    }, () => {});
+
+});
+
 test('same title', () => {
 
 });

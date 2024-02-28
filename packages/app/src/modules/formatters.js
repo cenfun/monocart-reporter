@@ -125,14 +125,13 @@ const markdownFormatter = (str, inline) => {
 // ===========================================================================
 
 const tagFormatter = (item) => {
-    const str = item.title;
+    const title = item.title;
 
     if (!Util.isTagItem(item)) {
-        return str;
+        return title;
     }
 
-    return str.replace(Util.tagPattern, function(all, before, key, after) {
-
+    const getTag = (key, before, after) => {
         const cls = ['mcr-tag'];
         if (before) {
             cls.push('mcr-tag-before');
@@ -152,13 +151,28 @@ const tagFormatter = (item) => {
                 list.push(` style="${Util.quoteAttr(Util.styleMap(style))}"`);
             }
             if (description) {
-                list.push(` title="${Util.quoteAttr(description)}"`);
+                list.push(` tooltip="${Util.quoteAttr(description)}"`);
             }
         }
 
         list.push(`>${key}</span>`);
 
         return list.join('');
+    };
+
+    // new syntax in playwright v1.42
+    if (item.tags) {
+        const len = item.tags.length;
+        return title + item.tags.map((it, i) => {
+            const key = `${it}`.slice(1);
+            const before = i === 0;
+            const after = i !== len - 1;
+            return getTag(key, before, after);
+        }).join('');
+    }
+
+    return title.replace(Util.tagPattern, function(all, before, key, after) {
+        return getTag(key, before, after);
     });
 };
 

@@ -76,6 +76,14 @@ const getSearchableValues = (rowItem, searchableAllKeys, searchableKeys) => {
             value = String(value);
         }
 
+        // new syntax in playwright v1.42
+        if (id === 'title' && rowItem.tags) {
+            // remove repeated tag in title
+            const list = rowItem.tags.filter((it) => !value.includes(it));
+            list.unshift(value);
+            value = list.join(' ');
+        }
+
         searchableValues.push({
             id,
             value
@@ -177,6 +185,8 @@ export default (rowItem) => {
     }
 
     const searchableValues = getSearchableValues(rowItem, searchableAllKeys, searchableKeys);
+
+    // console.log(searchableValues);
 
     const keywordList = keywords.split(/\s+/g);
 

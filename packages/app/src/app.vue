@@ -131,14 +131,14 @@ const stepHandler = (item) => {
     }
 };
 
-const initTagList = (tags) => {
-    state.tagMap = tags;
-    // tags and style
+const initTagList = (tagMap) => {
+    state.tagMap = tagMap;
+    // tag and style
     const tagList = [];
-    Object.keys(tags).forEach((tag) => {
+    Object.keys(tagMap).forEach((tag) => {
         tagList.push({
             name: tag,
-            ... tags[tag]
+            ... tagMap[tag]
         });
     });
 
@@ -755,6 +755,7 @@ window.addEventListener('message', (e) => {
             v-for="(item, i) of state.tagList"
             :key="i"
             :style="item.style"
+            :title="item.description"
             class="mcr-tag"
             @mousedown="onTagItemClick(item)"
           >
