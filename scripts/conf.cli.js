@@ -120,7 +120,6 @@ module.exports = {
 
     outdate: {
         exclude: [
-            'stylelint',
             'open'
         ]
     },
