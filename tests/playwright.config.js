@@ -335,7 +335,7 @@ module.exports = {
             customFieldsInComments: true,
 
             // async hook after report data generated
-            onEnd: (reportData, capability) => {
+            onEnd: (reportData, helper) => {
                 // console.log('onEnd hook start');
 
                 // rename report filename
@@ -348,10 +348,28 @@ module.exports = {
 
                 // console.log(reportData.summary);
 
+
+                // find a test by title
+                const myCase = helper.find((item, parent) => item.type === 'case' && item.title.includes('inline tag'));
+                console.log(myCase && myCase.title);
+
+                // find a suite by title
+                const mySuite = helper.find((item, parent) => item.type === 'suite' && item.title.includes('new syntax'));
+                console.log(mySuite && mySuite.title);
+
+                // filter failed cases
+                const failedCases = helper.filter((item, parent) => item.type === 'case' && item.caseType === 'failed');
+                console.log('failed cases', failedCases.map((it) => it.title).length);
+
+                // Iterate all items
+                helper.forEach((item, parent) => {
+                    // do something
+                });
+
                 console.log('check test ...');
 
                 const errMsg = [];
-                capability.forEach((row) => {
+                helper.forEach((row) => {
                     if (row.type === 'case' && ['failed', 'flaky'].includes(row.caseType)) {
                         if (row.verify === 'random') {
                             return;

@@ -168,7 +168,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 
     // onEnd hook
     onEnd: null
-    // onEnd: async (reportData, capability) => {}
+    // onEnd: async (reportData, helper) => {}
 }
 ```
 
@@ -1036,7 +1036,7 @@ await merge(reportDataList, {
     attachmentPath: (currentPath, extras) => {
        // return `https://cenfun.github.io/monocart-reporter/${currentPath}`;
     },
-    onEnd: async (reportData, capability) => {
+    onEnd: async (reportData, helper) => {
         // send email or third party integration
     }
 });
@@ -1061,9 +1061,12 @@ The `onEnd` function will be executed after report generated. Arguments:
     - `cwd`, `outputDir` and `outputFile` (String)
     - `htmlPath`, `jsonPath` and `summaryTable` (String)
     - ...
-- `capability` APIs:
-    - `capability.forEach(callback)` Iterate over all rows of data (suites/cases/steps), return `false` will `break` loop.
-    - `capability.sendEmail(emailOptions)` 
+- `helper` APIs:
+    - `helper.find(callback)` Find item like array `find` function.
+    - `helper.filter(callback)` Filter list like array `filter` function.
+    - `helper.forEach(callback)` Iterate all rows of data (suites/cases/steps), return `break` will break the iteration.
+    - `helper.sendEmail(emailOptions)` 
+
 ```js
 // playwright.config.js
 module.exports = {
@@ -1072,13 +1075,33 @@ module.exports = {
             name: "My Test Report",
             outputFile: './test-results/report.html',
             // async hook after report data generated
-            onEnd: async (reportData, capability) => {
+            onEnd: async (reportData, helper) => {
                 // console.log(reportData.summary);
+
+                // find a test by title
+                const myCase = helper.find((item, parent) => item.type === 'case' && item.title.includes('inline tag'));
+                console.log(myCase && myCase.title);
+
+                // find a suite by title
+                const mySuite = helper.find((item, parent) => item.type === 'suite' && item.title.includes('new syntax'));
+                console.log(mySuite && mySuite.title);
+
+                // filter failed cases
+                const failedCases = helper.filter((item, parent) => item.type === 'case' && item.caseType === 'failed');
+                console.log(failedCases.map((it) => it.title));
+
+                // Iterate all items
+                helper.forEach((item, parent) => {
+                    // do something
+                });
+
+
             }
         }]
     ]
 };
 ```
+
 ## Send Email
 - Simply send email with [nodemailer](https://nodemailer.com)
 - Example: [send-email](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/send-email)

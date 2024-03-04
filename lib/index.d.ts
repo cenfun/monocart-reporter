@@ -27,6 +27,23 @@ export type {
     AddedResults
 }
 
+export interface Helper {
+
+    find: (callback: ((item: any, parent: any) => void)) => any;
+    filter: (callback: ((item: any, parent: any) => void)) => any[];
+    /** Traverse all cases, suites, and steps. */
+    forEach: (callback: ((item: any, parent: any) => void | "break")) => void;
+
+    /** send email with nodemailer: https://nodemailer.com/ */
+    sendEmail: (emailOptions: {
+        /** email transport: https://nodemailer.com/smtp/ */
+        transport: any,
+        /** email message: https://nodemailer.com/message/ */
+        message: any
+    }) => Promise<void>;
+
+}
+
 export type MonocartReporterOptions = {
     /** the report name */
     name?: string,
@@ -112,17 +129,7 @@ export type MonocartReporterOptions = {
     }
 
     /** onEnd hook: https://github.com/cenfun/monocart-reporter?#onend-hook */
-    onEnd?: (reportData: any, capability: {
-        /** send email with nodemailer: https://nodemailer.com/ */
-        sendEmail?: (emailOptions: {
-            /** email transport: https://nodemailer.com/smtp/ */
-            transport: any,
-            /** email message: https://nodemailer.com/message/ */
-            message: any
-        }) => Promise<void>,
-        /** Traverse all cases, suites, and steps. */
-        forEach?: (callback: ((item: any) => void)) => void
-    }) => Promise<void>
+    onEnd?: (reportData: any, helper: Helper) => Promise<void>
 
 }
 

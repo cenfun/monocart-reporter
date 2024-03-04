@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.1
+  - added `helper.find()` and `helper.filter()` for onEnd hook
+
 * 2.4.0
   - supports [new syntax](https://playwright.dev/docs/test-annotations) for tag and annotation in playwright v1.42.0
 
