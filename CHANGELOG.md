@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.2
+  - fixed tag issue for both title and new syntax
+
 * 2.4.1
   - added `helper.find()` and `helper.filter()` for onEnd hook
 

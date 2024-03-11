@@ -160,20 +160,28 @@ const tagFormatter = (item) => {
         return list.join('');
     };
 
-    // new syntax in playwright v1.42
-    if (item.tags) {
-        const len = item.tags.length;
-        return title + item.tags.map((it, i) => {
-            const key = `${it}`.slice(1);
-            const before = i === 0;
-            const after = i !== len - 1;
-            return getTag(key, before, after);
-        }).join('');
-    }
-
-    return title.replace(Util.tagPattern, function(all, before, key, after) {
+    const titleTags = [];
+    let newTitle = title.replace(Util.tagPattern, function(all, before, key, after) {
+        titleTags.push(`@${key}`);
         return getTag(key, before, after);
     });
+
+    // new syntax in playwright v1.42
+    if (item.tags) {
+        // remove tags which is already in title
+        const tags = item.tags.filter((it) => !titleTags.includes(it));
+        const len = tags.length;
+        if (len) {
+            newTitle += tags.map((it, i) => {
+                const key = `${it}`.slice(1);
+                const before = i === 0;
+                const after = i !== len - 1;
+                return getTag(key, before, after);
+            }).join('');
+        }
+    }
+
+    return newTitle;
 };
 
 // ===========================================================================

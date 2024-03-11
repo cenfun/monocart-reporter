@@ -49,7 +49,7 @@
         "lz-utils": "~2.0.2",
         "monocart-coverage-reports": "~2.6.5",
         "monocart-formatter": "~2.3.2",
-        "nodemailer": "~6.9.11",
+        "nodemailer": "~6.9.12",
         "turbogrid": "~3.0.13"
     },
     "devDependencies": {
