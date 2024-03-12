@@ -2,6 +2,8 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    ignore:
+      - dependency-name: "open"
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
