@@ -42,15 +42,15 @@
         "url": "git+https://github.com/cenfun/monocart-reporter.git"
     },
     "dependencies": {
-        "console-grid": "~2.2.2",
-        "eight-colors": "~1.3.0",
-        "koa": "~2.15.0",
-        "koa-static-resolver": "~1.0.5",
-        "lz-utils": "~2.0.2",
-        "monocart-coverage-reports": "~2.6.5",
-        "monocart-formatter": "~2.3.2",
-        "nodemailer": "~6.9.12",
-        "turbogrid": "~3.0.13"
+        "console-grid": "^2.2.2",
+        "eight-colors": "^1.3.0",
+        "koa": "^2.15.0",
+        "koa-static-resolver": "^1.0.5",
+        "lz-utils": "^2.0.2",
+        "monocart-coverage-reports": "^2.7.0",
+        "monocart-formatter": "^2.3.2",
+        "nodemailer": "^6.9.12",
+        "turbogrid": "^3.0.13"
     },
     "devDependencies": {
         "@playwright/test": "^1.42.1",
@@ -59,7 +59,7 @@
         "eslint": "^8.57.0",
         "eslint-config-plus": "^1.0.6",
         "eslint-plugin-html": "^8.0.0",
-        "eslint-plugin-vue": "^9.22.0",
+        "eslint-plugin-vue": "^9.23.0",
         "open": "8.4.2",
         "stylelint": "^16.2.1",
         "stylelint-config-plus": "^1.1.0",
