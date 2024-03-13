@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.3
+  - fixed `traceViewerUrl` for merging reports
+
 * 2.4.2
   - fixed tag issue for both title and new syntax
 
