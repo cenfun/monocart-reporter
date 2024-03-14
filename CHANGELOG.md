@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.4
+  - fixed trace url does not refresh
+
 * 2.4.3
   - fixed `traceViewerUrl` for merging reports
 

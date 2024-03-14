@@ -199,6 +199,11 @@ const initList = (attachments) => {
         list.push(group);
     }
 
+    // random id to force refresh attachments
+    list.forEach((item) => {
+        item.id = Util.uid();
+    });
+
     return list;
 };
 
@@ -217,8 +222,8 @@ watchEffect(() => {
     >
       <component
         :is="item.component"
-        v-for="(item, i) of data.list"
-        :key="i"
+        v-for="item of data.list"
+        :key="item.id"
         :data="item.data"
       />
     </VuiFlex>
