@@ -1133,6 +1133,9 @@ module.exports = {
 - Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. 
 - Example: [teams-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/teams-webhook)
 
+## BrowserStack Integration
+- Example: [browserstack](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/browserstack)
+
 ## Dingtalk/Weixin/Feishu Integration
 - [dingtalk-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/dingtalk-webhook)
 - [weixin-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/weixin-webhook)
