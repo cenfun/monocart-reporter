@@ -53,6 +53,7 @@
     - [Slack Integration](#slack-integration)
     - [Discord Integration](#discord-integration)
     - [Teams Integration](#teams-integration)
+    - [BrowserStack Integration](#browserstack-integration)
     - [Dingtalk/Weixin/Feishu Integration](#dingtalkweixinfeishu-integration)
 * [Contributing](#contributing)
 * [Changelog](CHANGELOG.md)
