@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.5
+  - fixed CLI path issue
+
 * 2.4.4
   - fixed trace url does not refresh
 

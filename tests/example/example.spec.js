@@ -344,6 +344,13 @@ Playwright Test supports test annotations to deal with failures, flakiness, skip
             console.log('failed');
         });
 
+        /**
+         * @verify failed
+         */
+        test('title 中文', () => {
+            test.fail();
+        });
+
         test('case fixme - not yet ready', () => {
             test.fixme();
             console.log('fixme');
