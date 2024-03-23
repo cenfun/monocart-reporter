@@ -13,7 +13,6 @@ A clear and concise description of what the bug is.
 **To Reproduce**
 - Version: 
 - Node Version: 
-- OS and Version: 
 - Have you tried the latest version (including node), and does the issue still exist? 
 - Steps to reproduce the actual behavior:
 1. 
