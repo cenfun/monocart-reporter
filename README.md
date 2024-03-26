@@ -1145,10 +1145,13 @@ module.exports = {
 
 ## Contributing
 ```sh
+# Node.js 20+
 npm install starfall-cli -g
 npm install
-npm run test
+
 npm run build
+npm run test
+
 npm run dev
 ```
 ## Dependencies
