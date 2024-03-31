@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.6
+  - fixed dependency formatter to locator
+
 * 2.4.5
   - fixed CLI path issue
 

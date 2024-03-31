@@ -48,7 +48,8 @@
         "koa-static-resolver": "^1.0.6",
         "lz-utils": "^2.0.2",
         "monocart-coverage-reports": "^2.7.7",
-        "monocart-formatter": "^2.3.2",
+        "monocart-formatter": "^3.0.0",
+        "monocart-locator": "^1.0.0",
         "nodemailer": "^6.9.13",
         "turbogrid": "^3.0.13"
     },
@@ -61,7 +62,7 @@
         "eslint-plugin-html": "^8.0.0",
         "eslint-plugin-vue": "^9.24.0",
         "open": "8.4.2",
-        "stylelint": "^16.3.0",
+        "stylelint": "^16.3.1",
         "stylelint-config-plus": "^1.1.0",
         "vine-ui": "^3.1.13"
     }
