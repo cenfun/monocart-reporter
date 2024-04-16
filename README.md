@@ -34,11 +34,11 @@
 * [Style Tags](#style-tags)
 * [Metadata](#metadata)
 * [Trend Chart](#trend-chart)
-* [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
 * [Code Coverage Report](#code-coverage-report)
     - [Global Coverage Report](#global-coverage-report)
     - [Coverage Options](#coverage-options)
     - [Coverage Examples](#coverage-examples)
+* [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
 * [Attach Network Report](#attach-network-report)
 * [Global State Management](#global-state-management)
     - [Setup Global State](#setup-global-state)
@@ -443,6 +443,7 @@ test('case description', () => {
 
 });
 ````
+see [Mermaid doc](https://mermaid.js.org/syntax/flowchart.html)
 
 
 ### Custom Data Visitor
@@ -689,33 +690,6 @@ module.exports = {
 };
 ```
 
-## Attach Lighthouse Audit Report
-Attach an audit report with API `attachAuditReport(runnerResult, testInfo)`. Arguments:
-- `runnerResult` lighthouse result. see [lighthouse](https://github.com/GoogleChrome/lighthouse/tree/main/docs)
-- `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
-```js
-const { test, chromium } = require('@playwright/test');
-const { attachAuditReport } = require('monocart-reporter');
-const lighthouse = require('lighthouse/core/index.cjs');
-test('attach lighthouse audit report', async () => {
-    const port = 9222;
-    const browser = await chromium.launch({
-        args: [`--remote-debugging-port=${port}`]
-    });
-    const options = {
-        // logLevel: 'info',
-        // onlyCategories: ['performance', 'best-practices', 'seo'],
-        output: 'html',
-        port
-    };
-    const url = 'https://github.com/cenfun/monocart-reporter';
-    const runnerResult = await lighthouse(url, options);
-    await browser.close();
-    await attachAuditReport(runnerResult, test.info());
-});
-
-```
-
 ## Code Coverage Report
 The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports) for coverage reports, there are two APIs:
 - `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
@@ -825,14 +799,14 @@ export default async (config) => {
     }
 }
 ```
-see [Node.js V8 Coverage Report for Server Side](https://github.com/cenfun/monocart-coverage-reports?#nodejs-v8-coverage-report-for-server-side)
+see [Collecting V8 Coverage Data from Node.js](https://github.com/cenfun/monocart-coverage-reports?#collecting-v8-coverage-data-from-nodejs)
 
 ### Coverage Options
-- Default [options](https://github.com/cenfun/monocart-coverage-reports/blob/main/lib/default/options.js)
+- Default [options](https://github.com/cenfun/monocart-coverage-reports?#options)
 - [Available Reports](https://github.com/cenfun/monocart-coverage-reports?#available-reports)
 - [Using entryFilter and sourceFilter to filter the results for V8 report](https://github.com/cenfun/monocart-coverage-reports?#using-entryfilter-and-sourcefilter-to-filter-the-results-for-v8-report)
 - Checking thresholds with [onEnd Hook](https://github.com/cenfun/monocart-coverage-reports?#onend-hook)
-- More Introduction [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
+- More details see [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
 
 ### Coverage Examples
 - For Playwright component testing:
@@ -841,6 +815,33 @@ see [Node.js V8 Coverage Report for Server Side](https://github.com/cenfun/monoc
     - [playwright-ct-svelte](https://github.com/cenfun/playwright-ct-svelte)
 - [nextjs-with-playwright](https://github.com/cenfun/nextjs-with-playwright)
 - [code-coverage-with-monocart-reporter](https://github.com/edumserrano/playwright-adventures/blob/main/demos/code-coverage-with-monocart-reporter/) 
+
+## Attach Lighthouse Audit Report
+Attach an audit report with API `attachAuditReport(runnerResult, testInfo)`. Arguments:
+- `runnerResult` lighthouse result. see [lighthouse](https://github.com/GoogleChrome/lighthouse/tree/main/docs)
+- `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
+```js
+const { test, chromium } = require('@playwright/test');
+const { attachAuditReport } = require('monocart-reporter');
+const lighthouse = require('lighthouse/core/index.cjs');
+test('attach lighthouse audit report', async () => {
+    const port = 9222;
+    const browser = await chromium.launch({
+        args: [`--remote-debugging-port=${port}`]
+    });
+    const options = {
+        // logLevel: 'info',
+        // onlyCategories: ['performance', 'best-practices', 'seo'],
+        output: 'html',
+        port
+    };
+    const url = 'https://github.com/cenfun/monocart-reporter';
+    const runnerResult = await lighthouse(url, options);
+    await browser.close();
+    await attachAuditReport(runnerResult, test.info());
+});
+
+```
 
 ## Attach Network Report
 Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments:
@@ -1155,7 +1156,8 @@ npm run test
 npm run dev
 ```
 ## Dependencies
- - UI Framework [Vue 3](https://github.com/vuejs/core)
- - Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
- - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
- - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
+- UI Framework [Vue 3](https://github.com/vuejs/core)
+- Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
+- High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
+- String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
+- Coverage Reporters [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
