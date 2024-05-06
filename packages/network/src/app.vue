@@ -229,9 +229,13 @@ const getUrl = (input) => {
         return empty;
     }
     let url;
+    let err;
     try {
         url = new URL(input);
     } catch (e) {
+        err = e;
+    }
+    if (err) {
         return empty;
     }
     return url;

@@ -108,6 +108,7 @@ const onErrorClick = () => {
     }
 };
 
+// eslint-disable-next-line complexity
 const switchTo = (e, offset = 0) => {
     const category = d.categories[d.tempIndex];
     let target;

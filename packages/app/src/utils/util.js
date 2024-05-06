@@ -51,12 +51,16 @@ const Util = {
 
     copyText: (text) => {
         return new Promise((resolve) => {
+            let err;
             try {
-                navigator.clipboard.writeText(text).then(() => {
-                    resolve(true);
-                });
-            } catch (err) {
+                navigator.clipboard.writeText(text);
+            } catch (e) {
+                err = e;
+            }
+            if (err) {
                 resolve(false);
+            } else {
+                resolve(true);
             }
         });
     },

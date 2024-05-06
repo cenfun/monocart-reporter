@@ -429,7 +429,7 @@ export const initCustomsFormatters = (list, customFormatters) => {
             try {
                 formatter = new Function(`return (${formatterStr}).apply(this, arguments);`);
             } catch (e) {
-                console.error('failed to deserialize formatter function');
+                console.error(`failed to deserialize formatter function: ${e.message}`);
             }
 
             // console.log(formatter);
