@@ -37,7 +37,7 @@ const props = defineProps({
     > .vui-flex {
         min-width: 20px;
         min-height: 20px;
-        padding: 0 5px;
+        padding: 1px 5px;
         font-size: 13px;
         line-height: 20px;
         border: 1px solid #ddd;

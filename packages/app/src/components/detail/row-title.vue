@@ -1,6 +1,6 @@
 <script setup>
 import { components } from 'vine-ui';
-import { tagFormatter } from '../../modules/formatters.js';
+import { titleTagFormatter } from '../../modules/formatters.js';
 import IconLabel from '../icon-label.vue';
 const { VuiFlex } = components;
 
@@ -22,7 +22,7 @@ const props = defineProps({
     />
     <div
       class="mcr-detail-title"
-      v-html="tagFormatter(props.item.data)"
+      v-html="titleTagFormatter(props.item.data, props.item.titleColumn)"
     />
 
     <span

@@ -11,7 +11,9 @@ import 'github-markdown-css/github-markdown-light.css';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
-import { markdownFormatter, mergeAnnotations } from '../../modules/formatters.js';
+import {
+    markdownFormatter, mergeAnnotations, formatters
+} from '../../modules/formatters.js';
 
 import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
@@ -281,6 +283,30 @@ const getAttachments = (item, column) => {
 
 // ===========================================================================
 
+const getCustomFormattedContent = (value, item, column) => {
+
+    const formatter = column.formatter;
+
+    if (formatter) {
+        if (typeof formatter === 'function') {
+            return formatter(value, item, column);
+        }
+
+        if (typeof formatter === 'string') {
+            const handler = formatters[formatter];
+            if (handler) {
+                return handler(value, item, column);
+            }
+        }
+    }
+
+    if (column.markdown) {
+        return markdownFormatter(value);
+    }
+
+    return value;
+};
+
 const getCustom = (item, column) => {
 
     // not detailed default columns here
@@ -298,12 +324,7 @@ const getCustom = (item, column) => {
 
     const simple = !column.markdown && !column.detailed;
 
-    let content = value;
-    if (typeof column.formatter === 'function') {
-        content = column.formatter(value, item, column);
-    } else if (column.markdown) {
-        content = markdownFormatter(value);
-    }
+    const content = getCustomFormattedContent(value, item, column);
 
     return {
         simple,
@@ -426,6 +447,8 @@ const initDataColumns = (item) => {
         });
     }
 
+    // titleColumn for tags
+    item.tg_titleColumn = state.columns.find((it) => it.id === 'title');
     item.tg_simpleColumns = simpleColumns;
     item.tg_detailColumns = detailColumns;
 };
@@ -533,6 +556,7 @@ const initDataList = () => {
             stepGroup,
             style: `margin-left:${left}px;`,
             icon,
+            titleColumn: item.tg_titleColumn,
             simpleColumns: item.tg_simpleColumns,
             detailColumns: item.tg_detailColumns
         };
