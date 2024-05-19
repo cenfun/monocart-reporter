@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.7
+  - fixed UI supports tags column (#119)
+
 * 2.4.6
   - fixed dependency formatter to locator
 

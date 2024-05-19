@@ -167,7 +167,7 @@ const tagsFormatter = (tags) => {
     return list.join('');
 };
 
-const titleTagFormatter = (rowItem, columnItem) => {
+const titleTagsFormatter = (rowItem, columnItem) => {
     const title = rowItem.title;
 
     if (columnItem && columnItem.titleTagsDisabled) {
@@ -246,7 +246,7 @@ const formatters = {
     tree: function(value, rowItem, columnItem, cellNode) {
         let formattedValue = matchedFormatter(value, rowItem, columnItem);
         if (formattedValue === value) {
-            formattedValue = titleTagFormatter(rowItem, columnItem);
+            formattedValue = titleTagsFormatter(rowItem, columnItem);
         }
         const defaultFormatter = this.getDefaultFormatter('tree');
 
@@ -330,7 +330,7 @@ const formatters = {
 
 export {
     formatters,
-    titleTagFormatter,
+    titleTagsFormatter,
     matchedFormatter,
     markdownFormatter,
     mergeAnnotations

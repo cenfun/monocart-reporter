@@ -270,6 +270,15 @@ module.exports = {
                     searchable: true
                 });
 
+                // custom tags column
+                // defaultColumns.find((column) => column.id === 'title').titleTagsDisabled = true;
+                // defaultColumns.splice(3, 0, {
+                //     id: 'tags',
+                //     name: 'Tags',
+                //     width: 100,
+                //     formatter: 'tags'
+                // });
+
                 // hide a default column
                 // const retryColumn = defaultColumns.find((column) => column.id === 'retry');
                 // retryColumn.invisible = true;
