@@ -541,11 +541,17 @@ module.exports = {
 see example: [remove-secrets](https://github.com/cenfun/monocart-reporter-examples/tree/main/tests/remove-secrets)
 
 ## Style Tags
+
 * Add tag to test/describe title ( starts with `@` )
 ```js
 test('test title @smoke @critical', () => { });
 test.describe('describe title @smoke @critical', () => { });
+
+// new syntax for tag in playwright v1.42.0
+test('test title', { tag: ['@smoke', '@critical'] }, () => { });
+test.describe('describe title', { tag: ['@smoke', '@critical'] }, () => { });
 ```
+
 * Custom tag style
 ```js
 // playwright.config.js
@@ -569,6 +575,38 @@ module.exports = {
     ]
 };
 ```
+
+* Put style tags in new column
+```js
+module.exports = {
+    reporter: [
+        ['list'],
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './test-results/report.html',
+            tags: {
+                // ...
+            },
+            columns: (defaultColumns) => {
+
+                // disable title tags
+                defaultColumns.find((column) => column.id === 'title').titleTagsDisabled = true;
+
+                // add tags column
+                const index = defaultColumns.findIndex((column) => column.id === 'type');
+                defaultColumns.splice(index, 0, {
+                    id: 'tags',
+                    name: 'Tags',
+                    width: 150,
+                    formatter: 'tags'
+                });
+            }
+        }]
+    ]
+};
+```
+see [example](https://github.com/cenfun/monocart-reporter-examples/tree/main/tests/tags-column)
+
 
 ## Metadata
 > All metadata will be listed in the report in a key/value format.
