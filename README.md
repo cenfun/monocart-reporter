@@ -46,7 +46,7 @@
     - [Send and Receive Messages between Processes](#send-and-receive-messages-between-processes)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd Hook](#onend-hook)
-* [Integration Examples](#integration-examples)
+* [Integration](#integration)
 * [Contributing](#contributing)
 * [Changelog](CHANGELOG.md)
 ## Preview
@@ -1134,8 +1134,20 @@ module.exports = {
 };
 ```
 
-## Integration Examples
-Moved to repo `monocart-reporter-examples`, see [integrations](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations)
+## Integration
+By using the `onEnd` hook, we can integrate Playwright report with any other tools, such as:
+- Email
+- Testrail
+- Qase
+- Jira + Zephyr
+- Jira + Xray
+- Slack
+- Discord
+- Teams
+- BrowserStack 
+- Dingtalk/Weixin/Feishu
+
+See [Integration Examples](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations)
 
 ## Contributing
 ```sh
