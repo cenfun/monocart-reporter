@@ -46,15 +46,7 @@
     - [Send and Receive Messages between Processes](#send-and-receive-messages-between-processes)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd Hook](#onend-hook)
-    - [Send Email](#send-email)
-    - [Testrail Integration](#testrail-integration)
-    - [Jira + Zephyr Scale Integration](#jira--zephyr-scale-integration)
-    - [Jira + Xray Integration](#jira--xray-integration)
-    - [Slack Integration](#slack-integration)
-    - [Discord Integration](#discord-integration)
-    - [Teams Integration](#teams-integration)
-    - [BrowserStack Integration](#browserstack-integration)
-    - [Dingtalk/Weixin/Feishu Integration](#dingtalkweixinfeishu-integration)
+* [Integration Examples](#integration-examples)
 * [Contributing](#contributing)
 * [Changelog](CHANGELOG.md)
 ## Preview
@@ -1142,45 +1134,8 @@ module.exports = {
 };
 ```
 
-## Send Email
-- Simply send email with [nodemailer](https://nodemailer.com)
-- Example: [send-email](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/send-email)
-
-## Testrail Integration
-- Send test results to your [Testrail](https://www.testrail.com/)
-- Example: [testrail](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/testrail)
-
-## Jira + Zephyr Scale Integration
-- Create test cycle and executions with [zephyr-scale-api](https://support.smartbear.com/zephyr-scale-cloud/api-docs/)
-- Example: [zephyr-scale](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/zephyr-scale)
-
-## Jira + Xray Integration
-- Import test execution results with [Xray REST API](https://docs.getxray.app/display/XRAYCLOUD/REST+API)
-- Update Jira issue status with [Jira Transition API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-issueidorkey-transitions-post)
-- Example: [xray](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/xray)
-
-## Slack Integration
-- Simply send message with [@slack/webhook](https://github.com/slackapi/node-slack-sdk) 
-- Example: [slack-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/slack-webhook)
-- Post chat message and upload image with [@slack/web-api](https://github.com/slackapi/node-slack-sdk) 
-- Example: [slack-web-api](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/slack-web-api)
-
-## Discord Integration
-- Using [Discord webhooks](https://discord.com/developers/docs/resources/webhook) to post messages to channels.
-- Example: [discord-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/discord-webhook)
-
-## Teams Integration
-- Please create an [Incoming Webhooks](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook) for the channel first. 
-- Example: [teams-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/teams-webhook)
-
-## BrowserStack Integration
-- Example: [browserstack](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/browserstack)
-
-## Dingtalk/Weixin/Feishu Integration
-- [dingtalk-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/dingtalk-webhook)
-- [weixin-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/weixin-webhook)
-- [feishu-webhook](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations/feishu-webhook)
-
+## Integration Examples
+Moved to repo `monocart-reporter-examples`, see [integrations](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations)
 
 ## Contributing
 ```sh
