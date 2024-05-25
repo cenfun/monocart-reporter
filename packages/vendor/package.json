@@ -9,7 +9,7 @@
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
-        "@babel/code-frame": "^7.24.2",
+        "@babel/code-frame": "^7.24.6",
         "commander": "^12.1.0",
         "sanitize-filename": "^1.6.3",
         "stack-utils": "^2.0.6",

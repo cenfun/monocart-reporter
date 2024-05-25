@@ -79,7 +79,8 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 
 ## Examples
 - [tests](/tests/)
-- More Examples [monocart-reporter-examples](https://github.com/cenfun/monocart-reporter-examples)
+- [monocart-reporter-examples](https://github.com/cenfun/monocart-reporter-examples)
+- [playwright-reporter-integrations](https://github.com/cenfun/playwright-reporter-integrations)
 
 ## Output
 - path-to/your-filename.html  
@@ -1147,7 +1148,7 @@ By using the `onEnd` hook, we can integrate Playwright report with any other too
 - BrowserStack 
 - Dingtalk/Weixin/Feishu
 
-See [Integration Examples](https://github.com/cenfun/monocart-reporter-examples/tree/main/integrations)
+See [Integration Examples](https://github.com/cenfun/playwright-reporter-integrations)
 
 ## Contributing
 ```sh
