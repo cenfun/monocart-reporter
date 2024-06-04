@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.4.8
+  - fixed highlight keywords
+
 * 2.4.7
   - fixed UI supports tags column (#119)
 

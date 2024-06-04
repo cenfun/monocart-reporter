@@ -320,7 +320,7 @@ const onTagItemClick = (item) => {
         titleColumn.checked = true;
     }
 
-    let tag = `@${item.name} `;
+    let tag = `${item.name} `;
     if (state.keywords) {
 
         const target = state.searchHelperTarget;

@@ -4,7 +4,6 @@ import { hash } from 'monocart-common';
 import Util from '../utils/util.js';
 import { formatters, matchedFormatter } from './formatters.js';
 import state from '../modules/state.js';
-import searchHandler from './search.js';
 import { getGridRows } from './grid-rows.js';
 
 const isNodeTruncated = (node) => {
@@ -512,7 +511,32 @@ const getGridOption = () => {
         // 9999 max
         rowNumberWidth: 46,
         rowNumberFilter: getRowNumberFilter(),
-        rowFilter: searchHandler,
+
+        highlightKeywords: {
+            textGenerator: (rowItem, id) => {
+                if (id === 'title') {
+                    return rowItem[id] + rowItem.tags;
+                }
+                return rowItem[id];
+            }
+        },
+        rowFilter: function(rowItem) {
+
+            const searchableAllKeys = state.searchableAllKeys;
+
+            const hasMatched = this.highlightKeywordsFilter(rowItem, searchableAllKeys, state.keywords);
+
+            if (hasMatched) {
+                let row = rowItem;
+                while (row.tg_parent) {
+                    row = row.tg_parent;
+                    row.collapsed = false;
+                }
+            }
+
+            return hasMatched;
+
+        },
         rowNotFound: '<div class="mcr-no-results">No Results</div>',
         frozenColumn: 1,
 
