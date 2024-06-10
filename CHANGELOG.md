@@ -1,6 +1,9 @@
 ## Changelog
 
 * 2.4.8
+  - fixed repeated columns (#122)
+
+* 2.4.8
   - fixed highlight keywords
 
 * 2.4.7
