@@ -1,6 +1,6 @@
 ## Changelog
 
-* 2.4.8
+* 2.4.9
   - fixed repeated columns (#122)
 
 * 2.4.8
