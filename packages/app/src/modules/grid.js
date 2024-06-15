@@ -526,14 +526,6 @@ const getGridOption = () => {
 
             const hasMatched = this.highlightKeywordsFilter(rowItem, searchableAllKeys, state.keywords);
 
-            if (hasMatched) {
-                let row = rowItem;
-                while (row.tg_parent) {
-                    row = row.tg_parent;
-                    row.collapsed = false;
-                }
-            }
-
             return hasMatched;
 
         },
