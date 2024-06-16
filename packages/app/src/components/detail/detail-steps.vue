@@ -4,9 +4,10 @@ import {
 } from 'vue';
 import { components } from 'vine-ui';
 import { Grid, $ } from 'turbogrid';
-import { microtask } from 'monocart-common';
+import { debounce, microtask } from 'monocart-common';
 
 import Util from '../../utils/util.js';
+import state from '../../modules/state.js';
 
 import IconLabel from '../icon-label.vue';
 import StepInfo from './step-info.vue';
@@ -16,11 +17,13 @@ const {
 } = components;
 
 const props = defineProps({
-    item: {
+    caseItem: {
         type: Object,
         default: () => {}
     }
 });
+
+const emit = defineEmits(['position']);
 
 const data = shallowReactive({
     stepNum: 0,
@@ -37,6 +40,48 @@ const rowHeightMap = new Map();
 const el = ref(null);
 let $el;
 
+// ===========================================================================
+
+const scrollIntoView = () => {
+    if (typeof $el.scrollIntoViewIfNeeded === 'function') {
+        $el.scrollIntoViewIfNeeded();
+    } else {
+        $el.scrollIntoView();
+    }
+};
+
+// wait for image loaded
+const updatePosition = debounce(() => {
+
+    const position = state.position;
+    // {rowId: '12f5e2a2c3f4c7ef1eca', columnId: 'title'}
+    console.log(position);
+
+    if (!position) {
+        return;
+    }
+    state.position = null;
+
+    const grid = data.grid;
+    const rowItem = grid.getRowItem(position.rowId);
+    if (rowItem) {
+        scrollIntoView();
+        grid.scrollToRow(rowItem);
+
+        setTimeout(() => {
+            const cellNode = grid.getCellNode(rowItem, 'title');
+            console.log('cellNode', cellNode);
+            Util.setFocus(cellNode);
+        }, 100);
+
+    } else {
+        emit('position', position);
+    }
+
+}, 100);
+
+// ===========================================================================
+
 const onStepCollapsedClick = () => {
     if (data.stepCollapsed) {
         data.grid.collapseAllRows();
@@ -46,9 +91,8 @@ const onStepCollapsedClick = () => {
 };
 
 
-const initData = (item) => {
+const initData = (caseItem) => {
 
-    const caseItem = item.data;
     // console.log(caseItem);
 
     data.stepNum = caseItem.stepNum;
@@ -193,17 +237,21 @@ const getGrid = () => {
         updateColumnWidth(grid);
     });
 
+    // grid.bind('onFirstUpdated', () => {
+    //
+    // });
+
     return grid;
 };
 
 const updateGrid = () => {
-    if (!$el || !props.item) {
+    if (!$el || !props.caseItem) {
         return;
     }
 
     const grid = getGrid();
 
-    const rows = initData(props.item);
+    const rows = initData(props.caseItem);
 
     // based on grid height
     const maxHeight = 600;
@@ -308,6 +356,13 @@ watch([
     }
 });
 
+
+watch(() => state.position, (v) => {
+    if (v) {
+        updatePosition();
+    }
+});
+
 onMounted(() => {
     $el = el.value;
     updateGrid();
@@ -409,5 +464,16 @@ onMounted(() => {
 .mcr-steps-grid {
     position: relative;
     height: 600px;
+
+    .tg-multiline {
+        .tg-tree-icon {
+            height: 26px;
+        }
+
+        .tg-tree {
+            align-items: start;
+        }
+    }
 }
+
 </style>

@@ -3,7 +3,7 @@ import {
     ref, watch, shallowReactive, onActivated, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
-import { debounce, microtask } from 'monocart-common';
+import { microtask } from 'monocart-common';
 
 import Convert from 'ansi-to-html';
 
@@ -15,7 +15,7 @@ import {
     markdownFormatter, mergeAnnotations, formatters
 } from '../../modules/formatters.js';
 
-// import IconLabel from '../icon-label.vue';
+import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
 import DetailColumns from './detail-columns.vue';
 import DetailSteps from './detail-steps.vue';
@@ -23,7 +23,7 @@ import DurationLocation from './duration-location.vue';
 
 import RowTitle from './row-title.vue';
 
-const { VuiFlex } = components;
+const { VuiFlex, VuiTab } = components;
 
 const data = shallowReactive({
     list: [],
@@ -424,6 +424,10 @@ const initDataList = () => {
     // init steps detailColumns
     initSteps(caseItem.subs, 1);
 
+    data.stepNum = caseItem.stepNum;
+
+    data.caseItem = caseItem;
+
     data.list = list.map((item) => {
 
         initDataColumns(item);
@@ -510,59 +514,46 @@ const updateCase = microtask(() => {
 
 // ===========================================================================
 
-// wait for image loaded
-const updatePosition = debounce(() => {
 
+const onFocus = (e) => {
+    Util.setFocus();
+};
+
+const onPosition = (position) => {
     if (!$el) {
         return;
     }
-
-    const position = state.position;
     if (!position) {
         return;
     }
-    state.position = null;
-
-    // console.log('position', position);
 
     // check positionId first
-    let found = true;
+    let found = false;
     const positionId = getPositionId(position.rowId, position.columnId);
     let elem = $el.querySelector(`[position-id="${positionId}"]`);
-    if (!elem) {
-        found = false;
+    if (elem) {
+        found = true;
+    } else {
         // not found but try to find related type position
         elem = $el.querySelector(`[position-type="${position.columnId}"]`);
     }
 
-    if (!elem) {
-        Util.setFocus();
+    // found case and suite
+    if (elem) {
+        if (typeof elem.scrollIntoViewIfNeeded === 'function') {
+            elem.scrollIntoViewIfNeeded();
+        } else {
+            elem.scrollIntoView();
+        }
+        if (found) {
+            Util.setFocus(elem);
+        }
         return;
     }
 
-    if (typeof elem.scrollIntoViewIfNeeded === 'function') {
-        elem.scrollIntoViewIfNeeded();
-    } else {
-        elem.scrollIntoView();
-    }
-    if (found) {
-        Util.setFocus(elem);
-    }
-
-}, 100);
-
-watch(() => state.position, (v) => {
-    if (v) {
-        updatePosition();
-    }
-});
-
-onMounted(() => {
-    $el = el.value;
-    if (state.position) {
-        updatePosition();
-    }
-});
+    // not found
+    Util.setFocus();
+};
 
 // ===========================================================================
 
@@ -576,9 +567,9 @@ onActivated(() => {
     updateCase();
 });
 
-const onFocus = (e) => {
-    Util.setFocus();
-};
+onMounted(() => {
+    $el = el.value;
+});
 
 </script>
 
@@ -590,37 +581,63 @@ const onFocus = (e) => {
     @focus="onFocus"
     @click="onFocus"
   >
-    <div
-      v-for="item, ik in data.list"
-      :key="ik"
-      :class="itemClass(item.data)"
-      :style="item.style"
-    >
-      <VuiFlex
-        :class="itemHeadClass(item.data)"
-        gap="10px"
-        padding="5px"
-        :position-id="item.positionId"
-        wrap
-      >
-        <RowTitle :item="item" />
+    <VuiTab v-model="state.tabIndex">
+      <template #tabs>
+        <div>
+          <VuiFlex gap="5px">
+            <IconLabel icon="case" />
+            <b>Test</b>
+          </VuiFlex>
+        </div>
+        <div>
+          <VuiFlex gap="5px">
+            <IconLabel icon="step" />
+            <b>Steps</b>
+            <div class="mcr-num">
+              {{ data.stepNum }}
+            </div>
+          </VuiFlex>
+        </div>
+      </template>
+      <template #panes>
+        <div>
+          <div class="mcr-case-info">
+            <div
+              v-for="item, ik in data.list"
+              :key="ik"
+              :class="itemClass(item.data)"
+              :style="item.style"
+            >
+              <VuiFlex
+                :class="itemHeadClass(item.data)"
+                gap="10px"
+                padding="5px"
+                :position-id="item.positionId"
+                wrap
+              >
+                <RowTitle :item="item" />
 
-        <SimpleColumns :list="item.simpleColumns" />
+                <SimpleColumns :list="item.simpleColumns" />
 
-        <div class="vui-flex-auto" />
+                <div class="vui-flex-auto" />
 
-        <DurationLocation :row-item="item.data" />
-      </VuiFlex>
-      <DetailColumns
-        class="mcr-detail-body"
-        :list="item.detailColumns"
-      />
+                <DurationLocation :row-item="item.data" />
+              </VuiFlex>
 
-      <DetailSteps
-        v-if="item.data.type==='case'&&item.data.stepNum"
-        :item="item"
-      />
-    </div>
+              <DetailColumns
+                class="mcr-detail-body"
+                :list="item.detailColumns"
+              />
+            </div>
+          </div>
+        </div>
+        <DetailSteps
+          v-if="data.caseItem && data.caseItem.stepNum"
+          :case-item="data.caseItem"
+          @position="onPosition"
+        />
+      </template>
+    </VuiTab>
   </div>
 </template>
 
@@ -628,7 +645,13 @@ const onFocus = (e) => {
 .mcr-detail {
     width: 100%;
     height: 100%;
-    padding: 0 0 5px 5px;
+    overflow: hidden;
+}
+
+.mcr-case-info {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 10px;
     overflow: hidden auto;
 }
 
@@ -664,6 +687,13 @@ const onFocus = (e) => {
     &.mcr-case-failed + .mcr-detail-body,
     &.mcr-case-flaky + .mcr-detail-body {
         border-top: none;
+    }
+}
+
+.mcr-detail-item:first-child {
+    .mcr-detail-head,
+    .mcr-detail-body {
+        border-left: none;
     }
 }
 
