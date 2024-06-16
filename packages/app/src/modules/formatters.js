@@ -80,14 +80,12 @@ const titleFormatter = (value) => {
 
 // add target="_blank" for link
 const renderer = new marked.Renderer();
-renderer.link = function() {
-    const html = marked.Renderer.prototype.link.apply(this, arguments);
-    return html.replace('<a', '<a target="_blank"');
+renderer.link = function(token) {
+    return `<a href="${token.href}" target="_blank">${token.text}</a>`;
 };
 
 renderer.code = function(token) {
-
-    console.log(state.mermaid, token);
+    // console.log(state.mermaid, token);
     if (state.mermaid && token.lang === 'mermaid') {
         state.mermaidEnabled = true;
         return `<pre class="mermaid">${token.text}</pre>`;
