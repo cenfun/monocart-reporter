@@ -20,6 +20,8 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits(['resize']);
+
 const itemColumnClass = (item) => {
     return ['mcr-detail-column', `mcr-detail-${item.id}`];
 };
@@ -36,6 +38,7 @@ const columnContentClass = (column) => {
 
 const onColumnHeadClick = (column) => {
     column.collapsed = !column.collapsed;
+    emit('resize');
 };
 
 const getColumnComponent = (id) => {

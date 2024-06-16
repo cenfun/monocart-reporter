@@ -79,6 +79,10 @@ const initData = (item) => {
 const asyncUpdateRowHeight = microtask(() => {
     // console.log('asyncUpdateRowHeight', rowHeightMap);
 
+    if (!rowHeightMap.size) {
+        return;
+    }
+
     const grid = data.grid;
 
     const rows = [];
@@ -122,7 +126,12 @@ const createStepInfo = (value, rowItem, columnItem, cellNode) => {
             render() {
                 return h(StepInfo, {
                     rowItem,
-                    columnItem
+                    columnItem,
+                    onResize: () => {
+                        rowItem.tg_row_height_fixed = false;
+                        rowHeightMap.set(rowItem.id, rowItem);
+                        asyncUpdateRowHeight();
+                    }
                 });
             }
         }).mount(div);
@@ -155,6 +164,20 @@ const updateColumnWidth = function(grid) {
 
     // console.log(`updateWidth: ${titleWidth}`);
     grid.setColumnWidth(titleColumn, titleWidth);
+
+    // reset row height fixed
+    const visibleRowList = grid.viewport.rows;
+    grid.forEachRow(function(rowItem) {
+        if (rowItem.tg_row_height_fixed) {
+            rowItem.tg_row_height_fixed = false;
+        }
+        if (rowItem.tg_row_height_fixable) {
+            if (visibleRowList.includes(rowItem.tg_view_index)) {
+                rowHeightMap.set(rowItem.id, rowItem);
+                asyncUpdateRowHeight();
+            }
+        }
+    });
 
 };
 

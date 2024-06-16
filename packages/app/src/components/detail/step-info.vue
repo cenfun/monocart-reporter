@@ -1,7 +1,5 @@
 <script setup>
-import {
-    onMounted, onUnmounted, computed
-} from 'vue';
+import { computed } from 'vue';
 import { components } from 'vine-ui';
 
 // import IconLabel from '../icon-label.vue';
@@ -23,6 +21,8 @@ const props = defineProps({
         default: () => {}
     }
 });
+
+const emit = defineEmits(['resize']);
 
 // const data = shallowReactive({
 
@@ -49,14 +49,9 @@ const onMouseleave = (e) => {
     hideTooltip();
 };
 
-
-onMounted(() => {
-
-});
-
-onUnmounted(() => {
-
-});
+const onResize = (e) => {
+    emit('resize', props.rowItem);
+};
 
 </script>
 
@@ -84,6 +79,7 @@ onUnmounted(() => {
     <DetailColumns
       class="mcr-step-body"
       :list="rowItem.tg_detailColumns"
+      @resize="onResize"
     />
   </VuiFlex>
 </template>
@@ -96,8 +92,7 @@ onUnmounted(() => {
 }
 
 .mcr-step-head {
-    height: 30px;
-    min-height: 30px;
+    min-height: 26px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
