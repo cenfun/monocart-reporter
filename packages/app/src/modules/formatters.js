@@ -85,10 +85,12 @@ renderer.link = function() {
     return html.replace('<a', '<a target="_blank"');
 };
 
-renderer.code = function(code, language) {
-    if (state.mermaid && language === 'mermaid') {
+renderer.code = function(token) {
+
+    console.log(state.mermaid, token);
+    if (state.mermaid && token.lang === 'mermaid') {
         state.mermaidEnabled = true;
-        return `<pre class="mermaid">${code}</pre>`;
+        return `<pre class="mermaid">${token.text}</pre>`;
     }
     const html = marked.Renderer.prototype.code.apply(this, arguments);
     return html;
