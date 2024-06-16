@@ -380,18 +380,25 @@ const collectErrorForAttachment = () => {
 
 };
 
-const initSteps = (list) => {
+const initSteps = (list, index) => {
     if (Util.isList(list)) {
         list.forEach((it) => {
+
+            if (it.stepType !== 'retry') {
+                it.index = index++;
+            }
+
             initDataColumns(it);
             if (it.tg_detailColumns.length) {
                 it.tg_row_height_fixable = true;
                 it.titleClassMap = 'tg-multiline';
                 it.hoverable = false;
             }
-            initSteps(it.subs);
+            index = initSteps(it.subs, index);
         });
     }
+
+    return index;
 };
 
 const initDataList = () => {
@@ -415,7 +422,7 @@ const initDataList = () => {
     data.attachments = [];
 
     // init steps detailColumns
-    initSteps(caseItem.subs);
+    initSteps(caseItem.subs, 1);
 
     data.list = list.map((item) => {
 

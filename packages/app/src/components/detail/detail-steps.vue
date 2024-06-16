@@ -241,12 +241,6 @@ const updateGrid = () => {
 
         rowNumberVisible: true,
         rowNumberWidth,
-        rowNumberFilter: function(rowItem, i) {
-            if (rowItem.stepType === 'retry') {
-                return false;
-            }
-            return true;
-        },
 
         rowFilter: function(rowItem) {
             const hasMatched = this.highlightKeywordsFilter(rowItem, ['title'], data.keywords);
@@ -279,6 +273,9 @@ const updateGrid = () => {
             });
             // tg-tree-name
             return defaultFormatter('', rowItem, columnItem, cellNode);
+        },
+        rowNumber: function(value, rowItem, columnItem, cellNode) {
+            return rowItem.index || '';
         }
     });
 
