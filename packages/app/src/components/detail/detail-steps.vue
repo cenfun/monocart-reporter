@@ -1,13 +1,14 @@
 <script setup>
 import {
-    createApp, h, ref, watch, shallowReactive, onMounted, nextTick
+    createApp, h, watch, shallowReactive, onMounted, nextTick
 } from 'vue';
 import { components } from 'vine-ui';
 import { Grid, $ } from 'turbogrid';
-import { debounce, microtask } from 'monocart-common';
+import { microtask } from 'monocart-common';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
+import { initDataColumns } from '../../modules/detail-columns.js';
 
 import IconLabel from '../icon-label.vue';
 import StepInfo from './step-info.vue';
@@ -16,56 +17,25 @@ const {
     VuiFlex, VuiSwitch, VuiInput
 } = components;
 
-const props = defineProps({
-    caseItem: {
-        type: Object,
-        default: () => {}
-    }
-});
-
-const emit = defineEmits(['position']);
-
 const data = shallowReactive({
-    stepNum: 0,
-    stepCollapsed: false,
-    stepCollapsedDisabled: false,
     stepFailed: 0,
-    stepFailedOnly: false,
-    stepSubs: false,
-    searchVisible: false
+    stepFailedOnly: false
 });
 
 const rowHeightMap = new Map();
 
-const el = ref(null);
-let $el;
+const isCurrentTab = () => {
+    return state.tabIndex === 1;
+};
 
 // ===========================================================================
 
-const scrollIntoView = () => {
-    if (typeof $el.scrollIntoViewIfNeeded === 'function') {
-        $el.scrollIntoViewIfNeeded();
-    } else {
-        $el.scrollIntoView();
-    }
-};
-
 // wait for image loaded
-const updatePosition = debounce(() => {
-
-    const position = state.position;
-    // {rowId: '12f5e2a2c3f4c7ef1eca', columnId: 'title'}
-    console.log(position);
-
-    if (!position) {
-        return;
-    }
-    state.position = null;
+const updatePosition = (position) => {
 
     const grid = data.grid;
     const rowItem = grid.getRowItem(position.rowId);
     if (rowItem) {
-        scrollIntoView();
         grid.scrollToRow(rowItem);
 
         setTimeout(() => {
@@ -74,51 +44,11 @@ const updatePosition = debounce(() => {
             Util.setFocus(cellNode);
         }, 100);
 
-    } else {
-        emit('position', position);
     }
 
-}, 100);
+};
 
 // ===========================================================================
-
-const onStepCollapsedClick = () => {
-    if (data.stepCollapsed) {
-        data.grid.collapseAllRows();
-    } else {
-        data.grid.expandAllRows();
-    }
-};
-
-
-const initData = (caseItem) => {
-
-    // console.log(caseItem);
-
-    data.stepNum = caseItem.stepNum;
-    data.stepFailed = caseItem.stepFailed;
-    data.stepFailedOnly = caseItem.stepFailedOnly;
-    if (data.stepFailedOnly) {
-        data.stepCollapsedDisabled = !data.stepSubs;
-    } else {
-        data.stepCollapsedDisabled = false;
-    }
-
-    data.stepSubs = false;
-
-    const steps = caseItem.subs;
-    if (!Util.isList(steps)) {
-        return [];
-    }
-    steps.forEach((step) => {
-        if (step.subs) {
-            data.stepSubs = true;
-        }
-    });
-
-    return steps;
-};
-
 
 const asyncUpdateRowHeight = microtask(() => {
     // console.log('asyncUpdateRowHeight', rowHeightMap);
@@ -230,7 +160,7 @@ const getGrid = () => {
         return data.grid;
     }
 
-    const grid = new Grid($el);
+    const grid = new Grid(document.querySelector('.mcr-steps-grid'));
     data.grid = grid;
 
     grid.bind('onResize onLayout', function(e, d) {
@@ -244,36 +174,47 @@ const getGrid = () => {
     return grid;
 };
 
-const updateGrid = () => {
-    if (!$el || !props.caseItem) {
-        return;
+
+const initSteps = (list, index) => {
+    if (!Util.isList(list)) {
+        return index;
     }
+
+    list.forEach((it) => {
+
+        if (it.stepType !== 'retry') {
+            it.index = index++;
+        }
+
+        initDataColumns(it);
+        if (it.tg_detailColumns.length) {
+            it.tg_row_height_fixable = true;
+            it.titleClassMap = 'tg-multiline';
+            it.hoverable = false;
+        }
+        index = initSteps(it.subs, index);
+    });
+
+    return index;
+};
+
+
+const renderGrid = () => {
 
     const grid = getGrid();
 
-    const rows = initData(props.caseItem);
+    const caseItem = data.caseItem;
 
-    // based on grid height
-    const maxHeight = 600;
+    data.stepFailed = caseItem.stepFailed;
+    data.stepFailedOnly = caseItem.stepFailedOnly;
+
+    const rows = caseItem.subs || [];
+    initSteps(rows, 1);
+
     const rowHeight = 36;
-    const maxNum = Math.ceil(maxHeight / rowHeight);
-    // console.log(maxNum);
-
-    let autoHeight = false;
-    if (data.stepNum < maxNum) {
-        autoHeight = true;
-        data.searchVisible = false;
-    } else {
-        $el.removeAttribute('style');
-        data.searchVisible = true;
-    }
-
-    const rowNumberWidth = Math.max(10 + data.stepNum.toString().length * 12, rowHeight);
+    const rowNumberWidth = Math.max(10 + caseItem.stepNum.toString().length * 12, rowHeight);
 
     grid.setOption({
-
-        headerVisible: false,
-
 
         bindContainerResize: true,
         bindWindowResize: true,
@@ -281,9 +222,6 @@ const updateGrid = () => {
         scrollbarRound: true,
         textSelectable: true,
 
-        collapseAllOnInit: data.stepCollapsed,
-
-        autoHeight,
         rowHeight,
         rowNotFound: 'No Results',
 
@@ -331,7 +269,8 @@ const updateGrid = () => {
         columns: [{
             id: 'title',
             name: 'Title',
-            resizable: false
+            resizable: false,
+            sortable: false
         }],
         rows
     });
@@ -342,10 +281,6 @@ const updateGrid = () => {
 
 
 // ===========================================================================
-
-watch(() => props.item, (v) => {
-    updateGrid();
-});
 
 watch([
     () => data.keywords,
@@ -358,60 +293,62 @@ watch([
 
 
 watch(() => state.position, (v) => {
-    if (v) {
-        updatePosition();
+    if (v && data.grid && isCurrentTab()) {
+        updatePosition(v);
     }
 });
 
+
+// ======================================================================
+
+const updateCase = microtask(() => {
+
+    if (!isCurrentTab()) {
+        return;
+    }
+
+    const caseId = state.flyoverData;
+    if (!caseId) {
+        return;
+    }
+
+    const caseItem = state.detailMap[caseId];
+    if (!caseItem) {
+        return;
+    }
+
+    data.caseItem = caseItem;
+    renderGrid();
+
+});
+
+watch(() => state.flyoverData, (v) => {
+    if (state.flyoverComponent === 'detail') {
+        updateCase();
+    }
+});
+
+watch(() => state.tabIndex, () => {
+    updateCase();
+});
+
 onMounted(() => {
-    $el = el.value;
-    updateGrid();
+    updateCase();
 });
 
 </script>
 
 <template>
-  <div class="mcr-detail-steps">
+  <VuiFlex
+    class="mcr-detail-steps"
+    direction="column"
+  >
     <VuiFlex
       gap="10px"
       wrap
       class="mcr-steps-head"
     >
-      <IconLabel
-        icon="step"
-        size="20px"
-        :button="false"
-      >
-        <b>Steps</b>
-      </IconLabel>
-      <div class="mcr-num">
-        {{ data.stepNum }}
-      </div>
-
-      <VuiSwitch
-        v-if="data.stepSubs"
-        v-model="data.stepCollapsed"
-        :disabled="data.stepCollapsedDisabled"
-        :label-clickable="true"
-        label-position="right"
-        @change="onStepCollapsedClick()"
-      >
-        Collapse All
-      </VuiSwitch>
-
-      <VuiSwitch
-        v-if="data.stepFailed"
-        v-model="data.stepFailedOnly"
-        :label-clickable="true"
-        label-position="right"
-      >
-        Only Failed
-      </VuiSwitch>
-
-      <div
-        v-if="data.searchVisible"
-        class="mcr-search-steps"
-      >
+      <div class="mcr-search-steps">
         <VuiInput
           v-model="data.keywords"
           :class="data.keywords?'mcr-search-keywords':''"
@@ -425,18 +362,24 @@ onMounted(() => {
           :button="false"
         />
       </div>
+      <VuiSwitch
+        v-if="data.stepFailed"
+        v-model="data.stepFailedOnly"
+        :label-clickable="true"
+        label-position="right"
+      >
+        Only Failed
+      </VuiSwitch>
     </VuiFlex>
-    <div
-      ref="el"
-      class="mcr-steps-grid"
-    />
-  </div>
+    <div class="mcr-steps-grid" />
+  </VuiFlex>
 </template>
 
 <style lang="scss">
 .mcr-detail-steps {
-    border-top: thin solid #ccc;
-    border-left: thin solid #ccc;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 .mcr-steps-head {
@@ -444,7 +387,6 @@ onMounted(() => {
     min-height: 35px;
     padding: 5px;
     border-bottom: thin solid #ccc;
-    background-color: #f6f8fa;
     user-select: none;
 }
 
@@ -463,7 +405,7 @@ onMounted(() => {
 
 .mcr-steps-grid {
     position: relative;
-    height: 600px;
+    flex: auto;
 
     .tg-multiline {
         .tg-tree-icon {

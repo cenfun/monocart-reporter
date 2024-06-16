@@ -6,6 +6,7 @@ import { formatters } from './formatters.js';
 import state from '../modules/state.js';
 import { getGridRows } from './grid-rows.js';
 import { bindGridTooltip } from './tooltip.js';
+import { setPosition } from './detail-columns.js';
 
 export const hideFlyover = (immediately) => {
     state.flyoverVisible = false;
@@ -17,9 +18,13 @@ export const hideFlyover = (immediately) => {
 
 export const showFlyover = (component, data) => {
     state.flyoverComponent = component;
-    state.flyoverData = data;
-    const title = data ? data.title : state.title;
-    state.flyoverTitle = title;
+    if (data) {
+        state.flyoverData = data.id;
+        state.flyoverTitle = data.title;
+    } else {
+        state.flyoverData = null;
+        state.flyoverTitle = state.title;
+    }
     state.flyoverVisible = true;
 };
 
@@ -173,7 +178,7 @@ const getClickPosition = (columnItem, rowItem) => {
 const showPositionHandler = (d) => {
     const { rowItem, columnItem } = d;
     const position = getClickPosition(columnItem, rowItem);
-    state.position = position;
+    setPosition(position);
 };
 
 const clickTitleHandler = (d) => {

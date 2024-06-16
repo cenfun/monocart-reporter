@@ -7,6 +7,7 @@ import { microtask } from 'monocart-common';
 
 import Util from '../../../utils/util.js';
 import state from '../../../modules/state.js';
+import { setPosition } from '../../../modules/detail-columns.js';
 
 import IconLabel from '../../icon-label.vue';
 import AttachmentHead from './attachment-head.vue';
@@ -103,9 +104,7 @@ const initComparison = () => {
 };
 
 const onErrorClick = () => {
-    if (d.position) {
-        state.position = d.position;
-    }
+    setPosition(d.position);
 };
 
 // eslint-disable-next-line complexity
