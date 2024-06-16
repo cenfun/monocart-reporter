@@ -400,7 +400,13 @@ const initDataList = () => {
     data.errors = [];
     data.attachments = [];
 
-    let lastItem;
+    // init steps detailColumns
+    if (caseItem.subs) {
+        caseItem.subs.forEach((it) => {
+            initDataColumns(it);
+        });
+    }
+
     data.list = list.map((item) => {
 
         initDataColumns(item);
@@ -412,12 +418,6 @@ const initDataList = () => {
         }
 
         const positionId = getPositionId(item.id, 'title');
-
-        if (lastItem && lastItem.tg_level > item.tg_level) {
-            item.classLevel = 'mcr-detail-out';
-        }
-
-        lastItem = item;
 
         return {
             data: item,
@@ -618,11 +618,6 @@ const onFocus = (e) => {
 .mcr-detail-item {
     position: relative;
     border-bottom: 1px solid #ccc;
-
-    &.mcr-detail-out {
-        margin-top: -1px;
-        border-top: 1px solid #ccc;
-    }
 }
 
 .mcr-detail-body {
@@ -646,26 +641,6 @@ const onFocus = (e) => {
         height: 100%;
         background-color: rgb(0 0 0 / 2%);
         pointer-events: none;
-    }
-
-    &.mcr-detail-step,
-    &.mcr-detail-step + .mcr-detail-body,
-    &.mcr-case-passed,
-    &.mcr-case-passed + .mcr-detail-body {
-        border-left-color: var(--color-passed);
-    }
-
-    &.mcr-step-error,
-    &.mcr-step-error + .mcr-detail-body,
-    &.mcr-case-failed,
-    &.mcr-case-failed + .mcr-detail-body {
-        border-left-color: var(--color-failed);
-    }
-
-    &.mcr-step-retry,
-    &.mcr-case-flaky,
-    &.mcr-case-flaky + .mcr-detail-body {
-        border-left-color: var(--color-flaky);
     }
 
     &.mcr-case-failed + .mcr-detail-body,

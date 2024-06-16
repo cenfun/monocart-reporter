@@ -5,50 +5,7 @@ import Util from '../utils/util.js';
 import { formatters } from './formatters.js';
 import state from '../modules/state.js';
 import { getGridRows } from './grid-rows.js';
-
-const isNodeTruncated = (node) => {
-    if (!node) {
-        return false;
-    }
-    node = node.querySelector('.tg-tree-name') || node;
-    if (node.clientWidth < node.scrollWidth) {
-        return true;
-    }
-    return false;
-};
-
-const hideTooltip = () => {
-    if (Util.isTouchDevice()) {
-        return;
-    }
-
-    if (state.tooltip) {
-        state.tooltip.visible = false;
-        state.tooltip.text = '';
-        state.tooltip.html = false;
-        state.tooltip.classMap = '';
-    }
-};
-
-const showTooltip = (elem, text, html) => {
-    if (Util.isTouchDevice()) {
-        return;
-    }
-
-    hideTooltip();
-
-    if (!text) {
-        return;
-    }
-    if (state.tooltip) {
-        state.tooltip.target = elem;
-        state.tooltip.text = text;
-        state.tooltip.html = html;
-        state.tooltip.classMap = 'mcr-searchable';
-        state.tooltip.visible = true;
-    }
-
-};
+import { bindGridTooltip } from './tooltip.js';
 
 export const hideFlyover = (immediately) => {
     state.flyoverVisible = false;
@@ -312,21 +269,7 @@ const bindGridEvents = () => {
 
     const grid = state.grid;
 
-    grid.bind('onCellMouseEnter', (e, d) => {
-        const cellNode = d.cellNode;
-        if (isNodeTruncated(cellNode)) {
-            const { rowItem, columnItem } = d;
-            let html = true;
-            let text = rowItem[`${columnItem.id}_matched`];
-            if (!text) {
-                html = false;
-                text = cellNode.innerText;
-            }
-            showTooltip(cellNode, text, html);
-        }
-    }).bind('onCellMouseLeave', (e, d) => {
-        hideTooltip();
-    });
+    bindGridTooltip(grid);
 
     grid.bind('onClick', (e, d) => {
 

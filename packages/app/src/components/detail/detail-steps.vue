@@ -34,13 +34,6 @@ const data = shallowReactive({
 const el = ref(null);
 let $el;
 
-const onStepFailedClick = () => {
-    // if (item.stepFailedOnly && item.collapsed) {
-    //     item.collapsed = false;
-    // }
-
-};
-
 const onStepCollapsedClick = () => {
     if (data.stepCollapsed) {
         data.grid.collapseAllRows();
@@ -143,9 +136,9 @@ const updateGrid = () => {
 
     const rows = initData(props.item);
 
-    // grid height 500px
+    // based on grid height
+    const maxHeight = 600;
     const rowHeight = 36;
-    const maxHeight = 500;
     const maxNum = Math.ceil(maxHeight / rowHeight);
     // console.log(maxNum);
 
@@ -260,6 +253,7 @@ onMounted(() => {
   <div class="mcr-detail-steps">
     <VuiFlex
       gap="10px"
+      wrap
       class="mcr-steps-head"
     >
       <IconLabel
@@ -289,7 +283,6 @@ onMounted(() => {
         v-model="data.stepFailedOnly"
         :label-clickable="true"
         label-position="right"
-        @change="onStepFailedClick()"
       >
         Only Failed
       </VuiSwitch>
@@ -323,7 +316,6 @@ onMounted(() => {
 .mcr-detail-steps {
     border-top: thin solid #ccc;
     border-left: thin solid #ccc;
-    user-select: none;
 }
 
 .mcr-steps-head {
@@ -332,6 +324,7 @@ onMounted(() => {
     padding: 5px;
     border-bottom: thin solid #ccc;
     background-color: #f6f8fa;
+    user-select: none;
 }
 
 .mcr-search-steps {
@@ -349,6 +342,6 @@ onMounted(() => {
 
 .mcr-steps-grid {
     position: relative;
-    height: 500px;
+    height: 600px;
 }
 </style>

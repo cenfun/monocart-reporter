@@ -419,7 +419,7 @@ const onExportClick = () => {
             if (excludes.includes(k)) {
                 return;
             }
-            if (k.startsWith('tg_') || k.endsWith('_matched')) {
+            if (k.startsWith('tg_')) {
                 return;
             }
             row[k] = item[k];
