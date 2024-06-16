@@ -49,7 +49,6 @@ const getColumnComponent = (id) => {
     v-if="props.list.length"
     direction="column"
     gap="10px"
-    padding="10px"
   >
     <div
       v-for="column, dk in props.list"

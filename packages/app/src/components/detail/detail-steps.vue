@@ -49,7 +49,7 @@ const onStepCollapsedClick = () => {
 const initData = (item) => {
 
     const caseItem = item.data;
-    console.log(caseItem);
+    // console.log(caseItem);
 
     data.stepNum = caseItem.stepNum;
     data.stepFailed = caseItem.stepFailed;
@@ -95,6 +95,7 @@ const asyncUpdateRowHeight = microtask(() => {
         if (!cellNode) {
             return;
         }
+        // required stop loop
         rowItem.tg_row_height_fixed = true;
         const div = cellNode.querySelector('.tg-multiline-fixing');
         // 10px is padding top and bottom
@@ -103,11 +104,13 @@ const asyncUpdateRowHeight = microtask(() => {
         heights.push(realHeight);
     });
 
+    rowHeightMap.clear();
+
     // nothing fix
     if (!rows.length) {
         return;
     }
-    console.log('row height fix: ', rows, heights);
+    // console.log('row height fix: ', rows, heights);
     grid.setRowHeight(rows, heights);
 
 });
@@ -118,7 +121,6 @@ const createStepInfo = (value, rowItem, columnItem, cellNode) => {
         createApp({
             render() {
                 return h(StepInfo, {
-                    value,
                     rowItem,
                     columnItem
                 });

@@ -17,6 +17,10 @@ const props = defineProps({
     rowItem: {
         type: Object,
         default: () => {}
+    },
+    columnItem: {
+        type: Object,
+        default: () => {}
     }
 });
 
@@ -60,8 +64,12 @@ onUnmounted(() => {
   <VuiFlex
     :class="classMap"
     direction="column"
+    gap="5px"
   >
-    <VuiFlex gap="10px">
+    <VuiFlex
+      gap="10px"
+      class="mcr-step-head"
+    >
       <div
         class="mcr-tooltip vui-flex-auto"
         @mouseenter="onMouseenter"
@@ -74,15 +82,29 @@ onUnmounted(() => {
     </VuiFlex>
 
     <DetailColumns
-      class="mcr-detail-body"
+      class="mcr-step-body"
       :list="rowItem.tg_detailColumns"
     />
   </VuiFlex>
 </template>
 
-<style>
+<style lang="scss">
 .mcr-step-info {
     position: relative;
+    font-weight: normal;
+    overflow: hidden;
+}
+
+.mcr-step-head {
+    height: 30px;
+    min-height: 30px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.mcr-step-body {
+    padding: 1px 0;
 }
 
 .mcr-tooltip {
