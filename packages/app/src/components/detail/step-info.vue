@@ -1,5 +1,7 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue';
+import {
+    onMounted, onUnmounted, computed
+} from 'vue';
 import { components } from 'vine-ui';
 
 // import IconLabel from '../icon-label.vue';
@@ -11,7 +13,7 @@ import { showTooltip, hideTooltip } from '../../modules/tooltip.js';
 
 const { VuiFlex } = components;
 
-defineProps({
+const props = defineProps({
     rowItem: {
         type: Object,
         default: () => {}
@@ -21,6 +23,14 @@ defineProps({
 // const data = shallowReactive({
 
 // });
+
+const classMap = computed(() => {
+    const ls = ['mcr-step-info'];
+    if (props.rowItem.tg_row_height_fixable) {
+        ls.push('tg-multiline-fixing');
+    }
+    return ls;
+});
 
 const onMouseenter = (e) => {
     const node = e.target;
@@ -48,7 +58,7 @@ onUnmounted(() => {
 
 <template>
   <VuiFlex
-    class="mcr-step-info"
+    :class="classMap"
     direction="column"
   >
     <VuiFlex gap="10px">

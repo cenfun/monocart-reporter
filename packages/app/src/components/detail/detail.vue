@@ -380,6 +380,20 @@ const collectErrorForAttachment = () => {
 
 };
 
+const initSteps = (list) => {
+    if (Util.isList(list)) {
+        list.forEach((it) => {
+            initDataColumns(it);
+            if (it.tg_detailColumns.length) {
+                it.tg_row_height_fixable = true;
+                it.titleClassMap = 'tg-multiline';
+                it.hoverable = false;
+            }
+            initSteps(it.subs);
+        });
+    }
+};
+
 const initDataList = () => {
 
     const caseItem = state.detailMap[data.caseId];
@@ -401,11 +415,7 @@ const initDataList = () => {
     data.attachments = [];
 
     // init steps detailColumns
-    if (caseItem.subs) {
-        caseItem.subs.forEach((it) => {
-            initDataColumns(it);
-        });
-    }
+    initSteps(caseItem.subs);
 
     data.list = list.map((item) => {
 

@@ -3,7 +3,8 @@ import {
     createApp, h, ref, watch, shallowReactive, onMounted, nextTick
 } from 'vue';
 import { components } from 'vine-ui';
-import { Grid } from 'turbogrid';
+import { Grid, $ } from 'turbogrid';
+import { microtask } from 'monocart-common';
 
 import Util from '../../utils/util.js';
 
@@ -30,6 +31,8 @@ const data = shallowReactive({
     stepSubs: false,
     searchVisible: false
 });
+
+const rowHeightMap = new Map();
 
 const el = ref(null);
 let $el;
@@ -72,7 +75,63 @@ const initData = (item) => {
     return steps;
 };
 
-const updateWidth = function(grid) {
+
+const asyncUpdateRowHeight = microtask(() => {
+    // console.log('asyncUpdateRowHeight', rowHeightMap);
+
+    const grid = data.grid;
+
+    const rows = [];
+    const heights = [];
+
+    // console.log(grid.rows, visibleRowList);
+
+    rowHeightMap.forEach(function(rowItem) {
+        // console.log(row.name, row.tg_index);
+        if (!rowItem.tg_row_height_fixable || rowItem.tg_row_height_fixed) {
+            return;
+        }
+        const cellNode = grid.getCellNode(rowItem, 'title');
+        if (!cellNode) {
+            return;
+        }
+        rowItem.tg_row_height_fixed = true;
+        const div = cellNode.querySelector('.tg-multiline-fixing');
+        // 10px is padding top and bottom
+        const realHeight = Math.max($(div).height() + 10, grid.options.rowHeight);
+        rows.push(rowItem);
+        heights.push(realHeight);
+    });
+
+    // nothing fix
+    if (!rows.length) {
+        return;
+    }
+    console.log('row height fix: ', rows, heights);
+    grid.setRowHeight(rows, heights);
+
+});
+
+const createStepInfo = (value, rowItem, columnItem, cellNode) => {
+    const div = cellNode.querySelector('.tg-tree-name');
+    if (div) {
+        createApp({
+            render() {
+                return h(StepInfo, {
+                    value,
+                    rowItem,
+                    columnItem
+                });
+            }
+        }).mount(div);
+        if (rowItem.tg_row_height_fixable) {
+            rowHeightMap.set(rowItem.id, rowItem);
+            asyncUpdateRowHeight();
+        }
+    }
+};
+
+const updateColumnWidth = function(grid) {
     const titleColumn = grid.getColumnItem('title');
     const containerWidth = grid.containerWidth;
     // 5px padding right
@@ -91,25 +150,10 @@ const updateWidth = function(grid) {
     if (titleWidth === titleColumn.width) {
         return;
     }
-    // console.log(`updateWidth: ${titleWidth}`);
 
+    // console.log(`updateWidth: ${titleWidth}`);
     grid.setColumnWidth(titleColumn, titleWidth);
 
-};
-
-const createStepInfo = (value, rowItem, columnItem, cellNode) => {
-    const div = cellNode.querySelector('.tg-tree-name');
-    if (div) {
-        createApp({
-            render() {
-                return h(StepInfo, {
-                    value,
-                    rowItem,
-                    columnItem
-                });
-            }
-        }).mount(div);
-    }
 };
 
 const getGrid = () => {
@@ -120,8 +164,8 @@ const getGrid = () => {
     const grid = new Grid($el);
     data.grid = grid;
 
-    grid.bind('onUpdated', function(e, d) {
-        updateWidth(grid);
+    grid.bind('onResize onLayout', function(e, d) {
+        updateColumnWidth(grid);
     });
 
     return grid;
