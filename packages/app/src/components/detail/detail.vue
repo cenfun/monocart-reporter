@@ -15,10 +15,11 @@ import {
     markdownFormatter, mergeAnnotations, formatters
 } from '../../modules/formatters.js';
 
-import IconLabel from '../icon-label.vue';
+// import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
 import DetailColumns from './detail-columns.vue';
 import DetailSteps from './detail-steps.vue';
+import DurationLocation from './duration-location.vue';
 
 import RowTitle from './row-title.vue';
 
@@ -43,25 +44,6 @@ const itemClass = (d) => {
 
 const itemHeadClass = (d) => {
     return ['mcr-detail-head', `mcr-detail-${d.type}`, d.classMap];
-};
-
-const onLocationClick = (item) => {
-    if (item.state.locationLabel) {
-
-        Util.copyText(item.data.location).then((res) => {
-            if (res) {
-                item.state.locationLabel = 'copied';
-                setTimeout(() => {
-                    item.state.locationLabel = '';
-                }, 1000);
-            } else {
-                item.state.locationLabel = '';
-            }
-        });
-
-    } else {
-        item.state.locationLabel = item.data.location;
-    }
 };
 
 // ===========================================================================
@@ -610,21 +592,7 @@ const onFocus = (e) => {
 
         <div class="vui-flex-auto" />
 
-        <div
-          v-if="Util.isNum(item.data.duration)"
-          class="mcr-detail-duration"
-        >
-          {{ Util.TF(item.data.duration) }}
-        </div>
-
-        <IconLabel
-          v-if="item.data.location"
-          icon="location"
-          :tooltip="item.data.location"
-          @click="onLocationClick(item)"
-        >
-          {{ item.state.locationLabel }}
-        </IconLabel>
+        <DurationLocation :row-item="item.data" />
       </VuiFlex>
       <DetailColumns
         class="mcr-detail-body"
