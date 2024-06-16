@@ -1,6 +1,6 @@
 <script setup>
 import {
-    ref, watch, shallowReactive, onMounted, onActivated
+    ref, watch, shallowReactive, onActivated, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
 import { debounce, microtask } from 'monocart-common';
@@ -18,16 +18,14 @@ import {
 import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
 import DetailColumns from './detail-columns.vue';
+import DetailSteps from './detail-steps.vue';
 
 import RowTitle from './row-title.vue';
 
-const { VuiFlex, VuiSwitch } = components;
+const { VuiFlex } = components;
 
 const data = shallowReactive({
     list: [],
-    stepCollapsedDisabled: false,
-    stepFailedOnly: false,
-    stepSubs: false,
     errors: [],
     attachments: []
 });
@@ -333,99 +331,7 @@ const getCustom = (item, column) => {
     };
 };
 
-const onRowHeadClick = (item) => {
-    item.collapsed = !item.collapsed;
-    initDataList();
-};
-
-const onStepsClick = (item) => {
-    item.collapsed = !item.collapsed;
-    initDataList();
-};
-
-const onStepCollapsedClick = (item) => {
-    Util.forEach(item.subs, (step) => {
-        if (step.subs) {
-            step.collapsed = item.stepCollapsed;
-        }
-    });
-    initDataList();
-};
-
-const onStepFailedClick = (item) => {
-    if (item.stepFailedOnly && item.collapsed) {
-        item.collapsed = false;
-    }
-    initDataList();
-};
-
 // ===========================================================================
-
-// wait for image loaded
-const updatePosition = debounce(() => {
-
-    if (!$el) {
-        return;
-    }
-
-    const position = state.position;
-    if (!position) {
-        return;
-    }
-    state.position = null;
-
-    // console.log('position', position);
-
-    // check positionId first
-    let found = true;
-    const positionId = getPositionId(position.rowId, position.columnId);
-    let elem = $el.querySelector(`[position-id="${positionId}"]`);
-    if (!elem) {
-        found = false;
-        // not found but try to find related type position
-        elem = $el.querySelector(`[position-type="${position.columnId}"]`);
-    }
-
-    if (!elem) {
-        Util.setFocus();
-        return;
-    }
-
-    if (typeof elem.scrollIntoViewIfNeeded === 'function') {
-        elem.scrollIntoViewIfNeeded();
-    } else {
-        elem.scrollIntoView();
-    }
-    if (found) {
-        Util.setFocus(elem);
-    }
-
-}, 100);
-
-// ===========================================================================
-
-const initSteps = (list, steps, parent) => {
-    if (parent && parent.collapsed) {
-        return;
-    }
-    if (!Util.isList(steps)) {
-        return;
-    }
-    steps.forEach((step) => {
-
-        if (data.stepFailedOnly && !step.errorNum) {
-            return;
-        }
-
-        list.push(step);
-
-        if (step.subs) {
-            data.stepSubs = true;
-        }
-
-        initSteps(list, step.subs, step);
-    });
-};
 
 const initDataColumns = (item) => {
     if (item.tg_detailColumns) {
@@ -508,20 +414,6 @@ const initDataList = () => {
     // case
     list.push(caseItem);
 
-    // before init steps
-    data.stepFailedOnly = caseItem.stepFailedOnly;
-    data.stepSubs = false;
-    // collect steps with collapsed
-    if (!caseItem.collapsed) {
-        initSteps(list, caseItem.subs);
-    }
-
-    if (data.stepFailedOnly) {
-        data.stepCollapsedDisabled = !data.stepSubs;
-    } else {
-        data.stepCollapsedDisabled = false;
-    }
-
     // temp list for errors match to attachments
     data.errors = [];
     data.attachments = [];
@@ -538,10 +430,6 @@ const initDataList = () => {
         }
 
         const positionId = getPositionId(item.id, 'title');
-        const stepGroup = item.type === 'step' && item.subs;
-        if (stepGroup) {
-            icon = '';
-        }
 
         if (lastItem && lastItem.tg_level > item.tg_level) {
             item.classLevel = 'mcr-detail-out';
@@ -553,7 +441,6 @@ const initDataList = () => {
             data: item,
             state: shallowReactive({}),
             positionId,
-            stepGroup,
             style: `margin-left:${left}px;`,
             icon,
             titleColumn: item.tg_titleColumn,
@@ -624,15 +511,50 @@ const updateCase = microtask(() => {
 
 // ===========================================================================
 
+// wait for image loaded
+const updatePosition = debounce(() => {
+
+    if (!$el) {
+        return;
+    }
+
+    const position = state.position;
+    if (!position) {
+        return;
+    }
+    state.position = null;
+
+    // console.log('position', position);
+
+    // check positionId first
+    let found = true;
+    const positionId = getPositionId(position.rowId, position.columnId);
+    let elem = $el.querySelector(`[position-id="${positionId}"]`);
+    if (!elem) {
+        found = false;
+        // not found but try to find related type position
+        elem = $el.querySelector(`[position-type="${position.columnId}"]`);
+    }
+
+    if (!elem) {
+        Util.setFocus();
+        return;
+    }
+
+    if (typeof elem.scrollIntoViewIfNeeded === 'function') {
+        elem.scrollIntoViewIfNeeded();
+    } else {
+        elem.scrollIntoView();
+    }
+    if (found) {
+        Util.setFocus(elem);
+    }
+
+}, 100);
+
 watch(() => state.position, (v) => {
     if (v) {
         updatePosition();
-    }
-});
-
-watch(() => state.flyoverData, (v) => {
-    if (state.flyoverComponent === 'detail') {
-        updateCase();
     }
 });
 
@@ -640,6 +562,14 @@ onMounted(() => {
     $el = el.value;
     if (state.position) {
         updatePosition();
+    }
+});
+
+// ===========================================================================
+
+watch(() => state.flyoverData, (v) => {
+    if (state.flyoverComponent === 'detail') {
+        updateCase();
     }
 });
 
@@ -674,17 +604,7 @@ const onFocus = (e) => {
         :position-id="item.positionId"
         wrap
       >
-        <IconLabel
-          v-if="item.stepGroup"
-          :icon="item.data.collapsed?'collapsed':'expanded'"
-          @click="onRowHeadClick(item.data)"
-        >
-          <RowTitle :item="item" />
-        </IconLabel>
-        <RowTitle
-          v-else
-          :item="item"
-        />
+        <RowTitle :item="item" />
 
         <SimpleColumns :list="item.simpleColumns" />
 
@@ -710,42 +630,11 @@ const onFocus = (e) => {
         class="mcr-detail-body"
         :list="item.detailColumns"
       />
-      <VuiFlex
+
+      <DetailSteps
         v-if="item.data.type==='case'&&item.data.stepNum"
-        class="mcr-detail-steps"
-        gap="10px"
-      >
-        <IconLabel
-          :icon="item.data.collapsed?'collapsed':'expanded'"
-          @click="onStepsClick(item.data)"
-        >
-          <b>Steps</b>
-        </IconLabel>
-        <div class="mcr-num">
-          {{ item.data.stepNum }}
-        </div>
-
-        <VuiSwitch
-          v-if="item.data.stepSubs&&!item.data.collapsed"
-          v-model="item.data.stepCollapsed"
-          :disabled="data.stepCollapsedDisabled"
-          :label-clickable="true"
-          label-position="right"
-          @change="onStepCollapsedClick(item.data)"
-        >
-          Collapse All
-        </VuiSwitch>
-
-        <VuiSwitch
-          v-if="item.data.stepFailed&&!item.data.collapsed"
-          v-model="item.data.stepFailedOnly"
-          :label-clickable="true"
-          label-position="right"
-          @change="onStepFailedClick(item.data)"
-        >
-          Only Failed
-        </VuiSwitch>
-      </VuiFlex>
+        :item="item"
+      />
     </div>
   </div>
 </template>
@@ -771,14 +660,6 @@ const onFocus = (e) => {
 .mcr-detail-body {
     border-top: 1px solid #eee;
     border-left: 1px solid #ccc;
-}
-
-.mcr-detail-steps {
-    min-height: 35px;
-    padding: 5px;
-    border-top: thin solid #eee;
-    border-left: thin solid #ccc;
-    user-select: none;
 }
 
 .mcr-detail-head {

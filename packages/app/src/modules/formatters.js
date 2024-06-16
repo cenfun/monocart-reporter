@@ -9,15 +9,6 @@ import state from '../modules/state.js';
 
 const { VuiFlex } = components;
 
-const matchedFormatter = function(value, rowItem, columnItem) {
-    const id = columnItem.id;
-    const matched = rowItem[`${id}_matched`];
-    if (matched) {
-        return matched;
-    }
-    return value;
-};
-
 // ===========================================================================
 
 const mergeAnnotations = (list) => {
@@ -206,8 +197,6 @@ const titleTagsFormatter = (rowItem, columnItem) => {
 
 const formatters = {
 
-    string: matchedFormatter,
-
     null: function(value) {
         if (value === null || typeof value === 'undefined') {
             return '';
@@ -244,10 +233,7 @@ const formatters = {
     },
 
     tree: function(value, rowItem, columnItem, cellNode) {
-        let formattedValue = matchedFormatter(value, rowItem, columnItem);
-        if (formattedValue === value) {
-            formattedValue = titleTagsFormatter(rowItem, columnItem);
-        }
+        let formattedValue = titleTagsFormatter(rowItem, columnItem);
         const defaultFormatter = this.getDefaultFormatter('tree');
 
         if (rowItem.type === 'suite' && rowItem.caseNum) {
@@ -280,14 +266,12 @@ const formatters = {
         if (!value) {
             return '';
         }
-        let formattedValue = matchedFormatter(value, rowItem, columnItem);
-        if (formattedValue === value) {
-            if (Util.isList(value)) {
-                // only show type in grid
-                formattedValue = annotationTypeFormatter(value);
-            } else {
-                formattedValue = markdownFormatter(value, true);
-            }
+        let formattedValue = value;
+        if (Util.isList(value)) {
+            // only show type in grid
+            formattedValue = annotationTypeFormatter(value);
+        } else {
+            formattedValue = markdownFormatter(value, true);
         }
         if (formattedValue) {
             return `<span class="mcr-clickable">${formattedValue}</span>`;
@@ -331,7 +315,6 @@ const formatters = {
 export {
     formatters,
     titleTagsFormatter,
-    matchedFormatter,
     markdownFormatter,
     mergeAnnotations
 };

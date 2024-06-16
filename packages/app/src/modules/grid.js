@@ -2,7 +2,7 @@ import { Grid } from 'turbogrid';
 import { hash } from 'monocart-common';
 
 import Util from '../utils/util.js';
-import { formatters, matchedFormatter } from './formatters.js';
+import { formatters } from './formatters.js';
 import state from '../modules/state.js';
 import { getGridRows } from './grid-rows.js';
 
@@ -435,9 +435,6 @@ export const initCustomsFormatters = (list, customFormatters) => {
 
             if (formatter) {
                 item.formatter = function(value, rowItem, columnItem, cellNode) {
-
-                    value = matchedFormatter(value, rowItem, columnItem);
-
                     return formatter.apply(this, [value, rowItem, columnItem, cellNode]);
                 };
             }
