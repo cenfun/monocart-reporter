@@ -18,8 +18,7 @@ const {
 } = components;
 
 const data = shallowReactive({
-    stepFailed: 0,
-    stepFailedOnly: false
+    hasFailed: 0
 });
 
 const rowHeightMap = new Map();
@@ -185,8 +184,7 @@ const renderGrid = () => {
 
     const caseItem = data.caseItem;
 
-    data.stepFailed = caseItem.stepFailed;
-    data.stepFailedOnly = caseItem.stepFailedOnly;
+    data.hasFailed = caseItem.stepFailed > 0;
 
     const rows = caseItem.subs || [];
     initSteps(rows, 1);
@@ -213,7 +211,7 @@ const renderGrid = () => {
 
             if (hasMatched) {
 
-                if (data.stepFailedOnly) {
+                if (data.hasFailed && state.onlyFailedSteps) {
                     if (rowItem.errorNum) {
                         return true;
                     }
@@ -287,7 +285,7 @@ const updatePosition = (position) => {
 
 watch([
     () => data.keywords,
-    () => data.stepFailedOnly
+    () => state.onlyFailedSteps
 ], (v) => {
     if (data.grid) {
         data.grid.update();
@@ -372,9 +370,10 @@ const onFocus = (e) => {
           :button="false"
         />
       </div>
+
       <VuiSwitch
-        v-if="data.stepFailed"
-        v-model="data.stepFailedOnly"
+        v-if="data.hasFailed"
+        v-model="state.onlyFailedSteps"
         :label-clickable="true"
         label-position="right"
       >
@@ -402,7 +401,7 @@ const onFocus = (e) => {
 
 .mcr-search-steps {
     position: relative;
-    width: 120px;
+    width: 150px;
 
     .mcr-search-icon {
         left: 5px;

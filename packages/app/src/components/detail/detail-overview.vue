@@ -201,8 +201,8 @@ const onFocus = (e) => {
     @click="onFocus"
   >
     <div
-      v-for="item in data.list"
-      :key="item.id"
+      v-for="(item, i) in data.list"
+      :key="item.id+i"
       class="mcr-detail-item"
       :style="item.tg_style"
     >

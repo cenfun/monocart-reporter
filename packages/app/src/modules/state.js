@@ -49,6 +49,7 @@ const state = shallowReactive({
     grid: null,
 
     tabIndex: 0,
+    onlyFailedSteps: false,
 
     loading: false,
     initializing: true
