@@ -257,7 +257,6 @@ const zoomTo = (e, percent) => {
 
 };
 
-
 const onDblClick = (e) => {
     state.imageZoom = true;
     // console.log('onDblClick');
