@@ -258,7 +258,7 @@ onMounted(() => {
 <template>
   <div
     ref="el"
-    class="mcr-detail-test"
+    class="mcr-detail-overview"
     tabindex="0"
     @focus="onFocus"
     @click="onFocus"
@@ -294,7 +294,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-.mcr-detail-test {
+.mcr-detail-overview {
     width: 100%;
     height: 100%;
     padding-bottom: 10px;

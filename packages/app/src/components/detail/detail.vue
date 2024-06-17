@@ -9,7 +9,7 @@ import state from '../../modules/state.js';
 
 import IconLabel from '../icon-label.vue';
 import DetailSteps from './detail-steps.vue';
-import DetailTest from './detail-test.vue';
+import DetailOverview from './detail-overview.vue';
 
 const { VuiFlex, VuiTab } = components;
 
@@ -50,7 +50,7 @@ onActivated(() => {
       <div>
         <VuiFlex gap="5px">
           <IconLabel icon="case" />
-          <b>Test</b>
+          <b>Overview</b>
         </VuiFlex>
       </div>
       <div>
@@ -68,7 +68,7 @@ onActivated(() => {
     </template>
     <template #panes>
       <div>
-        <DetailTest />
+        <DetailOverview />
       </div>
       <div>
         <DetailSteps />
