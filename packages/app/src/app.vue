@@ -1574,8 +1574,18 @@ a:not([href], [class]):hover {
 }
 
 .mcr-focus {
-    outline: 2px solid #6bbbf7;
-    outline-offset: -2px;
+    position: relative;
+}
+
+.mcr-focus::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border: 2px solid #6bbbf7;
 }
 
 </style>

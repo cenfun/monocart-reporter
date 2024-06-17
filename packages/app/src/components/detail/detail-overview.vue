@@ -1,6 +1,6 @@
 <script setup>
 import {
-    ref, watch, shallowReactive, onMounted
+    ref, watch, shallowReactive, onMounted, nextTick
 } from 'vue';
 import { components } from 'vine-ui';
 import { microtask } from 'monocart-common';
@@ -101,7 +101,9 @@ const initDataList = (caseItem) => {
 
     collectErrorForAttachment(collection);
 
-    renderMermaid();
+    nextTick(() => {
+        renderMermaid();
+    });
 
 };
 
@@ -109,7 +111,8 @@ const initDataList = (caseItem) => {
 
 const updatePosition = (position) => {
 
-    if (!el.value) {
+    const $el = el.value;
+    if (!$el) {
         return;
     }
 
@@ -120,12 +123,12 @@ const updatePosition = (position) => {
     // check positionId first
     let found = false;
     const positionId = getPositionId(position.rowId, position.columnId);
-    let elem = el.value.querySelector(`[position-id="${positionId}"]`);
+    let elem = $el.querySelector(`[position-id="${positionId}"]`);
     if (elem) {
         found = true;
     } else {
         // not found but try to find related type position
-        elem = el.value.querySelector(`[position-type="${position.columnId}"]`);
+        elem = $el.querySelector(`[position-type="${position.columnId}"]`);
     }
 
     // found case and suite

@@ -58,15 +58,15 @@ const getColumnComponent = (id) => {
     gap="10px"
   >
     <div
-      v-for="column, dk in props.list"
-      :key="dk"
+      v-for="column in props.list"
+      :key="column.id"
       :class="itemColumnClass(column.data)"
-      :position-id="column.positionId"
-      :position-type="column.positionType"
     >
       <IconLabel
         :icon="column.state.collapsed?'collapsed':'expanded'"
         class="mcr-column-head"
+        :position-id="column.positionId"
+        :position-type="column.positionType"
         @click="onColumnHeadClick(column)"
       >
         <IconLabel :icon="column.icon">

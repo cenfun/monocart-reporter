@@ -8,7 +8,7 @@ import { microtask } from 'monocart-common';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
-import { initDataColumns } from '../../modules/detail-columns.js';
+import { initDataColumns, getPositionId } from '../../modules/detail-columns.js';
 
 import IconLabel from '../icon-label.vue';
 import StepInfo from './step-info.vue';
@@ -194,6 +194,8 @@ const renderGrid = () => {
 
     grid.setOption({
 
+        headerVisible: false,
+
         bindContainerResize: true,
         bindWindowResize: true,
 
@@ -270,12 +272,19 @@ const updatePosition = (position) => {
     const grid = data.grid;
     const rowItem = grid.getRowItem(position.rowId);
     if (rowItem) {
-        grid.scrollRowIntoView(rowItem);
+
+        // do not scrollRowIntoView, the row height could be changed
+        grid.scrollToRow(rowItem);
 
         setTimeout(() => {
-            const cellNode = grid.getCellNode(rowItem, 'title');
-            // console.log('cellNode', cellNode);
-            Util.setFocus(cellNode);
+
+            let elem = grid.getCellNode(rowItem, 'title');
+            if (elem) {
+                const positionId = getPositionId(position.rowId, position.columnId);
+                elem = elem.querySelector(`[position-id="${positionId}"]`) || elem;
+            }
+            Util.setFocus(elem);
+
         }, 100);
 
     }
@@ -393,8 +402,7 @@ const onFocus = (e) => {
 
 .mcr-steps-head {
     position: relative;
-    min-height: 35px;
-    padding: 5px;
+    padding: 10px;
     border-bottom: thin solid #ccc;
     user-select: none;
 }

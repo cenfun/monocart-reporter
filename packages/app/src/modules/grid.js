@@ -150,12 +150,14 @@ const onRowClickHandler = (d, force) => {
 const getClickPosition = (columnItem, rowItem) => {
     const columnId = columnItem.id;
     let rowId = rowItem.id;
+    let type = rowItem.type;
     if (columnId === 'errors' && rowItem.errorId) {
-        // use sub row errorId
+        // use sub row errorId, error from step
         rowId = rowItem.errorId;
+        type = 'step';
     }
     return {
-        type: rowItem.type,
+        type,
         rowId,
         columnId
     };

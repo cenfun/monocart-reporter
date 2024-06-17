@@ -310,8 +310,14 @@ export const setPosition = (position) => {
     }
 
     // auto switch tab only for step row
-    if (position.type === 'step' && state.tabIndex !== 1) {
-        state.tabIndex = 1;
+    if (state.tabIndex === 0) {
+        if (position.type === 'step') {
+            state.tabIndex = 1;
+        }
+    } else {
+        if (position.type !== 'step' && position.columnId !== 'title') {
+            state.tabIndex = 0;
+        }
     }
 
     // wait for image loaded
