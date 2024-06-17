@@ -304,6 +304,16 @@ export const initDataColumns = (item, collection) => {
     item.tg_detailColumns = detailColumns;
 };
 
+export const isClickableColumns = (columnId) => {
+    return [
+        'title',
+        'errors',
+        'logs',
+        'annotations',
+        'attachments'
+    ].includes(columnId);
+};
+
 export const setPosition = (position) => {
     if (!position) {
         return;
@@ -315,7 +325,7 @@ export const setPosition = (position) => {
             state.tabIndex = 1;
         }
     } else {
-        if (position.type !== 'step' && position.columnId !== 'title') {
+        if (position.type !== 'step' && isClickableColumns(position.columnId)) {
             state.tabIndex = 0;
         }
     }

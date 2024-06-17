@@ -9,6 +9,7 @@ import { microtask } from 'monocart-common';
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
 import { initDataColumns, getPositionId } from '../../modules/detail-columns.js';
+import emitter from '../../modules/emitter.js';
 
 import IconLabel from '../icon-label.vue';
 import StepInfo from './step-info.vue';
@@ -22,10 +23,6 @@ const data = shallowReactive({
 });
 
 const rowHeightMap = new Map();
-
-const isCurrentTab = () => {
-    return state.tabIndex === 1;
-};
 
 // ===========================================================================
 
@@ -209,6 +206,7 @@ const renderGrid = () => {
         rowNumberWidth,
 
         rowFilter: function(rowItem) {
+            // search title and errors
             const hasMatched = this.highlightKeywordsFilter(rowItem, ['title'], data.keywords);
 
             if (hasMatched) {
@@ -301,6 +299,9 @@ watch([
     }
 });
 
+const isCurrentTab = () => {
+    return state.tabIndex === 1;
+};
 
 watch(() => state.position, (v) => {
     if (v && data.grid && isCurrentTab()) {
@@ -338,7 +339,7 @@ watch(() => state.flyoverData, (v) => {
     }
 });
 
-watch(() => state.tabIndex, () => {
+emitter.on('onTabSteps', () => {
     updateCase();
 });
 

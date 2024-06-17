@@ -6,6 +6,7 @@ import { components } from 'vine-ui';
 import { microtask } from 'monocart-common';
 
 import state from '../../modules/state.js';
+import emitter from '../../modules/emitter.js';
 
 import IconLabel from '../icon-label.vue';
 import DetailSteps from './detail-steps.vue';
@@ -39,12 +40,21 @@ onActivated(() => {
     updateCase();
 });
 
+const onTabChange = (tabIndex) => {
+    if (tabIndex === 0) {
+        emitter.emit('onTabOverview');
+    } else if (tabIndex === 1) {
+        emitter.emit('onTabSteps');
+    }
+};
+
 </script>
 
 <template>
   <VuiTab
     v-model="state.tabIndex"
     class="mcr-detail"
+    @change="onTabChange"
   >
     <template #tabs>
       <div>

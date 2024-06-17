@@ -11,6 +11,7 @@ import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
 import { getPositionId, initDataColumns } from '../../modules/detail-columns.js';
 import { renderMermaid } from '../../modules/mermaid.js';
+import emitter from '../../modules/emitter.js';
 
 // import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
@@ -26,14 +27,12 @@ const data = shallowReactive({
 
 const el = ref(null);
 
-const isCurrentTab = () => {
-    return state.tabIndex === 0;
-};
-
 // ===========================================================================
 
 const collectErrorForAttachment = (collection) => {
     const { errors, attachments } = collection;
+
+    console.log(errors, attachments);
 
     if (!attachments.length || !errors.length) {
         return;
@@ -63,9 +62,12 @@ const collectErrorForAttachment = (collection) => {
                 attachment.message = match[0];
                 attachment.position = position;
                 index += 1;
+
+                console.log(attachment);
             }
         }
     });
+
 
 };
 
@@ -148,6 +150,10 @@ const updatePosition = (position) => {
     Util.setFocus();
 };
 
+const isCurrentTab = () => {
+    return state.tabIndex === 0;
+};
+
 watch(() => state.position, (v) => {
     if (v && isCurrentTab()) {
         updatePosition(v);
@@ -181,7 +187,7 @@ watch(() => state.flyoverData, (v) => {
     }
 });
 
-watch(() => state.tabIndex, () => {
+emitter.on('onTabOverview', () => {
     updateCase();
 });
 

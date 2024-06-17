@@ -64,6 +64,6 @@
         "open": "8.4.2",
         "stylelint": "^16.6.1",
         "stylelint-config-plus": "^1.1.2",
-        "vine-ui": "^3.1.14"
+        "vine-ui": "^3.1.15"
     }
 }

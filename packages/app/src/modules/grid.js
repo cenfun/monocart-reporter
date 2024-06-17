@@ -6,7 +6,7 @@ import { formatters } from './formatters.js';
 import state from '../modules/state.js';
 import { getGridRows } from './grid-rows.js';
 import { bindGridTooltip } from './tooltip.js';
-import { setPosition } from './detail-columns.js';
+import { setPosition, isClickableColumns } from './detail-columns.js';
 
 export const hideFlyover = (immediately) => {
     state.flyoverVisible = false;
@@ -133,13 +133,7 @@ const onRowClickHandler = (d, force) => {
 
     const isCaseTitle = columnId === 'title' && rowItem.type === 'case';
 
-    const isClickColumn = [
-        'ok',
-        'errors',
-        'logs',
-        'annotations',
-        'attachments'
-    ].includes(columnId) && !cls.contains('tg-cell');
+    const isClickColumn = isClickableColumns(columnId) && !cls.contains('tg-cell');
 
     if (isCaseTitle || isClickColumn) {
         showRowDetail(caseItem);
