@@ -4,6 +4,7 @@ import IconLabel from '../icon-label.vue';
 import Attachments from './attachments/attachments.vue';
 import ProjectMetadata from './project-metadata.vue';
 import HtmlContent from './html-content.vue';
+import { renderMermaid } from '../../modules/mermaid.js';
 
 const columnComponents = {
     attachments: Attachments,
@@ -38,6 +39,9 @@ const columnContentClass = (column) => {
 
 const onColumnHeadClick = (column) => {
     column.state.collapsed = !column.state.collapsed;
+    if (!column.state.collapsed) {
+        renderMermaid();
+    }
     emit('resize');
 };
 

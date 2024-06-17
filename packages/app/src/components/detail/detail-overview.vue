@@ -10,6 +10,7 @@ import 'github-markdown-css/github-markdown-light.css';
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
 import { getPositionId, initDataColumns } from '../../modules/detail-columns.js';
+import { renderMermaid } from '../../modules/mermaid.js';
 
 // import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
@@ -100,46 +101,9 @@ const initDataList = (caseItem) => {
 
     collectErrorForAttachment(collection);
 
+    renderMermaid();
+
 };
-
-const renderMermaid = async () => {
-    // console.log('renderMermaid');
-    await window.mermaid.run();
-};
-
-const loadMermaid = microtask(() => {
-    // console.log('loadMermaid');
-
-    const mermaidScript = document.querySelector("script[id='mermaid']");
-    if (mermaidScript) {
-        renderMermaid();
-        return;
-    }
-
-    const mermaidOptions = state.mermaid;
-    if (!mermaidOptions) {
-        return;
-    }
-
-    const scriptSrc = mermaidOptions.scriptSrc;
-    if (!scriptSrc) {
-        return;
-    }
-
-    const config = {
-        ... mermaidOptions.config
-    };
-    // console.log(config);
-
-    const script = document.createElement('script');
-    script.src = scriptSrc;
-    script.onload = () => {
-        script.setAttribute('id', 'mermaid');
-        window.mermaid.initialize(config);
-        renderMermaid();
-    };
-    document.body.appendChild(script);
-});
 
 // ===========================================================================
 
@@ -205,10 +169,6 @@ const updateCase = microtask(() => {
     }
 
     initDataList(caseItem);
-
-    if (state.mermaidEnabled) {
-        loadMermaid();
-    }
 
 });
 

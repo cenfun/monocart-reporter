@@ -17,6 +17,8 @@ import IconLabel from './components/icon-label.vue';
 
 import state, { defaultGroups } from './modules/state.js';
 
+import { loadMermaid } from './modules/mermaid.js';
+
 const {
     VuiInput,
     VuiFlex,
@@ -574,6 +576,12 @@ watch([
     () => state.exportSelected
 ], () => {
     renderGrid();
+});
+
+watch(() => state.mermaidEnabled, (v) => {
+    if (v && !state.mermaidLoaded) {
+        loadMermaid();
+    }
 });
 
 window.addEventListener('popstate', microtask(() => {
