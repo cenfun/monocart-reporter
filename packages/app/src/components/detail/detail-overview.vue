@@ -11,7 +11,7 @@ import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
 import { getPositionId, initDataColumns } from '../../modules/detail-columns.js';
 
-
+// import IconLabel from '../icon-label.vue';
 import SimpleColumns from './simple-columns.vue';
 import DetailColumns from './detail-columns.vue';
 import DurationLocation from './duration-location.vue';
@@ -28,19 +28,6 @@ const el = ref(null);
 const isCurrentTab = () => {
     return state.tabIndex === 0;
 };
-
-const itemClass = (d) => {
-    const ls = ['mcr-detail-item'];
-    if (d.classLevel) {
-        ls.push(d.classLevel);
-    }
-    return ls;
-};
-
-const itemHeadClass = (d) => {
-    return ['mcr-detail-head', `mcr-detail-${d.type}`, d.classMap];
-};
-
 
 // ===========================================================================
 
@@ -101,29 +88,15 @@ const initDataList = (caseItem) => {
         attachments: []
     };
 
-    data.list = list.map((item) => {
+    list.forEach((item) => {
 
         initDataColumns(item, collection);
 
-        const left = item.tg_level * 13;
-        let icon = Util.getTypeIcon(item.suiteType, item.type);
-        if (item.caseType) {
-            icon = item.caseType;
-        }
+        item.tg_style = `margin-left: ${item.tg_level * 13}px;`;
+        item.tg_positionId = getPositionId(item.id, 'title');
 
-        const positionId = getPositionId(item.id, 'title');
-
-        return {
-            data: item,
-            state: shallowReactive({}),
-            positionId,
-            style: `margin-left:${left}px;`,
-            icon,
-            titleColumn: item.tg_titleColumn,
-            simpleColumns: item.tg_simpleColumns,
-            detailColumns: item.tg_detailColumns
-        };
     });
+    data.list = list;
 
     collectErrorForAttachment(collection);
 
@@ -268,30 +241,29 @@ const onFocus = (e) => {
     @click="onFocus"
   >
     <div
-      v-for="item, ik in data.list"
-      :key="ik"
-      :class="itemClass(item.data)"
-      :style="item.style"
+      v-for="item in data.list"
+      :key="item.id"
+      class="mcr-detail-item"
+      :style="item.tg_style"
     >
       <VuiFlex
-        :class="itemHeadClass(item.data)"
+        class="mcr-detail-head"
         gap="10px"
-        padding="5px"
-        :position-id="item.positionId"
+        :position-id="item.tg_positionId"
         wrap
       >
-        <RowTitle :item="item" />
+        <RowTitle :row-item="item" />
 
-        <SimpleColumns :list="item.simpleColumns" />
+        <SimpleColumns :list="item.tg_simpleColumns" />
 
         <div class="vui-flex-auto" />
 
-        <DurationLocation :row-item="item.data" />
+        <DurationLocation :row-item="item" />
       </VuiFlex>
 
       <DetailColumns
         class="mcr-detail-body"
-        :list="item.detailColumns"
+        :list="item.tg_detailColumns"
       />
     </div>
   </div>
@@ -307,50 +279,27 @@ const onFocus = (e) => {
 
 .mcr-detail-item {
     position: relative;
-    border-bottom: 1px solid #ccc;
-}
+    border: thin solid #999;
+    border-top: none;
+    border-right: none;
 
-.mcr-detail-body {
-    padding: 10px;
-    border-top: 1px solid #eee;
-    border-left: 1px solid #ccc;
-}
-
-.mcr-detail-head {
-    position: relative;
-    z-index: 1;
-    min-height: 35px;
-    border-left: 1px solid #ccc;
-
-    &:hover::after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        content: "";
-        display: block;
-        width: 100%;
-        height: 100%;
-        background-color: rgb(0 0 0 / 2%);
-        pointer-events: none;
-    }
-
-    &.mcr-case-failed + .mcr-detail-body,
-    &.mcr-case-flaky + .mcr-detail-body {
-        border-top: none;
+    &:hover {
+        border-left: thin solid #666;
     }
 }
 
 .mcr-detail-item:first-child {
-    .mcr-detail-head,
-    .mcr-detail-body {
-        border-left: none;
-    }
+    border-left: none;
 }
 
-.mcr-detail-suite {
-    .mcr-detail-title {
-        font-weight: bold;
-    }
+.mcr-detail-head {
+    position: relative;
+    min-height: 36px;
+    padding: 10px;
+}
+
+.mcr-detail-body {
+    padding: 0 10px 10px;
 }
 
 .markdown-body {

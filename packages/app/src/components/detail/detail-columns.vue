@@ -28,7 +28,7 @@ const itemColumnClass = (item) => {
 
 const columnContentClass = (column) => {
     const cls = ['mcr-column-content'];
-    if (column.collapsed) {
+    if (column.state.collapsed) {
         cls.push('mcr-column-collapsed');
     } else {
         cls.push('mcr-column-expanded');
@@ -37,7 +37,7 @@ const columnContentClass = (column) => {
 };
 
 const onColumnHeadClick = (column) => {
-    column.collapsed = !column.collapsed;
+    column.state.collapsed = !column.state.collapsed;
     emit('resize');
 };
 
@@ -61,7 +61,7 @@ const getColumnComponent = (id) => {
       :position-type="column.positionType"
     >
       <IconLabel
-        :icon="column.collapsed?'collapsed':'expanded'"
+        :icon="column.state.collapsed?'collapsed':'expanded'"
         class="mcr-column-head"
         @click="onColumnHeadClick(column)"
       >

@@ -1,4 +1,4 @@
-
+import { shallowReactive } from 'vue';
 import Convert from 'ansi-to-html';
 
 import {
@@ -226,7 +226,7 @@ const addResult = (list, item, column, result) => {
     result.data = column;
     result.positionId = getPositionId(item.id, column.id);
     result.positionType = column.id;
-
+    result.state = shallowReactive({});
     list.push(result);
 };
 
