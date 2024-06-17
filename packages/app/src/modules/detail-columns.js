@@ -42,6 +42,7 @@ const getErrors = (item, column, collection) => {
     }
 
     const position = {
+        type: item.type,
         rowId: item.id,
         columnId: column.id
     };
@@ -307,8 +308,18 @@ export const setPosition = (position) => {
     if (!position) {
         return;
     }
+
+    // auto switch tab
+    if (position.type === 'step' && state.tabIndex !== 1) {
+        state.tabIndex = 1;
+    } else if (position.type !== 'step' && state.tabIndex !== 0) {
+        state.tabIndex = 0;
+    }
+
+    // wait for image loaded
     setTimeout(() => {
         state.position = position;
+        // remove status
         setTimeout(() => {
             state.position = null;
         }, 100);

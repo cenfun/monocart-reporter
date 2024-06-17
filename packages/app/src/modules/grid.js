@@ -28,28 +28,11 @@ export const showFlyover = (component, data) => {
     state.flyoverVisible = true;
 };
 
-const showDetailById = (grid, id) => {
-    if (id) {
-        const rowItem = grid.getRowItemById(id);
-        if (rowItem) {
-            grid.scrollRowIntoView(rowItem);
-            grid.setRowSelected(rowItem);
-            showFlyover('detail', rowItem);
-            return true;
-        }
-    }
-};
-
-const showDetailByTitle = (grid, title) => {
-    if (title) {
-        const rowItem = grid.getRowItemBy('title', title);
-        if (rowItem) {
-            grid.scrollRowIntoView(rowItem);
-            grid.setRowSelected(rowItem);
-            showFlyover('detail', rowItem);
-            return true;
-        }
-    }
+const showDetailRowAndFocus = (grid, rowItem) => {
+    grid.scrollRowIntoView(rowItem);
+    grid.selectAll(false);
+    grid.setRowSelected(rowItem);
+    showFlyover('detail', rowItem);
 };
 
 const showDetail = (pagePath) => {
@@ -58,25 +41,27 @@ const showDetail = (pagePath) => {
         return;
     }
 
-    const data = state.flyoverData;
-    if (data) {
-        showFlyover('detail', data);
-        return true;
-    }
-
     const list = pagePath.split('/');
     const id = list.shift();
     const title = list.join('/');
     // console.log('page:', page, 'id:', id, 'title:', title);
 
     // match id
-    if (showDetailById(grid, id)) {
-        return true;
+    if (id) {
+        const rowItem = grid.getRowItemById(id);
+        if (rowItem) {
+            showDetailRowAndFocus(grid, rowItem);
+            return true;
+        }
     }
 
     // only match title
-    if (showDetailByTitle(grid, title)) {
-        return true;
+    if (title) {
+        const rowItem = grid.getRowItemBy('title', title);
+        if (rowItem) {
+            showDetailRowAndFocus(grid, rowItem);
+            return true;
+        }
     }
 };
 
@@ -121,9 +106,9 @@ const getClickCaseItem = (rowItem) => {
     }
 };
 
-const showRowDetail = (data) => {
-    state.flyoverData = data;
-    const { id, title } = data;
+const showRowDetail = (caseItem) => {
+    showFlyover('detail', caseItem);
+    const { id, title } = caseItem;
     hash.set('page', `detail/${id}/${title}`);
 };
 
@@ -170,6 +155,7 @@ const getClickPosition = (columnItem, rowItem) => {
         rowId = rowItem.errorId;
     }
     return {
+        type: rowItem.type,
         rowId,
         columnId
     };

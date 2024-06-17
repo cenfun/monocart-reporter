@@ -170,13 +170,13 @@ const loadMermaid = microtask(() => {
 
 // ===========================================================================
 
-const onFocus = (e) => {
-    Util.setFocus();
-};
-
 const updatePosition = (position) => {
 
     if (!el.value) {
+        return;
+    }
+
+    if (position.type === 'step') {
         return;
     }
 
@@ -252,6 +252,10 @@ watch(() => state.tabIndex, () => {
 onMounted(() => {
     updateCase();
 });
+
+const onFocus = (e) => {
+    Util.setFocus();
+};
 
 </script>
 

@@ -30,26 +30,6 @@ const isCurrentTab = () => {
 
 // ===========================================================================
 
-// wait for image loaded
-const updatePosition = (position) => {
-
-    const grid = data.grid;
-    const rowItem = grid.getRowItem(position.rowId);
-    if (rowItem) {
-        grid.scrollToRow(rowItem);
-
-        setTimeout(() => {
-            const cellNode = grid.getCellNode(rowItem, 'title');
-            console.log('cellNode', cellNode);
-            Util.setFocus(cellNode);
-        }, 100);
-
-    }
-
-};
-
-// ===========================================================================
-
 const asyncUpdateRowHeight = microtask(() => {
     // console.log('asyncUpdateRowHeight', rowHeightMap);
 
@@ -282,6 +262,29 @@ const renderGrid = () => {
 
 // ===========================================================================
 
+// wait for image loaded
+const updatePosition = (position) => {
+
+    if (position.type !== 'step') {
+        return;
+    }
+
+    const grid = data.grid;
+    const rowItem = grid.getRowItem(position.rowId);
+    if (rowItem) {
+        grid.scrollRowIntoView(rowItem);
+
+        setTimeout(() => {
+            const cellNode = grid.getCellNode(rowItem, 'title');
+            // console.log('cellNode', cellNode);
+            Util.setFocus(cellNode);
+        }, 100);
+
+    }
+
+};
+
+
 watch([
     () => data.keywords,
     () => data.stepFailedOnly
@@ -336,12 +339,19 @@ onMounted(() => {
     updateCase();
 });
 
+const onFocus = (e) => {
+    Util.setFocus();
+};
+
 </script>
 
 <template>
   <VuiFlex
     class="mcr-detail-steps"
     direction="column"
+    tabindex="0"
+    @focus="onFocus"
+    @click="onFocus"
   >
     <VuiFlex
       gap="10px"
