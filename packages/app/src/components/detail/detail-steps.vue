@@ -183,7 +183,36 @@ const renderGrid = () => {
 
     data.hasFailed = caseItem.stepFailed > 0;
 
-    const rows = caseItem.subs || [];
+
+    const list = [];
+
+    // suites
+    let suite = caseItem.tg_parent;
+    while (suite) {
+        const row = {
+            ... suite
+        };
+        row.subs = null;
+        list.unshift(row);
+        suite = suite.tg_parent;
+    }
+
+    const steps = caseItem.subs;
+    const row = {
+        ... caseItem
+    };
+    row.subs = null;
+    list.push(row);
+
+    list.push({
+        title: 'Steps'
+    });
+
+    // console.log(list);
+
+
+    // const rows = caseItem.subs || [];
+    const rows = list.concat(steps);
     initSteps(rows, 1);
 
     const rowHeight = 36;

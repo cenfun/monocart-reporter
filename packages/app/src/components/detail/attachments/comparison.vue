@@ -567,6 +567,7 @@ onUnmounted(() => {
         height: 30px;
         min-width: 60px;
         line-height: 30px;
+        text-align: center;
     }
 
     .vui-tab-item::before {
