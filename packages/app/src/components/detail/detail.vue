@@ -24,6 +24,7 @@ const data = shallowReactive({
 });
 
 const gridDataCache = {};
+const suiteCache = {};
 
 // ===========================================================================
 
@@ -193,8 +194,6 @@ const collectErrorForAttachment = (collection) => {
                 attachment.message = match[0];
                 attachment.position = position;
                 index += 1;
-
-                console.log(attachment);
             }
         }
     });
@@ -234,8 +233,12 @@ const getGridData = (grid, caseItem) => {
     // suites
     let suite = caseItem.tg_parent;
     while (suite) {
-        const row = grid.getItemSnapshot(suite);
-        rows.unshift(row);
+        let suiteRow = suiteCache[suite.id];
+        if (!suiteRow) {
+            suiteRow = grid.getItemSnapshot(suite);
+            suiteCache[suite.id] = suiteRow;
+        }
+        rows.unshift(suiteRow);
         suite = suite.tg_parent;
     }
 

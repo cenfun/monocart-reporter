@@ -293,6 +293,11 @@ const getColumns = (list, item, columns, collection) => {
 
 export const initDataColumns = (item, collection) => {
 
+    // already done
+    if (item.tg_state) {
+        return;
+    }
+
     const allColumns = [];
     getColumns(allColumns, item, state.columns, collection);
 
@@ -308,6 +313,7 @@ export const initDataColumns = (item, collection) => {
         });
     }
 
+    item.tg_state = shallowReactive({});
     item.tg_simpleColumns = simpleColumns;
 
     if (detailColumns.length) {
