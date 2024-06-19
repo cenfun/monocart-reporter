@@ -23,6 +23,8 @@ const data = shallowReactive({
     hasFailed: 0
 });
 
+const gridDataCache = {};
+
 // ===========================================================================
 
 const createDetailInfo = (rowItem, columnItem, cellNode) => {
@@ -201,10 +203,6 @@ const collectErrorForAttachment = (collection) => {
 };
 
 const initRows = (list, collection) => {
-    if (!Util.isList(list)) {
-        return;
-    }
-
     list.forEach((it) => {
 
         if (it.type === 'step' && it.stepType !== 'retry') {
@@ -214,13 +212,20 @@ const initRows = (list, collection) => {
 
         initDataColumns(it, collection);
 
-        initRows(it.subs, collection);
+        // step subs
+        if (it.subs) {
+            initRows(it.subs, collection);
+        }
+
     });
 
 };
 
-const getGridData = () => {
-    const caseItem = data.caseItem;
+const getGridData = (grid, caseItem) => {
+
+    if (gridDataCache[caseItem.id]) {
+        return gridDataCache[caseItem.id];
+    }
 
     data.hasFailed = caseItem.stepFailed > 0;
 
@@ -229,20 +234,15 @@ const getGridData = () => {
     // suites
     let suite = caseItem.tg_parent;
     while (suite) {
-        const row = {
-            ... suite
-        };
-        row.subs = null;
+        const row = grid.getItemSnapshot(suite);
         rows.unshift(row);
         suite = suite.tg_parent;
     }
 
-
     const row = {
-        hasDetails: true,
-        ... caseItem
+        ... grid.getItemSnapshot(caseItem),
+        hasDetails: true
     };
-    row.subs = null;
     rows.push(row);
 
     const stepInfo = {
@@ -257,7 +257,7 @@ const getGridData = () => {
     const steps = caseItem.subs;
     if (Util.isList(steps)) {
         stepInfo.title = `Steps <div class="mcr-num">${caseItem.stepNum}</div>`;
-        stepInfo.subs = steps;
+        stepInfo.subs = grid.getTreeSnapshot(steps);
     }
 
     // temp list for errors match to attachments
@@ -281,12 +281,14 @@ const getGridData = () => {
         rows
     };
 
+    gridDataCache[caseItem.id] = gridData;
+
     return gridData;
 };
 
-const renderGrid = () => {
+const renderGrid = (caseItem) => {
     const grid = getGrid();
-    const gridData = getGridData();
+    const gridData = getGridData(grid, caseItem);
     grid.setData(gridData);
     grid.render();
 };
@@ -355,8 +357,7 @@ const updateCase = microtask(() => {
         return;
     }
 
-    data.caseItem = caseItem;
-    renderGrid();
+    renderGrid(caseItem);
 
 });
 

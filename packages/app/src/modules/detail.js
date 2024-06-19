@@ -222,13 +222,13 @@ export const getPositionId = (rowId, columnId) => {
     return [rowId, columnId].join('-');
 };
 
-const addResult = (list, item, column, result) => {
-
+const addColumn = (list, item, column, result) => {
+    const hasDetails = !result.subs;
     list.push({
         ... result,
         type: 'column',
-        hasDetails: true,
-        hoverable: false,
+        hasDetails,
+        hoverable: !hasDetails,
         data: column,
         title: column.name,
         positionId: getPositionId(item.id, column.id),
@@ -248,10 +248,21 @@ const getProjectMetadata = (item) => {
         return;
     }
 
+    metadataList.forEach((it) => {
+        let title = `<b>${it.name}</b>: `;
+        if (it.isLink) {
+            title += `<a href="${it.value}" target="_blank">${it.value}</a>`;
+        } else {
+            title += it.value;
+        }
+        it.title = title;
+    });
+
     return {
         id: 'metadata',
+        title: 'Metadata',
         icon: 'metadata',
-        list: metadataList
+        subs: metadataList
     };
 };
 
@@ -261,12 +272,7 @@ const getColumns = (list, item, columns, collection) => {
     if (item.type === 'suite' && item.suiteType === 'project') {
         const result = getProjectMetadata(item);
         if (result) {
-            // virtual column for project metadata
-            const column = {
-                id: 'metadata',
-                name: 'Metadata'
-            };
-            addResult(list, item, column, result);
+            list.push(result);
         }
     }
 
@@ -274,7 +280,7 @@ const getColumns = (list, item, columns, collection) => {
 
         const result = getColumn(item, column, collection);
         if (result) {
-            addResult(list, item, column, result);
+            addColumn(list, item, column, result);
         }
 
         if (Util.isList(column.subs)) {
@@ -307,8 +313,7 @@ export const initDataColumns = (item, collection) => {
     if (detailColumns.length) {
         // console.log(detailColumns);
         if (item.subs) {
-            // TODO copy subs prepend
-            // item.subs = detailColumns.concat(item.subs);
+            item.subs = detailColumns.concat(item.subs);
         } else {
             item.subs = detailColumns;
         }
