@@ -28,8 +28,7 @@ const props = defineProps({
 });
 
 const data = shallowReactive({
-    iconType: '',
-    iconStatus: ''
+    iconType: ''
 });
 
 const classMap = computed(() => {
@@ -49,8 +48,6 @@ onMounted(() => {
         // suite
 
     } else if (rowItem.type === 'case') {
-
-        data.iconStatus = rowItem.caseType;
 
         data.caseType = rowItem.caseType;
         data.classStatus = ['mcr-detail-status', `mcr-status-${rowItem.caseType}`];
@@ -115,13 +112,6 @@ const onMouseleave = (e) => {
         >
           {{ rowItem.index }}
         </div>
-
-        <IconLabel
-          v-if="data.iconStatus"
-          :icon="data.iconStatus"
-          size="20px"
-          :button="false"
-        />
 
         <div
           v-if="data.caseType"
@@ -205,6 +195,12 @@ const onMouseleave = (e) => {
     text-align: center;
     border-radius: 5px;
     background-color: gray;
+}
+
+.mcr-step-error {
+    .mcr-step-index {
+        background-color: var(--color-failed);
+    }
 }
 
 </style>

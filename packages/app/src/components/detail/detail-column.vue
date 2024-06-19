@@ -1,5 +1,5 @@
 <script setup>
-
+import { nextTick } from 'vue';
 import IconLabel from '../icon-label.vue';
 import Attachments from './attachments/attachments.vue';
 import ProjectMetadata from './project-metadata.vue';
@@ -23,20 +23,12 @@ const itemColumnClass = (item) => {
     return ['mcr-detail-column', `mcr-detail-${item.id}`];
 };
 
-const columnContentClass = (column) => {
-    const cls = ['mcr-column-content'];
-    if (column.state.collapsed) {
-        cls.push('mcr-column-collapsed');
-    } else {
-        cls.push('mcr-column-expanded');
-    }
-    return cls;
-};
-
 const onColumnHeadClick = (column) => {
     column.state.collapsed = !column.state.collapsed;
     if (!column.state.collapsed) {
-        renderMermaid();
+        nextTick(() => {
+            renderMermaid();
+        });
     }
 };
 
@@ -62,7 +54,8 @@ const getColumnComponent = (id) => {
 
     <component
       :is="getColumnComponent(column.id)"
-      :class="columnContentClass(column)"
+      v-if="!column.state.collapsed"
+      class="mcr-column-content"
       :column="column"
     />
   </div>
@@ -83,18 +76,12 @@ const getColumnComponent = (id) => {
 
 .mcr-column-content {
     position: relative;
+    margin-top: 5px;
     margin-bottom: 5px;
+    margin-left: 25px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f6f8fa;
-
-    &.mcr-column-collapsed {
-        display: none;
-    }
-
-    &.mcr-column-expanded {
-        display: block;
-    }
 }
 
 .mcr-detail-logs {
