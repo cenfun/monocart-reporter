@@ -223,11 +223,18 @@ export const getPositionId = (rowId, columnId) => {
 };
 
 const addResult = (list, item, column, result) => {
-    result.data = column;
-    result.positionId = getPositionId(item.id, column.id);
-    result.positionType = column.id;
-    result.state = shallowReactive({});
-    list.push(result);
+
+    list.push({
+        ... result,
+        type: 'column',
+        hasDetails: true,
+        hoverable: false,
+        data: column,
+        title: column.name,
+        positionId: getPositionId(item.id, column.id),
+        positionType: column.id,
+        state: shallowReactive({})
+    });
 };
 
 const getProjectMetadata = (item) => {
@@ -296,7 +303,17 @@ export const initDataColumns = (item, collection) => {
     }
 
     item.tg_simpleColumns = simpleColumns;
-    item.tg_detailColumns = detailColumns;
+
+    if (detailColumns.length) {
+        // console.log(detailColumns);
+        if (item.subs) {
+            // TODO copy subs prepend
+            // item.subs = detailColumns.concat(item.subs);
+        } else {
+            item.subs = detailColumns;
+        }
+    }
+
 };
 
 export const isClickableColumns = (columnId) => {

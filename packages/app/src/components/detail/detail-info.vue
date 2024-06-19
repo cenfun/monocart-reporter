@@ -12,7 +12,7 @@ import state from '../../modules/state.js';
 import IconLabel from '../icon-label.vue';
 import DurationLocation from './duration-location.vue';
 import DetailSimpleList from './detail-simple-list.vue';
-
+import DetailColumn from './detail-column.vue';
 
 const { VuiFlex } = components;
 
@@ -42,7 +42,7 @@ onMounted(() => {
     const rowItem = props.rowItem;
 
     data.html = rowItem.title;
-    data.iconType = Util.getTypeIcon(rowItem.suiteType, rowItem.type);
+    data.iconType = rowItem.icon || Util.getTypeIcon(rowItem.suiteType, rowItem.type);
 
     if (rowItem.type === 'suite') {
 
@@ -63,7 +63,6 @@ onMounted(() => {
 
     } else {
         // step-info
-        data.iconType = 'step';
     }
 
 
@@ -82,7 +81,6 @@ const onMouseleave = (e) => {
     hideTooltip();
 };
 
-
 </script>
 
 <template>
@@ -91,7 +89,13 @@ const onMouseleave = (e) => {
     direction="column"
     gap="5px"
   >
+    <DetailColumn
+      v-if="rowItem.type==='column'"
+      :column="rowItem"
+    />
+
     <VuiFlex
+      v-else
       gap="10px"
       class="mcr-detail-head"
     >

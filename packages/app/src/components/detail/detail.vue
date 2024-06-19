@@ -247,6 +247,7 @@ const getGridData = () => {
 
     const stepInfo = {
         type: 'step-info',
+        icon: 'step',
         title: 'No Steps'
     };
 
@@ -388,7 +389,7 @@ const onFocus = (e) => {
     @click="onFocus"
   >
     <VuiFlex
-      gap="10px"
+      gap="15px"
       wrap
       class="mcr-overview-head"
     >
@@ -434,14 +435,14 @@ const onFocus = (e) => {
 
 .mcr-overview-head {
     position: relative;
-    padding: 10px;
+    padding: 15px;
     border-bottom: thin solid #ccc;
     user-select: none;
 }
 
 .mcr-overview-search {
     position: relative;
-    width: 150px;
+    width: 200px;
 
     .mcr-search-icon {
         left: 5px;
