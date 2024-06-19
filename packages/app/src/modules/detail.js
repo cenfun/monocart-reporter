@@ -295,8 +295,6 @@ export const initDataColumns = (item, collection) => {
         });
     }
 
-    // titleColumn for tags
-    item.tg_titleColumn = state.columns.find((it) => it.id === 'title');
     item.tg_simpleColumns = simpleColumns;
     item.tg_detailColumns = detailColumns;
 };

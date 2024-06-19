@@ -12,8 +12,6 @@ import { initDataColumns, getPositionId } from '../../modules/detail.js';
 import emitter from '../../modules/emitter.js';
 import { renderMermaid } from '../../modules/mermaid.js';
 
-import { formatters } from '../../modules/formatters.js';
-
 import IconLabel from '../icon-label.vue';
 import DetailInfo from './detail-info.vue';
 
@@ -27,20 +25,19 @@ const data = shallowReactive({
 
 // ===========================================================================
 
-const createDetailInfo = (value, rowItem, columnItem, cellNode) => {
-    const div = cellNode.querySelector('.tg-tree-name');
-    if (div) {
+const createDetailInfo = (rowItem, columnItem, cellNode) => {
+
+    const container = cellNode.querySelector('.tg-tree-name');
+
+    if (container) {
         createApp({
             render() {
                 return h(DetailInfo, {
                     rowItem,
-                    columnItem,
-                    onResize: () => {
-
-                    }
+                    columnItem
                 });
             }
-        }).mount(div);
+        }).mount(container);
     }
 };
 
@@ -94,17 +91,31 @@ const getGrid = () => {
         bindContainerResize: true,
         bindWindowResize: true,
 
-        rowNumberVisible: true,
-
         scrollbarRound: true,
         textSelectable: true,
 
+        rowHeight: 36,
         rowNotFound: 'No Results',
-        // cellResizeObserver: (rowItem, columnItem) => {
-        //     if (columnItem.id === 'title') {
-        //         return true;
-        //     }
-        // },
+        cellResizeObserver: (rowItem, columnItem) => {
+            if (columnItem.id === 'title' && rowItem.hasDetails) {
+                return true;
+            }
+        },
+
+        highlightKeywords: {
+            textGenerator: (rowItem, id) => {
+                const list = [rowItem.title];
+
+                if (rowItem.type === 'case') {
+                    list.push(rowItem.tags);
+                    list.push(rowItem.caseType);
+                }
+
+                // TODO + simple columns
+
+                return list.join('');
+            }
+        },
 
         rowFilter: function(rowItem) {
             // search title and errors
@@ -131,20 +142,15 @@ const getGrid = () => {
 
     grid.setFormatter({
         tree: function(value, rowItem, columnItem, cellNode) {
+
+            nextTick(() => {
+                createDetailInfo(rowItem, columnItem, cellNode);
+            });
+
             const defaultFormatter = this.getDefaultFormatter('tree');
             // async create vue component
-            nextTick(() => {
-                createDetailInfo(value, rowItem, columnItem, cellNode);
-            });
             // tg-tree-name
             return defaultFormatter('', rowItem, columnItem, cellNode);
-        },
-        rowNumber: function(value, rowItem, columnItem, cellNode) {
-            if (['suite', 'case'].includes(rowItem.type)) {
-                return formatters.iconType(rowItem.type, rowItem, columnItem, cellNode);
-            }
-
-            return rowItem.index || '';
         }
     });
 
@@ -208,10 +214,6 @@ const initRows = (list, collection) => {
 
         initDataColumns(it, collection);
 
-        if (it.tg_detailColumns.length) {
-            it.hoverable = false;
-        }
-
         initRows(it.subs, collection);
     });
 
@@ -222,7 +224,7 @@ const getGridData = () => {
 
     data.hasFailed = caseItem.stepFailed > 0;
 
-    let rows = [];
+    const rows = [];
 
     // suites
     let suite = caseItem.tg_parent;
@@ -237,6 +239,7 @@ const getGridData = () => {
 
 
     const row = {
+        hasDetails: true,
         ... caseItem
     };
     row.subs = null;
@@ -244,8 +247,7 @@ const getGridData = () => {
 
     const stepInfo = {
         type: 'step-info',
-        title: 'No Steps',
-        stepNum: caseItem.stepNum
+        title: 'No Steps'
     };
 
     rows.push(stepInfo);
@@ -253,8 +255,8 @@ const getGridData = () => {
     // skipped case no steps
     const steps = caseItem.subs;
     if (Util.isList(steps)) {
-        stepInfo.title = 'Steps';
-        rows = rows.concat(steps);
+        stepInfo.title = `Steps <div class="mcr-num">${caseItem.stepNum}</div>`;
+        stepInfo.subs = steps;
     }
 
     // temp list for errors match to attachments
@@ -268,14 +270,7 @@ const getGridData = () => {
 
     collectErrorForAttachment(collection);
 
-    const rowHeight = 36;
-    const rowNumberWidth = Math.max(10 + stepInfo.stepNum.toString().length * 12, rowHeight);
-
     const gridData = {
-        options: {
-            rowHeight,
-            rowNumberWidth
-        },
         columns: [{
             id: 'title',
             name: 'Title',
@@ -401,7 +396,6 @@ const onFocus = (e) => {
         <VuiInput
           v-model="data.keywords"
           :class="data.keywords?'mcr-search-keywords':''"
-          placeholder="search steps"
           width="100%"
           :select-on-focus="true"
         />
@@ -409,6 +403,12 @@ const onFocus = (e) => {
           class="mcr-search-icon"
           icon="search"
           :button="false"
+        />
+        <IconLabel
+          v-if="data.keywords"
+          class="mcr-search-clear"
+          icon="close"
+          @click="data.keywords = ''"
         />
       </div>
 
@@ -447,8 +447,15 @@ const onFocus = (e) => {
         left: 5px;
     }
 
+    .mcr-search-clear {
+        right: 8px;
+    }
+
     input {
+        height: 30px;
+        padding-right: 25px;
         padding-left: 25px;
+        border-radius: 10px;
     }
 }
 
