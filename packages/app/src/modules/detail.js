@@ -279,9 +279,6 @@ const getColumns = (list, item, columns, collection) => {
 };
 
 export const initDataColumns = (item, collection) => {
-    if (item.tg_detailColumns) {
-        return;
-    }
 
     const allColumns = [];
     getColumns(allColumns, item, state.columns, collection);

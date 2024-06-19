@@ -6,7 +6,7 @@ import { formatters } from './formatters.js';
 import state from '../modules/state.js';
 import { getGridRows } from './grid-rows.js';
 import { bindGridTooltip } from './tooltip.js';
-import { setPosition, isClickableColumns } from './detail-columns.js';
+import { setPosition, isClickableColumns } from './detail.js';
 
 export const hideFlyover = (immediately) => {
     state.flyoverVisible = false;

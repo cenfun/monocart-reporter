@@ -8,9 +8,11 @@ import { microtask } from 'monocart-common';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
-import { initDataColumns, getPositionId } from '../../modules/detail-columns.js';
+import { initDataColumns, getPositionId } from '../../modules/detail.js';
 import emitter from '../../modules/emitter.js';
 import { renderMermaid } from '../../modules/mermaid.js';
+
+import { formatters } from '../../modules/formatters.js';
 
 import IconLabel from '../icon-label.vue';
 import DetailInfo from './detail-info.vue';
@@ -98,11 +100,11 @@ const getGrid = () => {
         textSelectable: true,
 
         rowNotFound: 'No Results',
-        cellResizeObserver: (rowItem, columnItem) => {
-            if (rowItem.tg_detailColumns.length) {
-                return true;
-            }
-        },
+        // cellResizeObserver: (rowItem, columnItem) => {
+        //     if (columnItem.id === 'title') {
+        //         return true;
+        //     }
+        // },
 
         rowFilter: function(rowItem) {
             // search title and errors
@@ -138,6 +140,10 @@ const getGrid = () => {
             return defaultFormatter('', rowItem, columnItem, cellNode);
         },
         rowNumber: function(value, rowItem, columnItem, cellNode) {
+            if (['suite', 'case'].includes(rowItem.type)) {
+                return formatters.iconType(rowItem.type, rowItem, columnItem, cellNode);
+            }
+
             return rowItem.index || '';
         }
     });
@@ -146,31 +152,10 @@ const getGrid = () => {
 };
 
 
-const initSteps = (list, index) => {
-    if (!Util.isList(list)) {
-        return index;
-    }
-
-    list.forEach((it) => {
-
-        if (it.stepType !== 'retry') {
-            it.index = index++;
-        }
-
-        initDataColumns(it);
-        if (it.tg_detailColumns.length) {
-            it.hoverable = false;
-        }
-        index = initSteps(it.subs, index);
-    });
-
-    return index;
-};
-
 const collectErrorForAttachment = (collection) => {
     const { errors, attachments } = collection;
 
-    console.log(errors, attachments);
+    // console.log(errors, attachments);
 
     if (!attachments.length || !errors.length) {
         return;
@@ -209,13 +194,35 @@ const collectErrorForAttachment = (collection) => {
 
 };
 
+const initRows = (list, collection) => {
+    if (!Util.isList(list)) {
+        return;
+    }
+
+    list.forEach((it) => {
+
+        if (it.type === 'step' && it.stepType !== 'retry') {
+            collection.index += 1;
+            it.index = collection.index;
+        }
+
+        initDataColumns(it, collection);
+
+        if (it.tg_detailColumns.length) {
+            it.hoverable = false;
+        }
+
+        initRows(it.subs, collection);
+    });
+
+};
+
 const getGridData = () => {
     const caseItem = data.caseItem;
 
     data.hasFailed = caseItem.stepFailed > 0;
 
-
-    const list = [];
+    let rows = [];
 
     // suites
     let suite = caseItem.tg_parent;
@@ -224,37 +231,45 @@ const getGridData = () => {
             ... suite
         };
         row.subs = null;
-        list.unshift(row);
+        rows.unshift(row);
         suite = suite.tg_parent;
     }
 
-    const steps = caseItem.subs;
+
     const row = {
         ... caseItem
     };
     row.subs = null;
-    list.push(row);
+    rows.push(row);
 
-    list.push({
-        title: 'Steps'
-    });
+    const stepInfo = {
+        type: 'step-info',
+        title: 'No Steps',
+        stepNum: caseItem.stepNum
+    };
 
-    // console.log(list);
+    rows.push(stepInfo);
+
+    // skipped case no steps
+    const steps = caseItem.subs;
+    if (Util.isList(steps)) {
+        stepInfo.title = 'Steps';
+        rows = rows.concat(steps);
+    }
 
     // temp list for errors match to attachments
     const collection = {
         errors: [],
-        attachments: []
+        attachments: [],
+        index: 0
     };
 
-    // const rows = caseItem.subs || [];
-    const rows = list.concat(steps);
-    initSteps(rows, 1);
+    initRows(rows, collection);
 
     collectErrorForAttachment(collection);
 
     const rowHeight = 36;
-    const rowNumberWidth = Math.max(10 + caseItem.stepNum.toString().length * 12, rowHeight);
+    const rowNumberWidth = Math.max(10 + stepInfo.stepNum.toString().length * 12, rowHeight);
 
     const gridData = {
         options: {
@@ -441,14 +456,13 @@ const onFocus = (e) => {
     position: relative;
     flex: auto;
 
-    .tg-multiline {
-        .tg-tree-icon {
-            height: 26px;
-        }
-
-        .tg-tree {
-            align-items: start;
-        }
+    .tg-cell-row-number .mcr-icon-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        transform: translate(-50%, -50%);
     }
 }
 

@@ -4,7 +4,7 @@ import { components } from 'vine-ui';
 
 // import IconLabel from '../icon-label.vue';
 import DurationLocation from './duration-location.vue';
-import DetailColumns from './detail-columns.vue';
+import DetailSimpleList from './detail-simple-list.vue';
 
 // import Util from '../../utils/util.js';
 import { showTooltip, hideTooltip } from '../../modules/tooltip.js';
@@ -22,17 +22,13 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['resize']);
-
 // const data = shallowReactive({
 
 // });
 
 const classMap = computed(() => {
     const ls = ['mcr-step-info'];
-    if (props.rowItem.tg_row_height_fixable) {
-        ls.push('tg-multiline-fixing');
-    }
+
     return ls;
 });
 
@@ -49,9 +45,6 @@ const onMouseleave = (e) => {
     hideTooltip();
 };
 
-const onResize = (e) => {
-    emit('resize', props.rowItem);
-};
 
 </script>
 
@@ -65,22 +58,30 @@ const onResize = (e) => {
       gap="10px"
       class="mcr-step-head"
     >
+      <VuiFlex
+        v-if="rowItem.type==='step-info'"
+        gap="5px"
+      >
+        <b>{{ rowItem.title }}</b>
+        <div class="mcr-num">
+          {{ rowItem.stepNum }}
+        </div>
+      </VuiFlex>
       <div
-        class="mcr-tooltip vui-flex-auto"
+        v-else
+        class="mcr-tooltip"
         @mouseenter="onMouseenter"
         @mouseleave="onMouseleave"
       >
         {{ rowItem.title }}
       </div>
 
+      <DetailSimpleList :list="rowItem.tg_simpleColumns" />
+
+      <div class="vui-flex-auto" />
+
       <DurationLocation :row-item="rowItem" />
     </VuiFlex>
-
-    <DetailColumns
-      class="mcr-step-body"
-      :list="rowItem.tg_detailColumns"
-      @resize="onResize"
-    />
   </VuiFlex>
 </template>
 
