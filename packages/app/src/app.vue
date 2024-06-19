@@ -69,11 +69,6 @@ const navItemClass = (item) => {
 
 const initStore = () => {
 
-    const tabIndex = store.get('tabIndex');
-    if (tabIndex) {
-        state.tabIndex = parseInt(tabIndex);
-    }
-
     const imageZoom = store.get('imageZoom');
     if (imageZoom === 'true') {
         state.imageZoom = true;
@@ -566,10 +561,6 @@ watch(() => state.groups, (v) => {
 
 watch(() => state.imageZoom, () => {
     store.set('imageZoom', state.imageZoom);
-});
-
-watch(() => state.tabIndex, () => {
-    store.set('tabIndex', state.tabIndex);
 });
 
 watch([

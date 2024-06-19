@@ -48,7 +48,6 @@ const state = shallowReactive({
     gridDataMap: {},
     grid: null,
 
-    tabIndex: 0,
     onlyFailedSteps: false,
 
     loading: false,

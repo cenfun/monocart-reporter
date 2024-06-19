@@ -1,33 +1,352 @@
 <script setup>
 import {
-    watch, shallowReactive, onActivated
+    createApp, h, watch, shallowReactive, onMounted, nextTick
 } from 'vue';
 import { components } from 'vine-ui';
+import { Grid } from 'turbogrid';
 import { microtask } from 'monocart-common';
 
+import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
+import { initDataColumns, getPositionId } from '../../modules/detail-columns.js';
 import emitter from '../../modules/emitter.js';
+import { renderMermaid } from '../../modules/mermaid.js';
 
 import IconLabel from '../icon-label.vue';
-import DetailSteps from './detail-steps.vue';
-import DetailOverview from './detail-overview.vue';
+import DetailInfo from './detail-info.vue';
 
-const { VuiFlex, VuiTab } = components;
+const {
+    VuiFlex, VuiSwitch, VuiInput
+} = components;
 
 const data = shallowReactive({
-
+    hasFailed: 0
 });
 
+// ===========================================================================
+
+const createDetailInfo = (value, rowItem, columnItem, cellNode) => {
+    const div = cellNode.querySelector('.tg-tree-name');
+    if (div) {
+        createApp({
+            render() {
+                return h(DetailInfo, {
+                    rowItem,
+                    columnItem,
+                    onResize: () => {
+
+                    }
+                });
+            }
+        }).mount(div);
+    }
+};
+
+const updateColumnWidth = function(grid) {
+    const titleColumn = grid.getColumnItem('title');
+    const containerWidth = grid.containerWidth;
+    // 5px padding right
+    let otherWidth = 5;
+    grid.viewColumns.forEach(function(item) {
+        if (item.id === 'title') {
+            return;
+        }
+        otherWidth += item.width;
+    });
+
+    // console.log(containerWidth, grid.getScrollbarWidth());
+
+    const titleWidth = containerWidth - otherWidth - grid.getScrollbarWidth();
+    // console.log(titleWidth);
+    if (titleWidth === titleColumn.width) {
+        return;
+    }
+
+    // console.log(`updateWidth: ${titleWidth}`);
+    grid.setColumnWidth(titleColumn, titleWidth);
+
+};
+
+const getGrid = () => {
+    if (data.grid) {
+        return data.grid;
+    }
+
+    const grid = new Grid(document.querySelector('.mcr-overview-grid'));
+    data.grid = grid;
+
+    grid.bind('onResize onLayout', function(e, d) {
+        updateColumnWidth(grid);
+    });
+
+    grid.bind('onUpdated', () => {
+        nextTick(() => {
+            renderMermaid();
+        });
+    });
+
+    grid.setOption({
+
+        headerVisible: false,
+
+        bindContainerResize: true,
+        bindWindowResize: true,
+
+        rowNumberVisible: true,
+
+        scrollbarRound: true,
+        textSelectable: true,
+
+        rowNotFound: 'No Results',
+        cellResizeObserver: (rowItem, columnItem) => {
+            if (rowItem.tg_detailColumns.length) {
+                return true;
+            }
+        },
+
+        rowFilter: function(rowItem) {
+            // search title and errors
+            const hasMatched = this.highlightKeywordsFilter(rowItem, ['title'], data.keywords);
+
+            if (hasMatched) {
+
+                if (data.hasFailed && state.onlyFailedSteps) {
+                    if (rowItem.errorNum) {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+            }
+
+            return hasMatched;
+        },
+        columnTypes: {
+            title: 'tree'
+        }
+    });
+
+    grid.setFormatter({
+        tree: function(value, rowItem, columnItem, cellNode) {
+            const defaultFormatter = this.getDefaultFormatter('tree');
+            // async create vue component
+            nextTick(() => {
+                createDetailInfo(value, rowItem, columnItem, cellNode);
+            });
+            // tg-tree-name
+            return defaultFormatter('', rowItem, columnItem, cellNode);
+        },
+        rowNumber: function(value, rowItem, columnItem, cellNode) {
+            return rowItem.index || '';
+        }
+    });
+
+    return grid;
+};
+
+
+const initSteps = (list, index) => {
+    if (!Util.isList(list)) {
+        return index;
+    }
+
+    list.forEach((it) => {
+
+        if (it.stepType !== 'retry') {
+            it.index = index++;
+        }
+
+        initDataColumns(it);
+        if (it.tg_detailColumns.length) {
+            it.hoverable = false;
+        }
+        index = initSteps(it.subs, index);
+    });
+
+    return index;
+};
+
+const collectErrorForAttachment = (collection) => {
+    const { errors, attachments } = collection;
+
+    console.log(errors, attachments);
+
+    if (!attachments.length || !errors.length) {
+        return;
+    }
+
+    const list = attachments.filter((attachment) => {
+        if (attachment.name) {
+            // first one is expected
+            const match = attachment.name.match(/^(.*)-expected(\.[^.]+)?$/);
+            if (match) {
+                return true;
+            }
+        }
+    });
+
+    if (!list.length) {
+        return;
+    }
+
+    let index = 0;
+    errors.forEach((item) => {
+        const { error, position } = item;
+        const match = error.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
+        if (match) {
+            const attachment = list[index];
+            if (attachment) {
+                attachment.message = match[0];
+                attachment.position = position;
+                index += 1;
+
+                console.log(attachment);
+            }
+        }
+    });
+
+
+};
+
+const getGridData = () => {
+    const caseItem = data.caseItem;
+
+    data.hasFailed = caseItem.stepFailed > 0;
+
+
+    const list = [];
+
+    // suites
+    let suite = caseItem.tg_parent;
+    while (suite) {
+        const row = {
+            ... suite
+        };
+        row.subs = null;
+        list.unshift(row);
+        suite = suite.tg_parent;
+    }
+
+    const steps = caseItem.subs;
+    const row = {
+        ... caseItem
+    };
+    row.subs = null;
+    list.push(row);
+
+    list.push({
+        title: 'Steps'
+    });
+
+    // console.log(list);
+
+    // temp list for errors match to attachments
+    const collection = {
+        errors: [],
+        attachments: []
+    };
+
+    // const rows = caseItem.subs || [];
+    const rows = list.concat(steps);
+    initSteps(rows, 1);
+
+    collectErrorForAttachment(collection);
+
+    const rowHeight = 36;
+    const rowNumberWidth = Math.max(10 + caseItem.stepNum.toString().length * 12, rowHeight);
+
+    const gridData = {
+        options: {
+            rowHeight,
+            rowNumberWidth
+        },
+        columns: [{
+            id: 'title',
+            name: 'Title',
+            resizable: false,
+            sortable: false
+        }],
+        rows
+    };
+
+    return gridData;
+};
+
+const renderGrid = () => {
+    const grid = getGrid();
+    const gridData = getGridData();
+    grid.setData(gridData);
+    grid.render();
+};
+
+
+// ===========================================================================
+
+// wait for image loaded
+const updatePosition = (position) => {
+
+    if (position.type !== 'step') {
+        return;
+    }
+
+    const grid = data.grid;
+    const rowItem = grid.getRowItem(position.rowId);
+    if (rowItem) {
+
+        // do not scrollRowIntoView, the row height could be changed
+        grid.scrollToRow(rowItem);
+
+        setTimeout(() => {
+
+            let elem = grid.getCellNode(rowItem, 'title');
+            if (elem) {
+                const positionId = getPositionId(position.rowId, position.columnId);
+                elem = elem.querySelector(`[position-id="${positionId}"]`) || elem;
+            }
+            Util.setFocus(elem);
+
+        }, 100);
+
+    }
+
+};
+
+
+watch([
+    () => data.keywords,
+    () => state.onlyFailedSteps
+], (v) => {
+    if (data.grid) {
+        data.grid.update();
+    }
+});
+
+
+watch(() => state.position, (v) => {
+    if (v && data.grid) {
+        updatePosition(v);
+    }
+});
+
+
+// ======================================================================
+
 const updateCase = microtask(() => {
+
     const caseId = state.flyoverData;
     if (!caseId) {
         return;
     }
+
     const caseItem = state.detailMap[caseId];
     if (!caseItem) {
         return;
     }
-    data.stepNum = caseItem.stepNum;
+
+    data.caseItem = caseItem;
+    renderGrid();
+
 });
 
 watch(() => state.flyoverData, (v) => {
@@ -36,53 +355,109 @@ watch(() => state.flyoverData, (v) => {
     }
 });
 
-onActivated(() => {
+emitter.on('onTabSteps', () => {
     updateCase();
 });
 
-const onTabChange = (tabIndex) => {
-    if (tabIndex === 0) {
-        emitter.emit('onTabOverview');
-    } else if (tabIndex === 1) {
-        emitter.emit('onTabSteps');
-    }
+onMounted(() => {
+    updateCase();
+});
+
+const onFocus = (e) => {
+    Util.setFocus();
 };
 
 </script>
 
 <template>
-  <VuiTab
-    v-model="state.tabIndex"
-    class="mcr-detail"
-    @change="onTabChange"
+  <VuiFlex
+    class="mcr-detail-overview"
+    direction="column"
+    tabindex="0"
+    @focus="onFocus"
+    @click="onFocus"
   >
-    <template #tabs>
-      <div>
-        <VuiFlex gap="5px">
-          <IconLabel icon="case" />
-          <b>Overview</b>
-        </VuiFlex>
+    <VuiFlex
+      gap="10px"
+      wrap
+      class="mcr-overview-head"
+    >
+      <div class="mcr-overview-search">
+        <VuiInput
+          v-model="data.keywords"
+          :class="data.keywords?'mcr-search-keywords':''"
+          placeholder="search steps"
+          width="100%"
+          :select-on-focus="true"
+        />
+        <IconLabel
+          class="mcr-search-icon"
+          icon="search"
+          :button="false"
+        />
       </div>
-      <div>
-        <VuiFlex gap="5px">
-          <IconLabel icon="step" />
-          <b>Steps</b>
-          <div
-            v-if="data.stepNum"
-            class="mcr-num"
-          >
-            {{ data.stepNum }}
-          </div>
-        </VuiFlex>
-      </div>
-    </template>
-    <template #panes>
-      <div>
-        <DetailOverview />
-      </div>
-      <div>
-        <DetailSteps />
-      </div>
-    </template>
-  </VuiTab>
+
+      <VuiSwitch
+        v-if="data.hasFailed"
+        v-model="state.onlyFailedSteps"
+        :label-clickable="true"
+        label-position="right"
+      >
+        Only Failed
+      </VuiSwitch>
+    </VuiFlex>
+    <div class="mcr-overview-grid" />
+  </VuiFlex>
 </template>
+
+<style lang="scss">
+.mcr-detail-overview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.mcr-overview-head {
+    position: relative;
+    padding: 10px;
+    border-bottom: thin solid #ccc;
+    user-select: none;
+}
+
+.mcr-overview-search {
+    position: relative;
+    width: 150px;
+
+    .mcr-search-icon {
+        left: 5px;
+    }
+
+    input {
+        padding-left: 25px;
+    }
+}
+
+.mcr-overview-grid {
+    position: relative;
+    flex: auto;
+
+    .tg-multiline {
+        .tg-tree-icon {
+            height: 26px;
+        }
+
+        .tg-tree {
+            align-items: start;
+        }
+    }
+}
+
+.markdown-body {
+    margin: 0;
+
+    .mermaid {
+        margin: 0;
+    }
+}
+
+</style>
