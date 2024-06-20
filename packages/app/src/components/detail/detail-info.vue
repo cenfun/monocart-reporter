@@ -166,10 +166,9 @@ const onMouseleave = (e) => {
 .mcr-detail-status {
     padding: 8px 12px;
     color: #fff;
-    font-weight: 500;
-    font-size: 15px;
+    font-weight: bold;
     text-transform: capitalize;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .mcr-status-failed {
