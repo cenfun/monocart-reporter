@@ -156,15 +156,15 @@ const onMouseleave = (e) => {
     text-overflow: ellipsis;
 }
 
-.mcr-detail-case .mcr-detail-title,
 .mcr-detail-step-info .mcr-detail-title {
     font-weight: bold;
 }
 
 .mcr-detail-status {
-    padding: 5px 10px;
+    padding: 8px 12px;
     color: #fff;
-    font-weight: 400;
+    font-weight: 500;
+    font-size: 15px;
     text-transform: capitalize;
     border-radius: 5px;
 }

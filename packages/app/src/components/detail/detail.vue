@@ -118,18 +118,17 @@ const getGrid = () => {
                 if (rowItem.type === 'case') {
                     list.push(rowItem.tags);
                     list.push(rowItem.caseType);
+                } else if (rowItem.type === 'column') {
+                    list.push(rowItem.content);
                 }
 
                 const simpleList = rowItem.tg_simpleList;
                 if (simpleList) {
-                    console.log(simpleList);
                     simpleList.forEach((it) => {
                         list.push(it.title);
                         list.push(it.content);
                     });
                 }
-
-                // TODO content
 
                 return list.join('');
             }
