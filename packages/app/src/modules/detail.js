@@ -65,6 +65,8 @@ const getErrors = (item, column, collection) => {
         hasDetails: true,
         hoverable: false,
         data: column,
+        // for row filter
+        errorNum: 1,
         content
     };
 };

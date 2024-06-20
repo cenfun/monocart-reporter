@@ -22,7 +22,7 @@ const {
 } = components;
 
 const data = shallowReactive({
-    hasFailed: 0
+    hasFailed: false
 });
 
 const gridDataCache = {};
@@ -244,6 +244,10 @@ const getGridData = (grid, caseItem) => {
 
     data.hasFailed = caseItem.stepFailed > 0;
 
+    if (data.hasFailed) {
+        console.log(caseItem);
+    }
+
     const rows = [];
 
     // suites
@@ -443,7 +447,7 @@ const onFocus = (e) => {
         Only Failed
       </VuiSwitch>
     </VuiFlex>
-    <div class="mcr-overview-grid" />
+    <div class="mcr-overview-grid vui-flex-auto" />
   </VuiFlex>
 </template>
 
@@ -483,7 +487,7 @@ const onFocus = (e) => {
 
 .mcr-overview-grid {
     position: relative;
-    flex: auto;
+    overflow: hidden;
 }
 
 .markdown-body {

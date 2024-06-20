@@ -69,7 +69,7 @@ const onCopyClick = (e, column) => {
     display: none;
     padding: 5px;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: rgb(255 255 255 / 60%);
 }
 
 .mcr-html-content:hover {

@@ -129,7 +129,7 @@ const getColumnComponent = (id) => {
 
 .mcr-annotation-item {
     display: flex;
-    flex-flow: row wrap;
+    flex-direction: row;
     gap: 10px;
 }
 
