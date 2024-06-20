@@ -98,7 +98,9 @@ module.exports = {
 
             mermaid: {
                 // for online
-                scriptSrc: 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
+                // scriptSrc: 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
+
+                scriptSrc: 'https://unpkg.com/mermaid/dist/mermaid.min.js',
 
                 // for local
                 // scriptSrc: '../../node_modules/mermaid/dist/mermaid.min.js',
