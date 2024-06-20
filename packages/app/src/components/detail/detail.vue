@@ -182,42 +182,28 @@ const getGrid = () => {
 
 
 const collectErrorForAttachment = (collection) => {
-    const { errors, attachments } = collection;
+    const { errors, comparisons } = collection;
 
-    // console.log(errors, attachments);
+    // console.log(errors, comparisons);
 
-    if (!attachments.length || !errors.length) {
-        return;
-    }
-
-    const list = attachments.filter((attachment) => {
-        if (attachment.name) {
-            // first one is expected
-            const match = attachment.name.match(/^(.*)-expected(\.[^.]+)?$/);
-            if (match) {
-                return true;
-            }
-        }
-    });
-
-    if (!list.length) {
+    if (!comparisons.length || !errors.length) {
         return;
     }
 
     let index = 0;
     errors.forEach((item) => {
         const { error, position } = item;
-        const match = error.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
-        if (match) {
-            const attachment = list[index];
-            if (attachment) {
-                attachment.message = match[0];
-                attachment.position = position;
+        const matchedComparisonError = error.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
+        if (matchedComparisonError) {
+            const comparison = comparisons[index];
+            if (comparison) {
+                comparison.data.message = matchedComparisonError[0];
+                comparison.data.position = position;
+                // console.log(comparison);
                 index += 1;
             }
         }
     });
-
 
 };
 
@@ -253,10 +239,6 @@ const getGridData = (grid, caseItem) => {
     }
 
     data.hasFailed = caseItem.stepFailed > 0;
-
-    if (data.hasFailed) {
-        console.log(caseItem);
-    }
 
     const rows = [];
 
@@ -296,7 +278,7 @@ const getGridData = (grid, caseItem) => {
     // temp list for errors match to attachments
     const collection = {
         errors: [],
-        attachments: [],
+        comparisons: [],
         index: 0
     };
 

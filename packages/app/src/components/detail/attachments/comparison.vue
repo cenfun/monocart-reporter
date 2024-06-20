@@ -488,6 +488,7 @@ onUnmounted(() => {
       >
         <IconLabel
           icon="error"
+          gap="10px"
           @click="onErrorClick"
         >
           {{ d.message }}

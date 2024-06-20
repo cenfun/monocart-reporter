@@ -39,8 +39,8 @@ const onColumnHeadClick = (column) => {
     }
 };
 
-const getColumnComponent = (id) => {
-    return columnComponents[id] || columnComponents.html;
+const getColumnComponent = (componentType) => {
+    return columnComponents[componentType] || columnComponents.html;
 };
 
 </script>
@@ -74,7 +74,7 @@ const getColumnComponent = (id) => {
     </VuiFlex>
 
     <component
-      :is="getColumnComponent(column.componentId)"
+      :is="getColumnComponent(column.componentType)"
       v-if="!column.tg_state.collapsed"
       class="mcr-column-content"
       :column="column"

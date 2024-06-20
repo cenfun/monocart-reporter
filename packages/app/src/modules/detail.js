@@ -55,12 +55,10 @@ const getErrors = (item, column, collection) => {
         columnId: column.id
     };
     const list = errors.map((error) => {
-        if (collection) {
-            collection.errors.push({
-                error,
-                position
-            });
-        }
+        collection.errors.push({
+            error,
+            position
+        });
         return convertHtml(error);
     });
     const content = list.join('');
@@ -166,22 +164,22 @@ const getAttachments = (item, column, collection) => {
         return;
     }
 
-    attachments.forEach((it) => {
-        collection.attachments.push(it);
-    });
-
     const list = groupAttachments(attachments);
 
     const subs = list.map((it) => {
+
+        if (it.component === 'comparison') {
+            collection.comparisons.push(it);
+        }
+
         // it: component, data
-        return {
-            ... it,
-            componentId: 'attachment',
+        return Object.assign(it, {
+            componentType: 'attachment',
             icon: 'attachment',
             type: 'details',
             hasDetails: true,
             hoverable: false
-        };
+        });
     });
 
     return {

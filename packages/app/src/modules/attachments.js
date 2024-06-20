@@ -1,19 +1,6 @@
 
 import Util from '../utils/util.js';
 
-import Image from '../components/detail/attachments/image.vue';
-import Video from '../components/detail/attachments/video.vue';
-import Trace from '../components/detail/attachments/trace.vue';
-
-import Audit from '../components/detail/attachments/audit.vue';
-import Coverage from '../components/detail/attachments/coverage.vue';
-import Network from '../components/detail/attachments/network.vue';
-
-import Content from '../components/detail/attachments/content.vue';
-import Link from '../components/detail/attachments/link.vue';
-
-import Comparison from '../components/detail/attachments/comparison.vue';
-
 const getPluginComponent = (contentType, name) => {
     const {
         audit, coverage, network
@@ -21,13 +8,13 @@ const getPluginComponent = (contentType, name) => {
 
     const definitions = [{
         ... audit,
-        component: Audit
+        component: 'audit'
     }, {
         ... coverage,
-        component: Coverage
+        component: 'coverage'
     }, {
         ... network,
-        component: Network
+        component: 'network'
     }];
 
     for (const definition of definitions) {
@@ -45,15 +32,15 @@ const getAttachmentComponent = (item) => {
     } = item;
 
     if (contentType.startsWith('image')) {
-        return Image;
+        return 'image';
     }
 
     if (contentType.startsWith('video')) {
-        return Video;
+        return 'video';
     }
 
     if (name === 'trace' && contentType === 'application/zip') {
-        return Trace;
+        return 'trace';
     }
 
     const pc = getPluginComponent(contentType, name);
@@ -62,10 +49,10 @@ const getAttachmentComponent = (item) => {
     }
 
     if (content) {
-        return Content;
+        return 'content';
     }
 
-    return Link;
+    return 'link';
 };
 
 const initGroupList = (group) => {
@@ -106,7 +93,7 @@ const existsGroupItem = (group, groupName, retry) => {
 
 const createGroup = (item, groupName, attachment) => {
     return {
-        component: Comparison,
+        component: 'comparison',
         data: {
             name: groupName,
             contentType: attachment.contentType,

@@ -1,5 +1,18 @@
 <script setup>
 
+import Image from './attachments/image.vue';
+import Video from './attachments/video.vue';
+import Trace from './attachments/trace.vue';
+
+import Audit from './attachments/audit.vue';
+import Coverage from './attachments/coverage.vue';
+import Network from './attachments/network.vue';
+
+import Content from './attachments/content.vue';
+import Link from './attachments/link.vue';
+
+import Comparison from './attachments/comparison.vue';
+
 defineProps({
     column: {
         type: Object,
@@ -7,11 +20,30 @@ defineProps({
     }
 });
 
+const getComponent = (component) => {
+    const comparisonMap = {
+        image: Image,
+        video: Video,
+        trace: Trace,
+
+        audit: Audit,
+        coverage: Coverage,
+        network: Network,
+
+        content: Content,
+        link: Link,
+
+        comparison: Comparison
+    };
+
+    return comparisonMap[component] || comparisonMap.link;
+};
+
 </script>
 
 <template>
   <component
-    :is="column.component"
+    :is="getComponent(column.component)"
     :data="column.data"
     class="mcr-attachment-body"
   />
