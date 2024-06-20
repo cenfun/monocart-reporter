@@ -94,7 +94,6 @@ watchEffect(() => {
 <template>
   <VuiFlex
     class="mcr-attachment-network"
-    padding="10px"
     direction="column"
     gap="10px"
   >
@@ -167,11 +166,20 @@ watchEffect(() => {
         <b>Creator</b> {{ d.creator.name }} {{ d.creator.version }}
       </div>
     </VuiFlex>
+
+    <VuiFlex>
+      <a
+        :href="props.data.path"
+        target="_blank"
+      >{{ props.data.report.name }}</a>
+    </VuiFlex>
   </VuiFlex>
 </template>
 
 <style lang="scss">
 .mcr-attachment-network {
+    padding: 10px;
+
     .mcr-network-waterfall {
         width: 100%;
         height: 30px;

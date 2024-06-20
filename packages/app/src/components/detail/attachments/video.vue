@@ -1,4 +1,8 @@
 <script setup>
+import { components } from 'vine-ui';
+const { VuiFlex } = components;
+import IconLabel from '../../icon-label.vue';
+
 const props = defineProps({
     data: {
         type: Object,
@@ -8,7 +12,11 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="mcr-attachment-video">
+  <VuiFlex
+    gap="10px"
+    direction="column"
+    class="mcr-attachment-video"
+  >
     <video
       controls
       :src="props.data.path"
@@ -16,7 +24,14 @@ const props = defineProps({
       :src="props.data.path"
       :type="props.data.contentType"
     ></video>
-  </div>
+    <VuiFlex>
+      <IconLabel icon="item-arrow" />
+      <a
+        :href="props.data.path"
+        target="_blank"
+      >Download video</a>
+    </VuiFlex>
+  </VuiFlex>
 </template>
 
 <style lang="scss">

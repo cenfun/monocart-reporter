@@ -332,7 +332,7 @@ const updatePosition = (position) => {
     }
     if (rowItem) {
 
-        if (rowItem.hasDetails) {
+        if (rowItem.hasDetails && rowItem.type !== 'case') {
             grid.scrollToRow(rowItem);
         } else {
             grid.scrollRowIntoView(rowItem);

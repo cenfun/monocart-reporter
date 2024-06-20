@@ -1,7 +1,10 @@
 <script setup>
 import { watchEffect, shallowReactive } from 'vue';
+import { components } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
+
+const { VuiFlex } = components;
 
 const props = defineProps({
     data: {
@@ -59,6 +62,12 @@ watchEffect(() => {
         </td>
       </tr>
     </table>
+    <VuiFlex padding="8px">
+      <a
+        :href="props.data.path"
+        target="_blank"
+      >{{ props.data.report.name }}</a>
+    </VuiFlex>
   </div>
 </template>
 
@@ -75,6 +84,10 @@ watchEffect(() => {
             padding-left: 20px;
             font-weight: normal;
         }
+    }
+
+    table {
+        border-bottom: 1px solid #eee;
     }
 }
 </style>

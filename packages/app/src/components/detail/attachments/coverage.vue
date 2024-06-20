@@ -130,12 +130,18 @@ watchEffect(() => {
           {{ Util.NF(item.total) }}
         </td>
       </tr>
+      <tr>
+        <td class="mcr-column-left">
+          <b>Files</b> <span class="mcr-num">{{ d.files }}</span>
+        </td>
+        <td /><td /><td /><td />
+      </tr>
     </table>
-    <VuiFlex
-      gap="10px"
-      padding="8px"
-    >
-      <div><b>Files</b> <span class="mcr-num">{{ d.files }}</span></div>
+    <VuiFlex padding="8px">
+      <a
+        :href="props.data.path"
+        target="_blank"
+      >{{ props.data.report.name }}</a>
     </VuiFlex>
   </div>
 </template>
