@@ -13,15 +13,12 @@ defineProps({
   <component
     :is="column.component"
     :data="column.data"
+    class="mcr-attachment-body"
   />
 </template>
 
 <style lang="scss">
 .mcr-attachment-body {
-    margin-top: 5px;
-    border: 1px solid #eee;
-    overflow-x: auto;
-
     .mcr-low {
         background: #fce1e5;
     }

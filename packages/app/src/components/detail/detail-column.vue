@@ -3,15 +3,16 @@ import { nextTick } from 'vue';
 import { components } from 'vine-ui';
 
 import IconLabel from '../icon-label.vue';
-import Attachment from './attachments/attachment.vue';
-import HtmlContent from './html-content.vue';
+import ContentAttachment from './detail-content-attachment.vue';
+import ContentHtml from './detail-content-html.vue';
+
 import { renderMermaid } from '../../modules/mermaid.js';
 
 const { VuiFlex } = components;
 
 const columnComponents = {
-    attachment: Attachment,
-    html: HtmlContent
+    attachment: ContentAttachment,
+    html: ContentHtml
 };
 
 defineProps({
@@ -22,7 +23,11 @@ defineProps({
 });
 
 const itemColumnClass = (item) => {
-    return ['mcr-detail-column', `mcr-detail-${item.id}`];
+    const ls = ['mcr-detail-column'];
+    if (item.id) {
+        ls.push(`mcr-detail-${item.id}`);
+    }
+    return ls;
 };
 
 const onColumnHeadClick = (column) => {
@@ -96,7 +101,7 @@ const getColumnComponent = (id) => {
     margin-bottom: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f6f8fa;
+    overflow: auto hidden;
 }
 
 .mcr-detail-logs {
@@ -106,6 +111,11 @@ const getColumnComponent = (id) => {
 .mcr-detail-errors {
     .mcr-column-head {
         color: var(--color-failed);
+    }
+
+    .mcr-column-content {
+        border-color: var(--border-failed);
+        background-color: var(--bg-failed);
     }
 }
 

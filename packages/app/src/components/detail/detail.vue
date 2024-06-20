@@ -15,6 +15,8 @@ import { renderMermaid } from '../../modules/mermaid.js';
 import IconLabel from '../icon-label.vue';
 import DetailInfo from './detail-info.vue';
 
+import 'github-markdown-css/github-markdown-light.css';
+
 const {
     VuiFlex, VuiSwitch, VuiInput
 } = components;
@@ -486,9 +488,11 @@ const onFocus = (e) => {
 
 .markdown-body {
     margin: 0;
+    background: none;
 
     .mermaid {
         margin: 0;
+        padding: 0;
     }
 }
 

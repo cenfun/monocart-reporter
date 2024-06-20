@@ -29,10 +29,6 @@ const showContent = () => {
         return;
     }
 
-    // if (Util.isJsonType(contentType)) {
-    // console.log('json', content);
-    // }
-
     $el.innerHTML = `<pre><code>${content}</code></pre>`;
 };
 
@@ -51,25 +47,24 @@ watch(() => props.data, () => {
 <template>
   <div
     ref="el"
-    class="mcr-attachment-body"
+    class="mcr-attachment-content"
   />
 </template>
 
 <style lang="scss">
 .mcr-attachment-content {
-    .mcr-attachment-body {
-        padding: 10px;
+    padding: 10px;
+    background-color: #f6f8fa;
 
-        pre {
-            margin: 0;
-            padding: 0;
-            overflow-x: auto;
-        }
+    pre {
+        margin: 0;
+        padding: 0;
+        overflow-x: auto;
+    }
 
-        code {
-            margin: 0;
-            padding: 0;
-        }
+    code {
+        margin: 0;
+        padding: 0;
     }
 }
 </style>

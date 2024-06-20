@@ -8,15 +8,14 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="mcr-attachment-body">
+  <div class="mcr-attachment-link">
     {{ props.data.path }}
   </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-link {
-    .mcr-attachment-body {
-        padding: 10px;
-    }
+    padding: 10px;
+    background-color: #f6f8fa;
 }
 </style>

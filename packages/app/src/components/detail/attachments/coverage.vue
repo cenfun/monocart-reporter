@@ -90,7 +90,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-body">
+  <div class="mcr-attachment-coverage">
     <table>
       <tr>
         <td class="mcr-column-left">

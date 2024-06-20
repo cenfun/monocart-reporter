@@ -41,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-body">
+  <div class="mcr-attachment-trace">
     <VuiFlex
       padding="10px"
       gap="10px"
@@ -87,6 +87,8 @@ onMounted(() => {
 
 <style lang="scss">
 .mcr-attachment-trace {
+    background-color: #f6f8fa;
+
     a {
         white-space: nowrap;
     }

@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="mcr-attachment-body">
+  <div class="mcr-attachment-video">
     <video
       controls
       :src="props.data.path"
@@ -21,10 +21,7 @@ const props = defineProps({
 
 <style lang="scss">
 .mcr-attachment-video {
-    .mcr-attachment-body {
-        padding: 10px;
-        border: none;
-    }
+    padding: 10px;
 
     video {
         display: block;

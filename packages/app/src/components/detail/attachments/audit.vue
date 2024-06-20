@@ -33,7 +33,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-body">
+  <div class="mcr-attachment-audit">
     <table>
       <tr class="mcr-head">
         <td class="mcr-column-left">
@@ -64,6 +64,8 @@ watchEffect(() => {
 
 <style lang="scss">
 .mcr-attachment-audit {
+    padding: 0;
+
     .mcr-column-name {
         font-weight: bold;
     }

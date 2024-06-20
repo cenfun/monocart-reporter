@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="mcr-attachment-body">
+  <div class="mcr-attachment-image">
     <a
       :href="props.data.path"
       target="_blank"
@@ -21,14 +21,12 @@ const props = defineProps({
 
 <style lang="scss">
 .mcr-attachment-image {
-    .mcr-attachment-body {
-        padding: 10px;
-        border: none;
-    }
+    padding: 10px;
 
     img {
         display: block;
         max-width: 100%;
+        min-height: 50px;
         box-shadow: var(--image-shadow);
     }
 }

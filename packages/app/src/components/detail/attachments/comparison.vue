@@ -383,7 +383,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-body">
+  <div class="mcr-attachment-comparison">
     <VuiTab
       v-if="d.imageList"
       v-model="d.tabIndex"

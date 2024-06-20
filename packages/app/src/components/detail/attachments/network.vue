@@ -93,7 +93,7 @@ watchEffect(() => {
 
 <template>
   <VuiFlex
-    class="mcr-attachment-body"
+    class="mcr-attachment-network"
     padding="10px"
     direction="column"
     gap="10px"
