@@ -238,11 +238,12 @@ const initRows = (list, collection) => {
 
 const getGridData = (grid, caseItem) => {
 
+    // before cache
+    data.hasFailed = caseItem.stepFailed > 0;
+
     if (gridDataCache[caseItem.id]) {
         return gridDataCache[caseItem.id];
     }
-
-    data.hasFailed = caseItem.stepFailed > 0;
 
     const rows = [];
 
