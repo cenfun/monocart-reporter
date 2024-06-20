@@ -70,6 +70,10 @@ const onCopyClick = (e, column) => {
     padding: 5px;
     border-radius: 5px;
     background-color: rgb(255 255 255 / 60%);
+
+    .mcr-icon-label {
+        background-color: #fff;
+    }
 }
 
 .mcr-html-content:hover {

@@ -324,11 +324,15 @@ const updatePosition = (position) => {
     }
     if (rowItem) {
 
-        grid.selectAll(false);
-        grid.scrollToRow(rowItem);
-        nextTick(() => {
+        if (rowItem.hasDetails) {
+            grid.scrollToRow(rowItem);
+        } else {
+            grid.scrollRowIntoView(rowItem);
+        }
+        setTimeout(() => {
+            grid.selectAll(false);
             grid.setRowSelected(rowItem);
-        });
+        }, 100);
 
     }
 
