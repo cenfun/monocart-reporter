@@ -9,7 +9,7 @@
     "license": "MIT",
     "dependencies": {
         "monocart-common": "~2.4.9",
-        "turbogrid": "^3.1.1"
+        "turbogrid": "^3.2.0"
     },
     "devDependencies": {
         "ansi-to-html": "^0.7.2",

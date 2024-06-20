@@ -10,7 +10,7 @@
         "monocart-code-viewer": "^1.1.4",
         "monocart-common": "~2.4.9",
         "monocart-formatter": "^3.0.0",
-        "turbogrid": "^3.1.1"
+        "turbogrid": "^3.2.0"
     },
     "devDependencies": {}
 }
