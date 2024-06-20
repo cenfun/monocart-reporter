@@ -220,9 +220,15 @@ const collectErrorForAttachment = (collection) => {
 const initRows = (list, collection) => {
     list.forEach((it) => {
 
-        if (it.type === 'step' && it.stepType !== 'retry') {
-            collection.index += 1;
-            it.index = collection.index;
+        if (it.type === 'step') {
+
+            if (it.stepType === 'retry') {
+                it.icon = 'retry';
+            } else {
+                collection.index += 1;
+                it.index = collection.index;
+            }
+
         }
 
         initDataColumns(it, collection);

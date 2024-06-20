@@ -57,6 +57,9 @@ onMounted(() => {
     } else if (rowItem.type === 'step') {
 
         // step
+        if (rowItem.stepType === 'retry') {
+            data.html = `<b>${rowItem.title}</b>`;
+        }
 
     } else {
         // step-info
