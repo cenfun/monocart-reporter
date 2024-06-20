@@ -83,14 +83,18 @@ const getGrid = () => {
         updateColumnWidth(grid);
     });
 
-    grid.bind('onUpdated', () => {
+    grid.bind('onUpdated', (e, d) => {
         nextTick(() => {
             renderMermaid();
         });
     });
 
-    grid.bind('onClick', () => {
+    grid.bind('onClick', (e, d) => {
         grid.selectAll(false);
+    });
+
+    grid.bind('onDblClick', (e, d) => {
+        grid.setRowSelected(d.rowItem);
     });
 
     // grid.bind('onRowExpanded onRowCollapsed', (e, d) => {

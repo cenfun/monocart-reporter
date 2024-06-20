@@ -1,7 +1,7 @@
 ## Changelog
 
 * 2.5.0
-  - updated UI for steps (performance requirement)
+  - updated UI for case details page (performance requirement)
   - updated marked to v13
   - fixed repeated suite id
 
