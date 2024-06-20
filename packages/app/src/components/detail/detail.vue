@@ -398,7 +398,9 @@ onMounted(() => {
 });
 
 const onFocus = (e) => {
-
+    if (data.grid) {
+        data.grid.selectAll(false);
+    }
 };
 
 </script>
