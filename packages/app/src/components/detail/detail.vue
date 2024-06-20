@@ -94,7 +94,10 @@ const getGrid = () => {
     });
 
     grid.bind('onDblClick', (e, d) => {
-        grid.setRowSelected(d.rowItem);
+        const { rowItem } = d;
+        if (rowItem && !rowItem.hasDetails) {
+            grid.setRowSelected(d.rowItem);
+        }
     });
 
     // grid.bind('onRowExpanded onRowCollapsed', (e, d) => {
