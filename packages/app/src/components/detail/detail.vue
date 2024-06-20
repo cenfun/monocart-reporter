@@ -89,6 +89,10 @@ const getGrid = () => {
         });
     });
 
+    grid.bind('onClick', () => {
+        grid.selectAll(false);
+    });
+
     // grid.bind('onRowExpanded onRowCollapsed', (e, d) => {
     //     if (d.type === 'step-info') {
     //         console.log(d);
@@ -328,27 +332,21 @@ const renderGrid = (caseItem) => {
 // wait for image loaded
 const updatePosition = (position) => {
 
-    if (position.type !== 'step') {
-        return;
-    }
+    // console.log(position);
 
     const grid = data.grid;
-    const rowItem = grid.getRowItem(position.rowId);
+    const positionId = getPositionId(position.rowId, position.columnId);
+    let rowItem = grid.getRowItem(positionId);
+    if (!rowItem) {
+        rowItem = grid.getRowItem(position.rowId);
+    }
     if (rowItem) {
 
-        // do not scrollRowIntoView, the row height could be changed
+        grid.selectAll(false);
         grid.scrollToRow(rowItem);
-
-        setTimeout(() => {
-
-            let elem = grid.getCellNode(rowItem, 'title');
-            if (elem) {
-                const positionId = getPositionId(position.rowId, position.columnId);
-                elem = elem.querySelector(`[position-id="${positionId}"]`) || elem;
-            }
-            Util.setFocus(elem);
-
-        }, 100);
+        nextTick(() => {
+            grid.setRowSelected(rowItem);
+        });
 
     }
 
@@ -405,7 +403,7 @@ onMounted(() => {
 });
 
 const onFocus = (e) => {
-    Util.setFocus();
+
 };
 
 </script>

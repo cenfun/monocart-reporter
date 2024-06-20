@@ -37,6 +37,12 @@ const convertHtml = (str) => {
 };
 
 
+export const getPositionId = (rowId, columnId) => {
+    return [rowId, columnId].join('-');
+};
+
+// ===========================================================================
+
 const getErrors = (item, column, collection) => {
     const errors = item.errors;
     if (!Util.isList(errors)) {
@@ -60,6 +66,7 @@ const getErrors = (item, column, collection) => {
     const content = list.join('');
 
     return {
+        id: getPositionId(item.id, column.id),
         type: 'details',
         icon: 'error',
         hasDetails: true,
@@ -83,6 +90,7 @@ const getLogs = (item, column, collection) => {
     const content = list.join('');
 
     return {
+        id: getPositionId(item.id, column.id),
         type: 'details',
         icon: 'log',
         hasDetails: true,
@@ -141,6 +149,7 @@ const getAnnotations = (item, column, collection) => {
 
     if (list && list.length) {
         return {
+            id: getPositionId(item.id, column.id),
             icon: 'annotation',
             title: column.name,
             subs: list
@@ -176,6 +185,7 @@ const getAttachments = (item, column, collection) => {
     });
 
     return {
+        id: getPositionId(item.id, column.id),
         icon: 'attachment',
         title: column.name,
         subs
@@ -237,6 +247,7 @@ const getCustom = (item, column) => {
     }
 
     return {
+        id: getPositionId(item.id, column.id),
         type: 'details',
         icon: 'custom',
         hasDetails: true,
@@ -266,10 +277,6 @@ const getColumn = (item, column, collection) => {
     return handler(item, column, collection);
 };
 
-export const getPositionId = (rowId, columnId) => {
-    return [rowId, columnId].join('-');
-};
-
 const getProjectMetadata = (item) => {
     const metadata = item.metadata;
     if (!metadata || typeof metadata !== 'object') {
@@ -292,6 +299,7 @@ const getProjectMetadata = (item) => {
     });
 
     return {
+        id: getPositionId(item.id, 'metadata'),
         title: 'Metadata',
         icon: 'metadata',
         subs: metadataList
@@ -346,6 +354,7 @@ export const initDataColumns = (item, collection) => {
     }
 
     item.tg_state = shallowReactive({});
+    item.selectable = true;
 
     if (simpleColumns.length) {
         item.tg_simpleList = simpleColumns;
