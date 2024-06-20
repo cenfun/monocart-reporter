@@ -39,6 +39,9 @@ const beforeReporter = (item, Util) => {
         return 0;
     }
 
+    // const addedData = Util.readJSONSync(path.resolve(__dirname, '../.temp/steps.json'));
+    // reportData.rows = reportData.rows.concat(addedData.rows);
+
     // attachment path handler for preview
     if (!item.production) {
         forEach(reportData.rows, (row) => {
