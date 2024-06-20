@@ -116,7 +116,7 @@ const getGrid = () => {
         scrollbarRound: true,
         textSelectable: true,
 
-        rowCacheLength: 10,
+        rowCacheLength: 30,
         rowHeight: 36,
         rowNotFound: 'No Results',
         cellResizeObserver: (rowItem, columnItem) => {
