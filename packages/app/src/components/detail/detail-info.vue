@@ -107,6 +107,7 @@ const onMouseleave = (e) => {
           v-if="data.iconType"
           :icon="data.iconType"
           :button="false"
+          :title="data.iconType"
         />
 
         <div

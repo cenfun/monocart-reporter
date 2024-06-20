@@ -52,11 +52,17 @@ const getColumnComponent = (id) => {
       gap="5px"
       @click="onColumnHeadClick(column)"
     >
-      <IconLabel :icon="column.icon" />
+      <IconLabel
+        :icon="column.icon"
+        :button="false"
+      />
 
       <div>{{ column.data.name }}</div>
 
-      <IconLabel :icon="column.tg_state.collapsed?'collapsed':'expanded'" />
+      <IconLabel
+        :icon="column.tg_state.collapsed?'collapsed':'expanded'"
+        :button="false"
+      />
 
       <div class="vui-flex-auto" />
       <div
@@ -66,7 +72,6 @@ const getColumnComponent = (id) => {
         Retry #{{ column.data.retry }}
       </div>
     </VuiFlex>
-
 
     <component
       :is="getColumnComponent(column.componentId)"
@@ -88,12 +93,11 @@ const getColumnComponent = (id) => {
     padding: 5px 0;
     border-radius: 5px;
     cursor: pointer;
-    opacity: 0.8;
     user-select: none;
 }
 
 .mcr-column-head:hover {
-    opacity: 1;
+    color: #000;
 }
 
 .mcr-column-content {
