@@ -1550,13 +1550,13 @@ a:not([href], [class]):hover {
     display: inline-block;
     min-height: 20px;
     margin: 0;
-    padding-left: 20px;
+    padding-left: 15px;
     line-height: 20px;
 
     &::before {
         position: absolute;
         top: 8px;
-        left: 6px;
+        left: 2px;
         content: "";
         width: 5px;
         height: 5px;

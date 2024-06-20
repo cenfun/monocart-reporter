@@ -101,7 +101,7 @@ onMounted(() => {
         }
 
         dl {
-            margin-top: 5px;
+            margin: 0;
         }
 
         dd {
