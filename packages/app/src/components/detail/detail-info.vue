@@ -127,7 +127,10 @@ const onMouseleave = (e) => {
           v-html="data.html"
         />
 
-        <DetailSimpleList :list="rowItem.tg_simpleColumns" />
+        <DetailSimpleList
+          v-if="rowItem.tg_simpleList"
+          :list="rowItem.tg_simpleList"
+        />
       </VuiFlex>
 
       <DurationLocation :row-item="rowItem" />

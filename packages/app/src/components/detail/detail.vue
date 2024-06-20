@@ -120,7 +120,16 @@ const getGrid = () => {
                     list.push(rowItem.caseType);
                 }
 
-                // TODO + simple columns
+                const simpleList = rowItem.tg_simpleList;
+                if (simpleList) {
+                    console.log(simpleList);
+                    simpleList.forEach((it) => {
+                        list.push(it.title);
+                        list.push(it.content);
+                    });
+                }
+
+                // TODO content
 
                 return list.join('');
             }
@@ -407,6 +416,7 @@ const onFocus = (e) => {
         <VuiInput
           v-model="data.keywords"
           :class="data.keywords?'mcr-search-keywords':''"
+          placeholder="Search"
           width="100%"
           :select-on-focus="true"
         />

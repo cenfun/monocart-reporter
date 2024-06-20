@@ -314,7 +314,10 @@ export const initDataColumns = (item, collection) => {
     }
 
     item.tg_state = shallowReactive({});
-    item.tg_simpleColumns = simpleColumns;
+
+    if (simpleColumns.length) {
+        item.tg_simpleList = simpleColumns;
+    }
 
     if (detailColumns.length) {
         // console.log(detailColumns);
