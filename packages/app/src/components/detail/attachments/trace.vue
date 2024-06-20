@@ -4,7 +4,6 @@ import { components } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
 import state from '../../../modules/state.js';
-import AttachmentHead from './attachment-head.vue';
 
 const { VuiFlex } = components;
 
@@ -42,59 +41,48 @@ onMounted(() => {
 </script>
 
 <template>
-  <details
-    class="mcr-attachment-trace"
-    open
-  >
-    <AttachmentHead :retry="props.data.retry">
-      <a
-        :href="props.data.path"
-        target="_blank"
-      >{{ props.data.name }}</a>
-    </AttachmentHead>
-    <div class="mcr-attachment-body">
-      <VuiFlex
-        padding="10px"
-        gap="10px"
-        align-items="baseline"
-      >
-        <div>
-          <a
-            :href="d.viewerUrl"
-            target="_blank"
-          >View trace</a>
-        </div>
-        <details class="vui-flex-auto">
-          <summary>
-            NOTE
-          </summary>
+  <div class="mcr-attachment-body">
+    <VuiFlex
+      padding="10px"
+      gap="10px"
+      align-items="baseline"
+    >
+      <div>
+        <a
+          :href="d.viewerUrl"
+          target="_blank"
+        >View trace</a>
+      </div>
+      <details class="vui-flex-auto">
+        <summary>
+          NOTE
+        </summary>
 
-          <dl class="mcr-readme">
-            <dd class="mcr-item">
-              The <a
-                href="https://trace.playwright.dev/"
-                target="_blank"
-              >Trace Viewer</a> requires that the trace file must be loaded over the http:// or https:// protocols (current protocol is <code :style="d.color">{{ d.protocol }}</code>)
-              without <a
-                href="https://developer.mozilla.org/en-US/docs/Glossary/CORS"
-                target="_blank"
-              >CORS</a> issue,
-              try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server, please keep attachments and reports under the same directory.
-            </dd>
-            <dd class="mcr-item">
-              or download the trace file and load it to the page <a
-                href="https://trace.playwright.dev/"
-                target="_blank"
-              >Trace Viewer</a> manually.
-            </dd>
-            <dd class="mcr-item">
-              or customize a trace viewer url with option <code>traceViewerUrl: "{{ defaultUrl }}"</code>
-            </dd>
-          </dl>
-        </details>
-      </VuiFlex>
-    </div>
-  </details>
+        <dl class="mcr-readme">
+          <dd class="mcr-item">
+            The <a
+              href="https://trace.playwright.dev/"
+              target="_blank"
+            >Trace Viewer</a> requires that the trace file must be loaded over the http:// or https:// protocols (current protocol is <code :style="d.color">{{ d.protocol }}</code>)
+            without <a
+              href="https://developer.mozilla.org/en-US/docs/Glossary/CORS"
+              target="_blank"
+            >CORS</a> issue,
+            try <code>npx monocart show-report &lt;your-outputFile-path&gt;</code> start a local web server, please keep attachments and reports under the same directory.
+          </dd>
+          <dd class="mcr-item">
+            or download the trace file and load it to the page <a
+              href="https://trace.playwright.dev/"
+              target="_blank"
+            >Trace Viewer</a> manually.
+          </dd>
+          <dd class="mcr-item">
+            or customize a trace viewer url with option <code>traceViewerUrl: "{{ defaultUrl }}"</code>
+          </dd>
+        </dl>
+      </details>
+    </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">

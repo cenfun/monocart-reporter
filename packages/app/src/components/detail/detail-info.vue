@@ -87,7 +87,7 @@ const onMouseleave = (e) => {
     gap="5px"
   >
     <DetailColumn
-      v-if="rowItem.type==='column'"
+      v-if="rowItem.type==='details'"
       :column="rowItem"
     />
 

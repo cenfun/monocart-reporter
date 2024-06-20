@@ -118,7 +118,7 @@ const getGrid = () => {
                 if (rowItem.type === 'case') {
                     list.push(rowItem.tags);
                     list.push(rowItem.caseType);
-                } else if (rowItem.type === 'column') {
+                } else if (rowItem.type === 'details') {
                     list.push(rowItem.content);
                 }
 

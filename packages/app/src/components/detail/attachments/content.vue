@@ -2,7 +2,6 @@
 import {
     onMounted, ref, watch
 } from 'vue';
-import AttachmentHead from './attachment-head.vue';
 
 import Util from '../../../utils/util.js';
 import { markdownFormatter } from '../../../modules/formatters.js';
@@ -50,18 +49,10 @@ watch(() => props.data, () => {
 </script>
 
 <template>
-  <details
-    class="mcr-attachment-content"
-    open
-  >
-    <AttachmentHead :retry="props.data.retry">
-      {{ props.data.name }}
-    </AttachmentHead>
-    <div
-      ref="el"
-      class="mcr-attachment-body"
-    />
-  </details>
+  <div
+    ref="el"
+    class="mcr-attachment-body"
+  />
 </template>
 
 <style lang="scss">

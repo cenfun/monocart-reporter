@@ -21,9 +21,9 @@ const onCopyClick = (e, column) => {
 
     Util.copyText(elem.innerText).then((res) => {
         if (res) {
-            column.state.copied = 'copied';
+            column.tg_state.copied = 'copied';
             setTimeout(() => {
-                column.state.copied = '';
+                column.tg_state.copied = '';
             }, 1000);
         }
     });
@@ -43,7 +43,7 @@ const onCopyClick = (e, column) => {
       @click="onCopyClick($event, props.column)"
     >
       <IconLabel icon="copy">
-        {{ props.column.state.copied }}
+        {{ props.column.tg_state.copied }}
       </IconLabel>
     </div>
   </div>

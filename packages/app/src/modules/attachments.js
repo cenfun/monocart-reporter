@@ -1,34 +1,18 @@
-<script setup>
-import { shallowReactive, watchEffect } from 'vue';
-import { components } from 'vine-ui';
 
-import Util from '../../../utils/util.js';
+import Util from '../utils/util.js';
 
-import Image from './image.vue';
-import Video from './video.vue';
-import Trace from './trace.vue';
+import Image from '../components/detail/attachments/image.vue';
+import Video from '../components/detail/attachments/video.vue';
+import Trace from '../components/detail/attachments/trace.vue';
 
-import Audit from './audit.vue';
-import Coverage from './coverage.vue';
-import Network from './network.vue';
+import Audit from '../components/detail/attachments/audit.vue';
+import Coverage from '../components/detail/attachments/coverage.vue';
+import Network from '../components/detail/attachments/network.vue';
 
-import Content from './content.vue';
-import Link from './link.vue';
+import Content from '../components/detail/attachments/content.vue';
+import Link from '../components/detail/attachments/link.vue';
 
-import Comparison from './comparison.vue';
-
-const { VuiFlex } = components;
-
-const props = defineProps({
-    column: {
-        type: Object,
-        default: () => {}
-    }
-});
-
-const data = shallowReactive({
-    list: []
-});
+import Comparison from '../components/detail/attachments/comparison.vue';
 
 const getPluginComponent = (contentType, name) => {
     const {
@@ -134,10 +118,7 @@ const createGroup = (item, groupName, attachment) => {
     };
 };
 
-const initList = (attachments) => {
-    if (!attachments) {
-        return;
-    }
+export const groupAttachments = (attachments) => {
 
     attachments = attachments.filter((item) => typeof item.name === 'string');
 
@@ -199,121 +180,6 @@ const initList = (attachments) => {
         list.push(group);
     }
 
-    // random id to force refresh attachments
-    list.forEach((item) => {
-        item.id = Util.uid();
-    });
-
     return list;
+
 };
-
-watchEffect(() => {
-    data.list = initList(props.column.list);
-});
-
-</script>
-
-<template>
-  <div class="mcr-details-summary">
-    <VuiFlex
-      direction="column"
-      padding="10px"
-      gap="10px"
-    >
-      <component
-        :is="item.component"
-        v-for="item of data.list"
-        :key="item.id"
-        :data="item.data"
-      />
-    </VuiFlex>
-  </div>
-</template>
-
-<style lang="scss">
-.mcr-attachment-body {
-    margin-top: 5px;
-    border: 1px solid #eee;
-    overflow-x: auto;
-
-    .mcr-low {
-        background: #fce1e5;
-    }
-
-    .mcr-medium {
-        background: #fff4c2;
-    }
-
-    .mcr-high {
-        background: rgb(230 245 208);
-    }
-
-    .mcr-covered {
-        color: green;
-    }
-
-    .mcr-uncovered {
-        color: red;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-
-        tr {
-            position: relative;
-        }
-
-        tr:not(:last-child) {
-            border-bottom: 1px solid #eee;
-        }
-
-        tr.mcr-row-summary {
-            border-top: 2px solid #eee;
-        }
-
-        tr:first-child {
-            font-weight: bold;
-        }
-
-        tr:not(:first-child):hover::after {
-            position: absolute;
-            top: 0;
-            left: 0;
-            content: "";
-            display: block;
-            width: 100%;
-            height: 100%;
-            background-color: rgb(0 0 0 / 2%);
-            pointer-events: none;
-        }
-
-        td {
-            padding: 5px 8px;
-            text-align: right;
-        }
-
-        .mcr-column-filename {
-            min-width: 100px;
-            text-align: left;
-            word-break: break-all;
-        }
-
-        .mcr-column-left {
-            min-width: 100px;
-            white-space: nowrap;
-            text-align: left;
-        }
-
-        .mcr-column-description {
-            color: #666;
-            font-size: 12px;
-            text-align: left;
-        }
-
-        .mcr-head {
-            background-color: #f8f8f8;
-        }
-    }
-}
-</style>

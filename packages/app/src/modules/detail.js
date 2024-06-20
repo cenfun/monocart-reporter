@@ -5,6 +5,8 @@ import {
     markdownFormatter, mergeAnnotations, formatters
 } from './formatters.js';
 
+import { groupAttachments } from './attachments.js';
+
 import Util from '../utils/util.js';
 import state from './state.js';
 
@@ -58,7 +60,11 @@ const getErrors = (item, column, collection) => {
     const content = list.join('');
 
     return {
+        type: 'details',
         icon: 'error',
+        hasDetails: true,
+        hoverable: false,
+        data: column,
         content
     };
 };
@@ -75,22 +81,26 @@ const getLogs = (item, column, collection) => {
     const content = list.join('');
 
     return {
+        type: 'details',
         icon: 'log',
+        hasDetails: true,
+        hoverable: false,
+        data: column,
         content
     };
 };
 
-const getAnnotations = (item, column, collection) => {
+const getAnnotationList = (item) => {
     const annotations = item.annotations;
+
+    const icon = 'item-arrow';
 
     // string
     if (typeof annotations === 'string' && annotations) {
-        return {
-            icon: 'annotation',
-            content: `<div class="mcr-annotation-list">
-                        <div class="mcr-annotation-item">${markdownFormatter(annotations, true)}</div>
-                    </div>`
-        };
+        return [{
+            icon,
+            title: markdownFormatter(annotations, true)
+        }];
     }
 
     if (!Util.isList(annotations)) {
@@ -108,7 +118,10 @@ const getAnnotations = (item, column, collection) => {
                 res.push(`<span>${markdownFormatter(des, true)}</span>`);
             }
         });
-        return `<div class="mcr-annotation-item">${res.join('')}</div>`;
+        return {
+            icon,
+            title: `<div class="mcr-annotation-item">${res.join('')}</div>`
+        };
     });
     // console.log(list);
 
@@ -117,12 +130,21 @@ const getAnnotations = (item, column, collection) => {
         return;
     }
 
-    return {
-        icon: 'annotation',
-        content: `<div class="mcr-annotation-list">
-            ${content}
-        </div>`
-    };
+    return list;
+};
+
+const getAnnotations = (item, column, collection) => {
+
+    const list = getAnnotationList(item);
+
+    if (list && list.length) {
+        return {
+            icon: 'annotation',
+            title: column.name,
+            subs: list
+        };
+    }
+
 };
 
 // ===========================================================================
@@ -133,16 +155,28 @@ const getAttachments = (item, column, collection) => {
         return;
     }
 
-    if (collection) {
-        attachments.forEach((it) => {
-            collection.attachments.push(it);
-        });
-    }
+    attachments.forEach((it) => {
+        collection.attachments.push(it);
+    });
+
+    const list = groupAttachments(attachments);
+
+    const subs = list.map((it) => {
+        // it: component, data
+        return {
+            ... it,
+            componentId: 'attachment',
+            icon: 'attachment',
+            type: 'details',
+            hasDetails: true,
+            hoverable: false
+        };
+    });
 
     return {
-        id: column.id,
         icon: 'attachment',
-        list: attachments
+        title: column.name,
+        subs
     };
 };
 
@@ -187,13 +221,25 @@ const getCustom = (item, column) => {
         return;
     }
 
-    const simple = !column.markdown && !column.detailed;
-
+    const title = column.name;
     const content = getCustomFormattedContent(value, item, column);
 
+    const simple = !column.markdown && !column.detailed;
+    if (simple) {
+        // for detail-simple-list.vue
+        return {
+            simple,
+            title,
+            content
+        };
+    }
+
     return {
-        simple,
+        type: 'details',
         icon: 'custom',
+        hasDetails: true,
+        hoverable: false,
+        data: column,
         content
     };
 };
@@ -222,21 +268,6 @@ export const getPositionId = (rowId, columnId) => {
     return [rowId, columnId].join('-');
 };
 
-const addColumn = (list, item, column, result) => {
-    const hasDetails = !result.subs;
-    list.push({
-        ... result,
-        type: 'column',
-        hasDetails,
-        hoverable: !hasDetails,
-        data: column,
-        title: column.name,
-        positionId: getPositionId(item.id, column.id),
-        positionType: column.id,
-        state: shallowReactive({})
-    });
-};
-
 const getProjectMetadata = (item) => {
     const metadata = item.metadata;
     if (!metadata || typeof metadata !== 'object') {
@@ -259,14 +290,13 @@ const getProjectMetadata = (item) => {
     });
 
     return {
-        id: 'metadata',
         title: 'Metadata',
         icon: 'metadata',
         subs: metadataList
     };
 };
 
-const getColumns = (list, item, columns, collection) => {
+const forEachColumn = (list, item, columns, collection) => {
 
     // metadata for project
     if (item.type === 'suite' && item.suiteType === 'project') {
@@ -280,11 +310,11 @@ const getColumns = (list, item, columns, collection) => {
 
         const result = getColumn(item, column, collection);
         if (result) {
-            addColumn(list, item, column, result);
+            list.push(result);
         }
 
         if (Util.isList(column.subs)) {
-            getColumns(list, item, column.subs, collection);
+            forEachColumn(list, item, column.subs, collection);
         }
 
     });
@@ -299,7 +329,7 @@ export const initDataColumns = (item, collection) => {
     }
 
     const allColumns = [];
-    getColumns(allColumns, item, state.columns, collection);
+    forEachColumn(allColumns, item, state.columns, collection);
 
     const simpleColumns = [];
     const detailColumns = [];
@@ -317,6 +347,7 @@ export const initDataColumns = (item, collection) => {
 
     if (simpleColumns.length) {
         item.tg_simpleList = simpleColumns;
+        item.hasDetails = true;
     }
 
     if (detailColumns.length) {

@@ -1,14 +1,16 @@
 <script setup>
 import { nextTick } from 'vue';
+import { components } from 'vine-ui';
+
 import IconLabel from '../icon-label.vue';
-import Attachments from './attachments/attachments.vue';
-import ProjectMetadata from './project-metadata.vue';
+import Attachment from './attachments/attachment.vue';
 import HtmlContent from './html-content.vue';
 import { renderMermaid } from '../../modules/mermaid.js';
 
+const { VuiFlex } = components;
+
 const columnComponents = {
-    attachments: Attachments,
-    metadata: ProjectMetadata,
+    attachment: Attachment,
     html: HtmlContent
 };
 
@@ -24,8 +26,8 @@ const itemColumnClass = (item) => {
 };
 
 const onColumnHeadClick = (column) => {
-    column.state.collapsed = !column.state.collapsed;
-    if (!column.state.collapsed) {
+    column.tg_state.collapsed = !column.tg_state.collapsed;
+    if (!column.tg_state.collapsed) {
         nextTick(() => {
             renderMermaid();
         });
@@ -40,21 +42,30 @@ const getColumnComponent = (id) => {
 
 <template>
   <div :class="itemColumnClass(column.data)">
-    <IconLabel
-      :icon="column.state.collapsed?'collapsed':'expanded'"
+    <VuiFlex
       class="mcr-column-head"
-      :position-id="column.positionId"
-      :position-type="column.positionType"
+      gap="5px"
       @click="onColumnHeadClick(column)"
     >
-      <IconLabel :icon="column.icon">
-        {{ column.data.name }}
-      </IconLabel>
-    </IconLabel>
+      <IconLabel :icon="column.icon" />
+
+      <div>{{ column.data.name }}</div>
+
+      <IconLabel :icon="column.tg_state.collapsed?'collapsed':'expanded'" />
+
+      <div class="vui-flex-auto" />
+      <div
+        v-if="column.data.retry"
+        class="mcr-attachment-retry"
+      >
+        Retry #{{ column.data.retry }}
+      </div>
+    </VuiFlex>
+
 
     <component
-      :is="getColumnComponent(column.id)"
-      v-if="!column.state.collapsed"
+      :is="getColumnComponent(column.componentId)"
+      v-if="!column.tg_state.collapsed"
       class="mcr-column-content"
       :column="column"
     />
@@ -69,16 +80,20 @@ const getColumnComponent = (id) => {
 }
 
 .mcr-column-head {
-    padding: 5px;
-    font-weight: bold;
+    padding: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.8;
     user-select: none;
+}
+
+.mcr-column-head:hover {
+    opacity: 1;
 }
 
 .mcr-column-content {
     position: relative;
-    margin-top: 5px;
     margin-bottom: 5px;
-    margin-left: 25px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f6f8fa;
@@ -102,19 +117,18 @@ const getColumnComponent = (id) => {
     }
 }
 
-.mcr-detail-annotations {
-    .mcr-annotation-list {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        border-radius: 5px;
+.mcr-annotation-item {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 10px;
+}
 
-        .mcr-annotation-item {
-            display: flex;
-            flex-flow: row wrap;
-            gap: 10px;
-        }
-    }
+.mcr-attachment-retry {
+    margin-right: 10px;
+    color: var(--color-flaky);
+    font-size: small;
+    cursor: default;
+    user-select: none;
 }
 
 </style>
