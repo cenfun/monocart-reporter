@@ -3,7 +3,6 @@ import { watchEffect, shallowReactive } from 'vue';
 import { components } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
-import AttachmentHead from './attachment-head.vue';
 
 const { VuiFlex } = components;
 
@@ -91,67 +90,54 @@ watchEffect(() => {
 </script>
 
 <template>
-  <details
-    class="mcr-attachment-coverage"
-    open
-  >
-    <AttachmentHead :retry="props.data.retry">
-      <a
-        :href="props.data.path"
-        target="_blank"
-      >{{ props.data.name }}</a>
-
-      <span class="mcr-coverage-type">{{ d.type }}</span>
-    </AttachmentHead>
-    <div class="mcr-attachment-body">
-      <table>
-        <tr>
-          <td class="mcr-column-left">
-            Name
-          </td>
-          <td>Coverage</td>
-          <td />
-          <td>Covered</td>
-          <td>Uncovered</td>
-          <td>Total</td>
-        </tr>
-        <tr
-          v-for="(item, i) of d.list"
-          :key="i"
-        >
-          <td class="mcr-column-left">
-            <b>{{ item.name }}</b>
-          </td>
-          <td
-            style="padding: 0 5px;"
-            :class="'mcr-'+item.status"
-          >
-            {{ Util.PF(item.pct, 100, 2) }}
-          </td>
-          <td
-            style="min-width: 100px;"
-            v-html="item.percentChart"
-          />
-
-          <td :title="item.coveredTitle">
-            <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
-          </td>
-          <td :title="item.uncoveredTitle">
-            <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
-          </td>
-          <td :title="item.totalTitle">
-            {{ Util.NF(item.total) }}
-          </td>
-        </tr>
-      </table>
-      <VuiFlex
-        gap="10px"
-        padding="8px"
+  <div class="mcr-attachment-coverage">
+    <table>
+      <tr>
+        <td class="mcr-column-left">
+          Name
+        </td>
+        <td>Coverage</td>
+        <td />
+        <td>Covered</td>
+        <td>Uncovered</td>
+        <td>Total</td>
+      </tr>
+      <tr
+        v-for="(item, i) of d.list"
+        :key="i"
       >
-        <div><b>Files</b> <span class="mcr-num">{{ d.files }}</span></div>
-      </VuiFlex>
-    </div>
-  </details>
+        <td class="mcr-column-left">
+          <b>{{ item.name }}</b>
+        </td>
+        <td
+          style="padding: 0 5px;"
+          :class="'mcr-'+item.status"
+        >
+          {{ Util.PF(item.pct, 100, 2) }}
+        </td>
+        <td
+          style="min-width: 100px;"
+          v-html="item.percentChart"
+        />
+
+        <td :title="item.coveredTitle">
+          <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
+        </td>
+        <td :title="item.uncoveredTitle">
+          <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
+        </td>
+        <td :title="item.totalTitle">
+          {{ Util.NF(item.total) }}
+        </td>
+      </tr>
+    </table>
+    <VuiFlex
+      gap="10px"
+      padding="8px"
+    >
+      <div><b>Files</b> <span class="mcr-num">{{ d.files }}</span></div>
+    </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">

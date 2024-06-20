@@ -39,16 +39,6 @@ const Util = {
         return icons[subType] || icons[type];
     },
 
-    setFocus: (elem) => {
-        const prev = document.querySelector('.mcr-focus');
-        if (prev) {
-            prev.classList.remove('mcr-focus');
-        }
-        if (elem) {
-            elem.classList.add('mcr-focus');
-        }
-    },
-
     copyText: (text) => {
         return new Promise((resolve) => {
             let err;

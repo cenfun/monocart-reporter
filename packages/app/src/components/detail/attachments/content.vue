@@ -2,7 +2,6 @@
 import {
     onMounted, ref, watch
 } from 'vue';
-import AttachmentHead from './attachment-head.vue';
 
 import Util from '../../../utils/util.js';
 import { markdownFormatter } from '../../../modules/formatters.js';
@@ -30,10 +29,6 @@ const showContent = () => {
         return;
     }
 
-    // if (Util.isJsonType(contentType)) {
-    // console.log('json', content);
-    // }
-
     $el.innerHTML = `<pre><code>${content}</code></pre>`;
 };
 
@@ -50,35 +45,26 @@ watch(() => props.data, () => {
 </script>
 
 <template>
-  <details
+  <div
+    ref="el"
     class="mcr-attachment-content"
-    open
-  >
-    <AttachmentHead :retry="props.data.retry">
-      {{ props.data.name }}
-    </AttachmentHead>
-    <div
-      ref="el"
-      class="mcr-attachment-body"
-    />
-  </details>
+  />
 </template>
 
 <style lang="scss">
 .mcr-attachment-content {
-    .mcr-attachment-body {
-        padding: 10px;
+    padding: 10px;
+    background-color: #f6f8fa;
 
-        pre {
-            margin: 0;
-            padding: 0;
-            overflow-x: auto;
-        }
+    pre {
+        margin: 0;
+        padding: 0;
+        overflow-x: auto;
+    }
 
-        code {
-            margin: 0;
-            padding: 0;
-        }
+    code {
+        margin: 0;
+        padding: 0;
     }
 }
 </style>

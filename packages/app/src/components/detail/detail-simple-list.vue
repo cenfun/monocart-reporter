@@ -25,7 +25,7 @@ const props = defineProps({
       wrap
     >
       <div>
-        {{ column.data.name }}
+        {{ column.title }}
       </div>
       <div v-html="column.content" />
     </VuiFlex>
@@ -36,10 +36,8 @@ const props = defineProps({
 .mcr-simple-columns {
     > .vui-flex {
         min-width: 20px;
-        min-height: 20px;
-        padding: 1px 5px;
+        padding: 2px 6px;
         font-size: 13px;
-        line-height: 20px;
         border: 1px solid #ddd;
         border-radius: 5px;
         background-color: rgb(175 184 193 / 20%);

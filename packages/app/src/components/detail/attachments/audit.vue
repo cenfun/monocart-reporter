@@ -3,8 +3,6 @@ import { watchEffect, shallowReactive } from 'vue';
 
 import Util from '../../../utils/util.js';
 
-import AttachmentHead from './attachment-head.vue';
-
 const props = defineProps({
     data: {
         type: Object,
@@ -35,48 +33,39 @@ watchEffect(() => {
 </script>
 
 <template>
-  <details
-    class="mcr-attachment-audit"
-    open
-  >
-    <AttachmentHead :retry="props.data.retry">
-      <a
-        :href="props.data.path"
-        target="_blank"
-      >{{ props.data.name }}</a>
-    </AttachmentHead>
-    <div class="mcr-attachment-body">
-      <table>
-        <tr class="mcr-head">
-          <td class="mcr-column-left">
-            Name
-          </td>
-          <td />
-          <td>
-            Score
-          </td>
-        </tr>
+  <div class="mcr-attachment-audit">
+    <table>
+      <tr class="mcr-head">
+        <td class="mcr-column-left">
+          Name
+        </td>
+        <td />
+        <td>
+          Score
+        </td>
+      </tr>
 
-        <tr
-          v-for="(item, i) of d.list"
-          :key="i"
-          :class="item.sub?'mcr-row-sub':''"
-        >
-          <td class="mcr-column-left mcr-column-name">
-            {{ item.name }}
-          </td>
-          <td>{{ item.value }}</td>
-          <td :class="'mcr-'+item.status">
-            {{ Util.PNF(item.score) }}
-          </td>
-        </tr>
-      </table>
-    </div>
-  </details>
+      <tr
+        v-for="(item, i) of d.list"
+        :key="i"
+        :class="item.sub?'mcr-row-sub':''"
+      >
+        <td class="mcr-column-left mcr-column-name">
+          {{ item.name }}
+        </td>
+        <td>{{ item.value }}</td>
+        <td :class="'mcr-'+item.status">
+          {{ Util.PNF(item.score) }}
+        </td>
+      </tr>
+    </table>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-audit {
+    padding: 0;
+
     .mcr-column-name {
         font-weight: bold;
     }

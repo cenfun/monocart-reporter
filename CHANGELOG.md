@@ -1,5 +1,10 @@
 ## Changelog
 
+* 2.5.0
+  - updated UI for case details page (performance requirement)
+  - updated marked to v13
+  - fixed repeated suite id
+
 * 2.4.9
   - fixed repeated columns (#122)
 

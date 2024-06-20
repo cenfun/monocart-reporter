@@ -7,9 +7,9 @@ import { microtask } from 'monocart-common';
 
 import Util from '../../../utils/util.js';
 import state from '../../../modules/state.js';
+import { setPosition } from '../../../modules/detail.js';
 
 import IconLabel from '../../icon-label.vue';
-import AttachmentHead from './attachment-head.vue';
 
 const {
     VuiFlex, VuiTab, VuiSwitch
@@ -103,9 +103,7 @@ const initComparison = () => {
 };
 
 const onErrorClick = () => {
-    if (d.position) {
-        state.position = d.position;
-    }
+    setPosition(d.position);
 };
 
 // eslint-disable-next-line complexity
@@ -258,7 +256,6 @@ const zoomTo = (e, percent) => {
 
 };
 
-
 const onDblClick = (e) => {
     state.imageZoom = true;
     // console.log('onDblClick');
@@ -386,147 +383,135 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <details
-    class="mcr-attachment-comparison"
-    open
-  >
-    <AttachmentHead :retry="props.data.retry">
-      <IconLabel
-        v-if="d.imageList"
-        icon="image"
-        :button="false"
-      />
-      <div>mismatch: {{ props.data.name }}</div>
-    </AttachmentHead>
-    <div class="mcr-attachment-body">
-      <VuiTab
-        v-if="d.imageList"
-        v-model="d.tabIndex"
-        class="mcr-comparison-tab"
-      >
-        <template #right>
-          <div class="mcr-comparison-zoom">
-            <VuiSwitch
-              v-if="!d.touch"
-              v-model="state.imageZoom"
-              width="28px"
-              height="16px"
-              :label-clickable="true"
-              label-position="right"
-            >
-              Zoom
-              {{ d.percent }}%
-            </VuiSwitch>
-          </div>
-          <div
-            class="mcr-comparison-note"
-            @mouseenter="showHelp($event, true)"
-            @mouseleave="showHelp($event, false)"
+  <div class="mcr-attachment-comparison">
+    <VuiTab
+      v-if="d.imageList"
+      v-model="d.tabIndex"
+      class="mcr-comparison-tab"
+    >
+      <template #right>
+        <div class="mcr-comparison-zoom">
+          <VuiSwitch
+            v-if="!d.touch"
+            v-model="state.imageZoom"
+            width="28px"
+            height="16px"
+            :label-clickable="true"
+            label-position="right"
           >
-            <IconLabel icon="help" />
-            <div hidden>
-              <div class="mcr-readme mcr-comparison-help">
-                <h3>Help on the image:</h3>
-                <li class="mcr-item">
-                  Mouse Down/Up: switch view with neighbor
-                </li>
-                <li class="mcr-item">
-                  Double Click: zoom to 100% or reset
-                </li>
-                <li class="mcr-item">
-                  Mouse Wheel: zoom in/out
-                </li>
-                <li class="mcr-item">
-                  Mouse Drag: switch view or pan
-                </li>
-              </div>
+            Zoom
+            {{ d.percent }}%
+          </VuiSwitch>
+        </div>
+        <div
+          class="mcr-comparison-note"
+          @mouseenter="showHelp($event, true)"
+          @mouseleave="showHelp($event, false)"
+        >
+          <IconLabel icon="help" />
+          <div hidden>
+            <div class="mcr-readme mcr-comparison-help">
+              <h3>Help on the image:</h3>
+              <li class="mcr-item">
+                Mouse Down/Up: switch view with neighbor
+              </li>
+              <li class="mcr-item">
+                Double Click: zoom to 100% or reset
+              </li>
+              <li class="mcr-item">
+                Mouse Wheel: zoom in/out
+              </li>
+              <li class="mcr-item">
+                Mouse Drag: switch view or pan
+              </li>
             </div>
           </div>
-        </template>
-        <template #tabs>
-          <div
-            v-for="(item, i) of d.imageList"
-            :key="i"
-          >
-            {{ item.title }}
-          </div>
-        </template>
-        <template #panes>
-          <div
-            v-for="(item, i) of d.imageList"
-            :key="i"
-            class="mcr-comparison-image"
-            :style="d.containerStyle"
-          >
-            <img
-              :src="item.path"
-              :alt="item.name"
-              :style="d.imageStyle"
-              @load="onImgLoad"
-              @error="onImgError($event, item)"
-            >
-          </div>
-        </template>
-      </VuiTab>
-
-      <VuiFlex
-        v-if="d.textList"
-        gap="10px"
-        padding="10px"
-        width="100%"
-        align-items="start"
-        shirk
-        wrap
-      >
+        </div>
+      </template>
+      <template #tabs>
         <div
-          v-for="(item, i) of d.textList"
+          v-for="(item, i) of d.imageList"
           :key="i"
-          class="mcr-text-item"
         >
-          <div class="mcr-text-head">
-            {{ item.category }}
-          </div>
-          <pre><code>{{ item.content }}</code></pre>
+          {{ item.title }}
+        </div>
+      </template>
+      <template #panes>
+        <div
+          v-for="(item, i) of d.imageList"
+          :key="i"
+          class="mcr-comparison-image"
+          :style="d.containerStyle"
+        >
+          <img
+            :src="item.path"
+            :alt="item.name"
+            :style="d.imageStyle"
+            @load="onImgLoad"
+            @error="onImgError($event, item)"
+          >
+        </div>
+      </template>
+    </VuiTab>
+
+    <VuiFlex
+      v-if="d.textList"
+      gap="10px"
+      padding="10px"
+      width="100%"
+      align-items="start"
+      shirk
+      wrap
+    >
+      <div
+        v-for="(item, i) of d.textList"
+        :key="i"
+        class="mcr-text-item"
+      >
+        <div class="mcr-text-head">
+          {{ item.category }}
+        </div>
+        <pre><code>{{ item.content }}</code></pre>
+      </div>
+    </VuiFlex>
+
+    <VuiFlex
+      direction="column"
+      gap="10px"
+      padding="10px"
+    >
+      <VuiFlex
+        v-if="d.message"
+        gap="10px"
+        wrap
+        shirk
+      >
+        <IconLabel
+          icon="error"
+          gap="10px"
+          @click="onErrorClick"
+        >
+          {{ d.message }}
+        </IconLabel>
+        <div v-if="d.size">
+          ({{ d.size }})
         </div>
       </VuiFlex>
 
       <VuiFlex
-        direction="column"
         gap="10px"
-        padding="10px"
+        wrap
       >
-        <VuiFlex
-          v-if="d.message"
-          gap="10px"
-          wrap
-          shirk
-        >
-          <IconLabel
-            icon="error"
-            @click="onErrorClick"
-          >
-            {{ d.message }}
-          </IconLabel>
-          <div v-if="d.size">
-            ({{ d.size }})
-          </div>
-        </VuiFlex>
-
-        <VuiFlex
-          gap="10px"
-          wrap
-        >
-          <a
-            v-for="(item, i) of props.data.list"
-            :key="i"
-            :href="item.path"
-            target="_blank"
-            class="mcr-item"
-          >{{ item.name }}</a>
-        </VuiFlex>
+        <a
+          v-for="(item, i) of props.data.list"
+          :key="i"
+          :href="item.path"
+          target="_blank"
+          class="mcr-item"
+        >{{ item.name }}</a>
       </VuiFlex>
-    </div>
-  </details>
+    </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
@@ -569,6 +554,7 @@ onUnmounted(() => {
         height: 30px;
         min-width: 60px;
         line-height: 30px;
+        text-align: center;
     }
 
     .vui-tab-item::before {

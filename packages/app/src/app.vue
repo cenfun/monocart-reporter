@@ -17,6 +17,8 @@ import IconLabel from './components/icon-label.vue';
 
 import state, { defaultGroups } from './modules/state.js';
 
+import { loadMermaid } from './modules/mermaid.js';
+
 const {
     VuiInput,
     VuiFlex,
@@ -419,7 +421,7 @@ const onExportClick = () => {
             if (excludes.includes(k)) {
                 return;
             }
-            if (k.startsWith('tg_') || k.endsWith('_matched')) {
+            if (k.startsWith('tg_')) {
                 return;
             }
             row[k] = item[k];
@@ -557,9 +559,7 @@ watch(() => state.groups, (v) => {
     deep: true
 });
 
-watch([
-    () => state.imageZoom
-], () => {
+watch(() => state.imageZoom, () => {
     store.set('imageZoom', state.imageZoom);
 });
 
@@ -567,6 +567,12 @@ watch([
     () => state.exportSelected
 ], () => {
     renderGrid();
+});
+
+watch(() => state.mermaidEnabled, (v) => {
+    if (v && !state.mermaidLoaded) {
+        loadMermaid();
+    }
 });
 
 window.addEventListener('popstate', microtask(() => {
@@ -1039,6 +1045,7 @@ body {
     --color-failed: #d00;
     --color-flaky: orange;
     --color-skipped: gray;
+    --border-failed: rgb(180 0 0 / 50%);
     --image-shadow: rgb(0 0 0 / 35%) 0 2px 8px;
 
     width: 100%;
@@ -1543,24 +1550,19 @@ a:not([href], [class]):hover {
     display: inline-block;
     min-height: 20px;
     margin: 0;
-    padding-left: 20px;
+    padding-left: 15px;
     line-height: 20px;
 
     &::before {
         position: absolute;
         top: 8px;
-        left: 6px;
+        left: 2px;
         content: "";
         width: 5px;
         height: 5px;
         border-radius: 50%;
         background-color: #333;
     }
-}
-
-.mcr-focus {
-    outline: 2px solid #6bbbf7;
-    outline-offset: -1px;
 }
 
 </style>

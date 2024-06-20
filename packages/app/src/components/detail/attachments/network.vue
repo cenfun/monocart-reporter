@@ -4,7 +4,6 @@ import { components } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
 import generateWaterfallChart from '../../../modules/waterfall.js';
-import AttachmentHead from './attachment-head.vue';
 
 const { VuiFlex } = components;
 
@@ -93,93 +92,82 @@ watchEffect(() => {
 </script>
 
 <template>
-  <details
+  <VuiFlex
     class="mcr-attachment-network"
-    open
+    padding="10px"
+    direction="column"
+    gap="10px"
   >
-    <AttachmentHead :retry="props.data.retry">
-      <a
-        :href="props.data.path"
-        target="_blank"
-      >{{ props.data.name }}</a>
-    </AttachmentHead>
-    <VuiFlex
-      class="mcr-attachment-body"
-      padding="10px"
-      direction="column"
-      gap="10px"
+    <div
+      v-for="(item, i) of d.pages"
+      :key="i"
     >
-      <div
-        v-for="(item, i) of d.pages"
-        :key="i"
-      >
-        <VuiFlex
-          gap="10px"
-        >
-          <div><b>Page{{ item.number }}</b></div>
-          <div>{{ item.title }}</div>
-
-          <div
-            v-if="item.onContentLoad>0"
-            style="color: #1a1aa6;"
-          >
-            ContendLoaded {{ Util.TF(item.onContentLoad) }}
-          </div>
-
-          <div
-            v-if="item.onLoad>0"
-            style="color: #c80000;"
-          >
-            Load {{ Util.TF(item.onLoad) }}
-          </div>
-
-          <div>Duration {{ Util.TF(item.waterfall.time) }}</div>
-        </VuiFlex>
-
-        <div
-          class="mcr-network-waterfall"
-          v-html="item.waterfallChart"
-        />
-      </div>
-
-      <VuiFlex gap="10px">
-        <div><b>Requests</b> <span class="mcr-num">{{ d.summary.requests }}</span></div>
-        <div><b>Transferred</b> {{ Util.BF(d.summary.size) }}</div>
-      </VuiFlex>
-
-      <VuiFlex gap="10px">
-        <div><b>Status</b></div>
-        <div
-          v-for="(item, i) of d.status"
-          :key="i"
-        >
-          <span :style="item.color">{{ item.name }}</span> <span class="mcr-num">{{ item.count }}</span>
-        </div>
-      </VuiFlex>
-
-      <VuiFlex gap="10px">
-        <div><b>Methods</b></div>
-        <div
-          v-for="(item, i) of d.methods"
-          :key="i"
-        >
-          {{ item.name }} <span class="mcr-num">{{ item.count }}</span>
-        </div>
-      </VuiFlex>
-
       <VuiFlex
-        v-if="d.browser||d.creator"
         gap="10px"
       >
-        <div v-if="d.browser">
-          <b>Browser</b> {{ d.browser.name }} {{ d.browser.version }}
+        <div><b>Page{{ item.number }}</b></div>
+        <div>{{ item.title }}</div>
+
+        <div
+          v-if="item.onContentLoad>0"
+          style="color: #1a1aa6;"
+        >
+          ContendLoaded {{ Util.TF(item.onContentLoad) }}
         </div>
-        <div v-if="d.creator">
-          <b>Creator</b> {{ d.creator.name }} {{ d.creator.version }}
+
+        <div
+          v-if="item.onLoad>0"
+          style="color: #c80000;"
+        >
+          Load {{ Util.TF(item.onLoad) }}
         </div>
+
+        <div>Duration {{ Util.TF(item.waterfall.time) }}</div>
       </VuiFlex>
+
+      <div
+        class="mcr-network-waterfall"
+        v-html="item.waterfallChart"
+      />
+    </div>
+
+    <VuiFlex gap="10px">
+      <div><b>Requests</b> <span class="mcr-num">{{ d.summary.requests }}</span></div>
+      <div><b>Transferred</b> {{ Util.BF(d.summary.size) }}</div>
     </VuiFlex>
-  </details>
+
+    <VuiFlex gap="10px">
+      <div><b>Status</b></div>
+      <div
+        v-for="(item, i) of d.status"
+        :key="i"
+      >
+        <span :style="item.color">{{ item.name }}</span> <span class="mcr-num">{{ item.count }}</span>
+      </div>
+    </VuiFlex>
+
+    <VuiFlex gap="10px">
+      <div><b>Methods</b></div>
+      <div
+        v-for="(item, i) of d.methods"
+        :key="i"
+      >
+        {{ item.name }} <span class="mcr-num">{{ item.count }}</span>
+      </div>
+    </VuiFlex>
+
+    <VuiFlex
+      v-if="d.browser||d.creator"
+      gap="10px"
+    >
+      <div v-if="d.browser">
+        <b>Browser</b> {{ d.browser.name }} {{ d.browser.version }}
+      </div>
+      <div v-if="d.creator">
+        <b>Creator</b> {{ d.creator.name }} {{ d.creator.version }}
+      </div>
+    </VuiFlex>
+  </VuiFlex>
 </template>
 
 <style lang="scss">

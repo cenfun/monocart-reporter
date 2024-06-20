@@ -21,9 +21,9 @@ const onCopyClick = (e, column) => {
 
     Util.copyText(elem.innerText).then((res) => {
         if (res) {
-            column.copied = 'copied';
+            column.tg_state.copied = 'copied';
             setTimeout(() => {
-                column.copied = '';
+                column.tg_state.copied = '';
             }, 1000);
         }
     });
@@ -43,7 +43,7 @@ const onCopyClick = (e, column) => {
       @click="onCopyClick($event, props.column)"
     >
       <IconLabel icon="copy">
-        {{ props.column.copied }}
+        {{ props.column.tg_state.copied }}
       </IconLabel>
     </div>
   </div>
@@ -52,6 +52,8 @@ const onCopyClick = (e, column) => {
 <style lang="scss">
 .mcr-html-content {
     position: relative;
+    padding: 0;
+    background-color: #f6f8fa;
 }
 
 .mcr-column-html {
@@ -67,7 +69,11 @@ const onCopyClick = (e, column) => {
     display: none;
     padding: 5px;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: rgb(255 255 255 / 60%);
+
+    .mcr-icon-label {
+        background-color: #fff;
+    }
 }
 
 .mcr-html-content:hover {

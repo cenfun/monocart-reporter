@@ -1,5 +1,4 @@
 <script setup>
-import AttachmentHead from './attachment-head.vue';
 const props = defineProps({
     data: {
         type: Object,
@@ -9,38 +8,25 @@ const props = defineProps({
 </script>
 
 <template>
-  <details
-    class="mcr-attachment-image"
-    open
-  >
-    <AttachmentHead :retry="props.data.retry">
-      <a
-        :href="props.data.path"
-        target="_blank"
-      >{{ props.data.name }}</a>
-    </AttachmentHead>
-    <div class="mcr-attachment-body">
-      <a
-        :href="props.data.path"
-        target="_blank"
-      ><img
-        :src="props.data.path"
-        :alt="props.data.name"
-      ></a>
-    </div>
-  </details>
+  <div class="mcr-attachment-image">
+    <a
+      :href="props.data.path"
+      target="_blank"
+    ><img
+      :src="props.data.path"
+      :alt="props.data.name"
+    ></a>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-image {
-    .mcr-attachment-body {
-        padding: 10px;
-        border: none;
-    }
+    padding: 10px;
 
     img {
         display: block;
         max-width: 100%;
+        min-height: 50px;
         box-shadow: var(--image-shadow);
     }
 }

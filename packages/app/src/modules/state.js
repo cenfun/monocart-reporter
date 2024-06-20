@@ -42,11 +42,13 @@ const state = shallowReactive({
 
     imageZoom: false,
 
-    position: 0,
+    position: null,
 
     // grid data
     gridDataMap: {},
     grid: null,
+
+    onlyFailedSteps: false,
 
     loading: false,
     initializing: true

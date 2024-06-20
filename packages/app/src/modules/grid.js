@@ -2,53 +2,11 @@ import { Grid } from 'turbogrid';
 import { hash } from 'monocart-common';
 
 import Util from '../utils/util.js';
-import { formatters, matchedFormatter } from './formatters.js';
+import { formatters } from './formatters.js';
 import state from '../modules/state.js';
 import { getGridRows } from './grid-rows.js';
-
-const isNodeTruncated = (node) => {
-    if (!node) {
-        return false;
-    }
-    node = node.querySelector('.tg-tree-name') || node;
-    if (node.clientWidth < node.scrollWidth) {
-        return true;
-    }
-    return false;
-};
-
-const hideTooltip = () => {
-    if (Util.isTouchDevice()) {
-        return;
-    }
-
-    if (state.tooltip) {
-        state.tooltip.visible = false;
-        state.tooltip.text = '';
-        state.tooltip.html = false;
-        state.tooltip.classMap = '';
-    }
-};
-
-const showTooltip = (elem, text, html) => {
-    if (Util.isTouchDevice()) {
-        return;
-    }
-
-    hideTooltip();
-
-    if (!text) {
-        return;
-    }
-    if (state.tooltip) {
-        state.tooltip.target = elem;
-        state.tooltip.text = text;
-        state.tooltip.html = html;
-        state.tooltip.classMap = 'mcr-searchable';
-        state.tooltip.visible = true;
-    }
-
-};
+import { bindGridTooltip } from './tooltip.js';
+import { setPosition, isClickableColumns } from './detail.js';
 
 export const hideFlyover = (immediately) => {
     state.flyoverVisible = false;
@@ -60,34 +18,21 @@ export const hideFlyover = (immediately) => {
 
 export const showFlyover = (component, data) => {
     state.flyoverComponent = component;
-    state.flyoverData = data;
-    const title = data ? data.title : state.title;
-    state.flyoverTitle = title;
+    if (data) {
+        state.flyoverData = data.id;
+        state.flyoverTitle = data.title;
+    } else {
+        state.flyoverData = null;
+        state.flyoverTitle = state.title;
+    }
     state.flyoverVisible = true;
 };
 
-const showDetailById = (grid, id) => {
-    if (id) {
-        const rowItem = grid.getRowItemById(id);
-        if (rowItem) {
-            grid.scrollRowIntoView(rowItem);
-            grid.setRowSelected(rowItem);
-            showFlyover('detail', rowItem);
-            return true;
-        }
-    }
-};
-
-const showDetailByTitle = (grid, title) => {
-    if (title) {
-        const rowItem = grid.getRowItemBy('title', title);
-        if (rowItem) {
-            grid.scrollRowIntoView(rowItem);
-            grid.setRowSelected(rowItem);
-            showFlyover('detail', rowItem);
-            return true;
-        }
-    }
+const showDetailRowAndFocus = (grid, rowItem) => {
+    grid.scrollRowIntoView(rowItem);
+    grid.selectAll(false);
+    grid.setRowSelected(rowItem);
+    showFlyover('detail', rowItem);
 };
 
 const showDetail = (pagePath) => {
@@ -96,25 +41,27 @@ const showDetail = (pagePath) => {
         return;
     }
 
-    const data = state.flyoverData;
-    if (data) {
-        showFlyover('detail', data);
-        return true;
-    }
-
     const list = pagePath.split('/');
     const id = list.shift();
     const title = list.join('/');
     // console.log('page:', page, 'id:', id, 'title:', title);
 
     // match id
-    if (showDetailById(grid, id)) {
-        return true;
+    if (id) {
+        const rowItem = grid.getRowItemById(id);
+        if (rowItem) {
+            showDetailRowAndFocus(grid, rowItem);
+            return true;
+        }
     }
 
     // only match title
-    if (showDetailByTitle(grid, title)) {
-        return true;
+    if (title) {
+        const rowItem = grid.getRowItemBy('title', title);
+        if (rowItem) {
+            showDetailRowAndFocus(grid, rowItem);
+            return true;
+        }
     }
 };
 
@@ -159,9 +106,9 @@ const getClickCaseItem = (rowItem) => {
     }
 };
 
-const showRowDetail = (data) => {
-    state.flyoverData = data;
-    const { id, title } = data;
+const showRowDetail = (caseItem) => {
+    showFlyover('detail', caseItem);
+    const { id, title } = caseItem;
     hash.set('page', `detail/${id}/${title}`);
 };
 
@@ -186,13 +133,7 @@ const onRowClickHandler = (d, force) => {
 
     const isCaseTitle = columnId === 'title' && rowItem.type === 'case';
 
-    const isClickColumn = [
-        'ok',
-        'errors',
-        'logs',
-        'annotations',
-        'attachments'
-    ].includes(columnId) && !cls.contains('tg-cell');
+    const isClickColumn = isClickableColumns(columnId) && !cls.contains('tg-cell');
 
     if (isCaseTitle || isClickColumn) {
         showRowDetail(caseItem);
@@ -203,11 +144,14 @@ const onRowClickHandler = (d, force) => {
 const getClickPosition = (columnItem, rowItem) => {
     const columnId = columnItem.id;
     let rowId = rowItem.id;
+    let type = rowItem.type;
     if (columnId === 'errors' && rowItem.errorId) {
-        // use sub row errorId
+        // use sub row errorId, error from step
         rowId = rowItem.errorId;
+        type = 'step';
     }
     return {
+        type,
         rowId,
         columnId
     };
@@ -216,7 +160,7 @@ const getClickPosition = (columnItem, rowItem) => {
 const showPositionHandler = (d) => {
     const { rowItem, columnItem } = d;
     const position = getClickPosition(columnItem, rowItem);
-    state.position = position;
+    setPosition(position);
 };
 
 const clickTitleHandler = (d) => {
@@ -312,21 +256,7 @@ const bindGridEvents = () => {
 
     const grid = state.grid;
 
-    grid.bind('onCellMouseEnter', (e, d) => {
-        const cellNode = d.cellNode;
-        if (isNodeTruncated(cellNode)) {
-            const { rowItem, columnItem } = d;
-            let html = true;
-            let text = rowItem[`${columnItem.id}_matched`];
-            if (!text) {
-                html = false;
-                text = cellNode.innerText;
-            }
-            showTooltip(cellNode, text, html);
-        }
-    }).bind('onCellMouseLeave', (e, d) => {
-        hideTooltip();
-    });
+    bindGridTooltip(grid);
 
     grid.bind('onClick', (e, d) => {
 
@@ -435,9 +365,6 @@ export const initCustomsFormatters = (list, customFormatters) => {
 
             if (formatter) {
                 item.formatter = function(value, rowItem, columnItem, cellNode) {
-
-                    value = matchedFormatter(value, rowItem, columnItem);
-
                     return formatter.apply(this, [value, rowItem, columnItem, cellNode]);
                 };
             }

@@ -1,490 +1,209 @@
 <script setup>
 import {
-    ref, watch, shallowReactive, onMounted, onActivated
+    createApp, h, watch, shallowReactive, onMounted, nextTick
 } from 'vue';
 import { components } from 'vine-ui';
-import { debounce, microtask } from 'monocart-common';
-
-import Convert from 'ansi-to-html';
-
-import 'github-markdown-css/github-markdown-light.css';
+import { Grid } from 'turbogrid';
+import { microtask } from 'monocart-common';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
-import {
-    markdownFormatter, mergeAnnotations, formatters
-} from '../../modules/formatters.js';
+import { initDataColumns, getPositionId } from '../../modules/detail.js';
+import emitter from '../../modules/emitter.js';
+import { renderMermaid } from '../../modules/mermaid.js';
 
 import IconLabel from '../icon-label.vue';
-import SimpleColumns from './simple-columns.vue';
-import DetailColumns from './detail-columns.vue';
+import DetailInfo from './detail-info.vue';
 
-import RowTitle from './row-title.vue';
+import 'github-markdown-css/github-markdown-light.css';
 
-const { VuiFlex, VuiSwitch } = components;
+const {
+    VuiFlex, VuiSwitch, VuiInput
+} = components;
 
 const data = shallowReactive({
-    list: [],
-    stepCollapsedDisabled: false,
-    stepFailedOnly: false,
-    stepSubs: false,
-    errors: [],
-    attachments: []
+    hasFailed: false
 });
 
-const el = ref(null);
-let $el;
+const gridDataCache = {};
+const suiteCache = {};
 
-const itemClass = (d) => {
-    const ls = ['mcr-detail-item'];
-    if (d.classLevel) {
-        ls.push(d.classLevel);
-    }
-    return ls;
-};
+// ===========================================================================
 
-const itemHeadClass = (d) => {
-    return ['mcr-detail-head', `mcr-detail-${d.type}`, d.classMap];
-};
+const createDetailInfo = (rowItem, columnItem, cellNode) => {
 
-const onLocationClick = (item) => {
-    if (item.state.locationLabel) {
+    const container = cellNode.querySelector('.tg-tree-name');
 
-        Util.copyText(item.data.location).then((res) => {
-            if (res) {
-                item.state.locationLabel = 'copied';
-                setTimeout(() => {
-                    item.state.locationLabel = '';
-                }, 1000);
-            } else {
-                item.state.locationLabel = '';
+    if (container) {
+        createApp({
+            render() {
+                return h(DetailInfo, {
+                    rowItem,
+                    columnItem
+                });
             }
-        });
-
-    } else {
-        item.state.locationLabel = item.data.location;
+        }).mount(container);
     }
 };
 
-// ===========================================================================
-// errors logs html
-
-const convert = new Convert({
-    fg: '#333',
-    bg: '#F6F8FA',
-    newline: true,
-    escapeXML: true
-});
-
-const convertHtml = (str) => {
-
-    const reg = /\s$/;
-    const endsWithN = reg.test(str) ? '' : '<br/>';
-
-    // link
-    // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
-    // str = str.replace(re, function(a) {
-    //     return `<a href="${a}" target="_blank">${a}</a>`;
-    // });
-
-    str = convert.toHtml(str) + endsWithN;
-
-    return str;
-};
-
-// ===========================================================================
-
-const getColumns = (list, item, columns) => {
-
-    // metadata for project
-    if (item.type === 'suite' && item.suiteType === 'project') {
-        const result = getProjectMetadata(item);
-        if (result) {
-            // virtual column for project metadata
-            const column = {
-                id: 'metadata',
-                name: 'Metadata'
-            };
-            addResult(list, item, column, result);
-        }
-    }
-
-    columns.forEach((column) => {
-
-        const result = getColumn(item, column);
-        if (result) {
-            addResult(list, item, column, result);
-        }
-
-        if (Util.isList(column.subs)) {
-            getColumns(list, item, column.subs);
-        }
-
-    });
-
-};
-
-const getPositionId = (rowId, columnId) => {
-    return [rowId, columnId].join('-');
-};
-
-const addResult = (list, item, column, result) => {
-    result.data = column;
-    result.positionId = getPositionId(item.id, column.id);
-    result.positionType = column.id;
-    result = shallowReactive(result);
-
-    list.push(result);
-};
-
-const getProjectMetadata = (item) => {
-    const metadata = item.metadata;
-    if (!metadata || typeof metadata !== 'object') {
-        return;
-    }
-
-    const metadataList = Util.getMetadataList(metadata);
-    if (!metadataList.length) {
-        return;
-    }
-
-    return {
-        id: 'metadata',
-        icon: 'metadata',
-        list: metadataList
-    };
-};
-
-const getColumn = (item, column) => {
-
-    if (!column.name) {
-        return;
-    }
-
-    const defaultHandler = {
-        errors: getErrors,
-        logs: getLogs,
-        annotations: getAnnotations,
-        attachments: getAttachments
-    };
-
-    const handler = defaultHandler[column.id] || getCustom;
-
-    return handler(item, column);
-};
-
-// ===========================================================================
-
-const getErrors = (item, column) => {
-    const errors = item.errors;
-    if (!Util.isList(errors)) {
-        return;
-    }
-
-    const position = {
-        rowId: item.id,
-        columnId: column.id
-    };
-    const list = errors.map((error) => {
-        data.errors.push({
-            error,
-            position
-        });
-        return convertHtml(error);
-    });
-    const content = list.join('');
-
-    return {
-        icon: 'error',
-        content
-    };
-};
-
-const getLogs = (item, column) => {
-    const logs = item.logs;
-    if (!Util.isList(logs)) {
-        return;
-    }
-
-    const list = logs.map((log) => {
-        return convertHtml(log);
-    });
-    const content = list.join('');
-
-    return {
-        icon: 'log',
-        content
-    };
-};
-
-const getAnnotations = (item, column) => {
-    const annotations = item.annotations;
-
-    // string
-    if (typeof annotations === 'string' && annotations) {
-        return {
-            icon: 'annotation',
-            content: `<div class="mcr-annotation-list">
-                        <div class="mcr-annotation-item">${markdownFormatter(annotations, true)}</div>
-                    </div>`
-        };
-    }
-
-    if (!Util.isList(annotations)) {
-        return;
-    }
-    // must be list
-    const map = mergeAnnotations(annotations);
-    // console.log(map);
-
-    const list = Object.keys(map).map((k) => {
-        const res = [`<b>${k}</b>`];
-        const v = map[k];
-        v.forEach((des) => {
-            if (des) {
-                res.push(`<span>${markdownFormatter(des, true)}</span>`);
-            }
-        });
-        return `<div class="mcr-annotation-item">${res.join('')}</div>`;
-    });
-    // console.log(list);
-
-    const content = list.join('');
-    if (!content) {
-        return;
-    }
-
-    return {
-        icon: 'annotation',
-        content: `<div class="mcr-annotation-list">
-            ${content}
-        </div>`
-    };
-};
-
-// ===========================================================================
-
-const getAttachments = (item, column) => {
-    const attachments = item.attachments;
-    if (!Util.isList(attachments)) {
-        return;
-    }
-
-    attachments.forEach((it) => {
-        data.attachments.push(it);
-    });
-
-    return {
-        id: column.id,
-        icon: 'attachment',
-        list: attachments
-    };
-};
-
-// ===========================================================================
-
-const getCustomFormattedContent = (value, item, column) => {
-
-    const formatter = column.formatter;
-
-    if (formatter) {
-        if (typeof formatter === 'function') {
-            return formatter(value, item, column);
-        }
-
-        if (typeof formatter === 'string') {
-            const handler = formatters[formatter];
-            if (handler) {
-                return handler(value, item, column);
-            }
-        }
-    }
-
-    if (column.markdown) {
-        return markdownFormatter(value);
-    }
-
-    return value;
-};
-
-const getCustom = (item, column) => {
-
-    // not detailed default columns here
-    // must be boolean false not undefined
-    if (column.detailed === false) {
-        return;
-    }
-
-    const value = item[column.id];
-
-    // do not show null value
-    if (value === null || typeof value === 'undefined') {
-        return;
-    }
-
-    const simple = !column.markdown && !column.detailed;
-
-    const content = getCustomFormattedContent(value, item, column);
-
-    return {
-        simple,
-        icon: 'custom',
-        content
-    };
-};
-
-const onRowHeadClick = (item) => {
-    item.collapsed = !item.collapsed;
-    initDataList();
-};
-
-const onStepsClick = (item) => {
-    item.collapsed = !item.collapsed;
-    initDataList();
-};
-
-const onStepCollapsedClick = (item) => {
-    Util.forEach(item.subs, (step) => {
-        if (step.subs) {
-            step.collapsed = item.stepCollapsed;
-        }
-    });
-    initDataList();
-};
-
-const onStepFailedClick = (item) => {
-    if (item.stepFailedOnly && item.collapsed) {
-        item.collapsed = false;
-    }
-    initDataList();
-};
-
-// ===========================================================================
-
-// wait for image loaded
-const updatePosition = debounce(() => {
-
-    if (!$el) {
-        return;
-    }
-
-    const position = state.position;
-    if (!position) {
-        return;
-    }
-    state.position = null;
-
-    // console.log('position', position);
-
-    // check positionId first
-    let found = true;
-    const positionId = getPositionId(position.rowId, position.columnId);
-    let elem = $el.querySelector(`[position-id="${positionId}"]`);
-    if (!elem) {
-        found = false;
-        // not found but try to find related type position
-        elem = $el.querySelector(`[position-type="${position.columnId}"]`);
-    }
-
-    if (!elem) {
-        Util.setFocus();
-        return;
-    }
-
-    if (typeof elem.scrollIntoViewIfNeeded === 'function') {
-        elem.scrollIntoViewIfNeeded();
-    } else {
-        elem.scrollIntoView();
-    }
-    if (found) {
-        Util.setFocus(elem);
-    }
-
-}, 100);
-
-// ===========================================================================
-
-const initSteps = (list, steps, parent) => {
-    if (parent && parent.collapsed) {
-        return;
-    }
-    if (!Util.isList(steps)) {
-        return;
-    }
-    steps.forEach((step) => {
-
-        if (data.stepFailedOnly && !step.errorNum) {
+const updateColumnWidth = function(grid) {
+    const titleColumn = grid.getColumnItem('title');
+    const containerWidth = grid.containerWidth;
+    // 5px padding right
+    let otherWidth = 5;
+    grid.viewColumns.forEach(function(item) {
+        if (item.id === 'title') {
             return;
         }
-
-        list.push(step);
-
-        if (step.subs) {
-            data.stepSubs = true;
-        }
-
-        initSteps(list, step.subs, step);
+        otherWidth += item.width;
     });
-};
 
-const initDataColumns = (item) => {
-    if (item.tg_detailColumns) {
+    // console.log(containerWidth, grid.getScrollbarWidth());
+
+    const titleWidth = containerWidth - otherWidth - grid.getScrollbarWidth();
+    // console.log(titleWidth);
+    if (titleWidth === titleColumn.width) {
         return;
     }
 
-    const allColumns = [];
-    getColumns(allColumns, item, state.columns);
+    // console.log(`updateWidth: ${titleWidth}`);
+    grid.setColumnWidth(titleColumn, titleWidth);
 
-    const simpleColumns = [];
-    const detailColumns = [];
-    if (allColumns.length) {
-        allColumns.forEach((c) => {
-            if (c.simple) {
-                simpleColumns.push(c);
-            } else {
-                detailColumns.push(c);
-            }
+};
+
+const getGrid = () => {
+    if (data.grid) {
+        return data.grid;
+    }
+
+    const grid = new Grid(document.querySelector('.mcr-overview-grid'));
+    data.grid = grid;
+
+    grid.bind('onResize onLayout', function(e, d) {
+        updateColumnWidth(grid);
+    });
+
+    grid.bind('onUpdated', (e, d) => {
+        nextTick(() => {
+            renderMermaid();
         });
-    }
+    });
 
-    // titleColumn for tags
-    item.tg_titleColumn = state.columns.find((it) => it.id === 'title');
-    item.tg_simpleColumns = simpleColumns;
-    item.tg_detailColumns = detailColumns;
-};
+    grid.bind('onClick', (e, d) => {
+        grid.selectAll(false);
+    });
 
-const collectErrorForAttachment = () => {
-    const { errors, attachments } = data;
-    data.errors = [];
-    data.attachments = [];
+    grid.bind('onDblClick', (e, d) => {
+        grid.setRowSelected(d.rowItem);
+    });
 
-    if (!attachments.length || !errors.length) {
-        return;
-    }
+    // grid.bind('onRowExpanded onRowCollapsed', (e, d) => {
+    //     if (d.type === 'step-info') {
+    //         console.log(d);
+    //     }
+    // });
 
-    const list = attachments.filter((attachment) => {
-        if (attachment.name) {
-            // first one is expected
-            const match = attachment.name.match(/^(.*)-expected(\.[^.]+)?$/);
-            if (match) {
+    grid.setOption({
+
+        headerVisible: false,
+
+        bindContainerResize: true,
+        bindWindowResize: true,
+
+        scrollbarRound: true,
+        textSelectable: true,
+
+        rowHeight: 36,
+        rowNotFound: 'No Results',
+        cellResizeObserver: (rowItem, columnItem) => {
+            if (columnItem.id === 'title' && rowItem.hasDetails) {
                 return true;
             }
+        },
+
+        highlightKeywords: {
+            textGenerator: (rowItem, id) => {
+                const list = [rowItem.title];
+
+                if (rowItem.type === 'case') {
+                    list.push(rowItem.tags);
+                    list.push(rowItem.caseType);
+                } else if (rowItem.type === 'details') {
+                    list.push(rowItem.content);
+                }
+
+                const simpleList = rowItem.tg_simpleList;
+                if (simpleList) {
+                    simpleList.forEach((it) => {
+                        list.push(it.title);
+                        list.push(it.content);
+                    });
+                }
+
+                return list.join('');
+            }
+        },
+
+        rowFilter: function(rowItem) {
+            // search title and errors
+            const hasMatched = this.highlightKeywordsFilter(rowItem, ['title'], data.keywords);
+
+            if (hasMatched) {
+
+                if (data.hasFailed && state.onlyFailedSteps) {
+                    if (rowItem.errorNum) {
+                        return true;
+                    }
+
+                    return false;
+                }
+
+            }
+
+            return hasMatched;
+        },
+        columnTypes: {
+            title: 'tree'
         }
     });
 
-    if (!list.length) {
+    grid.setFormatter({
+        tree: function(value, rowItem, columnItem, cellNode) {
+
+            nextTick(() => {
+                createDetailInfo(rowItem, columnItem, cellNode);
+            });
+
+            const defaultFormatter = this.getDefaultFormatter('tree');
+            // async create vue component
+            // tg-tree-name
+            return defaultFormatter('', rowItem, columnItem, cellNode);
+        }
+    });
+
+    return grid;
+};
+
+
+const collectErrorForAttachment = (collection) => {
+    const { errors, comparisons } = collection;
+
+    // console.log(errors, comparisons);
+
+    if (!comparisons.length || !errors.length) {
         return;
     }
 
     let index = 0;
     errors.forEach((item) => {
         const { error, position } = item;
-        const match = error.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
-        if (match) {
-            const attachment = list[index];
-            if (attachment) {
-                attachment.message = match[0];
-                attachment.position = position;
+        const matchedComparisonError = error.match(/\d+ pixels \(ratio \d+\.\d+ of all image pixels\) are different/);
+        if (matchedComparisonError) {
+            const comparison = comparisons[index];
+            if (comparison) {
+                comparison.data.message = matchedComparisonError[0];
+                comparison.data.position = position;
+                // console.log(comparison);
                 index += 1;
             }
         }
@@ -492,142 +211,172 @@ const collectErrorForAttachment = () => {
 
 };
 
-const initDataList = () => {
+const initRows = (list, collection) => {
+    list.forEach((it) => {
 
-    const caseItem = state.detailMap[data.caseId];
+        if (it.type === 'step') {
 
-    const list = [];
+            if (it.stepType === 'retry') {
+                it.icon = 'retry';
+            } else {
+                collection.index += 1;
+                it.index = collection.index;
+            }
+
+        }
+
+        initDataColumns(it, collection);
+
+        // step subs
+        if (it.subs) {
+            initRows(it.subs, collection);
+        }
+
+    });
+
+};
+
+const getGridData = (grid, caseItem) => {
+
+    // before cache
+    data.hasFailed = caseItem.stepFailed > 0;
+
+    if (gridDataCache[caseItem.id]) {
+        return gridDataCache[caseItem.id];
+    }
+
+    const rows = [];
 
     // suites
     let suite = caseItem.tg_parent;
     while (suite) {
-        list.unshift(suite);
+        let suiteRow = suiteCache[suite.id];
+        if (!suiteRow) {
+            suiteRow = grid.getItemSnapshot(suite);
+            suiteCache[suite.id] = suiteRow;
+        }
+        rows.unshift(suiteRow);
         suite = suite.tg_parent;
     }
 
-    // case
-    list.push(caseItem);
+    const row = {
+        ... grid.getItemSnapshot(caseItem),
+        hasDetails: true
+    };
+    rows.push(row);
 
-    // before init steps
-    data.stepFailedOnly = caseItem.stepFailedOnly;
-    data.stepSubs = false;
-    // collect steps with collapsed
-    if (!caseItem.collapsed) {
-        initSteps(list, caseItem.subs);
-    }
+    const stepInfo = {
+        type: 'step-info',
+        icon: 'step',
+        title: 'No Steps'
+    };
 
-    if (data.stepFailedOnly) {
-        data.stepCollapsedDisabled = !data.stepSubs;
-    } else {
-        data.stepCollapsedDisabled = false;
+    rows.push(stepInfo);
+
+    // skipped case no steps
+    const steps = caseItem.subs;
+    if (Util.isList(steps)) {
+        stepInfo.title = `Steps <div class="mcr-num">${caseItem.stepNum}</div>`;
+        stepInfo.subs = grid.getTreeSnapshot(steps);
     }
 
     // temp list for errors match to attachments
-    data.errors = [];
-    data.attachments = [];
+    const collection = {
+        errors: [],
+        comparisons: [],
+        index: 0
+    };
 
-    let lastItem;
-    data.list = list.map((item) => {
+    initRows(rows, collection);
 
-        initDataColumns(item);
+    collectErrorForAttachment(collection);
 
-        const left = item.tg_level * 13;
-        let icon = Util.getTypeIcon(item.suiteType, item.type);
-        if (item.caseType) {
-            icon = item.caseType;
+    const gridData = {
+        columns: [{
+            id: 'title',
+            name: 'Title',
+            resizable: false,
+            sortable: false
+        }],
+        rows
+    };
+
+    gridDataCache[caseItem.id] = gridData;
+
+    return gridData;
+};
+
+const renderGrid = (caseItem) => {
+    const grid = getGrid();
+    const gridData = getGridData(grid, caseItem);
+    grid.setData(gridData);
+    grid.render();
+};
+
+
+// ===========================================================================
+
+// wait for image loaded
+const updatePosition = (position) => {
+
+    // console.log(position);
+
+    const grid = data.grid;
+    const positionId = getPositionId(position.rowId, position.columnId);
+    let rowItem = grid.getRowItem(positionId);
+    if (!rowItem) {
+        rowItem = grid.getRowItem(position.rowId);
+    }
+    if (rowItem) {
+
+        if (rowItem.hasDetails) {
+            grid.scrollToRow(rowItem);
+        } else {
+            grid.scrollRowIntoView(rowItem);
         }
+        setTimeout(() => {
+            grid.selectAll(false);
+            grid.setRowSelected(rowItem);
+        }, 100);
 
-        const positionId = getPositionId(item.id, 'title');
-        const stepGroup = item.type === 'step' && item.subs;
-        if (stepGroup) {
-            icon = '';
-        }
-
-        if (lastItem && lastItem.tg_level > item.tg_level) {
-            item.classLevel = 'mcr-detail-out';
-        }
-
-        lastItem = item;
-
-        return {
-            data: item,
-            state: shallowReactive({}),
-            positionId,
-            stepGroup,
-            style: `margin-left:${left}px;`,
-            icon,
-            titleColumn: item.tg_titleColumn,
-            simpleColumns: item.tg_simpleColumns,
-            detailColumns: item.tg_detailColumns
-        };
-    });
-
-    collectErrorForAttachment();
+    }
 
 };
 
-const renderMermaid = async () => {
-    // console.log('renderMermaid');
-    await window.mermaid.run();
-};
 
-const loadMermaid = microtask(() => {
-    // console.log('loadMermaid');
-
-    const mermaidScript = document.querySelector("script[id='mermaid']");
-    if (mermaidScript) {
-        renderMermaid();
-        return;
+watch([
+    () => data.keywords,
+    () => state.onlyFailedSteps
+], (v) => {
+    if (data.grid) {
+        data.grid.update();
     }
-
-    const mermaidOptions = state.mermaid;
-    if (!mermaidOptions) {
-        return;
-    }
-
-    const scriptSrc = mermaidOptions.scriptSrc;
-    if (!scriptSrc) {
-        return;
-    }
-
-    const config = {
-        ... mermaidOptions.config
-    };
-    // console.log(config);
-
-    const script = document.createElement('script');
-    script.src = scriptSrc;
-    script.onload = () => {
-        script.setAttribute('id', 'mermaid');
-        window.mermaid.initialize(config);
-        renderMermaid();
-    };
-    document.body.appendChild(script);
 });
 
-const updateCase = microtask(() => {
-    const caseItem = state.flyoverData;
 
+watch(() => state.position, (v) => {
+    if (v && data.grid) {
+        updatePosition(v);
+    }
+});
+
+
+// ======================================================================
+
+const updateCase = microtask(() => {
+
+    const caseId = state.flyoverData;
+    if (!caseId) {
+        return;
+    }
+
+    const caseItem = state.detailMap[caseId];
     if (!caseItem) {
         return;
     }
 
-    data.caseId = caseItem.id;
+    renderGrid(caseItem);
 
-    initDataList();
-
-    if (state.mermaidEnabled) {
-        loadMermaid();
-    }
-
-});
-
-// ===========================================================================
-
-watch(() => state.position, (v) => {
-    if (v) {
-        updatePosition();
-    }
 });
 
 watch(() => state.flyoverData, (v) => {
@@ -636,206 +385,114 @@ watch(() => state.flyoverData, (v) => {
     }
 });
 
-onMounted(() => {
-    $el = el.value;
-    if (state.position) {
-        updatePosition();
-    }
+emitter.on('onTabSteps', () => {
+    updateCase();
 });
 
-onActivated(() => {
+onMounted(() => {
     updateCase();
 });
 
 const onFocus = (e) => {
-    Util.setFocus();
+
 };
 
 </script>
 
 <template>
-  <div
-    ref="el"
-    class="mcr-detail"
+  <VuiFlex
+    class="mcr-detail-overview"
+    direction="column"
     tabindex="0"
     @focus="onFocus"
     @click="onFocus"
   >
-    <div
-      v-for="item, ik in data.list"
-      :key="ik"
-      :class="itemClass(item.data)"
-      :style="item.style"
+    <VuiFlex
+      gap="15px"
+      wrap
+      class="mcr-overview-head"
     >
-      <VuiFlex
-        :class="itemHeadClass(item.data)"
-        gap="10px"
-        padding="5px"
-        :position-id="item.positionId"
-        wrap
-      >
-        <IconLabel
-          v-if="item.stepGroup"
-          :icon="item.data.collapsed?'collapsed':'expanded'"
-          @click="onRowHeadClick(item.data)"
-        >
-          <RowTitle :item="item" />
-        </IconLabel>
-        <RowTitle
-          v-else
-          :item="item"
+      <div class="mcr-overview-search">
+        <VuiInput
+          v-model="data.keywords"
+          :class="data.keywords?'mcr-search-keywords':''"
+          placeholder="Search"
+          width="100%"
+          :select-on-focus="true"
         />
-
-        <SimpleColumns :list="item.simpleColumns" />
-
-        <div class="vui-flex-auto" />
-
-        <div
-          v-if="Util.isNum(item.data.duration)"
-          class="mcr-detail-duration"
-        >
-          {{ Util.TF(item.data.duration) }}
-        </div>
-
         <IconLabel
-          v-if="item.data.location"
-          icon="location"
-          :tooltip="item.data.location"
-          @click="onLocationClick(item)"
-        >
-          {{ item.state.locationLabel }}
-        </IconLabel>
-      </VuiFlex>
-      <DetailColumns
-        class="mcr-detail-body"
-        :list="item.detailColumns"
-      />
-      <VuiFlex
-        v-if="item.data.type==='case'&&item.data.stepNum"
-        class="mcr-detail-steps"
-        gap="10px"
+          class="mcr-search-icon"
+          icon="search"
+          :button="false"
+        />
+        <IconLabel
+          v-if="data.keywords"
+          class="mcr-search-clear"
+          icon="close"
+          @click="data.keywords = ''"
+        />
+      </div>
+
+      <VuiSwitch
+        v-if="data.hasFailed"
+        v-model="state.onlyFailedSteps"
+        :label-clickable="true"
+        label-position="right"
       >
-        <IconLabel
-          :icon="item.data.collapsed?'collapsed':'expanded'"
-          @click="onStepsClick(item.data)"
-        >
-          <b>Steps</b>
-        </IconLabel>
-        <div class="mcr-num">
-          {{ item.data.stepNum }}
-        </div>
-
-        <VuiSwitch
-          v-if="item.data.stepSubs&&!item.data.collapsed"
-          v-model="item.data.stepCollapsed"
-          :disabled="data.stepCollapsedDisabled"
-          :label-clickable="true"
-          label-position="right"
-          @change="onStepCollapsedClick(item.data)"
-        >
-          Collapse All
-        </VuiSwitch>
-
-        <VuiSwitch
-          v-if="item.data.stepFailed&&!item.data.collapsed"
-          v-model="item.data.stepFailedOnly"
-          :label-clickable="true"
-          label-position="right"
-          @change="onStepFailedClick(item.data)"
-        >
-          Only Failed
-        </VuiSwitch>
-      </VuiFlex>
-    </div>
-  </div>
+        Only Failed
+      </VuiSwitch>
+    </VuiFlex>
+    <div class="mcr-overview-grid vui-flex-auto" />
+  </VuiFlex>
 </template>
 
 <style lang="scss">
-.mcr-detail {
+.mcr-detail-overview {
+    position: relative;
     width: 100%;
     height: 100%;
-    padding: 0 0 5px 5px;
-    overflow: hidden auto;
 }
 
-.mcr-detail-item {
+.mcr-overview-head {
     position: relative;
-    border-bottom: 1px solid #ccc;
-
-    &.mcr-detail-out {
-        margin-top: -1px;
-        border-top: 1px solid #ccc;
-    }
-}
-
-.mcr-detail-body {
-    border-top: 1px solid #eee;
-    border-left: 1px solid #ccc;
-}
-
-.mcr-detail-steps {
-    min-height: 35px;
-    padding: 5px;
-    border-top: thin solid #eee;
-    border-left: thin solid #ccc;
+    padding: 15px;
+    border-bottom: thin solid #ccc;
     user-select: none;
 }
 
-.mcr-detail-head {
+.mcr-overview-search {
     position: relative;
-    z-index: 1;
-    min-height: 35px;
-    border-left: 1px solid #ccc;
+    width: 200px;
 
-    &:hover::after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        content: "";
-        display: block;
-        width: 100%;
-        height: 100%;
-        background-color: rgb(0 0 0 / 2%);
-        pointer-events: none;
+    .mcr-search-icon {
+        left: 5px;
     }
 
-    &.mcr-detail-step,
-    &.mcr-detail-step + .mcr-detail-body,
-    &.mcr-case-passed,
-    &.mcr-case-passed + .mcr-detail-body {
-        border-left-color: var(--color-passed);
+    .mcr-search-clear {
+        right: 8px;
     }
 
-    &.mcr-step-error,
-    &.mcr-step-error + .mcr-detail-body,
-    &.mcr-case-failed,
-    &.mcr-case-failed + .mcr-detail-body {
-        border-left-color: var(--color-failed);
-    }
-
-    &.mcr-step-retry,
-    &.mcr-case-flaky,
-    &.mcr-case-flaky + .mcr-detail-body {
-        border-left-color: var(--color-flaky);
-    }
-
-    &.mcr-case-failed + .mcr-detail-body,
-    &.mcr-case-flaky + .mcr-detail-body {
-        border-top: none;
+    input {
+        height: 30px;
+        padding-right: 25px;
+        padding-left: 25px;
+        border-radius: 10px;
     }
 }
 
-.mcr-detail-suite {
-    .mcr-detail-title {
-        font-weight: bold;
-    }
+.mcr-overview-grid {
+    position: relative;
+    overflow: hidden;
 }
 
 .markdown-body {
     margin: 0;
+    background: none;
 
     .mermaid {
         margin: 0;
+        padding: 0;
     }
 }
+
 </style>

@@ -97,7 +97,12 @@ module.exports = {
             // logging: 'debug',
 
             mermaid: {
+                // for online
                 scriptSrc: 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
+
+                // for local
+                // scriptSrc: '../../node_modules/mermaid/dist/mermaid.min.js',
+
                 // mermaid config: https://mermaid.js.org/config/schema-docs/config.html
                 config: {
                     startOnLoad: false
