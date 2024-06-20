@@ -1,22 +1,35 @@
 <script setup>
+import { components } from 'vine-ui';
+const { VuiFlex } = components;
+import IconLabel from '../../icon-label.vue';
+
 const props = defineProps({
     data: {
         type: Object,
         default: () => {}
     }
 });
+
 </script>
 
 <template>
-  <div class="mcr-attachment-image">
-    <a
-      :href="props.data.path"
-      target="_blank"
-    ><img
+  <VuiFlex
+    gap="10px"
+    direction="column"
+    class="mcr-attachment-image"
+  >
+    <img
       :src="props.data.path"
       :alt="props.data.name"
-    ></a>
-  </div>
+    >
+    <VuiFlex>
+      <IconLabel icon="item-arrow" />
+      <a
+        :href="props.data.path"
+        target="_blank"
+      >Download image</a>
+    </VuiFlex>
+  </VuiFlex>
 </template>
 
 <style lang="scss">
@@ -26,7 +39,7 @@ const props = defineProps({
     img {
         display: block;
         max-width: 100%;
-        min-height: 50px;
+        min-height: 30px;
         box-shadow: var(--image-shadow);
     }
 }
