@@ -1,4 +1,8 @@
 <script setup>
+import { components } from 'vine-ui';
+const { VuiFlex } = components;
+import IconLabel from '../../icon-label.vue';
+
 const props = defineProps({
     data: {
         type: Object,
@@ -9,7 +13,13 @@ const props = defineProps({
 
 <template>
   <div class="mcr-attachment-link">
-    {{ props.data.path }}
+    <VuiFlex>
+      <IconLabel icon="item-arrow" />
+      <a
+        :href="props.data.path"
+        target="_blank"
+      >Download</a>
+    </VuiFlex>
   </div>
 </template>
 

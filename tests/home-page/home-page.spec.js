@@ -52,6 +52,11 @@ test('test home page', async ({ page, context }, testInfo) => {
         contentType: 'application/pdf'
     });
 
+    await testInfo.attach('downloaded', {
+        contentType: 'application/zip',
+        path: `${testInfo.snapshotDir}/report.zip`
+    });
+
     const screenshot = await page.screenshot();
     await testInfo.attach('screenshot', {
         body: screenshot,

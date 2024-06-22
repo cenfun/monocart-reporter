@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.5.1
+  - fixed the download link for attachments
+
 * 2.5.0
   - updated UI for case details page (performance requirement)
   - updated marked to v13
