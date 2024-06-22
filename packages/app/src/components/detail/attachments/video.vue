@@ -28,6 +28,7 @@ const props = defineProps({
       <IconLabel icon="item-arrow" />
       <a
         :href="props.data.path"
+        :download="props.data.name"
         target="_blank"
       >Download video</a>
     </VuiFlex>

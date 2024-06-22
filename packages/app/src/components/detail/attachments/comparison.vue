@@ -507,6 +507,7 @@ onUnmounted(() => {
           :key="i"
           :href="item.path"
           target="_blank"
+          :download="item.name"
           class="mcr-item"
         >{{ item.name }}</a>
       </VuiFlex>

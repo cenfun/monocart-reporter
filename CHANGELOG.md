@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.5.2
+  - fixed the download filename for attachments
+
 * 2.5.1
   - fixed the download link for attachments
 

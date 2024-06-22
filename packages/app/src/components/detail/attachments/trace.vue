@@ -58,8 +58,9 @@ onMounted(() => {
       <IconLabel icon="item-arrow" />
       <a
         :href="props.data.path"
+        :download="props.data.name"
         target="_blank"
-      >Download trace.zip</a>
+      >Download</a>
     </VuiFlex>
     <details>
       <summary>
