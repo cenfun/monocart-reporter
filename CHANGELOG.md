@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.6.0
+  - added new API `setMetadata(data, testInfo)` for data driven tests
+
 * 2.5.2
   - fixed the download filename for attachments
 

@@ -339,13 +339,6 @@ module.exports = {
 
                 }
 
-                // test issue #91
-                const comments = collect.comments();
-                if (comments) {
-                    Object.assign(data, comments);
-                }
-
-
             },
 
             customFieldsInComments: true,
@@ -367,15 +360,15 @@ module.exports = {
 
                 // find a test by title
                 const myCase = helper.find((item, parent) => item.type === 'case' && item.title.includes('inline tag'));
-                console.log(myCase && myCase.title);
+                console.log('onEnd find test', myCase && myCase.title);
 
                 // find a suite by title
                 const mySuite = helper.find((item, parent) => item.type === 'suite' && item.title.includes('new syntax'));
-                console.log(mySuite && mySuite.title);
+                console.log('onEnd find suite', mySuite && mySuite.title);
 
                 // filter failed cases
                 const failedCases = helper.filter((item, parent) => item.type === 'case' && item.caseType === 'failed');
-                console.log('failed cases', failedCases.map((it) => it.title).length);
+                console.log('onEnd failed cases', failedCases.map((it) => it.title).length);
 
                 // Iterate all items
                 helper.forEach((item, parent) => {

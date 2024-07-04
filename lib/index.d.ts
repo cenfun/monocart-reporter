@@ -191,6 +191,12 @@ export function attachNetworkReport(
     options?: NetworkReportOptions
 ): Promise<any>;
 
+export function setMetadata(
+    data: {
+        [key: string]: any;
+    },
+    testInfo: TestInfo
+): void;
 
 /**
  * state
