@@ -1176,6 +1176,7 @@ By using the `onEnd` hook, we can integrate Playwright report with any other too
 - Discord
 - Teams
 - BrowserStack 
+- Github Actions Summary
 - Dingtalk/Weixin/Feishu
 
 See [Integration Examples](https://github.com/cenfun/playwright-reporter-integrations)
