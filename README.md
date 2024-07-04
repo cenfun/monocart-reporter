@@ -27,6 +27,7 @@
         - [Searchable Fields](#searchable-fields)
     * [Custom Fields in Comments](#custom-fields-in-comments)
         - [Create Diagrams and Visualizations with Mermaid](#create-diagrams-and-visualizations-with-mermaid)
+    * [Custom Fields with `setMetadata()`](#custom-fields-with-setmetadata)
     * [Custom Data Visitor](#custom-data-visitor)
         - [Collect Data from the Title](#collect-data-from-the-title)
         - [Collect Data from the Annotations](#collect-data-from-the-annotations)
@@ -438,6 +439,35 @@ test('case description', () => {
 ````
 see [Mermaid doc](https://mermaid.js.org/syntax/flowchart.html)
 
+
+### Custom Fields with `setMetadata()`
+Using `comments` is only applicable to statically created tests, while using API `setMetadata()` can be applicable to all situations, which is including dynamically created tests.
+```js
+const { test } = require('@playwright/test');
+const { setMetadata } = require('monocart-reporter');
+test.describe('Data Driven Tests with setMetadata(data, testInfo)', () => {
+    const list = [{
+        title: 'Example Case 1 Data Driven Test',
+        owner: 'Jensen',
+        jira: 'MCR-16889',
+    }, {
+        title: 'Example Case 2 Data Driven Test',
+        owner: 'Mark',
+        jira: 'MCR-16899'
+    }];
+    list.forEach((item, i) => {
+        test(item.title, () => {
+            setMetadata({
+                owner: item.owner,
+                jira: item.jira
+            }, test.info());
+
+            //expect(1).toBe(1);
+
+        });
+    });
+});
+```
 
 ### Custom Data Visitor
 The `visitor` function will be executed for each row item (suite, case and step). Arguments:
