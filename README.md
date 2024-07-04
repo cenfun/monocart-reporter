@@ -47,7 +47,7 @@
     - [Send and Receive Messages between Processes](#send-and-receive-messages-between-processes)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd Hook](#onend-hook)
-* [Integration](#integration)
+* [Integration Examples](#integration-examples)
 * [Contributing](#contributing)
 * [Changelog](CHANGELOG.md)
 ## Preview
@@ -1165,21 +1165,21 @@ module.exports = {
 };
 ```
 
-## Integration
+## Integration Examples
 By using the `onEnd` hook, we can integrate Playwright report with any other tools, such as:
-- Email
-- Testrail
-- Qase
-- Jira + Zephyr
-- Jira + Xray
-- Slack
-- Discord
-- Teams
-- BrowserStack 
-- Github Actions Summary
-- Dingtalk/Weixin/Feishu
+- [Email](https://github.com/cenfun/playwright-reporter-integrations/tree/main/send-email)
+- [Testrail](https://github.com/cenfun/playwright-reporter-integrations/blob/main/testrail)
+- [Qase](https://github.com/cenfun/playwright-reporter-integrations/tree/main/qase)
+- [Jira + Zephyr](https://github.com/cenfun/playwright-reporter-integrations/tree/main/zephyr-scale)
+- [Jira + Xray](https://github.com/cenfun/playwright-reporter-integrations/blob/main/xray)
+- [Slack](https://github.com/cenfun/playwright-reporter-integrations/tree/main/slack-webhook)
+- [Discord](https://github.com/cenfun/playwright-reporter-integrations/blob/main/discord-webhook)
+- [Teams](https://github.com/cenfun/playwright-reporter-integrations/blob/main/teams-webhook)
+- [BrowserStack](https://github.com/cenfun/playwright-reporter-integrations/blob/main/browserstack) 
+- [Github Actions Summary](https://github.com/cenfun/playwright-reporter-integrations/blob/main/github-actions-summary)
+- [Dingtalk](https://github.com/cenfun/playwright-reporter-integrations/tree/main/dingtalk-webhook)/[Weixin](https://github.com/cenfun/playwright-reporter-integrations/tree/main/weixin-webhook)/[Feishu](https://github.com/cenfun/playwright-reporter-integrations/tree/main/feishu-webhook)
 
-See [Integration Examples](https://github.com/cenfun/playwright-reporter-integrations)
+See [playwright-reporter-integrations](https://github.com/cenfun/playwright-reporter-integrations)
 
 ## Contributing
 ```sh
