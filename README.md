@@ -1197,4 +1197,4 @@ npm run dev
 - Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
 - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
 - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
-- Coverage Reporters [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
+- Coverage Reporter [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
