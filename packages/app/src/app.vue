@@ -236,6 +236,22 @@ const initCaseMap = (rows) => {
 
 // let timeout_tooltip;
 const initTooltip = () => {
+
+    const getTooltip = (target) => {
+        const text = target.getAttribute('tooltip');
+        if (text) {
+            return text;
+        }
+        if (target.classList.contains('mcr-long-label')) {
+
+            if (target.clientWidth < target.scrollWidth) {
+                return target.innerText;
+            }
+
+        }
+    };
+
+
     generateTooltips((target, text) => {
         // clearTimeout(timeout_tooltip);
 
@@ -256,7 +272,7 @@ const initTooltip = () => {
         //  clearTimeout(timeout_tooltip);
         tooltip.visible = false;
         tooltip.text = '';
-    });
+    }, getTooltip);
 };
 
 const initFlyoverSize = () => {

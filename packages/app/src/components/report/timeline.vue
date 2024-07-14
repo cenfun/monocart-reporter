@@ -752,13 +752,6 @@ onMounted(() => {
     }
 }
 
-.mcr-long-label {
-    flex-shrink: 1;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
 .mcr-timeline-popover {
     pointer-events: none;
 }

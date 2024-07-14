@@ -803,6 +803,15 @@ onActivated(() => {
     padding: 10px;
 }
 
+.mcr-long-label {
+    flex-shrink: 1;
+    max-width: 300px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+    overflow: hidden;
+}
+
 .mcr-report-tag {
     position: relative;
     cursor: pointer;
