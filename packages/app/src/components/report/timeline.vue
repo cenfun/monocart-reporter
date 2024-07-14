@@ -681,7 +681,7 @@ onMounted(() => {
               :icon="item.caseType"
               :button="false"
             />
-            <div class="mcr-long-label">
+            <div>
               {{ item.title }}
             </div>
           </VuiFlex>

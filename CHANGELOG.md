@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.6.1
+  - fixed UI for better tooltip
+
 * 2.6.0
   - added new API `setMetadata(data, testInfo)` for data driven tests
 
