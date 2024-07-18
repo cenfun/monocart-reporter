@@ -48,14 +48,14 @@
         "koa": "^2.15.3",
         "koa-static-resolver": "^1.0.6",
         "lz-utils": "^2.0.2",
-        "monocart-coverage-reports": "^2.9.2",
+        "monocart-coverage-reports": "^2.9.3",
         "monocart-formatter": "^3.0.0",
         "monocart-locator": "^1.0.2",
         "nodemailer": "^6.9.14",
         "turbogrid": "^3.2.0"
     },
     "devDependencies": {
-        "@playwright/test": "^1.45.1",
+        "@playwright/test": "^1.45.2",
         "axios": "^1.7.2",
         "dotenv": "^16.4.5",
         "eslint": "^9.7.0",

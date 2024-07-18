@@ -1,16 +1,16 @@
 # Monocart Reporter
 
 [![](https://img.shields.io/npm/v/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
-[![](https://badgen.net/npm/dw/monocart-reporter)](https://www.npmjs.com/package/monocart-reporter)
+[![](https://devimg.vercel.app/npm/downloads/monocart-reporter?label={total}%20downloads/month)](https://www.npmjs.com/package/monocart-reporter)
 ![](https://img.shields.io/librariesio/github/cenfun/monocart-reporter)
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 ![](https://img.shields.io/github/actions/workflow/status/cenfun/monocart-reporter/static.yml)
 
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
-    - Shows Test Report in A `Tree Grid`
-    - Console Logs in Order (log/error/warn/debug/info)
-    - Custom Annotations with Markdown 
+    - A `Tree Grid` style test report
+    - Support processing large amounts of data with high performance
+    - Design for customization and extensibility
     - Timeline Workers Graph
     - Monitor CPU and Memory Usage
     - Export Data (json)
@@ -199,7 +199,10 @@ You can create and install local CA with [mkcert](https://mkcert.dev)
 ## Custom Fields Report
 You can add custom fields to the report. for example: Owner, JIRA Key etc.
 - First, you need to add [Custom Columns](#custom-columns) for the fields.
-- Then, collect data for these fields with [Custom Fields in Comments](#custom-fields-in-comments) or [Custom Data Visitor](#custom-data-visitor)
+- Then, collect data for these fields
+    - [Custom Fields in Comments](#custom-fields-in-comments)
+    - [Custom Fields with `setMetadata()`](#custom-fields-with-setmetadata)
+    - [Custom Data Visitor](#custom-data-visitor)
 
 ### Custom Columns
 The report will be displayed in a `Tree Grid`. The `columns` function is used to customize the grid columns. The column properties following:
