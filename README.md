@@ -8,9 +8,10 @@
 
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
-    - A `Tree Grid` style test report
-    - Support processing large amounts of data with high performance
+    - A `Tree Grid` style test reporter
+    - Support processing big data with high performance
     - Design for customization and extensibility
+    - Interactive report with grouping and ultra-fast filter
     - Timeline Workers Graph
     - Monitor CPU and Memory Usage
     - Export Data (json)
@@ -50,6 +51,8 @@
 * [Integration Examples](#integration-examples)
 * [Contributing](#contributing)
 * [Changelog](CHANGELOG.md)
+
+
 ## Preview
 [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
@@ -1195,7 +1198,7 @@ npm run test
 
 npm run dev
 ```
-## Dependencies
+### Dependencies
 - UI Framework [Vue 3](https://github.com/vuejs/core)
 - Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
 - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
