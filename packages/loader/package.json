@@ -1,0 +1,12 @@
+{
+    "name": "monocart-reporter-loader",
+    "version": "2.9.3",
+    "private": true,
+    "main": "dist/monocart-reporter-loader.js",
+    "files": [
+        "dist"
+    ],
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {}
+}

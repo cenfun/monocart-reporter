@@ -129,7 +129,7 @@ module.exports = {
 
     build: {
 
-        vendors: ['common', 'app', 'network'],
+        vendors: ['app', 'network', 'loader'],
 
         before: (item, Util) => {
 
