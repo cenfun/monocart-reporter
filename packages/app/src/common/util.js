@@ -1,5 +1,5 @@
 import { Util } from 'turbogrid';
-import Share from '../../../lib/platform/share.js';
+import Share from '../../../../lib/platform/share.js';
 
 const CommonUtil = {
     ... Util,

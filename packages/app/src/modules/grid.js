@@ -1,5 +1,5 @@
 import { Grid } from 'turbogrid';
-import { hash } from 'monocart-common';
+import { hash } from '../common/common.js';
 
 import Util from '../utils/util.js';
 import { formatters } from './formatters.js';

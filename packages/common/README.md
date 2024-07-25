@@ -1,3 +1,0 @@
-# monocart-common
-
-## Getting Started

@@ -1,7 +1,7 @@
 <script setup>
 import { components } from 'vine-ui';
 
-import { hash } from 'monocart-common';
+import { hash } from '../common/common.js';
 
 import state from '../modules/state.js';
 

@@ -3,7 +3,7 @@ import {
     shallowReactive, watch, computed, ref, onMounted
 } from 'vue';
 import { components } from 'vine-ui';
-import { niceTicks, microtask } from 'monocart-common';
+import { niceTicks, microtask } from '../../common/common.js';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';

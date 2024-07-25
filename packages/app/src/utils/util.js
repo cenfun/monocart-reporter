@@ -1,4 +1,4 @@
-import { saveAs, CommonUtil } from 'monocart-common';
+import { saveAs, CommonUtil } from '../common/common.js';
 
 const Util = {
     ... CommonUtil,

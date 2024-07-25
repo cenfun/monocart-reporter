@@ -31,9 +31,7 @@
         "mock-download": "node ./scripts/mock-download.js",
         "mock-serve": "node ./scripts/mock-serve.js"
     },
-    "workspaces": [
-        "packages/*"
-    ],
+    "workspaces": [],
     "files": [
         "lib"
     ],
@@ -49,23 +47,36 @@
         "koa-static-resolver": "^1.0.6",
         "lz-utils": "^2.0.2",
         "monocart-coverage-reports": "^2.9.3",
-        "monocart-formatter": "^3.0.0",
         "monocart-locator": "^1.0.2",
-        "nodemailer": "^6.9.14",
-        "turbogrid": "^3.2.0"
+        "nodemailer": "^6.9.14"
     },
     "devDependencies": {
-        "@playwright/test": "^1.45.2",
+        "@babel/code-frame": "^7.24.7",
+        "@playwright/test": "^1.45.3",
+        "ansi-to-html": "^0.7.2",
+        "async-tick": "^1.0.0",
         "axios": "^1.7.2",
+        "commander": "^12.1.0",
         "dotenv": "^16.4.5",
         "eslint": "^9.7.0",
         "eslint-config-plus": "^2.0.2",
         "eslint-plugin-html": "^8.1.1",
         "eslint-plugin-vue": "^9.27.0",
+        "file-saver": "^2.0.5",
+        "github-markdown-css": "^5.6.1",
+        "marked": "^13.0.2",
         "mermaid": "^10.9.1",
+        "mitt": "^3.0.1",
+        "monocart-code-viewer": "^1.1.4",
+        "monocart-formatter": "^3.0.0",
+        "nice-ticks": "^1.0.2",
         "open": "8.4.2",
+        "sanitize-filename": "^1.6.3",
+        "stack-utils": "^2.0.6",
         "stylelint": "^16.7.0",
         "stylelint-config-plus": "^1.1.2",
-        "vine-ui": "^3.1.16"
+        "turbogrid": "^3.2.0",
+        "vine-ui": "^3.1.16",
+        "ws": "^8.18.0"
     }
 }

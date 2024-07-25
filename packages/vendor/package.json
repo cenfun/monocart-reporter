@@ -1,19 +1,13 @@
 {
-    "name": "monocart-vendor",
+    "name": "monocart-reporter-vendor",
     "version": "2.6.1",
     "private": true,
-    "main": "dist/monocart-vendor.js",
+    "main": "dist/monocart-reporter-vendor.js",
     "files": [
         "dist"
     ],
     "license": "MIT",
     "dependencies": {},
-    "devDependencies": {
-        "@babel/code-frame": "^7.24.7",
-        "commander": "^12.1.0",
-        "sanitize-filename": "^1.6.3",
-        "stack-utils": "^2.0.6",
-        "ws": "^8.18.0"
-    },
+    "devDependencies": {},
     "platform": "node"
 }

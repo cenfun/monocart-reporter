@@ -1,16 +1,12 @@
 {
-    "name": "monocart-network",
+    "name": "monocart-reporter-network",
     "version": "2.6.1",
-    "main": "dist/monocart-network.js",
+    "private": true,
+    "main": "dist/monocart-reporter-network.js",
     "files": [
         "dist"
     ],
     "license": "MIT",
-    "dependencies": {
-        "monocart-code-viewer": "^1.1.4",
-        "monocart-common": "~2.6.1",
-        "monocart-formatter": "^3.0.0",
-        "turbogrid": "^3.2.0"
-    },
+    "dependencies": {},
     "devDependencies": {}
 }

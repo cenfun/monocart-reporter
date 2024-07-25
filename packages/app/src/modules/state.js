@@ -1,5 +1,5 @@
 import { shallowReactive } from 'vue';
-import { hash } from 'monocart-common';
+import { hash } from '../common/common.js';
 
 
 export const defaultGroups = {

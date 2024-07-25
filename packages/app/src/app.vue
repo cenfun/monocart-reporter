@@ -5,7 +5,7 @@ import {
 import { components, generateTooltips } from 'vine-ui';
 import {
     debounce, microtask, inflate, store, hash, setFavicon
-} from 'monocart-common';
+} from './common/common.js';
 
 import Util from './utils/util.js';
 import {

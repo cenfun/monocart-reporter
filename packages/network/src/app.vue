@@ -6,7 +6,7 @@ import { components, generateTooltips } from 'vine-ui';
 
 import { Grid } from 'turbogrid';
 
-import { inflate, setFavicon } from 'monocart-common';
+import { inflate, setFavicon } from '../../app/src/common/common.js';
 
 import Util from './utils/util.js';
 
