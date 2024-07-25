@@ -45,7 +45,7 @@
         "eight-colors": "^1.3.0",
         "koa": "^2.15.3",
         "koa-static-resolver": "^1.0.6",
-        "lz-utils": "^2.0.2",
+        "lz-utils": "^2.1.0",
         "monocart-coverage-reports": "^2.9.3",
         "monocart-locator": "^1.0.2",
         "nodemailer": "^6.9.14"
