@@ -46,7 +46,7 @@
         "koa": "^2.15.3",
         "koa-static-resolver": "^1.0.6",
         "lz-utils": "^2.1.0",
-        "monocart-coverage-reports": "^2.9.3",
+        "monocart-coverage-reports": "^2.10.0",
         "monocart-locator": "^1.0.2",
         "nodemailer": "^6.9.14"
     },
@@ -58,7 +58,7 @@
         "axios": "^1.7.2",
         "commander": "^12.1.0",
         "dotenv": "^16.4.5",
-        "eslint": "^9.7.0",
+        "eslint": "^9.8.0",
         "eslint-config-plus": "^2.0.2",
         "eslint-plugin-html": "^8.1.1",
         "eslint-plugin-vue": "^9.27.0",
