@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.6.2
+  - updated report assets
+
 * 2.6.1
   - fixed UI for better tooltip
 
