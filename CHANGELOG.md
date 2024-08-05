@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.6.3
+  - supported `autolinker` for logs
+
 * 2.6.2
   - updated report assets
 

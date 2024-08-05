@@ -9,6 +9,7 @@ import { groupAttachments } from './attachments.js';
 
 import Util from '../utils/util.js';
 import state from './state.js';
+import Autolinker from 'autolinker';
 
 // ===========================================================================
 // errors logs html
@@ -25,13 +26,14 @@ const convertHtml = (str) => {
     const reg = /\s$/;
     const endsWithN = reg.test(str) ? '' : '<br/>';
 
-    // link
-    // const re = /(http[s]?:\/\/([\w-]+.)+([:\d+])?(\/[\w-./?%&=]*)?)/gi;
-    // str = str.replace(re, function(a) {
-    //     return `<a href="${a}" target="_blank">${a}</a>`;
-    // });
-
     str = convert.toHtml(str) + endsWithN;
+
+    // link
+    str = Autolinker.link(str, {
+        stripPrefix: false,
+        stripTrailingSlash: false,
+        decodePercentEncoding: false
+    });
 
     return str;
 };

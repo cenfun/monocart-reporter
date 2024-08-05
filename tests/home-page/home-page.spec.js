@@ -221,9 +221,12 @@ test('text comparison', async ({ page }) => {
     test.info().attach('text/markdown:', {
         contentType: 'text/markdown',
         body: `### monocart reporter
-        - playwright test reporter
-        - html reporter`
+- [playwright](https://playwright.dev/) test reporter
+- html reporter`
     });
+
+    console.log('https://playwright.dev/');
+    console.log('http://localhost:8080/?query=1#page=a%20&b=1?hash-query=%20%22');
 
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
     expect(await page.textContent('.page-url')).toMatchSnapshot();
