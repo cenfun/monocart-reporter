@@ -52,7 +52,7 @@
     },
     "devDependencies": {
         "@babel/code-frame": "^7.24.7",
-        "@playwright/test": "^1.45.3",
+        "@playwright/test": "^1.46.0",
         "ansi-to-html": "^0.7.2",
         "async-tick": "^1.0.0",
         "autolinker": "^4.0.0",
@@ -65,7 +65,7 @@
         "eslint-plugin-vue": "^9.27.0",
         "file-saver": "^2.0.5",
         "github-markdown-css": "^5.6.1",
-        "marked": "^13.0.3",
+        "marked": "^14.0.0",
         "mermaid": "^10.9.1",
         "mitt": "^3.0.1",
         "monocart-code-viewer": "^1.1.4",
