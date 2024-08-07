@@ -46,7 +46,7 @@
         "koa": "^2.15.3",
         "koa-static-resolver": "^1.0.6",
         "lz-utils": "^2.1.0",
-        "monocart-coverage-reports": "^2.10.1",
+        "monocart-coverage-reports": "^2.10.2",
         "monocart-locator": "^1.0.2",
         "nodemailer": "^6.9.14"
     },
