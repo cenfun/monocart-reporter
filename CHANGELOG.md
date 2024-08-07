@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.6.4
+  - added option `groupOptions` for report UI (#137)
+
 * 2.6.3
   - supported `autolinker` for logs
 

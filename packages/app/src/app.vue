@@ -382,6 +382,17 @@ const resetGroups = () => {
     });
 };
 
+const initGroups = (groupOptions) => {
+    if (!groupOptions) {
+        return;
+    }
+    Object.keys(defaultGroups).forEach((k) => {
+        if (Util.hasOwn(groupOptions, k)) {
+            state.groups[k] = Boolean(groupOptions[k]);
+        }
+    });
+};
+
 const isGroupsChanged = computed(() => {
     const keys = Object.keys(defaultGroups);
     for (const k of keys) {
@@ -486,6 +497,8 @@ const init = async () => {
     state.date = reportData.dateH;
     state.duration = reportData.durationH;
     state.mermaid = reportData.mermaid;
+
+    initGroups(reportData.groupOptions);
 
     initFlyoverSize();
 

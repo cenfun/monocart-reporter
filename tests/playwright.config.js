@@ -343,6 +343,18 @@ module.exports = {
 
             customFieldsInComments: true,
 
+            groupOptions: {
+                group: true,
+
+                shard: true,
+                project: true,
+                file: true,
+                describe: true,
+                step: false,
+
+                merge: false
+            },
+
             // async hook after report data generated
             onEnd: (reportData, helper) => {
                 // console.log('onEnd hook start');

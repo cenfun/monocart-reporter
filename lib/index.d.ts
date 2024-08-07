@@ -128,6 +128,19 @@ export type MonocartReporterOptions = {
         config?: any;
     }
 
+    /** enable/disable group or levels */
+    groupOptions?: {
+        group?: boolean;
+
+        shard?: boolean;
+        project?: boolean;
+        file?: boolean;
+        describe?: boolean;
+        step?: boolean;
+
+        merge?: boolean;
+    }
+
     /** onEnd hook: https://github.com/cenfun/monocart-reporter?#onend-hook */
     onEnd?: (reportData: any, helper: Helper) => Promise<void>
 
