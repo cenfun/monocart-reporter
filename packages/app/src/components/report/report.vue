@@ -196,7 +196,7 @@ const timelineHandler = () => {
 const onTagClick = (tag) => {
     state.flyoverVisible = false;
     state.caseType = 'tests';
-    state.keywords = `${tag.name}`;
+    state.keywords = `@${tag.name}`;
     updateGrid();
 };
 

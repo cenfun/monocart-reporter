@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.6.5
+  - fixed tag issue (#138)
+
 * 2.6.4
   - added option `groupOptions` for report UI (#137)
 
