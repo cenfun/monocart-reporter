@@ -497,7 +497,28 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <div>Slider</div>
+        <div>
+          <div
+            v-if="d.imageMap"
+            class="mcr-slider"
+          >
+            <div class="mcr-slider-top">
+              <div class="mcr-slider-item">
+                <img
+                  :src="d.imageMap.actual.path"
+                  :alt="d.imageMap.actual.name"
+                >
+              </div>
+              <div class="mcr-slider-gutter" />
+            </div>
+            <div class="mcr-slider-item">
+              <img
+                :src="d.imageMap.expected.path"
+                :alt="d.imageMap.expected.name"
+              >
+            </div>
+          </div>
+        </div>
       </template>
     </VuiTab>
 
@@ -649,6 +670,50 @@ onUnmounted(() => {
                 margin-bottom: 10px;
                 box-shadow: var(--image-shadow);
                 transition: all 0.1s ease-out;
+            }
+        }
+    }
+
+    .mcr-slider {
+        position: relative;
+
+        .mcr-slider-item {
+            width: 100%;
+            padding: 10px;
+
+            img {
+                position: relative;
+                display: block;
+                width: 100%;
+                box-shadow: var(--image-shadow);
+                transition: all 0.1s ease-out;
+            }
+        }
+
+        .mcr-slider-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+
+            img {
+                box-shadow: none;
+            }
+        }
+
+        .mcr-slider-gutter {
+            position: absolute;
+            top: 10px;
+            right: 3px;
+            width: 6px;
+            height: calc(100% - 20px);
+            background-color: #aaa;
+            cursor: ew-resize;
+
+            &:hover {
+                background-color: #999;
             }
         }
     }
