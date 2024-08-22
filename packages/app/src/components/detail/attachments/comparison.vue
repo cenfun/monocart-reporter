@@ -46,6 +46,8 @@ const initImageComparison = (list) => {
     d.indexes = {};
     d.categories = [];
 
+    const imageMap = {};
+
     d.imageList = list.map((it, i) => {
 
         const {
@@ -55,14 +57,23 @@ const initImageComparison = (list) => {
         d.indexes[category] = i;
         d.categories.push(category);
 
-        return {
+        const item = {
             title: titles[category],
             category,
             name,
             path
         };
 
+        imageMap[category] = item;
+
+        return item;
     });
+
+    // console.log(imageMap);
+    d.imageMap = imageMap;
+    d.sideLeft = imageMap.expected;
+    d.sideRight = imageMap.actual;
+
 
     if (Util.hasOwn(d.indexes, 'diff')) {
         d.tabIndex = d.indexes.diff;
@@ -257,7 +268,14 @@ const zoomTo = (e, percent) => {
 };
 
 const onDblClick = (e) => {
-    state.imageZoom = true;
+    if (d.tabIndex >= 3) {
+        return;
+    }
+
+    if (!state.imageZoom) {
+        return;
+    }
+
     // console.log('onDblClick');
     setTimeout(() => {
         if (d.percent === 100) {
@@ -334,8 +352,13 @@ const onImgLoad = (e) => {
     }
 };
 
-const onImgError = (e, item) => {
-    // console.log(item);
+const onSideClick = () => {
+    console.log('side click');
+    if (d.sideRight === d.imageMap.actual) {
+        d.sideRight = d.imageMap.diff;
+    } else {
+        d.sideRight = d.imageMap.actual;
+    }
 };
 
 const showHelp = (e, visible) => {
@@ -435,6 +458,8 @@ onUnmounted(() => {
         >
           {{ item.title }}
         </div>
+        <div>Side by side</div>
+        <div>Slider</div>
       </template>
       <template #panes>
         <div
@@ -448,9 +473,31 @@ onUnmounted(() => {
             :alt="item.name"
             :style="d.imageStyle"
             @load="onImgLoad"
-            @error="onImgError($event, item)"
           >
         </div>
+        <div>
+          <div
+            v-if="d.imageMap"
+            class="mcr-side-by-side"
+          >
+            <div class="mcr-side-item">
+              <img
+                :src="d.sideLeft.path"
+                :alt="d.sideLeft.name"
+              >
+              <div>{{ d.sideLeft.title }}</div>
+            </div>
+            <div class="mcr-side-item">
+              <img
+                :src="d.sideRight.path"
+                :alt="d.sideRight.name"
+                @click="onSideClick"
+              >
+              <div>{{ d.sideRight.title }}</div>
+            </div>
+          </div>
+        </div>
+        <div>Slider</div>
       </template>
     </VuiTab>
 
@@ -560,7 +607,7 @@ onUnmounted(() => {
 
     .vui-tab-item::before {
         bottom: 10px;
-        height: 10px;
+        height: 15px;
     }
 
     .mcr-comparison-tab {
@@ -583,6 +630,26 @@ onUnmounted(() => {
             max-width: 100%;
             box-shadow: var(--image-shadow);
             transition: all 0.1s ease-out;
+        }
+    }
+
+    .mcr-side-by-side {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+
+        .mcr-side-item {
+            width: calc(50% - 5px);
+            text-align: center;
+
+            img {
+                position: relative;
+                display: block;
+                width: 100%;
+                margin-bottom: 10px;
+                box-shadow: var(--image-shadow);
+                transition: all 0.1s ease-out;
+            }
         }
     }
 }
