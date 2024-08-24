@@ -229,6 +229,8 @@ class StartMoveEnd extends EventTarget {
             return;
         }
 
+        this.preventDefault(e);
+
         const ed = this.eventData;
         ed.e = e;
         // keep previous position

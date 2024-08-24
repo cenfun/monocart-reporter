@@ -660,6 +660,10 @@ onUnmounted(() => {
         text-transform: capitalize;
     }
 
+    .vui-tab {
+        min-width: 550px;
+    }
+
     .vui-tab-header {
         background: #f5f5f5;
     }
