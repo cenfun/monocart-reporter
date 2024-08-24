@@ -384,24 +384,41 @@ const showHelp = (e, visible) => {
     }
 
 };
+
+const getMaskImage = (pos) => {
+    return `linear-gradient(to right, red, red ${pos}, transparent ${pos}, transparent)`;
+};
+
 const initGutter = () => {
     const $gutter = gutter.value;
     if (!$gutter) {
         return;
     }
+    const $top = $gutter.parentNode.parentNode.querySelector('.mcr-slider-top');
+
+    $top.style.maskImage = getMaskImage('50%');
 
     const sme = new SME($gutter);
 
+    let moving = false;
+    let left = 0;
+    let max = 0;
     sme.bind(SME.START, (e) => {
-        console.log(e.type, e.detail);
+        moving = true;
+        left = $gutter.offsetLeft;
+        max = $gutter.parentNode.getBoundingClientRect().width;
     });
 
     sme.bind(SME.MOVE, (e) => {
-        console.log(e.type, e.detail);
+        if (moving) {
+            const x = sme.clamp(left + e.detail.offsetX, 0, max);
+            $gutter.style.left = `${x}px`;
+            $top.style.maskImage = getMaskImage(`${x + 10}px`);
+        }
     });
 
     sme.bind(SME.END, (e) => {
-        console.log(e.type, e.detail);
+        moving = false;
     });
 };
 
@@ -529,10 +546,12 @@ onUnmounted(() => {
             v-if="d.imageMap"
             class="mcr-slider"
           >
-            <div
-              ref="gutter"
-              class="mcr-slider-gutter"
-            />
+            <div class="mcr-slider-window">
+              <div
+                ref="gutter"
+                class="mcr-slider-gutter"
+              />
+            </div>
 
             <div class="mcr-slider-top">
               <div class="mcr-slider-item">
@@ -707,6 +726,7 @@ onUnmounted(() => {
 
     .mcr-slider {
         position: relative;
+        user-select: none;
 
         .mcr-slider-item {
             width: 100%;
@@ -734,13 +754,21 @@ onUnmounted(() => {
             }
         }
 
-        .mcr-slider-gutter {
+        .mcr-slider-window {
             position: absolute;
             top: 10px;
-            left: 50%;
+            left: 10px;
             z-index: 100;
-            width: 6px;
+            width: calc(100% - 20px);
             height: calc(100% - 20px);
+        }
+
+        .mcr-slider-gutter {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 6px;
+            height: 100%;
             background-color: #aaa;
             cursor: ew-resize;
 
