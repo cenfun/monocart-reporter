@@ -37,6 +37,7 @@ const d = shallowReactive({
 });
 
 const gutter = ref(null);
+let $gutter;
 
 const initImageComparison = (list) => {
     const titles = {
@@ -145,6 +146,11 @@ const onMouseUp = (e) => {
 };
 
 const onMouseMove = (e) => {
+
+    if (d.gutterMoving) {
+        return;
+    }
+
     const offsetX = e.pageX - d.startX;
     const offsetY = e.pageY - d.startY;
 
@@ -260,9 +266,7 @@ const zoomTo = (e, percent) => {
 
 
     const minHeight = Math.round(d.hw * minWidth);
-    const padding = 10 * 2;
-    const ch = minHeight + padding;
-    d.containerStyle = `height: ${ch}px`;
+    d.containerStyle = `height: ${minHeight}px`;
 
     // console.log(l, t);
 
@@ -314,6 +318,9 @@ const onContainerResize = microtask(() => {
     // init percent
     d.minPercent = Math.round(minWidth / d.maxWidth * 100);
     d.percent = d.minPercent;
+
+    // fix gutter
+    updateGutter();
 });
 
 
@@ -389,36 +396,47 @@ const getMaskImage = (pos) => {
     return `linear-gradient(to right, red, red ${pos}, transparent ${pos}, transparent)`;
 };
 
-const initGutter = () => {
-    const $gutter = gutter.value;
+const updateGutter = () => {
     if (!$gutter) {
         return;
     }
-    const $top = $gutter.parentNode.parentNode.querySelector('.mcr-slider-top');
 
+    const $top = $gutter.parentNode.parentNode.querySelector('.mcr-slider-top');
+    $gutter.style.left = '50%';
     $top.style.maskImage = getMaskImage('50%');
 
-    const sme = new SME($gutter);
+    return $top;
+};
 
-    let moving = false;
+const initGutter = () => {
+    $gutter = gutter.value;
+    if (!$gutter) {
+        return;
+    }
+    const $top = updateGutter();
+
+    const sme = new SME($gutter);
+    const padding = 10;
+
     let left = 0;
     let max = 0;
     sme.bind(SME.START, (e) => {
-        moving = true;
+        d.gutterMoving = true;
         left = $gutter.offsetLeft;
+        // padding 20
         max = $gutter.parentNode.getBoundingClientRect().width;
     });
 
     sme.bind(SME.MOVE, (e) => {
-        if (moving) {
+        if (d.gutterMoving) {
             const x = sme.clamp(left + e.detail.offsetX, 0, max);
             $gutter.style.left = `${x}px`;
-            $top.style.maskImage = getMaskImage(`${x + 10}px`);
+            $top.style.maskImage = getMaskImage(`${x + padding}px`);
         }
     });
 
     sme.bind(SME.END, (e) => {
-        moving = false;
+        d.gutterMoving = false;
     });
 };
 
@@ -542,31 +560,34 @@ onUnmounted(() => {
           </div>
         </div>
         <div>
-          <div
-            v-if="d.imageMap"
-            class="mcr-slider"
-          >
-            <div class="mcr-slider-window">
-              <div
-                ref="gutter"
-                class="mcr-slider-gutter"
-              />
-            </div>
+          <div class="mcr-slider">
+            <div
+              ref="gutter"
+              class="mcr-slider-gutter"
+            />
+          </div>
 
-            <div class="mcr-slider-top">
-              <div class="mcr-slider-item">
-                <img
-                  :src="d.imageMap.actual.path"
-                  :alt="d.imageMap.actual.name"
-                >
-              </div>
-            </div>
-            <div class="mcr-slider-item">
+          <div class="mcr-slider-top">
+            <div
+              class="mcr-comparison-image"
+              :style="d.containerStyle"
+            >
               <img
-                :src="d.imageMap.expected.path"
-                :alt="d.imageMap.expected.name"
+                :src="d.imageMap.actual.path"
+                :alt="d.imageMap.actual.name"
+                :style="d.imageStyle"
               >
             </div>
+          </div>
+          <div
+            class="mcr-comparison-image"
+            :style="d.containerStyle"
+          >
+            <img
+              :src="d.imageMap.expected.path"
+              :alt="d.imageMap.expected.name"
+              :style="d.imageStyle"
+            >
           </div>
         </div>
       </template>
@@ -694,7 +715,9 @@ onUnmounted(() => {
     }
 
     .mcr-comparison-image {
-        padding: 10px;
+        width: calc(100% - 20px);
+        margin: 10px;
+        box-shadow: var(--image-shadow);
         cursor: default;
         overflow: hidden;
         user-select: none;
@@ -702,8 +725,7 @@ onUnmounted(() => {
         img {
             position: relative;
             display: block;
-            max-width: 100%;
-            box-shadow: var(--image-shadow);
+            width: 100%;
             transition: all 0.1s ease-out;
         }
     }
@@ -729,56 +751,38 @@ onUnmounted(() => {
     }
 
     .mcr-slider {
-        position: relative;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 100;
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
         user-select: none;
+    }
 
-        .mcr-slider-item {
-            width: 100%;
-            padding: 10px;
+    .mcr-slider-gutter {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 6px;
+        height: 100%;
+        background-color: #aaa;
+        cursor: ew-resize;
 
-            img {
-                position: relative;
-                display: block;
-                width: 100%;
-                box-shadow: var(--image-shadow);
-                transition: all 0.1s ease-out;
-            }
+        &:hover {
+            background-color: #999;
         }
+    }
 
-        .mcr-slider-top {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
+    .mcr-slider-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: 100%;
 
-            img {
-                box-shadow: none;
-            }
-        }
-
-        .mcr-slider-window {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 100;
-            width: calc(100% - 20px);
-            height: calc(100% - 20px);
-        }
-
-        .mcr-slider-gutter {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 6px;
-            height: 100%;
-            background-color: #aaa;
-            cursor: ew-resize;
-
-            &:hover {
-                background-color: #999;
-            }
+        .mcr-comparison-image {
+            box-shadow: none;
         }
     }
 }
