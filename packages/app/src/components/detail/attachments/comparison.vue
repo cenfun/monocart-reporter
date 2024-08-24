@@ -1,6 +1,6 @@
 <script setup>
 import {
-    watch, watchEffect, shallowReactive, onUnmounted
+    watch, watchEffect, shallowReactive, onUnmounted, onMounted, ref
 } from 'vue';
 import { components } from 'vine-ui';
 import { microtask } from '../../../common/common.js';
@@ -8,6 +8,8 @@ import { microtask } from '../../../common/common.js';
 import Util from '../../../utils/util.js';
 import state from '../../../modules/state.js';
 import { setPosition } from '../../../modules/detail.js';
+
+import SME from '../../../common/start-move-end.js';
 
 import IconLabel from '../../icon-label.vue';
 
@@ -34,6 +36,7 @@ const d = shallowReactive({
     containerStyle: ''
 });
 
+const gutter = ref(null);
 
 const initImageComparison = (list) => {
     const titles = {
@@ -268,9 +271,6 @@ const zoomTo = (e, percent) => {
 };
 
 const onDblClick = (e) => {
-    if (d.tabIndex >= 3) {
-        return;
-    }
 
     if (!state.imageZoom) {
         return;
@@ -384,6 +384,26 @@ const showHelp = (e, visible) => {
     }
 
 };
+const initGutter = () => {
+    const $gutter = gutter.value;
+    if (!$gutter) {
+        return;
+    }
+
+    const sme = new SME($gutter);
+
+    sme.bind(SME.START, (e) => {
+        console.log(e.type, e.detail);
+    });
+
+    sme.bind(SME.MOVE, (e) => {
+        console.log(e.type, e.detail);
+    });
+
+    sme.bind(SME.END, (e) => {
+        console.log(e.type, e.detail);
+    });
+};
 
 watchEffect(() => {
     initComparison();
@@ -395,6 +415,11 @@ watch([
     () => state.imageZoom
 ], () => {
     onContainerResize();
+});
+
+onMounted(() => {
+
+    initGutter();
 });
 
 onUnmounted(() => {
@@ -413,7 +438,9 @@ onUnmounted(() => {
       class="mcr-comparison-tab"
     >
       <template #right>
-        <div class="mcr-comparison-zoom">
+        <div
+          class="mcr-comparison-zoom"
+        >
           <VuiSwitch
             v-if="!d.touch"
             v-model="state.imageZoom"
@@ -423,7 +450,7 @@ onUnmounted(() => {
             label-position="right"
           >
             Zoom
-            {{ d.percent }}%
+            <span v-if="state.imageZoom">{{ d.percent }}%</span>
           </VuiSwitch>
         </div>
         <div
@@ -502,6 +529,11 @@ onUnmounted(() => {
             v-if="d.imageMap"
             class="mcr-slider"
           >
+            <div
+              ref="gutter"
+              class="mcr-slider-gutter"
+            />
+
             <div class="mcr-slider-top">
               <div class="mcr-slider-item">
                 <img
@@ -509,7 +541,6 @@ onUnmounted(() => {
                   :alt="d.imageMap.actual.name"
                 >
               </div>
-              <div class="mcr-slider-gutter" />
             </div>
             <div class="mcr-slider-item">
               <img
@@ -706,7 +737,8 @@ onUnmounted(() => {
         .mcr-slider-gutter {
             position: absolute;
             top: 10px;
-            right: 3px;
+            left: 50%;
+            z-index: 100;
             width: 6px;
             height: calc(100% - 20px);
             background-color: #aaa;

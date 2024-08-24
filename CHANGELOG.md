@@ -1,10 +1,10 @@
 ## Changelog
 
-* 2.6.6
-  - improved the `merge` API (#139) 
-      - copy attachments
-      - merge coverage reports
-
+* 2.7.0
+  - (Breaking) improved the `merge` API (#139) 
+      - supports coping and merging attachments
+      - supports merging coverage reports
+  - 
 
 * 2.6.5
   - fixed tag issue (#138)
