@@ -37,7 +37,6 @@ const d = shallowReactive({
 });
 
 const gutter = ref(null);
-let $gutter;
 
 const initImageComparison = (list) => {
     const titles = {
@@ -320,7 +319,7 @@ const onContainerResize = microtask(() => {
     d.percent = d.minPercent;
 
     // fix gutter
-    updateGutter();
+    updateGutter(gutter.value);
 });
 
 
@@ -396,42 +395,48 @@ const getMaskImage = (pos) => {
     return `linear-gradient(to right, red, red ${pos}, transparent ${pos}, transparent)`;
 };
 
-const updateGutter = () => {
+
+const updateGutter = ($gutter) => {
     if (!$gutter) {
         return;
     }
 
+    const padding = 10;
     const $top = $gutter.parentNode.parentNode.querySelector('.mcr-slider-top');
-    $gutter.style.left = '50%';
-    $top.style.maskImage = getMaskImage('50%');
 
-    return $top;
+    const max = $gutter.parentNode.getBoundingClientRect().width;
+    if (max) {
+        const x = Math.max(Math.min(d.gutterLeft || max / 2, max), 0);
+        $gutter.style.left = `${x - padding / 2}px`;
+        $top.style.maskImage = getMaskImage(`${x + padding}px`);
+    } else {
+        $gutter.style.left = `calc(50% - ${padding / 2}px)`;
+        $top.style.maskImage = getMaskImage('50%');
+    }
+
 };
 
 const initGutter = () => {
-    $gutter = gutter.value;
+    const $gutter = gutter.value;
     if (!$gutter) {
         return;
     }
-    const $top = updateGutter();
+
+    updateGutter($gutter);
 
     const sme = new SME($gutter);
     const padding = 10;
 
     let left = 0;
-    let max = 0;
     sme.bind(SME.START, (e) => {
         d.gutterMoving = true;
-        left = $gutter.offsetLeft;
-        // padding 20
-        max = $gutter.parentNode.getBoundingClientRect().width;
+        left = $gutter.offsetLeft + padding / 2;
     });
 
     sme.bind(SME.MOVE, (e) => {
         if (d.gutterMoving) {
-            const x = sme.clamp(left + e.detail.offsetX, 0, max);
-            $gutter.style.left = `${x}px`;
-            $top.style.maskImage = getMaskImage(`${x + padding}px`);
+            d.gutterLeft = left + e.detail.offsetX;
+            updateGutter($gutter);
         }
     });
 
@@ -564,7 +569,9 @@ onUnmounted(() => {
             <div
               ref="gutter"
               class="mcr-slider-gutter"
-            />
+            >
+              <div />
+            </div>
           </div>
 
           <div class="mcr-slider-top">
@@ -764,13 +771,46 @@ onUnmounted(() => {
         position: absolute;
         top: 0;
         left: 50%;
-        width: 6px;
+        width: 10px;
         height: 100%;
-        background-color: #aaa;
         cursor: ew-resize;
 
-        &:hover {
-            background-color: #999;
+        &::before {
+            position: absolute;
+            top: -10px;
+            left: 0;
+            content: "";
+            width: 10px;
+            height: 10px;
+            background-image: url("../../../images/gutter-up.svg");
+            opacity: 0.6;
+        }
+
+        &::after {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            content: "";
+            width: 10px;
+            height: 10px;
+            background-image: url("../../../images/gutter-down.svg");
+            opacity: 0.6;
+        }
+
+        div {
+            position: relative;
+            left: 50%;
+            height: 100%;
+            border-left: 1px solid #000;
+            opacity: 0.6;
+        }
+    }
+
+    .mcr-slider-gutter:hover {
+        &::before,
+        &::after,
+        div {
+            opacity: 1;
         }
     }
 
