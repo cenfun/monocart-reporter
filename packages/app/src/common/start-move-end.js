@@ -119,7 +119,8 @@ class StartMoveEnd extends EventTarget {
         ed.currentY = ed.startY;
 
         this.eventData = ed;
-        this.hasMoved = false;
+
+        this.trigger(StartMoveEnd.START, ed);
 
     }
 
@@ -144,20 +145,12 @@ class StartMoveEnd extends EventTarget {
         ed.changed = !(ed.offsetX === 0 && ed.offsetY === 0);
 
         // moved but no changed, because position back to start point
-        if (this.hasMoved) {
-            this.trigger(StartMoveEnd.MOVE, ed);
-            return;
-        }
+        this.trigger(StartMoveEnd.MOVE, ed);
 
-        this.hasMoved = true;
-        this.trigger(StartMoveEnd.START, ed);
     }
 
     mouseUpHandler(e) {
         this.unbindEvents(this.mouseEvents);
-        if (!this.hasMoved) {
-            return;
-        }
         const ed = this.eventData;
         ed.e = e;
         this.preventDefault(e);

@@ -14,7 +14,7 @@ import SME from '../../../common/start-move-end.js';
 import IconLabel from '../../icon-label.vue';
 
 const {
-    VuiFlex, VuiTab, VuiSwitch
+    VuiFlex, VuiTab, VuiSwitch, VuiProgress
 } = components;
 
 const props = defineProps({
@@ -29,6 +29,7 @@ const imgF = reactive({
     startX: 0,
     imageTop: 0,
     imageLeft: 0,
+    opacity: 100,
     imageStyle: {},
     wrapperStyle: {}
 });
@@ -38,6 +39,7 @@ const imgH = reactive({
     startX: 0,
     imageTop: 0,
     imageLeft: 0,
+    opacity: 100,
     imageStyle: {},
     wrapperStyle: {}
 });
@@ -159,14 +161,13 @@ const switchTo = (e, offset = 0) => {
 };
 
 const onMouseUp = (e) => {
-    console.log('onMouseUp');
     d.tabIndex = d.tempIndex;
     Util.unbindEvents(windowEvents);
 };
 
 const onMouseMove = (e) => {
 
-    if (d.gutterMoving) {
+    if (d.gutterEnabled) {
         return;
     }
 
@@ -445,19 +446,55 @@ const initGutter = () => {
 
     let left = 0;
     sme.bind(SME.START, (e) => {
-        d.gutterMoving = true;
+        d.gutterEnabled = true;
         left = $gutter.offsetLeft + padding / 2;
     });
 
     sme.bind(SME.MOVE, (e) => {
-        if (d.gutterMoving) {
+        if (d.gutterEnabled) {
             d.gutterLeft = left + e.detail.offsetX;
             updateGutter($gutter);
         }
     });
 
     sme.bind(SME.END, (e) => {
-        d.gutterMoving = false;
+        d.gutterEnabled = false;
+    });
+};
+
+const updateOpacity = (imageStyle) => {
+    return {
+        ... imageStyle,
+        opacity: d.img.opacity / 100
+    };
+};
+
+const initOpacity = ($el) => {
+    const $opacity = $el.querySelector('.mcr-comparison-opacity');
+    const sme = new SME($opacity);
+    sme.bind(SME.START, (e) => {
+        if (d.tabIndex === 4) {
+            d.opacityEnabled = true;
+
+            const ed = e.detail;
+            const ee = ed.e;
+            const left = sme.clamp(ee.offsetX, 0, 100);
+            d.img.opacityLeft = left;
+            d.img.opacity = left;
+
+        }
+    });
+
+    sme.bind(SME.MOVE, (e) => {
+        if (d.opacityEnabled) {
+            const ed = e.detail;
+            const left = sme.clamp(d.img.opacityLeft + ed.offsetX, 0, 100);
+            d.img.opacity = left;
+        }
+    });
+
+    sme.bind(SME.END, (e) => {
+        d.opacityEnabled = true;
     });
 };
 
@@ -546,6 +583,7 @@ onMounted(() => {
     Util.bindEvents(globalEvents, el.value);
     updateCurrentTabContainer();
     initGutter();
+    initOpacity(el.value);
 });
 
 onUnmounted(() => {
@@ -641,7 +679,7 @@ onUnmounted(() => {
               <img
                 :src="d.imageMap.actual.path"
                 :alt="d.imageMap.actual.name"
-                :style="d.img.imageStyle"
+                :style="updateOpacity(d.img.imageStyle)"
               >
             </div>
           </div>
@@ -649,7 +687,7 @@ onUnmounted(() => {
           <div class="mcr-slider">
             <div
               ref="gutter"
-              :class="['mcr-slider-gutter', d.gutterMoving?'mcr-slider-gutter-moving':'']"
+              :class="['mcr-slider-gutter', d.gutterEnabled?'mcr-slider-gutter-moving':'']"
             >
               <div />
             </div>
@@ -659,28 +697,43 @@ onUnmounted(() => {
     </VuiTab>
 
     <VuiFlex
-      class="mcr-comparison-line"
+      class="mcr-comparison-toolbar"
       align="space-between"
       padding="5px 10px 10px 10px"
     >
-      <div class="mcr-comparison-zoom">
+      <VuiFlex gap="20px">
         <VuiSwitch
           v-if="!d.touch"
           v-model="state.imageZoom"
+          class="mcr-comparison-zoom"
           width="28px"
           height="16px"
           :label-clickable="true"
           label-position="right"
         >
-          Zoom In/Out
-          <span
-            v-if="state.imageZoom"
-            class="mcr-comparison-percent"
-          >{{ d.img.percent }}%</span>
+          <VuiFlex gap="5px">
+            <div>Zoom In/Out</div>
+            <b v-if="state.imageZoom">
+              {{ d.img.percent }}%
+            </b>
+          </VuiFlex>
         </VuiSwitch>
-      </div>
+
+        <VuiFlex
+          v-show="d.tabIndex===4"
+          gap="5px"
+        >
+          <div>Opacity</div>
+          <VuiProgress
+            class="mcr-comparison-opacity"
+            :percentage="d.img.opacity"
+            height="8px"
+            width="100px"
+          />
+          <b>{{ d.img.opacity }}%</b>
+        </VuiFlex>
+      </VuiFlex>
       <div
-        class="mcr-comparison-note"
         @mouseenter="showHelp($event, true)"
         @mouseleave="showHelp($event, false)"
       >
@@ -793,7 +846,7 @@ onUnmounted(() => {
         text-transform: capitalize;
     }
 
-    .vui-tab {
+    > div {
         min-width: 420px;
     }
 
@@ -818,17 +871,9 @@ onUnmounted(() => {
         height: 15px;
     }
 
-    .mcr-comparison-line {
+    .mcr-comparison-toolbar {
         border-bottom: 1px solid #eee;
-    }
-
-    .mcr-comparison-percent {
-        padding-left: 5px;
-        font-weight: bold;
-    }
-
-    .mcr-comparison-note {
-        margin-right: 10px;
+        user-select: none;
     }
 
     .mcr-comparison-image {
