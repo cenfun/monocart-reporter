@@ -4,7 +4,9 @@
   - (Breaking) improved the `merge` API (#139) 
       - supports coping and merging attachments
       - supports merging coverage reports
-  - 
+  - (New Feature) added `Side by side` and `Slider` tab for visual comparisons (#140)
+  - fixed mermaid supports loading local dist file with `scriptSrc=null`
+  - fixed expected image path
 
 * 2.6.5
   - fixed tag issue (#138)
