@@ -435,6 +435,11 @@ const updateGutter = ($gutter) => {
 const initGutter = () => {
     const $gutter = gutter.value;
 
+    // there is no $gutter if not image to comparison, only text
+    if (!$gutter) {
+        return;
+    }
+
     updateGutter($gutter);
 
     const sme = new SME($gutter);
@@ -468,6 +473,10 @@ const updateOpacity = (imageStyle) => {
 const initOpacity = () => {
     const $el = el.value;
     const $opacity = $el.querySelector('.mcr-comparison-opacity');
+    // only image list
+    if (!$opacity) {
+        return;
+    }
     const sme = new SME($opacity);
     sme.bind(SME.START, (e) => {
         if (d.tabIndex === 4) {
@@ -641,6 +650,12 @@ watch([
 });
 
 onMounted(() => {
+
+    // only for image list
+    if (!d.imageList) {
+        return;
+    }
+
     updateCurrentTabContainer();
     initEvents();
     initGutter();
@@ -757,6 +772,7 @@ onUnmounted(() => {
     </VuiTab>
 
     <VuiFlex
+      v-if="d.imageList"
       class="mcr-comparison-toolbar"
       align="space-between"
       padding="5px 10px 10px 10px"
