@@ -32,8 +32,8 @@ const d = shallowReactive({
     startX: 0,
     imageTop: 0,
     imageLeft: 0,
-    imageStyle: '',
-    containerStyle: ''
+    imageStyle: {},
+    containerStyle: {}
 });
 
 const gutter = ref(null);
@@ -220,15 +220,18 @@ const updateImage = (l, t, w, h, minWidth, minHeight, dragging) => {
     l = Util.clamp(l, -maxL, 0);
     t = Util.clamp(t, -maxT, 0);
 
-    const ls = ['max-width: none;'];
-    ls.push(`left: ${l}px;`);
-    ls.push(`top: ${t}px;`);
-    ls.push(`width: ${w}px;`);
+    const imageStyle = {
+        'max-width': 'none',
+        'left': `${l}px`,
+        'top': `${t}px`,
+        'width': ` ${w}px`
+    };
+
     if (dragging) {
-        ls.push('transition: none;');
+        imageStyle.transition = 'none';
     }
 
-    d.imageStyle = ls.join(' ');
+    d.imageStyle = imageStyle;
 
     d.imageLeft = l;
     d.imageTop = t;
@@ -265,7 +268,9 @@ const zoomTo = (e, percent) => {
 
 
     const minHeight = Math.round(d.hw * minWidth);
-    d.containerStyle = `height: ${minHeight}px`;
+    d.containerStyle = {
+        height: `${minHeight}px`
+    };
 
     // console.log(l, t);
 
@@ -289,6 +294,7 @@ const onDblClick = (e) => {
     });
 };
 
+
 const onMouseWheel = (e) => {
     if (!state.imageZoom) {
         return;
@@ -299,6 +305,8 @@ const onMouseWheel = (e) => {
     const percent = d.percent + 10 * delta;
 
     e.preventDefault();
+
+    d.imageCursor = delta > 0 ? 'zoom-in' : 'zoom-out';
 
     zoomTo(e, percent);
 
@@ -312,8 +320,13 @@ const onContainerResize = microtask(() => {
     d.imageWidth = minWidth;
     d.imageLeft = 0;
     d.imageTop = 0;
-    d.imageStyle = `left: 0; top: 0; transition: none; width: ${minWidth}px;`;
-    d.containerStyle = '';
+    d.imageStyle = {
+        left: 0,
+        top: 0,
+        transition: 'none',
+        width: `${minWidth}px`
+    };
+    d.containerStyle = {};
     // init percent
     d.minPercent = Math.round(minWidth / d.maxWidth * 100);
     d.percent = d.minPercent;
@@ -405,8 +418,8 @@ const updateGutter = ($gutter) => {
     const $top = $gutter.parentNode.parentNode.querySelector('.mcr-slider-top');
 
     const max = $gutter.parentNode.getBoundingClientRect().width;
-    if (max) {
-        const x = Math.max(Math.min(d.gutterLeft || max / 2, max), 0);
+    if (max > 0) {
+        const x = Math.max(Math.min(d.gutterLeft, max), 0);
         $gutter.style.left = `${x - padding / 2}px`;
         $top.style.maskImage = getMaskImage(`${x + padding}px`);
     } else {
@@ -475,49 +488,7 @@ onUnmounted(() => {
     <VuiTab
       v-if="d.imageList"
       v-model="d.tabIndex"
-      class="mcr-comparison-tab"
     >
-      <template #right>
-        <div
-          class="mcr-comparison-zoom"
-        >
-          <VuiSwitch
-            v-if="!d.touch"
-            v-model="state.imageZoom"
-            width="28px"
-            height="16px"
-            :label-clickable="true"
-            label-position="right"
-          >
-            Zoom
-            <span v-if="state.imageZoom">{{ d.percent }}%</span>
-          </VuiSwitch>
-        </div>
-        <div
-          class="mcr-comparison-note"
-          @mouseenter="showHelp($event, true)"
-          @mouseleave="showHelp($event, false)"
-        >
-          <IconLabel icon="help" />
-          <div hidden>
-            <div class="mcr-readme mcr-comparison-help">
-              <h3>Help on the image:</h3>
-              <li class="mcr-item">
-                Mouse Down/Up: switch view with neighbor
-              </li>
-              <li class="mcr-item">
-                Double Click: zoom to 100% or reset
-              </li>
-              <li class="mcr-item">
-                Mouse Wheel: zoom in/out
-              </li>
-              <li class="mcr-item">
-                Mouse Drag: switch view or pan
-              </li>
-            </div>
-          </div>
-        </div>
-      </template>
       <template #tabs>
         <div
           v-for="(item, i) of d.imageList"
@@ -565,13 +536,15 @@ onUnmounted(() => {
           </div>
         </div>
         <div>
-          <div class="mcr-slider">
-            <div
-              ref="gutter"
-              class="mcr-slider-gutter"
+          <div
+            class="mcr-comparison-image"
+            :style="d.containerStyle"
+          >
+            <img
+              :src="d.imageMap.expected.path"
+              :alt="d.imageMap.expected.name"
+              :style="d.imageStyle"
             >
-              <div />
-            </div>
           </div>
 
           <div class="mcr-slider-top">
@@ -586,19 +559,64 @@ onUnmounted(() => {
               >
             </div>
           </div>
-          <div
-            class="mcr-comparison-image"
-            :style="d.containerStyle"
-          >
-            <img
-              :src="d.imageMap.expected.path"
-              :alt="d.imageMap.expected.name"
-              :style="d.imageStyle"
+
+          <div class="mcr-slider">
+            <div
+              ref="gutter"
+              class="mcr-slider-gutter"
             >
+              <div />
+            </div>
           </div>
         </div>
       </template>
     </VuiTab>
+
+    <VuiFlex
+      class="mcr-comparison-line"
+      align="space-between"
+      padding="5px 10px 10px 10px"
+    >
+      <div
+        class="mcr-comparison-zoom"
+      >
+        <VuiSwitch
+          v-if="!d.touch"
+          v-model="state.imageZoom"
+          width="28px"
+          height="16px"
+          :label-clickable="true"
+          label-position="right"
+        >
+          Zoom
+          <span v-if="state.imageZoom">{{ d.percent }}%</span>
+        </VuiSwitch>
+      </div>
+      <div
+        class="mcr-comparison-note"
+        @mouseenter="showHelp($event, true)"
+        @mouseleave="showHelp($event, false)"
+      >
+        <IconLabel icon="help" />
+        <div hidden>
+          <div class="mcr-readme mcr-comparison-help">
+            <h3>Help on the image:</h3>
+            <li class="mcr-item">
+              Mouse Down/Up: switch view with neighbor
+            </li>
+            <li class="mcr-item">
+              Double Click: zoom to 100% or reset
+            </li>
+            <li class="mcr-item">
+              Mouse Wheel: zoom in/out
+            </li>
+            <li class="mcr-item">
+              Mouse Drag: switch view or pan
+            </li>
+          </div>
+        </div>
+      </div>
+    </VuiFlex>
 
     <VuiFlex
       v-if="d.textList"
@@ -689,7 +707,7 @@ onUnmounted(() => {
     }
 
     .vui-tab {
-        min-width: 550px;
+        min-width: 420px;
     }
 
     .vui-tab-header {
@@ -713,7 +731,7 @@ onUnmounted(() => {
         height: 15px;
     }
 
-    .mcr-comparison-tab {
+    .mcr-comparison-line {
         border-bottom: 1px solid #eee;
     }
 
