@@ -786,7 +786,7 @@ onUnmounted(() => {
           <VuiProgress
             class="mcr-comparison-opacity"
             :percentage="d.img.opacity"
-            height="8px"
+            height="12px"
             width="100px"
           />
           <b>{{ d.img.opacity }}%</b>
