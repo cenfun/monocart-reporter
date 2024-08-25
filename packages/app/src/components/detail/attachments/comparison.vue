@@ -27,6 +27,7 @@ const props = defineProps({
 // full size image
 const imgF = reactive({
     startX: 0,
+    startY: 0,
     imageTop: 0,
     imageLeft: 0,
     opacity: 100,
@@ -37,6 +38,7 @@ const imgF = reactive({
 // half size image (side by side)
 const imgH = reactive({
     startX: 0,
+    startY: 0,
     imageTop: 0,
     imageLeft: 0,
     opacity: 100,
@@ -45,7 +47,6 @@ const imgH = reactive({
 });
 
 const d = shallowReactive({
-    touch: Util.isTouchDevice(),
     tabIndex: 0,
     tempIndex: 0,
     img: imgF
@@ -160,19 +161,31 @@ const switchTo = (e, offset = 0) => {
     }
 };
 
-const onMouseUp = (e) => {
-    d.tabIndex = d.tempIndex;
-    Util.unbindEvents(windowEvents);
+// ===================================================================================================
+
+const onDragDown = (e) => {
+    // stop drag event for side by side
+    e.preventDefault();
+
+    const ee = e.type.startsWith('touch') ? e.touches[0] : e;
+
+    d.img.startX = ee.pageX;
+    d.img.startY = ee.pageY;
+
+    d.startL = d.img.imageLeft;
+    d.startT = d.img.imageTop;
+    d.tempIndex = d.tabIndex;
+
+    switchTo(e, 0);
+
 };
 
-const onMouseMove = (e) => {
+const onDragMove = (e) => {
 
-    if (d.gutterEnabled) {
-        return;
-    }
+    const ee = e.type.startsWith('touch') ? e.touches[0] : e;
 
-    const offsetX = e.pageX - d.img.startX;
-    const offsetY = e.pageY - d.img.startY;
+    const offsetX = ee.pageX - d.img.startX;
+    const offsetY = ee.pageY - d.img.startY;
 
     // pan if zoom
     if (d.img.percent > d.img.minPercent && d.container) {
@@ -195,41 +208,14 @@ const onMouseMove = (e) => {
     if (Math.abs(offsetX) < 10) {
         return;
     }
+
     switchTo(e, offsetX);
-    d.img.startX = e.pageX;
+    d.img.startX = ee.pageX;
 };
 
-const windowEvents = {
-    mousemove: {
-        handler: (e) => {
-            onMouseMove(e);
-        },
-        options: true
-    },
-    mouseup: {
-        handler: (e) => {
-            onMouseUp(e);
-        },
-        options: {
-            once: true
-        }
-    }
-};
 
-const onMouseDown = (e) => {
-    // stop drag event for side by side
-    e.preventDefault();
-
-    d.img.startX = e.pageX;
-    d.img.startY = e.pageY;
-    d.startL = d.img.imageLeft;
-    d.startT = d.img.imageTop;
-    d.tempIndex = d.tabIndex;
-
-    switchTo(e, 0);
-
-    Util.bindEvents(windowEvents, window);
-    // console.log(e.offsetX, e.offsetY);
+const onDragUp = (e) => {
+    d.tabIndex = d.tempIndex;
 };
 
 const getMinWidth = () => {
@@ -275,8 +261,11 @@ const zoomTo = (e, percent) => {
     }
 
     const br = d.container.getBoundingClientRect();
-    const ox = Math.round(e.pageX - br.left - 10);
-    const oy = Math.round(e.pageY - br.top - 10);
+
+    const ee = e.type.startsWith('touch') ? e.touches[0] : e;
+
+    const ox = Math.round(ee.pageX - br.left - 10);
+    const oy = Math.round(ee.pageY - br.top - 10);
 
     // console.log(ox, oy);
 
@@ -309,11 +298,18 @@ const onDblClick = (e) => {
 
     // console.log('onDblClick');
     setTimeout(() => {
-        if (d.img.percent === 100) {
-            zoomTo(e, d.img.minPercent - 1);
+
+        if (d.img.percent < 100) {
+            zoomTo(e, 100);
             return;
         }
-        zoomTo(e, 100);
+
+        if (d.img.percent < 200) {
+            zoomTo(e, 200);
+            return;
+        }
+
+        zoomTo(e, d.img.minPercent - 1);
     });
 };
 
@@ -329,7 +325,7 @@ const onMouseWheel = (e) => {
 
     e.preventDefault();
 
-    d.imageCursor = delta > 0 ? 'zoom-in' : 'zoom-out';
+    // d.imageCursor = delta > 0 ? 'zoom-in' : 'zoom-out';
 
     zoomTo(e, percent);
 
@@ -469,16 +465,23 @@ const updateOpacity = (imageStyle) => {
     };
 };
 
-const initOpacity = ($el) => {
+const initOpacity = () => {
+    const $el = el.value;
     const $opacity = $el.querySelector('.mcr-comparison-opacity');
     const sme = new SME($opacity);
     sme.bind(SME.START, (e) => {
         if (d.tabIndex === 4) {
-            d.opacityEnabled = true;
 
             const ed = e.detail;
             const ee = ed.e;
-            const left = sme.clamp(ee.offsetX, 0, 100);
+
+            const eee = ee.type.startsWith('touch') ? ee.touches[0] : ee;
+
+            const x = eee.pageX - ee.target.getBoundingClientRect().left;
+            // console.log(x);
+
+            d.opacityEnabled = true;
+            const left = sme.clamp(Math.round(x), 0, 100);
             d.img.opacityLeft = left;
             d.img.opacity = left;
 
@@ -488,7 +491,7 @@ const initOpacity = ($el) => {
     sme.bind(SME.MOVE, (e) => {
         if (d.opacityEnabled) {
             const ed = e.detail;
-            const left = sme.clamp(d.img.opacityLeft + ed.offsetX, 0, 100);
+            const left = sme.clamp(Math.round(d.img.opacityLeft + ed.offsetX), 0, 100);
             d.img.opacity = left;
         }
     });
@@ -514,17 +517,8 @@ const getEventTargetContainer = (e) => {
     }
 };
 
+let previousTouch = Date.now();
 const globalEvents = {
-    mousedown: {
-        handler: (e) => {
-            const container = getEventTargetContainer(e);
-            if (container) {
-                // console.log(container);
-                d.container = container;
-                onMouseDown(e);
-            }
-        }
-    },
     wheel: {
         handler: (e) => {
             const container = getEventTargetContainer(e);
@@ -536,13 +530,80 @@ const globalEvents = {
     },
     dblclick: {
         handler: (e) => {
-            const container = getEventTargetContainer(e);
-            if (container) {
-                d.container = container;
+            // can not get event target container
+            if (d.container) {
                 onDblClick(e);
             }
         }
+    },
+    touchstart: {
+        handler: (e) => {
+            // mock dblclick
+            const now = Date.now();
+            if (now - previousTouch < 400) {
+
+                const container = getEventTargetContainer(e);
+                if (container) {
+                    d.container = container;
+                    onDblClick(e);
+                }
+            }
+            previousTouch = now;
+        },
+        options: {
+            passive: false
+        }
     }
+};
+
+const initEvents = () => {
+    const $el = el.value;
+    Util.bindEvents(globalEvents, $el);
+
+    const sme = new SME($el, {
+        proxy: (e) => {
+            const container = getEventTargetContainer(e);
+            if (container) {
+                return true;
+            }
+        }
+    });
+
+    sme.bind(SME.START, (e) => {
+
+        if (d.gutterEnabled) {
+            return;
+        }
+
+        const ed = e.detail;
+        const ee = ed.e;
+        const container = getEventTargetContainer(ee);
+        if (!container) {
+            return;
+        }
+
+        d.container = container;
+        d.dragEnabled = true;
+
+        onDragDown(ee);
+
+    });
+
+    sme.bind(SME.MOVE, (e) => {
+        if (d.dragEnabled) {
+            const ed = e.detail;
+            const ee = ed.e;
+            onDragMove(ee);
+        }
+    });
+
+    sme.bind(SME.END, (e) => {
+        d.dragEnabled = false;
+        const ed = e.detail;
+        const ee = ed.e;
+        onDragUp(ee);
+    });
+
 };
 
 const updateCurrentTabContainer = () => {
@@ -580,14 +641,13 @@ watch([
 });
 
 onMounted(() => {
-    Util.bindEvents(globalEvents, el.value);
     updateCurrentTabContainer();
+    initEvents();
     initGutter();
-    initOpacity(el.value);
+    initOpacity();
 });
 
 onUnmounted(() => {
-    Util.unbindEvents(windowEvents);
     Util.unbindEvents(globalEvents);
 });
 
@@ -703,7 +763,6 @@ onUnmounted(() => {
     >
       <VuiFlex gap="20px">
         <VuiSwitch
-          v-if="!d.touch"
           v-model="state.imageZoom"
           class="mcr-comparison-zoom"
           width="28px"
@@ -745,7 +804,7 @@ onUnmounted(() => {
               Mouse Down/Up: switch view with neighbor
             </li>
             <li class="mcr-item">
-              Double Click: zoom to 100% or reset
+              Double Click: zoom in 100%/200% or reset
             </li>
             <li class="mcr-item">
               Mouse Wheel: zoom in/out

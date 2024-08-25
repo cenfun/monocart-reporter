@@ -18,16 +18,21 @@ class StartMoveEnd extends EventTarget {
             ... options
         };
 
+
         this.startEvents = {
             mousedown: {
                 handler: (e) => {
-                    this.targetMouseDownHandler(e);
+                    if (this.proxyHandler(e)) {
+                        this.targetMouseDownHandler(e);
+                    }
                 },
                 options: true
             },
             touchstart: {
                 handler: (e) => {
-                    this.targetTouchStartHandler(e);
+                    if (this.proxyHandler(e)) {
+                        this.targetTouchStartHandler(e);
+                    }
                 },
                 options: {
                     passive: false
@@ -83,6 +88,17 @@ class StartMoveEnd extends EventTarget {
             }
         };
 
+    }
+
+    // ====================================================================
+
+    // check target proxy
+    proxyHandler(e) {
+        const proxy = this.options.proxy;
+        if (typeof proxy !== 'function') {
+            return true;
+        }
+        return proxy.call(this, e);
     }
 
     // ====================================================================
