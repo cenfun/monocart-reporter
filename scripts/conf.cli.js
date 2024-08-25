@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
+// eslint-disable-next-line complexity
 const beforeReporter = (item, Util) => {
 
     const EC = require('eight-colors');
@@ -42,31 +43,39 @@ const beforeReporter = (item, Util) => {
     // const addedData = Util.readJSONSync(path.resolve(__dirname, '../.temp/steps.json'));
     // reportData.rows = reportData.rows.concat(addedData.rows);
 
+    const convertDevPath = (p) => {
+        if (p) {
+            const prevPath = path.resolve(reportData.cwd, reportData.outputDir, p);
+            const newDir = item.devPath;
+            // console.log(prevPath, newDir);
+            const newPath = path.relative(newDir, prevPath);
+            return formatPath(newPath);
+        }
+        return p;
+    };
+
     // attachment path handler for preview
     if (!item.production) {
         forEach(reportData.rows, (row) => {
             if (row.type === 'case' && row.attachments) {
                 row.attachments.forEach((attachment) => {
-                    if (attachment.path) {
-                        const prevPath = path.resolve(reportData.cwd, reportData.outputDir, attachment.path);
-                        const newDir = item.devPath;
-                        // console.log(prevPath, newDir);
-                        const newPath = path.relative(newDir, prevPath);
-                        // console.log(newPath);
-                        attachment.path = formatPath(newPath);
-                    }
+                    attachment.path = convertDevPath(attachment.path);
                 });
             }
         });
         if (reportData.artifacts) {
             reportData.artifacts.forEach((artifact) => {
-                const prevPath = path.resolve(reportData.cwd, reportData.outputDir, artifact.path);
-                const newDir = item.devPath;
-                // console.log(prevPath, newDir);
-                const newPath = path.relative(newDir, prevPath);
-                artifact.path = formatPath(newPath);
+                artifact.path = convertDevPath(artifact.path);
             });
         }
+
+        if (reportData.mermaid) {
+            const { scriptSrc } = reportData.mermaid;
+            if (scriptSrc && scriptSrc.startsWith('assets')) {
+                reportData.mermaid.scriptSrc = convertDevPath(reportData.mermaid.scriptSrc);
+            }
+        }
+
     }
 
     const reportDataStr = deflateSync(JSON.stringify(reportData));
