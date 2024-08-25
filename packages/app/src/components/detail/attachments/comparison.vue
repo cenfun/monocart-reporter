@@ -159,6 +159,7 @@ const switchTo = (e, offset = 0) => {
 };
 
 const onMouseUp = (e) => {
+    console.log('onMouseUp');
     d.tabIndex = d.tempIndex;
     Util.unbindEvents(windowEvents);
 };
@@ -215,12 +216,17 @@ const windowEvents = {
 };
 
 const onMouseDown = (e) => {
+    // stop drag event for side by side
+    e.preventDefault();
+
     d.img.startX = e.pageX;
     d.img.startY = e.pageY;
     d.startL = d.img.imageLeft;
     d.startT = d.img.imageTop;
     d.tempIndex = d.tabIndex;
+
     switchTo(e, 0);
+
     Util.bindEvents(windowEvents, window);
     // console.log(e.offsetX, e.offsetY);
 };
@@ -524,7 +530,8 @@ watch(() => d.tabIndex, (i) => {
         d.img = imgF;
     }
 
-    onContainerResize();
+    const reset = !state.imageZoom;
+    onContainerResize(reset);
 });
 
 watch([
@@ -596,6 +603,7 @@ onUnmounted(() => {
               <img
                 :src="d.sideLeft.path"
                 :alt="d.sideLeft.name"
+                :title="d.sideLeft.title"
                 :style="d.img.imageStyle"
               >
             </div>
@@ -606,6 +614,7 @@ onUnmounted(() => {
               <img
                 :src="d.sideRight.path"
                 :alt="d.sideRight.name"
+                :title="d.sideRight.title"
                 :style="d.img.imageStyle"
                 @click="onSideClick"
               >
@@ -640,7 +649,7 @@ onUnmounted(() => {
           <div class="mcr-slider">
             <div
               ref="gutter"
-              class="mcr-slider-gutter"
+              :class="['mcr-slider-gutter', d.gutterMoving?'mcr-slider-gutter-moving':'']"
             >
               <div />
             </div>
@@ -654,9 +663,7 @@ onUnmounted(() => {
       align="space-between"
       padding="5px 10px 10px 10px"
     >
-      <div
-        class="mcr-comparison-zoom"
-      >
+      <div class="mcr-comparison-zoom">
         <VuiSwitch
           v-if="!d.touch"
           v-model="state.imageZoom"
@@ -665,8 +672,11 @@ onUnmounted(() => {
           :label-clickable="true"
           label-position="right"
         >
-          Zoom
-          <span v-if="state.imageZoom">{{ d.img.percent }}%</span>
+          Zoom In/Out
+          <span
+            v-if="state.imageZoom"
+            class="mcr-comparison-percent"
+          >{{ d.img.percent }}%</span>
         </VuiSwitch>
       </div>
       <div
@@ -812,6 +822,11 @@ onUnmounted(() => {
         border-bottom: 1px solid #eee;
     }
 
+    .mcr-comparison-percent {
+        padding-left: 5px;
+        font-weight: bold;
+    }
+
     .mcr-comparison-note {
         margin-right: 10px;
     }
@@ -874,18 +889,19 @@ onUnmounted(() => {
             width: 10px;
             height: 10px;
             background-image: url("../../../images/gutter-down.svg");
-            opacity: 0.6;
+            opacity: 0.3;
         }
 
         div {
             position: relative;
             left: 50%;
             height: 100%;
-            border-left: 1px solid #000;
-            opacity: 0.6;
+            border-left: thin solid #000;
+            opacity: 0.5;
         }
     }
 
+    .mcr-slider-gutter-moving,
     .mcr-slider-gutter:hover {
         &::before,
         &::after,
