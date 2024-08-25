@@ -64,24 +64,6 @@ const initGroupList = (group) => {
         return ai - bi;
     });
 
-    let filePath;
-    group.data.list.forEach((it) => {
-        const {
-            category, name, path
-        } = it;
-
-        // fixed expected image path
-        if (category === 'expected' && filePath) {
-            const ls = filePath.split('/');
-            ls.pop();
-            ls.push(name);
-            it.path = ls.join('/');
-        } else {
-            filePath = path;
-        }
-
-    });
-
 };
 
 const existsGroupItem = (group, groupName, retry) => {
@@ -112,7 +94,7 @@ export const groupAttachments = (attachments) => {
     const list = [];
     let group;
     attachments.forEach((attachment) => {
-        const match = attachment.name.match(/^(.*)-(expected|actual|diff|previous)(\.[^.]+)?$/);
+        const match = attachment.name.match(/^(.*)-(expected|actual|diff)(\.[^.]+)?$/);
         if (match) {
             const [, name, category, extension = ''] = match;
 
