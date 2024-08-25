@@ -1,6 +1,6 @@
 <script setup>
 import {
-    watch, watchEffect, shallowReactive, onUnmounted, onMounted, ref
+    watch, watchEffect, reactive, shallowReactive, onUnmounted, onMounted, ref
 } from 'vue';
 import { components } from 'vine-ui';
 import { microtask } from '../../../common/common.js';
@@ -17,7 +17,6 @@ const {
     VuiFlex, VuiTab, VuiSwitch
 } = components;
 
-
 const props = defineProps({
     data: {
         type: Object,
@@ -25,17 +24,32 @@ const props = defineProps({
     }
 });
 
-const d = shallowReactive({
-    touch: Util.isTouchDevice(),
-    tabIndex: 0,
-    tempIndex: 0,
+// full size image
+const imgF = reactive({
     startX: 0,
     imageTop: 0,
     imageLeft: 0,
     imageStyle: {},
-    containerStyle: {}
+    wrapperStyle: {}
 });
 
+// half size image (side by side)
+const imgH = reactive({
+    startX: 0,
+    imageTop: 0,
+    imageLeft: 0,
+    imageStyle: {},
+    wrapperStyle: {}
+});
+
+const d = shallowReactive({
+    touch: Util.isTouchDevice(),
+    tabIndex: 0,
+    tempIndex: 0,
+    img: imgF
+});
+
+const el = ref(null);
 const gutter = ref(null);
 
 const initImageComparison = (list) => {
@@ -122,6 +136,11 @@ const onErrorClick = () => {
 
 // eslint-disable-next-line complexity
 const switchTo = (e, offset = 0) => {
+
+    if (d.tabIndex >= 3) {
+        return;
+    }
+
     const category = d.categories[d.tempIndex];
     let target;
 
@@ -150,14 +169,15 @@ const onMouseMove = (e) => {
         return;
     }
 
-    const offsetX = e.pageX - d.startX;
-    const offsetY = e.pageY - d.startY;
+    const offsetX = e.pageX - d.img.startX;
+    const offsetY = e.pageY - d.img.startY;
 
     // pan if zoom
-    if (d.percent > d.minPercent && d.container) {
+    if (d.img.percent > d.img.minPercent && d.container) {
+
         const minWidth = getMinWidth();
         const minHeight = Math.round(d.hw * minWidth);
-        const w = d.imageWidth;
+        const w = d.img.imageWidth;
         const h = Math.round(d.hw * w);
 
         const l = d.startL + offsetX;
@@ -174,7 +194,7 @@ const onMouseMove = (e) => {
         return;
     }
     switchTo(e, offsetX);
-    d.startX = e.pageX;
+    d.img.startX = e.pageX;
 };
 
 const windowEvents = {
@@ -195,10 +215,10 @@ const windowEvents = {
 };
 
 const onMouseDown = (e) => {
-    d.startX = e.pageX;
-    d.startY = e.pageY;
-    d.startL = d.imageLeft;
-    d.startT = d.imageTop;
+    d.img.startX = e.pageX;
+    d.img.startY = e.pageY;
+    d.startL = d.img.imageLeft;
+    d.startT = d.img.imageTop;
     d.tempIndex = d.tabIndex;
     switchTo(e, 0);
     Util.bindEvents(windowEvents, window);
@@ -206,8 +226,7 @@ const onMouseDown = (e) => {
 };
 
 const getMinWidth = () => {
-    const padding = 10 * 2;
-    const minWidth = d.container.clientWidth - padding;
+    const minWidth = d.container.clientWidth;
     return Math.min(minWidth, d.maxWidth);
 };
 
@@ -231,23 +250,20 @@ const updateImage = (l, t, w, h, minWidth, minHeight, dragging) => {
         imageStyle.transition = 'none';
     }
 
-    d.imageStyle = imageStyle;
+    d.img.imageStyle = imageStyle;
 
-    d.imageLeft = l;
-    d.imageTop = t;
-    d.imageWidth = w;
+    d.img.imageLeft = l;
+    d.img.imageTop = t;
+    d.img.imageWidth = w;
 
-    d.percent = Math.round(w / d.maxWidth * 100);
+    d.img.percent = Math.round(w / d.maxWidth * 100);
 };
 
 const zoomTo = (e, percent) => {
-    if (!d.container) {
-        return;
-    }
     const minWidth = getMinWidth();
     const v = Math.round(d.maxWidth * percent * 0.01);
     const w = Math.min(Math.max(v, minWidth), d.maxWidth * 2);
-    if (d.imageWidth === w) {
+    if (d.img.imageWidth === w) {
         return;
     }
 
@@ -257,9 +273,9 @@ const zoomTo = (e, percent) => {
 
     // console.log(ox, oy);
 
-    const imageHeight = d.hw * d.imageWidth;
-    const sx = (-d.imageLeft + ox) / d.imageWidth;
-    const sy = (-d.imageTop + oy) / imageHeight;
+    const imageHeight = d.hw * d.img.imageWidth;
+    const sx = (-d.img.imageLeft + ox) / d.img.imageWidth;
+    const sy = (-d.img.imageTop + oy) / imageHeight;
 
     const h = Math.round(d.hw * w);
     const l = -Math.round(w * sx - ox);
@@ -268,7 +284,7 @@ const zoomTo = (e, percent) => {
 
 
     const minHeight = Math.round(d.hw * minWidth);
-    d.containerStyle = {
+    d.img.wrapperStyle = {
         height: `${minHeight}px`
     };
 
@@ -286,8 +302,8 @@ const onDblClick = (e) => {
 
     // console.log('onDblClick');
     setTimeout(() => {
-        if (d.percent === 100) {
-            zoomTo(e, d.minPercent - 1);
+        if (d.img.percent === 100) {
+            zoomTo(e, d.img.minPercent - 1);
             return;
         }
         zoomTo(e, 100);
@@ -302,7 +318,7 @@ const onMouseWheel = (e) => {
 
     const deltaY = e.deltaY;
     const delta = deltaY > 0 ? -1 : 1;
-    const percent = d.percent + 10 * delta;
+    const percent = d.img.percent + 10 * delta;
 
     e.preventDefault();
 
@@ -312,52 +328,39 @@ const onMouseWheel = (e) => {
 
 };
 
-const onContainerResize = microtask(() => {
+const onContainerResize = microtask((reset) => {
     if (!d.container) {
         return;
     }
     const minWidth = getMinWidth();
-    d.imageWidth = minWidth;
-    d.imageLeft = 0;
-    d.imageTop = 0;
-    d.imageStyle = {
+    if (d.img.minWidth === minWidth && !reset) {
+        return;
+    }
+
+    d.img.minWidth = minWidth;
+    d.img.imageWidth = minWidth;
+    d.img.imageLeft = 0;
+    d.img.imageTop = 0;
+    d.img.imageStyle = {
         left: 0,
         top: 0,
         transition: 'none',
         width: `${minWidth}px`
     };
-    d.containerStyle = {};
+    d.img.wrapperStyle = {};
+
     // init percent
-    d.minPercent = Math.round(minWidth / d.maxWidth * 100);
-    d.percent = d.minPercent;
+    d.img.minPercent = Math.round(minWidth / d.maxWidth * 100);
+    d.img.percent = d.img.minPercent;
 
     // fix gutter
     updateGutter(gutter.value);
 });
 
 
-const containerEvents = {
-    mousedown: {
-        handler: (e) => {
-            onMouseDown(e);
-        }
-    },
-    wheel: {
-        handler: (e) => {
-            onMouseWheel(e);
-        }
-    },
-    dblclick: {
-        handler: (e) => {
-            onDblClick(e);
-        }
-    }
-};
-
 const onImgLoad = (e) => {
     const img = e.target;
     if (img && !d.size) {
-        const container = img.parentNode.parentNode;
         const w = img.naturalWidth;
         const h = img.naturalHeight;
         const t = (w * h).toLocaleString();
@@ -365,14 +368,11 @@ const onImgLoad = (e) => {
         d.maxWidth = w;
         d.maxHeight = h;
         d.hw = h / w;
-        d.container = container;
-        Util.bindEvents(containerEvents, container);
         onContainerResize();
     }
 };
 
 const onSideClick = () => {
-    console.log('side click');
     if (d.sideRight === d.imageMap.actual) {
         d.sideRight = d.imageMap.diff;
     } else {
@@ -431,9 +431,6 @@ const updateGutter = ($gutter) => {
 
 const initGutter = () => {
     const $gutter = gutter.value;
-    if (!$gutter) {
-        return;
-    }
 
     updateGutter($gutter);
 
@@ -458,8 +455,76 @@ const initGutter = () => {
     });
 };
 
+const getEventTargetContainer = (e) => {
+    let node = e.target;
+
+    // slider is top
+    if (node.classList.contains('mcr-slider')) {
+        return node.parentNode.querySelector('.mcr-comparison-image');
+    }
+
+    while (node) {
+        if (node.classList && node.classList.contains('mcr-comparison-image')) {
+            return node;
+        }
+        node = node.parentNode;
+    }
+};
+
+const globalEvents = {
+    mousedown: {
+        handler: (e) => {
+            const container = getEventTargetContainer(e);
+            if (container) {
+                // console.log(container);
+                d.container = container;
+                onMouseDown(e);
+            }
+        }
+    },
+    wheel: {
+        handler: (e) => {
+            const container = getEventTargetContainer(e);
+            if (container) {
+                d.container = container;
+                onMouseWheel(e);
+            }
+        }
+    },
+    dblclick: {
+        handler: (e) => {
+            const container = getEventTargetContainer(e);
+            if (container) {
+                d.container = container;
+                onDblClick(e);
+            }
+        }
+    }
+};
+
+const updateCurrentTabContainer = () => {
+    const $el = el.value;
+    const $pane = $el.querySelector(`.vui-tab-pane[index="${d.tabIndex}"]`);
+    if ($pane) {
+        d.container = $pane.querySelector('.mcr-comparison-image');
+    }
+};
+
 watchEffect(() => {
     initComparison();
+});
+
+watch(() => d.tabIndex, (i) => {
+    updateCurrentTabContainer();
+
+    // side by side
+    if (i === 3) {
+        d.img = imgH;
+    } else {
+        d.img = imgF;
+    }
+
+    onContainerResize();
 });
 
 watch([
@@ -467,24 +532,27 @@ watch([
     () => state.windowWidth,
     () => state.imageZoom
 ], () => {
-    onContainerResize();
+    onContainerResize(true);
 });
 
 onMounted(() => {
-
+    Util.bindEvents(globalEvents, el.value);
+    updateCurrentTabContainer();
     initGutter();
 });
 
 onUnmounted(() => {
-    d.container = null;
     Util.unbindEvents(windowEvents);
-    Util.unbindEvents(containerEvents);
+    Util.unbindEvents(globalEvents);
 });
 
 </script>
 
 <template>
-  <div class="mcr-attachment-comparison">
+  <div
+    ref="el"
+    class="mcr-attachment-comparison"
+  >
     <VuiTab
       v-if="d.imageList"
       v-model="d.tabIndex"
@@ -503,59 +571,68 @@ onUnmounted(() => {
         <div
           v-for="(item, i) of d.imageList"
           :key="i"
-          class="mcr-comparison-image"
-          :style="d.containerStyle"
         >
-          <img
-            :src="item.path"
-            :alt="item.name"
-            :style="d.imageStyle"
-            @load="onImgLoad"
+          <div
+            class="mcr-comparison-image"
+            :style="d.img.wrapperStyle"
           >
+            <img
+              :src="item.path"
+              :alt="item.name"
+              :style="d.img.imageStyle"
+              @load="onImgLoad"
+            >
+          </div>
         </div>
         <div>
           <div
             v-if="d.imageMap"
             class="mcr-side-by-side"
           >
-            <div class="mcr-side-item">
+            <div
+              class="mcr-comparison-image"
+              :style="d.img.wrapperStyle"
+            >
               <img
                 :src="d.sideLeft.path"
                 :alt="d.sideLeft.name"
+                :style="d.img.imageStyle"
               >
-              <div>{{ d.sideLeft.title }}</div>
             </div>
-            <div class="mcr-side-item">
+            <div
+              class="mcr-comparison-image"
+              :style="d.img.wrapperStyle"
+            >
               <img
                 :src="d.sideRight.path"
                 :alt="d.sideRight.name"
+                :style="d.img.imageStyle"
                 @click="onSideClick"
               >
-              <div>{{ d.sideRight.title }}</div>
             </div>
           </div>
         </div>
         <div>
           <div
             class="mcr-comparison-image"
-            :style="d.containerStyle"
+            :style="d.img.wrapperStyle"
           >
             <img
               :src="d.imageMap.expected.path"
               :alt="d.imageMap.expected.name"
-              :style="d.imageStyle"
+              :style="d.img.imageStyle"
             >
           </div>
 
           <div class="mcr-slider-top">
             <div
               class="mcr-comparison-image"
-              :style="d.containerStyle"
+              :style="d.img.wrapperStyle"
             >
               <img
                 :src="d.imageMap.actual.path"
                 :alt="d.imageMap.actual.name"
-                :style="d.imageStyle"
+                :style="d.img.imageStyle"
               >
             </div>
           </div>
@@ -589,7 +666,7 @@ onUnmounted(() => {
           label-position="right"
         >
           Zoom
-          <span v-if="state.imageZoom">{{ d.percent }}%</span>
+          <span v-if="state.imageZoom">{{ d.img.percent }}%</span>
         </VuiSwitch>
       </div>
       <div
@@ -757,22 +834,7 @@ onUnmounted(() => {
 
     .mcr-side-by-side {
         display: flex;
-        justify-content: space-between;
-        padding: 10px;
-
-        .mcr-side-item {
-            width: calc(50% - 5px);
-            text-align: center;
-
-            img {
-                position: relative;
-                display: block;
-                width: 100%;
-                margin-bottom: 10px;
-                box-shadow: var(--image-shadow);
-                transition: all 0.1s ease-out;
-            }
-        }
+        user-select: none;
     }
 
     .mcr-slider {
