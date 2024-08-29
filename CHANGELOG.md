@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.7.1
+  - fixed custom raw dir for merging coverage
+
 * 2.7.0
   - (Breaking) improved the `merge` API (#139) 
       - supports coping and merging attachments
