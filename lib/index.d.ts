@@ -37,35 +37,41 @@ export interface Helper {
     /** send email with nodemailer: https://nodemailer.com/ */
     sendEmail: (emailOptions: {
         /** email transport: https://nodemailer.com/smtp/ */
-        transport: any,
+        transport: any;
         /** email message: https://nodemailer.com/message/ */
-        message: any
+        message: any;
     }) => Promise<void>;
 
 }
 
 export type MonocartReporterOptions = {
     /** the report name */
-    name?: string,
+    name?: string;
 
     /** the output file path (relative process.cwd) */
-    outputFile?: string,
+    outputFile?: string;
 
     /** attachment path handler, for example:  
      * ```js
      * attachmentPath: (currentPath, extras) => `https://cenfun.github.io/monocart-reporter/${currentPath}` 
      * ```
      */
-    attachmentPath?: (currentPath: string, extras: any) => string,
+    attachmentPath?: (currentPath: string, extras: any) => string;
+
+    /**
+     *  whether copy attachments to the output dir, defaults to true
+     *  it is useful when there are multiple reports being output
+     */
+    copyAttachments?: boolean;
 
     /** custom trace viewer url: https://github.com/cenfun/monocart-reporter?#view-trace-online */
-    traceViewerUrl?: string,
+    traceViewerUrl?: string;
 
     /** logging levels: off, error, info, debug */
-    logging?: string,
+    logging?: string;
 
     /** timezone offset in minutes, For example: GMT+0800 = -480 */
-    timezoneOffset?: number,
+    timezoneOffset?: number;
 
     /** global coverage options: https://github.com/cenfun/monocart-reporter?#code-coverage-report 
      * ```js
@@ -75,17 +81,17 @@ export type MonocartReporterOptions = {
      * }
      * ```
     */
-    coverage?: CoverageReportOptions,
+    coverage?: CoverageReportOptions;
 
     /** Global State Management: https://github.com/cenfun/monocart-reporter?#global-state-management */
     state?: {
-        data?: any,
+        data?: any;
         server?: {
-            host?: string,
-            port?: number
+            host?: string;
+            port?: number;
         }
-        onReceive?: (...args: any[]) => any,
-        onClose?: (data: any, config: any) => void
+        onReceive?: (...args: any[]) => any;
+        onClose?: (data: any, config: any) => void;
     },
 
     /** trend data handler: https://github.com/cenfun/monocart-reporter?#trend-chart 
@@ -93,7 +99,7 @@ export type MonocartReporterOptions = {
      * trend: () => './test-results/report.json'
      * ```
     */
-    trend?: string | (() => Promise<string | any>),
+    trend?: string | (() => Promise<string | any>);
 
     /** custom tags style: https://github.com/cenfun/monocart-reporter?#style-tags 
      * ```js
@@ -109,16 +115,16 @@ export type MonocartReporterOptions = {
     */
     tags?: {
         [key: string]: any;
-    },
+    };
 
     /** columns data handler: https://github.com/cenfun/monocart-reporter?#style-tags */
-    columns?: (defaultColumns: any[]) => void,
+    columns?: (defaultColumns: any[]) => void;
 
     /** rows data handler (suite, case and step) https://github.com/cenfun/monocart-reporter?#custom-data-visitor */
-    visitor?: (data: any, metadata: any) => void,
+    visitor?: (data: any, metadata: any) => void;
 
     /** enable/disable custom fields in comments. Defaults to true. */
-    customFieldsInComments?: boolean,
+    customFieldsInComments?: boolean;
 
     /** mermaid options */
     mermaid?: {
@@ -142,7 +148,7 @@ export type MonocartReporterOptions = {
     }
 
     /** onEnd hook: https://github.com/cenfun/monocart-reporter?#onend-hook */
-    onEnd?: (reportData: any, helper: Helper) => Promise<void>
+    onEnd?: (reportData: any, helper: Helper) => Promise<void>;
 
 }
 
@@ -158,9 +164,9 @@ export function merge(
  * audit
  */
 export type AuditReportOptions = {
-    title?: string,
-    outputDir?: string,
-    outputName?: string
+    title?: string;
+    outputDir?: string;
+    outputName?: string;
 };
 
 export function attachAuditReport(
@@ -190,12 +196,12 @@ export function attachCoverageReport(
  * network
  */
 export type NetworkReportOptions = {
-    title?: string,
-    outputDir?: string,
-    outputName?: string,
+    title?: string;
+    outputDir?: string;
+    outputName?: string;
 
     // Whether inline all scripts to the single HTML file.
-    inline?: boolean
+    inline?: boolean;
 };
 
 export function attachNetworkReport(
@@ -215,9 +221,9 @@ export function setMetadata(
  * state
  */
 export type StateOptions = {
-    host?: string,
-    port?: number,
-    timeout?: number
+    host?: string;
+    port?: number;
+    timeout?: number;
 };
 
 export type State = {
