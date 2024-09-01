@@ -70,7 +70,7 @@ module.exports = {
         }
     ],
 
-    outputDir: '../.temp/monocart/',
+    outputDir: '../.temp/test-results/',
     reporter: [
         ['list'],
         ['json', {
