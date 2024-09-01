@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.8.0
+  - (New Feature) added new merge command for CLI: `npx monocart merge path-to/*/*.json` (#142)
+
 * 2.7.1
   - fixed custom raw dir for merging coverage
 
