@@ -74,7 +74,7 @@ module.exports = {
         ['list'],
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html'
+            outputFile: './monocart-report/index.html'
         }]
     ]
 };
@@ -89,26 +89,9 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 ## Output
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
-> Note: Test attachments (screenshots images/videos) are not included but linked with relative path in report. All attachments will be found in [playwrightConfig.outputDir](https://playwright.dev/docs/api/class-testconfig#test-config-output-dir)
-```js
-// playwright.config.js
-// attachments outputDir and report outputFile used same folder
-const date = new Date().toISOString().slice(0, 10); //2022-10-10
-const outputDir = `./test-results/${date}`;
-module.exports = {
-    outputDir: outputDir,
-    reporter: [
-        ['monocart-reporter', {  
-            name: `My Test Report ${date}`,
-            outputFile: `${outputDir}/index.html`
-        }]
-    ]
-};
-// deploy the folder to your report site and easy checking online
-// http://your.report.site/test-results/2022-10-10
-```
+> Note: All attachments (screenshots images/videos) will be linked with relative path in report.
 - path-to/your-filename.json  
-Separated metadata file (Already included in the above HTML and compressed, it can be deleted). Can be used for debugging or custom data collection.
+Separated data file which can be used for debugging or data provider (It's included in the above HTML and compressed).
 
 ## Reporter Options
 ```js
@@ -117,7 +100,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
     name: '',
 
     // the output file path (relative process.cwd)
-    outputFile: './test-results/report.html',
+    outputFile: './monocart-report/index.html',
 
     // attachment path handler
     attachmentPath: null,
@@ -140,7 +123,7 @@ Separated metadata file (Already included in the above HTML and compressed, it c
 
     // trend data handler
     trend: null,
-    // trend: () => './test-results/report.json',
+    // trend: () => './monocart-report/index.json',
 
     // custom tags style
     tags: null,
@@ -185,7 +168,7 @@ The server add the http header `Access-Control-Allow-Origin: *` to [allow reques
 ```sh
 npx monocart show-report <path-to-report> --ssl <path-to-key,path-to-cert>
 ```
-For example: `npx monocart show-report test-results/index.html --ssl ssl/key.pem,ssl/cert.pem`
+For example: `npx monocart show-report monocart-report/index.html --ssl ssl/key.pem,ssl/cert.pem`
 
 You can create and install local CA with [mkcert](https://mkcert.dev)
 - Using your own trace viewer url with option `traceViewerUrl`:
@@ -193,7 +176,7 @@ You can create and install local CA with [mkcert](https://mkcert.dev)
 // reporter options
 {
     name: "My Test Report",
-    outputFile: './test-results/report.html',
+    outputFile: './monocart-report/index.html',
     // defaults to 'https://trace.playwright.dev/?trace={traceUrl}'
     traceViewerUrl: 'https://your-own-trace-viewer-url/?trace={traceUrl}'
 }
@@ -228,7 +211,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
 
             // custom columns
             columns: (defaultColumns) => {
@@ -270,7 +253,7 @@ module.exports = {
      reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             columns: (defaultColumns) => {
 
                 // duration formatter
@@ -308,7 +291,7 @@ module.exports = {
      reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             columns: (defaultColumns) => {
                 const locationColumn = defaultColumns.find((column) => column.id === 'location');
                 locationColumn.searchable = true;
@@ -413,7 +396,7 @@ module.exports = {
      reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             mermaid: {
                 // mermaid script url, using mermaid CDN: https://www.jsdelivr.com/package/npm/mermaid
                 scriptSrc: 'https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js',
@@ -494,7 +477,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             visitor: (data, metadata) => {
                 // [MCR-123] collect data from the title
                 const matchResult = metadata.title.match(/\[(.+)\]/);
@@ -524,7 +507,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             visitor: (data, metadata) => {
                 // collect data from the annotations
                 if (metadata.annotations) {
@@ -547,7 +530,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             visitor: (data, metadata) => {
                 const mySecrets = [process.env.PASSWORD, process.env.TOKEN];
                 mySecrets.forEach((secret) => {
@@ -588,7 +571,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             tags: {
                 smoke: {
                     style: {
@@ -612,7 +595,7 @@ module.exports = {
         ['list'],
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             tags: {
                 // ...
             },
@@ -656,7 +639,7 @@ module.exports = {
      reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html'
+            outputFile: './monocart-report/index.html'
         }]
     ]
 };
@@ -723,9 +706,9 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             // connect previous report data for trend chart
-            trend: './test-results/report.json'
+            trend: './monocart-report/index.json'
         }]
     ]
 };
@@ -741,7 +724,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             // connect previous report data for trend chart
             trend: async () => {
                 const previousReportData = await readDataFromSomeWhere("path-to/report.json");
@@ -778,7 +761,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             // global coverage report options
             coverage: {
                 entryFilter: (entry) => true,
@@ -992,7 +975,7 @@ module.exports = {
         ['list'],
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             state: {
                 data: {
                     count: 0
@@ -1060,7 +1043,7 @@ module.exports = {
         ['list'],
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             state: {
                 onReceive: function(message) {
                     const test = this.getTest(message.testId);
@@ -1149,7 +1132,7 @@ module.exports = {
     reporter: [
         ['monocart-reporter', {  
             name: "My Test Report",
-            outputFile: './test-results/report.html',
+            outputFile: './monocart-report/index.html',
             // async hook after report data generated
             onEnd: async (reportData, helper) => {
                 // console.log(reportData.summary);

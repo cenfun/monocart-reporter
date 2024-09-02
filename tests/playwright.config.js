@@ -78,12 +78,12 @@ module.exports = {
         }],
         ['html', {
             outputFolder: '../.temp/html',
-            outputFile: 'results.html',
             open: 'never'
         }],
         ['junit', {
             outputFile: '../.temp/junit/results.xml'
         }],
+
         // ['monocart-reporter']
         ['monocart-reporter', {
             name: 'My Test Report',

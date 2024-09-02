@@ -96,7 +96,7 @@ export type MonocartReporterOptions = {
 
     /** trend data handler: https://github.com/cenfun/monocart-reporter?#trend-chart 
      * ```js
-     * trend: () => './test-results/report.json'
+     * trend: () => './monocart-report/index.json'
      * ```
     */
     trend?: string | (() => Promise<string | any>);
