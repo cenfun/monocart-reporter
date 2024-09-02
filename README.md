@@ -94,64 +94,8 @@ Single HTML file (data compressed), easy to transfer/deploy or open directly any
 Separated data file which can be used for debugging or data provider (It's included in the above HTML and compressed).
 
 ## Reporter Options
-```js
-{
-    // the report name
-    name: '',
-
-    // the output file path (relative process.cwd)
-    outputFile: './monocart-report/index.html',
-
-    // attachment path handler
-    attachmentPath: null,
-    // attachmentPath: (currentPath, extras) => `https://another-path/${currentPath}`,
-
-    traceViewerUrl: 'https://trace.playwright.dev/?trace={traceUrl}',
-
-    // logging levels: off, error, info, debug
-    logging: 'info',
-
-    // timezone offset in minutes, GMT+0800 = -480
-    timezoneOffset: 0,
-
-    // global coverage settings for addCoverageReport API
-    coverage: null,
-    // coverage: {
-    //     entryFilter: (entry) => true,
-    //     sourceFilter: (sourcePath) => sourcePath.search(/src\/.+/) !== -1,
-    // },
-
-    // trend data handler
-    trend: null,
-    // trend: () => './monocart-report/index.json',
-
-    // custom tags style
-    tags: null,
-    // tags: {
-    //     smoke: {
-    //         'background': '#6F9913'
-    //     },
-    //     sanity: {
-    //         'background': '#178F43'
-    //     }
-    // },
-
-    // columns data handler
-    columns: null,
-    // columns: (defaultColumns) => {},
-
-    // rows data handler (suite, case and step)
-    visitor: null,
-    // visitor: (data, metadata) => {},
-
-    // enable/disable custom fields in comments. Defaults to true.
-    customFieldsInComments: true,
-
-    // onEnd hook
-    onEnd: null
-    // onEnd: async (reportData, helper) => {}
-}
-```
+- Default options: [lib/default/options.js](./lib/default/options.js)
+- Options declaration see `MonocartReporterOptions` [lib/index.d.ts](./lib/index.d.ts)
 
 ## View Trace Online 
 > The [Trace Viewer](https://trace.playwright.dev/) requires that the trace file must be loaded over the http:// or https:// protocols without [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS) issue.
