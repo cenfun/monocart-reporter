@@ -96,7 +96,7 @@ test('secrets and sensitive data', async ({ page }, testInfo) => {
     });
 
     const context = await request.newContext();
-    await context.get(`https://api.npmjs.org/?token=${process.env.TOKEN}`);
+    await context.get(`http://localhost:8090/?token=${process.env.TOKEN}`);
 
 });
 
