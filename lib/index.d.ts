@@ -45,11 +45,20 @@ export interface Helper {
 }
 
 export type MonocartReporterOptions = {
+    /** logging levels: off, error, info, debug */
+    logging?: string;
+
     /** the report name */
     name?: string;
 
     /** the output file path (relative process.cwd) */
     outputFile?: string;
+
+    /**
+     *  whether to copy attachments to the reporter output dir, defaults to true
+     *  it is useful when there are multiple html reports being output
+     */
+    copyAttachments?: boolean;
 
     /** attachment path handler, for example:  
      * ```js
@@ -58,17 +67,8 @@ export type MonocartReporterOptions = {
      */
     attachmentPath?: (currentPath: string, extras: any) => string;
 
-    /**
-     *  whether copy attachments to the output dir, defaults to true
-     *  it is useful when there are multiple reports being output
-     */
-    copyAttachments?: boolean;
-
     /** custom trace viewer url: https://github.com/cenfun/monocart-reporter?#view-trace-online */
     traceViewerUrl?: string;
-
-    /** logging levels: off, error, info, debug */
-    logging?: string;
 
     /** timezone offset in minutes, For example: GMT+0800 = -480 */
     timezoneOffset?: number;
