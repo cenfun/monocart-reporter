@@ -1013,7 +1013,9 @@ npx playwright test --shard=1/3
 npx playwright test --shard=2/3
 npx playwright test --shard=3/3
 ```
-There are 3 reports will be generated. Using `merge(reportDataList, options)` API to merge all reports into one.
+There are 3 reports will be generated. 
+
+### Using `merge` API to merge all reports into one
 > Note: One more suite level "shard" will be added, its title will be the machine hostname, and the summary will be restated. All attachments will be copied to the merged output directory.
 ```js
 import { merge } from 'monocart-reporter';
@@ -1033,8 +1035,6 @@ await merge(reportDataList, {
     }
 });
 ```
-see example [merge.js](https://github.com/cenfun/monocart-reporter-examples/blob/main/scripts/merge.js)
-
 > Note: The coverage reports will be merged automatically if we specify the `raw` report in coverage options:
 ```js
 // global coverage options
@@ -1045,6 +1045,19 @@ coverage: {
     ]
 }
 ```
+see example [merge.js](https://github.com/cenfun/monocart-reporter-examples/blob/main/scripts/merge.js)
+
+### Using `merge` CLI
+```sh
+npx monocart merge path-to/shard*/index.json
+
+# -o --outputFile
+npx monocart merge path-to/shard*/index.json -o merged-reports/index.html
+
+# -c --config
+npx monocart merge path-to/shard*/index.json -c mr.config.js
+```
+
 
 ## onEnd Hook
 The `onEnd` function will be executed after report generated. Arguments:
