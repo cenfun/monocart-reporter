@@ -147,6 +147,12 @@ export type MonocartReporterOptions = {
         merge?: boolean;
     }
 
+    /**
+     * onData hook
+     */
+    onData?: (reportData: any, rawData: any) => Promise<void>;
+
+
     /** onEnd hook: https://github.com/cenfun/monocart-reporter?#onend-hook */
     onEnd?: (reportData: any, helper: Helper) => Promise<void>;
 

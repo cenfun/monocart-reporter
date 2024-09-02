@@ -1049,7 +1049,7 @@ see example [merge.js](https://github.com/cenfun/monocart-reporter-examples/blob
 
 ### Using `merge` CLI
 ```sh
-npx monocart merge path-to/shard*/index.json
+npx monocart merge <glob-patterns>
 
 # -o --outputFile
 npx monocart merge path-to/shard*/index.json -o merged-reports/index.html
