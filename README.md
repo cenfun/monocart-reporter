@@ -1057,6 +1057,12 @@ npx monocart merge path-to/shard*/index.json -o merged-reports/index.html
 # -c --config
 npx monocart merge path-to/shard*/index.json -c mr.config.js
 ```
+The default config files (In order of priority)
+- mr.config.js
+- mr.config.cjs
+- mr.config.mjs
+- mr.config.json
+- mr.config.ts
 
 
 ## onEnd Hook
