@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.8.2
+  - fixed loading .ts config file (`npm i amaro`)
+
 * 2.8.1
   - fixed onData issue (#141)
 
