@@ -1,7 +1,10 @@
 ## Changelog
 
+* 2.8.3
+  - fixed issue for loading TypeScript config file
+
 * 2.8.2
-  - fixed loading .ts config file (`npm i amaro`)
+  - fixed loading .ts config file
 
 * 2.8.1
   - fixed onData issue (#141)

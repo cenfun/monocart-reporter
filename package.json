@@ -53,7 +53,6 @@
     "devDependencies": {
         "@babel/code-frame": "^7.24.7",
         "@playwright/test": "^1.47.2",
-        "amaro": "^0.1.8",
         "ansi-to-html": "^0.7.2",
         "async-tick": "^1.0.0",
         "autolinker": "^4.0.0",
