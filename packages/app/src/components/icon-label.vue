@@ -35,6 +35,7 @@ const props = defineProps({
 });
 
 const el = ref(null);
+const slots = useSlots();
 
 const classMap = computed(() => {
     const list = ['mcr-icon-label', 'vui-flex-row'];
@@ -59,7 +60,6 @@ const styleMap = computed(() => {
 });
 
 const getSlot = function() {
-    const slots = useSlots();
     const fun = slots.default;
     if (typeof fun === 'function') {
         return fun();

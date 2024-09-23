@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.8.4
+  - fixed useSlots issue for vue@3.5.7
+
 * 2.8.3
   - fixed issue for loading TypeScript config file
 
