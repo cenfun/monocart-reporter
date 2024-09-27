@@ -59,6 +59,7 @@
 ![](/docs/report.gif)
 
 ![](/docs/cli.png)
+(For Github actions, we can enforce color with env: `FORCE_COLOR: true`)
 
 ## Install
 ```sh
