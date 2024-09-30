@@ -1065,6 +1065,12 @@ The default config files (In order of priority)
 - mr.config.json
 - mr.config.ts
 
+Preload for TypeScript config file:
+- It requires node 18.19.0+
+- Installing tsx: `npm i -D tsx`
+- Using the `--import tsx` flag
+- see [comment](https://github.com/cenfun/monocart-reporter/issues/145#issuecomment-2365460013)
+
 
 ## onEnd Hook
 The `onEnd` function will be executed after report generated. Arguments:
