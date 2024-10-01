@@ -1,5 +1,9 @@
 ## Changelog
 
+* 2.9.0
+  - added `zip` option for merging reports
+  - added `durationStrategy` option for merging reports
+
 * 2.8.4
   - fixed useSlots issue for vue@3.5.7
 
