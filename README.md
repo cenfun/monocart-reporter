@@ -1026,6 +1026,11 @@ const reportDataList = [
     'path-to/shard1/index.json',
     'path-to/shard2/index.json',
     'path-to/shard3/index.json'
+
+    // Or load zip report directly
+    // 'path-to/shard1/index.zip',
+    // 'path-to/shard2/index.zip',
+    // 'path-to/shard3/index.zip'
 ];
 
 await merge(reportDataList, {
@@ -1036,6 +1041,8 @@ await merge(reportDataList, {
     }
 });
 ```
+
+
 > Note: The coverage reports will be merged automatically if we specify the `raw` report in coverage options:
 ```js
 // global coverage options
@@ -1043,6 +1050,8 @@ coverage: {
     reports: [
         // for merging coverage reports
         'raw'
+        // we can merge and zip the raw report files
+        // ['raw', { merge: true, zip: true }]
     ]
 }
 ```
