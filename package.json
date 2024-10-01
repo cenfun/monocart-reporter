@@ -73,6 +73,7 @@
         "mitt": "^3.0.1",
         "monocart-code-viewer": "^1.1.4",
         "monocart-formatter": "^3.0.0",
+        "node-stream-zip": "^1.15.0",
         "nice-ticks": "^1.0.2",
         "open": "8.4.2",
         "sanitize-filename": "^1.6.3",
@@ -82,6 +83,7 @@
         "supports-color": "^9.4.0",
         "turbogrid": "^3.2.0",
         "vine-ui": "^3.1.16",
-        "ws": "^8.18.0"
+        "ws": "^8.18.0",
+        "yazl": "^2.5.1"
     }
 }
