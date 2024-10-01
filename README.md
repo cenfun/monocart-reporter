@@ -91,8 +91,10 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 - path-to/your-filename.html  
 Single HTML file (data compressed), easy to transfer/deploy or open directly anywhere   
 > Note: All attachments (screenshots images/videos) will be linked with relative path in report.
-- path-to/your-filename.json  
+- path-to/your-filename.json  (requires option `json` is true)
 Separated data file which can be used for debugging or data provider (It's included in the above HTML and compressed).
+- path-to/your-filename.zip  (requires option `zip` is true)
+Zip file for merging reports
 
 ## Reporter Options
 - Default options: [lib/default/options.js](./lib/default/options.js)
@@ -1027,7 +1029,7 @@ const reportDataList = [
     'path-to/shard2/index.json',
     'path-to/shard3/index.json'
 
-    // Or load zip report directly
+    // Or load zip file directly if the output files is zipped
     // 'path-to/shard1/index.zip',
     // 'path-to/shard2/index.zip',
     // 'path-to/shard3/index.zip'
@@ -1041,7 +1043,6 @@ await merge(reportDataList, {
     }
 });
 ```
-
 
 > Note: The coverage reports will be merged automatically if we specify the `raw` report in coverage options:
 ```js
