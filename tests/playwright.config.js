@@ -89,6 +89,8 @@ module.exports = {
             name: 'My Test Report',
             outputFile: '.temp/monocart/index.html',
 
+            zip: true,
+
             attachmentPath: (currentPath, extras) => {
                 // console.log(currentPath, extras);
                 // return `https://cenfun.github.io/monocart-reporter/${relativePath}`;

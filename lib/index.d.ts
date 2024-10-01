@@ -54,6 +54,11 @@ export type MonocartReporterOptions = {
     /** the output file path (relative process.cwd) */
     outputFile?: string;
 
+    /** output json file for data only */
+    json?: boolean;
+    /** output zip file for all report files */
+    zip?: boolean;
+
     /**
      *  whether to copy attachments to the reporter output dir, defaults to true
      *  it is useful when there are multiple html reports being output
