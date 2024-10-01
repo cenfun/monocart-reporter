@@ -20,6 +20,7 @@
     "scripts": {
         "link": "node ./scripts/link.js",
         "test": "npm run link && npx playwright test -c tests",
+        "test-example": "npm run link && npx playwright test tests/example -c tests",
         "test-data": "npm run link && npx playwright test tests/data -c tests",
         "test-page": "npm run link && npx playwright test tests/home-page -c tests",
         "test-coverage": "npm run link && npx playwright test tests/report-coverage -c tests",

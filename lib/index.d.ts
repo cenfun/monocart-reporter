@@ -73,6 +73,9 @@ export type MonocartReporterOptions = {
     /** timezone offset in minutes, For example: GMT+0800 = -480 */
     timezoneOffset?: number;
 
+    /** normal or exclude-idle */
+    durationStrategy?: 'normal' | 'exclude-idle',
+
     /** global coverage options: https://github.com/cenfun/monocart-reporter?#code-coverage-report 
      * ```js
      * coverage: {

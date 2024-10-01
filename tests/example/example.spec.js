@@ -145,6 +145,34 @@ test.describe('group', () => {
 
     });
 
+    test('@util getDuration', () => {
+        let ranges = [
+            {
+                start: 1,
+                end: 2
+            }
+        ];
+        expect(Util.getDuration(ranges)).toBe(1);
+        expect(Util.getDuration(ranges, 'exclude-idle')).toBe(1);
+
+        ranges = [
+            {
+                start: 1,
+                end: 6
+            },
+            {
+                start: 8,
+                end: 16
+            },
+            {
+                start: 1,
+                end: 3
+            }
+        ];
+        expect(Util.getDuration(ranges)).toBe(15);
+        expect(Util.getDuration(ranges, 'exclude-idle')).toBe(13);
+
+    });
 });
 
 test('@smoke Test full report', () => {
