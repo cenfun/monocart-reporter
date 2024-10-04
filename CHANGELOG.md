@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.2
+  - fixed collapsing steps when showing only failed steps
+
 * 2.9.1
   - added switch button for collapsing steps (first-level)
 

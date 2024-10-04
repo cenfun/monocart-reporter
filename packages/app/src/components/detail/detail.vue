@@ -101,9 +101,7 @@ const getGrid = () => {
     });
 
     // grid.bind('onRowExpanded onRowCollapsed', (e, d) => {
-    //     if (d.type === 'step-info') {
-    //         console.log(d);
-    //     }
+    //     console.log(d);
     // });
 
     grid.setOption({
@@ -337,6 +335,10 @@ const renderSteps = () => {
                     return;
                 }
 
+                if (state.onlyFailedSteps && !it.errorNum) {
+                    return;
+                }
+
                 if (!toggleFirst) {
                     toggleFirst = it;
                     return;
@@ -346,6 +348,8 @@ const renderSteps = () => {
             }
         });
     }
+
+    // console.log(toggleFirst);
 
     if (toggleFirst) {
         grid.toggleRow(toggleFirst);
