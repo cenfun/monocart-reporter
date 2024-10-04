@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.1
+  - added switch button for collapsing steps (first-level)
+
 * 2.9.0
   - added `zip` option for merging reports
   - added `durationStrategy` option for merging reports
