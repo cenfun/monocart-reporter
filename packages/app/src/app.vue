@@ -74,6 +74,11 @@ const initStore = () => {
         state.imageZoom = true;
     }
 
+    const collapseSteps = store.get('collapseSteps');
+    if (collapseSteps === 'true') {
+        state.collapseSteps = true;
+    }
+
     const groupsStr = store.get('groups');
     if (!groupsStr) {
         return;
@@ -468,7 +473,6 @@ const onExportClick = () => {
 
 // =================================================================================
 const init = async () => {
-    initStore();
 
     const reportStr = await inflate(window.reportData);
     const reportData = JSON.parse(reportStr);
@@ -499,6 +503,9 @@ const init = async () => {
     state.mermaid = reportData.mermaid;
 
     initGroups(reportData.groupOptions);
+
+    // user changed options, after groupOptions
+    initStore();
 
     initFlyoverSize();
 
@@ -590,6 +597,10 @@ watch(() => state.groups, (v) => {
 
 watch(() => state.imageZoom, () => {
     store.set('imageZoom', state.imageZoom);
+});
+
+watch(() => state.collapseSteps, () => {
+    store.set('collapseSteps', state.collapseSteps);
 });
 
 watch([

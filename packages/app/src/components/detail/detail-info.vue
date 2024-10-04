@@ -14,7 +14,7 @@ import DurationLocation from './duration-location.vue';
 import DetailSimpleList from './detail-simple-list.vue';
 import DetailColumn from './detail-column.vue';
 
-const { VuiFlex } = components;
+const { VuiFlex, VuiSwitch } = components;
 
 const props = defineProps({
     rowItem: {
@@ -28,7 +28,8 @@ const props = defineProps({
 });
 
 const data = shallowReactive({
-    iconType: ''
+    iconType: '',
+    showCollapse: false
 });
 
 const classMap = computed(() => {
@@ -43,28 +44,37 @@ onMounted(() => {
     data.html = rowItem.title;
     data.iconType = rowItem.icon || Util.getTypeIcon(rowItem.suiteType, rowItem.type);
 
-    if (rowItem.type === 'suite') {
+    // if (rowItem.type === 'suite') {
+    //     // suite
+    //     return;
+    // }
 
-        // suite
-
-    } else if (rowItem.type === 'case') {
-
+    if (rowItem.type === 'case') {
         data.caseType = rowItem.caseType;
         data.classStatus = ['mcr-detail-status', `mcr-status-${rowItem.caseType}`];
-
         const titleColumn = state.columns.find((it) => it.id === 'title');
         data.html = titleTagsFormatter(rowItem, titleColumn);
-    } else if (rowItem.type === 'step') {
+        return;
+    }
 
+    if (rowItem.type === 'step') {
         // step
         if (rowItem.stepType === 'retry') {
             data.html = `<b>${rowItem.title}</b>`;
         }
-
-    } else {
-        // step-info
+        return;
     }
 
+    if (rowItem.type === 'step-info') {
+        // step-info
+        data.showCollapse = false;
+        if (rowItem.subs) {
+            const groupStep = rowItem.subs.find((it) => it.subs);
+            if (groupStep) {
+                data.showCollapse = true;
+            }
+        }
+    }
 
 });
 
@@ -125,11 +135,22 @@ const onMouseleave = (e) => {
         </div>
 
         <div
-          class="mcr-detail-title vui-flex-auto"
+          :class="['mcr-detail-title', data.showCollapse?'':'vui-flex-auto']"
           @mouseenter="onMouseenter"
           @mouseleave="onMouseleave"
           v-html="data.html"
         />
+
+        <VuiSwitch
+          v-if="data.showCollapse"
+          v-model="state.collapseSteps"
+          :disabled="rowItem.collapsed"
+          :label-clickable="true"
+          label-position="right"
+          class="mcr-detail-collapse"
+        >
+          Collapse
+        </VuiSwitch>
 
         <DetailSimpleList
           v-if="rowItem.tg_simpleList"
@@ -162,6 +183,10 @@ const onMouseleave = (e) => {
 
 .mcr-detail-step-info .mcr-detail-title {
     font-weight: bold;
+}
+
+.mcr-detail-collapse {
+    margin-left: 10px;
 }
 
 .mcr-detail-status {

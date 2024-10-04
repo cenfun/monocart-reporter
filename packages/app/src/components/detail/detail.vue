@@ -310,9 +310,53 @@ const getGridData = (grid, caseItem) => {
     return gridData;
 };
 
+const collapseSteps = (gridData) => {
+    const stepInfo = gridData.rows.find((it) => it.type === 'step-info');
+    if (stepInfo && stepInfo.subs) {
+        stepInfo.subs.forEach((it) => {
+            if (it.subs) {
+                it.collapsed = state.collapseSteps;
+            }
+        });
+    }
+};
+
+const renderSteps = () => {
+    const grid = getGrid();
+    if (!grid) {
+        return;
+    }
+
+    let toggleFirst;
+
+    const stepInfo = grid.getRowItemBy('type', 'step-info');
+    if (stepInfo && stepInfo.subs) {
+        stepInfo.subs.forEach((it) => {
+            if (it.subs) {
+                if (Boolean(it.collapsed) === Boolean(state.collapseSteps)) {
+                    return;
+                }
+
+                if (!toggleFirst) {
+                    toggleFirst = it;
+                    return;
+                }
+
+                it.collapsed = state.collapseSteps;
+            }
+        });
+    }
+
+    if (toggleFirst) {
+        grid.toggleRow(toggleFirst);
+    }
+
+};
+
 const renderGrid = (caseItem) => {
     const grid = getGrid();
     const gridData = getGridData(grid, caseItem);
+    collapseSteps(gridData);
     grid.setData(gridData);
     grid.render();
 };
@@ -346,6 +390,10 @@ const updatePosition = (position) => {
     }
 
 };
+
+watch(() => state.collapseSteps, () => {
+    renderSteps();
+});
 
 
 watch([

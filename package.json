@@ -52,7 +52,7 @@
         "nodemailer": "^6.9.15"
     },
     "devDependencies": {
-        "@babel/code-frame": "^7.24.7",
+        "@babel/code-frame": "^7.25.7",
         "@playwright/test": "^1.47.2",
         "ansi-to-html": "^0.7.2",
         "async-tick": "^1.0.0",
@@ -73,8 +73,8 @@
         "mitt": "^3.0.1",
         "monocart-code-viewer": "^1.1.4",
         "monocart-formatter": "^3.0.0",
-        "node-stream-zip": "^1.15.0",
         "nice-ticks": "^1.0.2",
+        "node-stream-zip": "^1.15.0",
         "open": "8.4.2",
         "sanitize-filename": "^1.6.3",
         "stack-utils": "^2.0.6",
