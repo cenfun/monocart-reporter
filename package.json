@@ -69,7 +69,7 @@
         "github-markdown-css": "^5.7.0",
         "glob": "^11.0.0",
         "marked": "^14.1.2",
-        "mermaid": "^11.2.1",
+        "mermaid": "^11.3.0",
         "mitt": "^3.0.1",
         "monocart-code-viewer": "^1.1.4",
         "monocart-formatter": "^3.0.0",
