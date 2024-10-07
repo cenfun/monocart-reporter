@@ -56,8 +56,12 @@ export type MonocartReporterOptions = {
 
     /** output json file for data only */
     json?: boolean;
-    /** output zip file for all report files */
-    zip?: boolean;
+
+    /** output zip file for all report files
+     * {boolean} using default path
+     * {string} zip file path
+     */
+    zip?: boolean | string;
 
     /**
      *  whether to copy attachments to the reporter output dir, defaults to true

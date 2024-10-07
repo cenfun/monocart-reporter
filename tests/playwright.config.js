@@ -89,7 +89,7 @@ module.exports = {
             name: 'My Test Report',
             outputFile: '.temp/monocart/index.html',
 
-            zip: true,
+            zip: '.temp/monocart-zip/mr.zip',
 
             attachmentPath: (currentPath, extras) => {
                 // console.log(currentPath, extras);
