@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter-app",
-    "version": "2.9.3",
+    "version": "2.9.4",
     "private": true,
     "main": "dist/monocart-reporter-app.js",
     "files": [
