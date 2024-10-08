@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.4
+  - fixed merging entry for custom zip path
+
 * 2.9.3
   - fixed `zip` option to support custom zip path
 
