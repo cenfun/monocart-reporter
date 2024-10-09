@@ -61,7 +61,12 @@ export type MonocartReporterOptions = {
      * {boolean} using default path
      * {string} zip file path
      */
-    zip?: boolean | string;
+    zip?: boolean | string | {
+        /** the zip file path */
+        outputFile?: string;
+        /** whether to clean the files after zipped */
+        clean?: boolean;
+    };
 
     /**
      *  whether to copy attachments to the reporter output dir, defaults to true

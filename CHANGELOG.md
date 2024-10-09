@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.5
+  - added extra `clean` option for `zip` option
+
 * 2.9.4
   - fixed merging entry for custom zip path
 

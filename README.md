@@ -1060,13 +1060,14 @@ see example [merge.js](https://github.com/cenfun/monocart-reporter-examples/blob
 
 ### Using `merge` CLI
 ```sh
-npx monocart merge <glob-patterns>
+# NOTE: The asterisk(*) is a special character which is interpreted by some operating systems (Mac and Linux), please put it in quotes
+npx monocart merge '<glob-patterns>'
 
 # -o --outputFile
-npx monocart merge path-to/shard*/index.json -o merged-reports/index.html
+npx monocart merge 'path-to/shard*/index.json' -o merged-reports/index.html
 
 # -c --config
-npx monocart merge path-to/shard*/index.json -c mr.config.js
+npx monocart merge 'path-to/shard*/my-report.zip' -c mr.config.js
 ```
 The default config files (In order of priority)
 - mr.config.js
