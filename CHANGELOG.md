@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.6
+  - fixed exit with error code for `merge` api
+
 * 2.9.5
   - added extra `clean` option for `zip` option
 
