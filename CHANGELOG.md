@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.7
+  - fixed eol for unix
+
 * 2.9.6
   - fixed exit with error code for `merge` api
 
