@@ -1,0 +1,8 @@
+# https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+# fix the eol
+* text eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.pdf binary
