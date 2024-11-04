@@ -38,29 +38,32 @@ watchEffect(() => {
 <template>
   <div class="mcr-attachment-audit">
     <table>
-      <tr class="mcr-head">
-        <td class="mcr-column-left">
-          Name
-        </td>
-        <td />
-        <td>
-          Score
-        </td>
-      </tr>
-
-      <tr
-        v-for="(item, i) of d.list"
-        :key="i"
-        :class="item.sub?'mcr-row-sub':''"
-      >
-        <td class="mcr-column-left mcr-column-name">
-          {{ item.name }}
-        </td>
-        <td>{{ item.value }}</td>
-        <td :class="'mcr-'+item.status">
-          {{ Util.PNF(item.score) }}
-        </td>
-      </tr>
+      <thead>
+        <tr class="mcr-head">
+          <td class="mcr-column-left">
+            Name
+          </td>
+          <td />
+          <td>
+            Score
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(item, i) of d.list"
+          :key="i"
+          :class="item.sub?'mcr-row-sub':''"
+        >
+          <td class="mcr-column-left mcr-column-name">
+            {{ item.name }}
+          </td>
+          <td>{{ item.value }}</td>
+          <td :class="'mcr-'+item.status">
+            {{ Util.PNF(item.score) }}
+          </td>
+        </tr>
+      </tbody>
     </table>
     <VuiFlex padding="8px">
       <a

@@ -92,50 +92,54 @@ watchEffect(() => {
 <template>
   <div class="mcr-attachment-coverage">
     <table>
-      <tr>
-        <td class="mcr-column-left">
-          Name
-        </td>
-        <td>Coverage</td>
-        <td />
-        <td>Covered</td>
-        <td>Uncovered</td>
-        <td>Total</td>
-      </tr>
-      <tr
-        v-for="(item, i) of d.list"
-        :key="i"
-      >
-        <td class="mcr-column-left">
-          <b>{{ item.name }}</b>
-        </td>
-        <td
-          style="padding: 0 5px;"
-          :class="'mcr-'+item.status"
+      <thead>
+        <tr>
+          <td class="mcr-column-left">
+            Name
+          </td>
+          <td>Coverage</td>
+          <td />
+          <td>Covered</td>
+          <td>Uncovered</td>
+          <td>Total</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(item, i) of d.list"
+          :key="i"
         >
-          {{ Util.PF(item.pct, 100, 2) }}
-        </td>
-        <td
-          style="min-width: 100px;"
-          v-html="item.percentChart"
-        />
+          <td class="mcr-column-left">
+            <b>{{ item.name }}</b>
+          </td>
+          <td
+            style="padding: 0 5px;"
+            :class="'mcr-'+item.status"
+          >
+            {{ Util.PF(item.pct, 100, 2) }}
+          </td>
+          <td
+            style="min-width: 100px;"
+            v-html="item.percentChart"
+          />
 
-        <td :title="item.coveredTitle">
-          <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
-        </td>
-        <td :title="item.uncoveredTitle">
-          <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
-        </td>
-        <td :title="item.totalTitle">
-          {{ Util.NF(item.total) }}
-        </td>
-      </tr>
-      <tr>
-        <td class="mcr-column-left">
-          <b>Files</b> <span class="mcr-num">{{ d.files }}</span>
-        </td>
-        <td /><td /><td /><td />
-      </tr>
+          <td :title="item.coveredTitle">
+            <span :class="item.coveredClass">{{ Util.NF(item.covered) }}</span>
+          </td>
+          <td :title="item.uncoveredTitle">
+            <span :class="item.uncoveredClass">{{ Util.NF(item.uncovered) }}</span>
+          </td>
+          <td :title="item.totalTitle">
+            {{ Util.NF(item.total) }}
+          </td>
+        </tr>
+        <tr>
+          <td class="mcr-column-left">
+            <b>Files</b> <span class="mcr-num">{{ d.files }}</span>
+          </td>
+          <td /><td /><td /><td />
+        </tr>
+      </tbody>
     </table>
     <VuiFlex padding="8px">
       <a

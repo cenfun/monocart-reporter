@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.8
+  - fixed wrong duration for shards (#157)
+
 * 2.9.7
   - fixed eol for unix
 

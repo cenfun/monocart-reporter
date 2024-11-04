@@ -172,6 +172,23 @@ test.describe('group', () => {
         expect(Util.getDuration(ranges)).toBe(15);
         expect(Util.getDuration(ranges, 'exclude-idle')).toBe(13);
 
+        ranges = [
+            {
+                start: 1,
+                end: 6
+            },
+            {
+                start: 8,
+                end: 16
+            },
+            {
+                start: 2,
+                end: 24
+            }
+        ];
+        expect(Util.getDuration(ranges)).toBe(23);
+        expect(Util.getDuration(ranges, 'exclude-idle')).toBe(23);
+
     });
 });
 
