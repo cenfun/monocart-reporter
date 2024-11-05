@@ -352,6 +352,11 @@ module.exports = {
                 merge: false
             },
 
+            onData: (reportData) => {
+                // console.log('onData', reportData);
+                // reportData.name = 'My Report Name';
+            },
+
             // async hook after report data generated
             onEnd: (reportData, helper) => {
                 // console.log('onEnd hook start');

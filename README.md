@@ -48,6 +48,7 @@
     - [Send and Receive Messages between Processes](#send-and-receive-messages-between-processes)
 * [Merge Shard Reports](#merge-shard-reports)
 * [onEnd Hook](#onend-hook)
+* [onData Hook](#ondata-hook)
 * [Integration Examples](#integration-examples)
 * [Contributing](#contributing)
 * [Changelog](CHANGELOG.md)
@@ -1143,6 +1144,15 @@ module.exports = {
         }]
     ]
 };
+```
+
+## onData hook
+The `onData` function will be executed after report data generated (before `onEnd`).
+```js
+onData: (reportData) => {
+    // console.log('onData', reportData);
+    reportData.name = 'My Report Name';
+}
 ```
 
 ## Integration Examples
