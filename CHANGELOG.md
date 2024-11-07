@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.9
+  - fixed trend file issue (#160)
+
 * 2.9.8
   - fixed wrong duration for shards (#157)
 

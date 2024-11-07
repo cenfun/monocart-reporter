@@ -186,6 +186,18 @@ module.exports = {
 
             trend: () => {
                 return new Promise((resolve) => {
+
+                    // const fs = require('node:fs');
+                    // fs.readFile('./.temp/monocart/index.json', (error, data) => {
+                    //     if (error) {
+                    //         console.log(error);
+                    //         resolve();
+                    //         return;
+                    //     }
+                    //     const json = JSON.parse(data);
+                    //     resolve(json);
+                    // });
+
                     const axios = require('axios');
                     axios.get('https://cenfun.github.io/monocart-reporter/index.json').then((res) => {
                         const json = res.data;
