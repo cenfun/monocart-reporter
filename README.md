@@ -846,7 +846,7 @@ Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments
 - `har` HAR path (String) or HAR file buffer (Buffer). see [HAR 1.2 Spec](http://www.softwareishard.com/blog/har-12-spec/)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
 
- Generate HAR with `recordHar` option in browser.newContext() (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js) preview [report](https://cenfun.github.io/monocart-reporter/network-1a18723ee59b36867898/index.html))
+ Generate HAR with `recordHar` option in browser.newContext() (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js) preview [report](https://cenfun.github.io/monocart-reporter/#page=report))
 
 ```js
 const fs = require('fs');
@@ -912,7 +912,7 @@ test('finally, attach HAR', async () => {
     await attachNetworkReport(harPath, test.info());
 });
 ```
-Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/network-da7f5b4cceb1e6280782/index.html)
+Preview [Network HTML Report](https://cenfun.github.io/monocart-reporter/#page=report)
 
 ## Global State Management
 When tests are executed in [isolation](https://playwright.dev/docs/browser-contexts) mode, the reporter and each test may run in a different process, they cannot share data with each other. we can start a local WebSocket server to serve the global data, and read/write the global data with `useState` API from a test.
@@ -1149,10 +1149,19 @@ module.exports = {
 ## onData hook
 The `onData` function will be executed after report data generated (before `onEnd`).
 ```js
-onData: (reportData) => {
-    // console.log('onData', reportData);
-    reportData.name = 'My Report Name';
-}
+// playwright.config.js
+module.exports = {
+    reporter: [
+        ['monocart-reporter', {  
+            name: "My Test Report",
+            outputFile: './monocart-report/index.html',
+            onData: (reportData) => {
+                // console.log('onData', reportData);
+                reportData.name = 'My New Report Name';
+            }
+        }]
+    ]
+};
 ```
 
 ## Integration Examples
