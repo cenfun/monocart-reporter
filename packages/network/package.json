@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter-network",
-    "version": "2.9.9",
+    "version": "2.9.10",
     "private": true,
     "main": "dist/monocart-reporter-network.js",
     "files": [
