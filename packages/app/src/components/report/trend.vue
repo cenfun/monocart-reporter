@@ -16,12 +16,13 @@ const {
 
 const chart = shallowReactive({
     padding: 5,
+    axisHeight: 20,
     width: 1000,
     height: 200,
     lines: [],
     list: null,
 
-    density: 'Serial',
+    density: 'serial',
     // depends on duration
     densityOptions: [],
 
@@ -116,21 +117,6 @@ const getResults = (item) => {
     const d = new Date(item.date);
     let dateH = d.toLocaleString();
 
-    const density = item.density;
-
-    if (density) {
-        results.push({
-            icon: 'time',
-            name: `By ${density}`,
-            value: item.count
-        });
-
-        if (density === 'Day') {
-            dateH = d.toLocaleDateString();
-        }
-
-    }
-
     const items = chart.typeItems[chart.type];
     if (items) {
         appendItemResults(item, results, items);
@@ -138,8 +124,26 @@ const getResults = (item) => {
         appendStatusResults(item, results);
     }
 
+    const density = item.density;
+    if (density) {
+
+        const densityItem = chart.densityOptions.find((it) => it.value === density);
+
+        results.push({
+            icon: 'time',
+            name: densityItem.label,
+            value: item.count
+        });
+
+        if (density === 'day') {
+            dateH = d.toLocaleDateString();
+        }
+
+    }
+
     results.push({
         icon: 'calendar',
+        colspan: 3,
         name: dateH
     });
 
@@ -164,8 +168,7 @@ const appendStatusResults = (item, results) => {
     });
 
     // asc caseTypes
-    const ascCaseTypes = state.reportData.caseTypes;
-    ascCaseTypes.forEach((k) => {
+    chart.caseTypes.forEach((k) => {
         const info = summary[k];
         const v = item[ns + k];
         results.push({
@@ -203,7 +206,7 @@ const getListByDensity = () => {
     }
 
     const trendList = chart.trendList;
-    if (density === 'Serial') {
+    if (density === 'serial') {
         const list = trendList.map((item, i) => {
             return {
                 index: i,
@@ -222,7 +225,7 @@ const getListByDensity = () => {
         len: 10,
         zero: 'T00:00:00.000Z'
     };
-    if (density === 'Hour') {
+    if (density === 'hour') {
         dateInfo = {
             len: 13,
             zero: ':00:00.000Z'
@@ -314,7 +317,7 @@ const getLineD = (currentPoints, backPoints) => {
 const getStatusLines = (list) => {
     const padding = chart.padding;
     const cw = chart.width - padding * 2;
-    const ch = chart.height - padding * 2;
+    const ch = chart.height - padding * 2 - chart.axisHeight;
     const xw = cw / (list.length - 1);
 
     let perviousPoints = list.map((t, i) => {
@@ -324,9 +327,9 @@ const getStatusLines = (list) => {
     const summary = state.summary;
     const maxTests = chart.trendMax.tests;
 
-    // desc caseTypes
-    const descCaseTypes = [].concat(state.reportData.caseTypes).reverse();
-    chart.lines = descCaseTypes.map((caseType) => {
+    const caseTypes = [].concat(chart.caseTypes).reverse();
+
+    chart.lines = caseTypes.map((caseType) => {
         const meta = summary[caseType];
         const currentPoints = list.map((t, i) => {
             const [px, py] = perviousPoints[i];
@@ -345,12 +348,13 @@ const getStatusLines = (list) => {
             d
         };
     });
+
 };
 
 const getItemLines = (list, items) => {
     const padding = chart.padding;
     const cw = chart.width - padding * 2;
-    const ch = chart.height - padding * 2;
+    const ch = chart.height - padding * 2 - chart.axisHeight;
     const xw = cw / (list.length - 1);
     const trendMax = chart.trendMax;
 
@@ -374,7 +378,7 @@ const getItemLines = (list, items) => {
         });
 
         const lineFill = chart.bezier ? toBezier(points, 'L') : toStraight(points, 'L');
-        const dFill = `M0,${ch}${lineFill}V${ch}z`;
+        const dFill = `M${padding},${padding + ch}${lineFill}V${padding + ch}z`;
 
         lines.push({
             fill: color,
@@ -393,6 +397,9 @@ const render = () => {
     if (!trendList) {
         return;
     }
+
+    // desc caseTypes
+    chart.caseTypes = [].concat(state.reportData.caseTypes);
 
     const list = getListByDensity();
     chart.list = list;
@@ -427,6 +434,20 @@ const render = () => {
     chart.typeItems = typeItems;
     chart.typeOptions = ['Status'].concat(Object.keys(typeItems));
 
+    let startDate = new Date(list[0].date);
+    let endDate = new Date(list[list.length - 1].date);
+
+    if (chart.density === 'day') {
+        startDate = startDate.toLocaleDateString();
+        endDate = endDate.toLocaleDateString();
+    } else {
+        startDate = startDate.toLocaleString();
+        endDate = endDate.toLocaleString();
+    }
+
+    chart.startDate = startDate;
+    chart.endDate = endDate;
+
     const items = typeItems[type];
     if (items) {
         return getItemLines(list, items);
@@ -436,13 +457,22 @@ const render = () => {
 };
 
 const initDensity = (duration) => {
-    const densityOptions = ['Serial'];
+    const densityOptions = [{
+        label: 'Serial',
+        value: 'serial'
+    }];
     const h = 60 * 60 * 1000;
     if (duration > h) {
-        densityOptions.push('Hour');
+        densityOptions.push({
+            label: 'By Hour',
+            value: 'hour'
+        });
     }
     if (duration > 24 * h) {
-        densityOptions.push('Day');
+        densityOptions.push({
+            label: 'By Day',
+            value: 'day'
+        });
     }
     chart.densityOptions = densityOptions;
 };
@@ -577,6 +607,19 @@ onMounted(() => {
               />
             </g>
 
+            <g>
+              <text
+                :x="chart.padding"
+                :y="chart.height-chart.padding"
+                text-anchor="start"
+              >{{ chart.startDate }}</text>
+              <text
+                :x="chart.width-chart.padding"
+                :y="chart.height-chart.padding"
+                text-anchor="end"
+              >{{ chart.endDate }}</text>
+            </g>
+
             <g v-if="chart.focus">
               <path
                 :d="chart.focus.d"
@@ -597,32 +640,37 @@ onMounted(() => {
       class="mcr-trend-popover"
       width="200px"
     >
-      <VuiFlex
-        direction="column"
-        gap="10px"
-      >
-        <VuiFlex
-          v-for="(item, i) in pd.results"
-          :key="i"
-          gap="10px"
-        >
-          <IconLabel
-            :icon="item.icon"
-            :button="false"
+      <table class="popover-table">
+        <tbody>
+          <tr
+            v-for="(item, i) in pd.results"
+            :key="i"
+            gap="10px"
           >
-            {{ item.name }}
-          </IconLabel>
-          <span
-            v-if=" item.value"
-            class="mcr-num"
-          >{{ item.value }}</span>
-          <span v-if="item.percent">{{ item.percent }}</span>
-          <span
-            v-if="item.growth"
-            class="mcr-num"
-          >{{ item.growth }}</span>
-        </VuiFlex>
-      </VuiFlex>
+            <td :colspan="item.colspan">
+              <IconLabel
+                :icon="item.icon"
+                :button="false"
+              >
+                {{ item.name }}
+              </IconLabel>
+            </td>
+            <td>
+              <span
+                v-if=" item.value"
+                class="mcr-num"
+              >{{ item.value }}</span>
+            </td>
+            <td>
+              <span v-if="item.percent">{{ item.percent }}</span>
+              <span
+                v-if="item.growth"
+                class="mcr-num"
+              >{{ item.growth }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </VuiPopover>
   </div>
 </template>
@@ -633,6 +681,21 @@ onMounted(() => {
 
     svg {
         max-width: 1000px;
+    }
+}
+
+.popover-table {
+    td {
+        padding: 3px 10px 3px 0;
+        text-align: center;
+    }
+
+    td:last-child {
+        text-align: right;
+    }
+
+    td:first-child {
+        text-align: left;
     }
 }
 </style>

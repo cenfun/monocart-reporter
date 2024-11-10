@@ -48,6 +48,7 @@ const iconFormatter = (options) => {
         icon: '',
         size: '16px',
         button: false,
+        color: '#333',
         ... options
     };
     createApp(IconLabel, props).mount(div);
@@ -283,6 +284,7 @@ const formatters = {
         if (rowItem.errorNum) {
             return iconFormatter({
                 icon: 'error',
+                color: '#dd0000',
                 button: true
             });
         }

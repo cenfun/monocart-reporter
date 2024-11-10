@@ -335,11 +335,13 @@ const pieHandler = () => {
         primary: true,
         list: [
             summary.errors,
+            summary.retries,
             summary.logs,
-            summary.attachments,
-            summary.retries
+            summary.attachments
         ]
     }];
+
+    // console.log(report.amountList, summary);
 
 };
 
@@ -402,17 +404,22 @@ onActivated(() => {
                 gap="15px"
                 wrap
               >
-                <IconLabel
+                <VuiFlex
                   v-for="(item, j) in group.list"
                   :key="j"
-                  :icon="item.icon || group.icon"
-                  :button="group.button"
-                  :primary="group.primary"
-                  :tooltip="item.description"
-                  @click="onAmountClick(item)"
+                  gap="5px"
                 >
-                  {{ item.name }} <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-                </IconLabel>
+                  <IconLabel
+                    :icon="item.icon || group.icon"
+                    :button="group.button"
+                    :primary="group.primary"
+                    :tooltip="item.description"
+                    @click="onAmountClick(item)"
+                  >
+                    {{ item.name }}
+                  </IconLabel>
+                  <span class="mcr-num">{{ Util.NF(item.value) }}</span>
+                </VuiFlex>
               </VuiFlex>
             </template>
 
@@ -421,7 +428,7 @@ onActivated(() => {
               wrap
             >
               <IconLabel
-                icon="time"
+                icon="sort"
                 primary
                 @click="onSortClick('tests','duration')"
               >
@@ -429,7 +436,7 @@ onActivated(() => {
               </IconLabel>
 
               <IconLabel
-                icon="time"
+                icon="sort"
                 primary
                 @click="onSortClick('failed','duration')"
               >

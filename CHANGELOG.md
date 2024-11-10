@@ -1,5 +1,11 @@
 ## Changelog
 
+* 2.9.10
+  - fixed UI highlight
+  - fixed UI icons
+  - fixed trends chart
+  - fixed case type ordering
+
 * 2.9.9
   - fixed trend file issue (#160)
 

@@ -71,6 +71,21 @@ const updateColumnWidth = function(grid) {
 
 };
 
+const addHighlight = (rowItem) => {
+    removeHighlight();
+    if (data.grid && rowItem) {
+        data.grid.setRowState(rowItem, 'highlight', true);
+        data.highlightRow = rowItem;
+    }
+};
+
+const removeHighlight = () => {
+    if (data.grid && data.highlightRow) {
+        data.grid.setRowState(data.highlightRow, 'highlight', false);
+        data.highlightRow = null;
+    }
+};
+
 const getGrid = () => {
     if (data.grid) {
         return data.grid;
@@ -90,19 +105,8 @@ const getGrid = () => {
     });
 
     grid.bind('onClick', (e, d) => {
-        grid.selectAll(false);
+        removeHighlight();
     });
-
-    grid.bind('onDblClick', (e, d) => {
-        const { rowItem } = d;
-        if (rowItem && !rowItem.hasDetails) {
-            grid.setRowSelected(d.rowItem);
-        }
-    });
-
-    // grid.bind('onRowExpanded onRowCollapsed', (e, d) => {
-    //     console.log(d);
-    // });
 
     grid.setOption({
 
@@ -387,8 +391,7 @@ const updatePosition = (position) => {
             grid.scrollRowIntoView(rowItem);
         }
         setTimeout(() => {
-            grid.selectAll(false);
-            grid.setRowSelected(rowItem);
+            addHighlight(rowItem);
         }, 100);
 
     }
@@ -450,9 +453,7 @@ onMounted(() => {
 });
 
 const onFocus = (e) => {
-    if (data.grid) {
-        data.grid.selectAll(false);
-    }
+    removeHighlight();
 };
 
 </script>
@@ -541,6 +542,23 @@ const onFocus = (e) => {
 .mcr-overview-grid {
     position: relative;
     overflow: hidden;
+
+    .tg-turbogrid {
+        .tg-highlight {
+            &::after {
+                position: absolute;
+                top: 0;
+                left: 0;
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+                border: 2px solid #80bdff;
+                pointer-events: none;
+            }
+        }
+    }
 }
 
 .markdown-body {

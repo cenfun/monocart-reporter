@@ -20,6 +20,10 @@ const props = defineProps({
         type: String,
         default: ''
     },
+    color: {
+        type: String,
+        default: ''
+    },
     gap: {
         type: String,
         default: ''
@@ -52,6 +56,9 @@ const styleMap = computed(() => {
     const st = {};
     if (props.size) {
         st['--mcr-icon-size'] = props.size;
+    }
+    if (props.color) {
+        st['--mcr-icon-color'] = props.color;
     }
     if (props.gap) {
         st['--mcr-icon-gap'] = props.gap;
@@ -116,6 +123,7 @@ watch(() => props.icon, () => {
 .mcr-icon-label {
     --mcr-icon-size: 16px;
     --mcr-icon-gap: 3px;
+    --mcr-icon-color: inherit;
 
     position: relative;
     gap: var(--mcr-icon-gap);
@@ -125,6 +133,7 @@ watch(() => props.icon, () => {
     display: block;
     width: var(--mcr-icon-size);
     height: var(--mcr-icon-size);
+    color: var(--mcr-icon-color);
     background-repeat: no-repeat;
     background-position: center center;
     background-size: var(--mcr-icon-size) var(--mcr-icon-size);
