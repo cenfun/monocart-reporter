@@ -19,6 +19,7 @@
 * [Install](#install)
 * [Playwright Config](#playwright-config)
 * [Examples](#examples)
+* [Tutorial](#tutorial)
 * [Output](#output)
 * [Reporter Options](#reporter-options)
 * [View Trace Online](#view-trace-online)
@@ -87,6 +88,11 @@ Playwright Docs [https://playwright.dev/docs/test-reporters](https://playwright.
 - [tests](/tests/)
 - [monocart-reporter-examples](https://github.com/cenfun/monocart-reporter-examples)
 - [playwright-reporter-integrations](https://github.com/cenfun/playwright-reporter-integrations)
+
+## Tutorial
+- [Playwright + Monocart = Next-Level Custom Reports! | Step-by-Step Tutorial!](https://www.youtube.com/watch?v=8Ae-lkFAG5Q)
+- [Optimising Playwright Reporting Through Monocart](https://engineering.kablamo.com.au/posts/2024/optimising-playwright-reporting-through-monocart/)
+- [Leveraging Playwright's Powerful End-to-End Testing, MongoDB, Data Fixtures for Live Execution Insights](https://www.linkedin.com/pulse/leveraging-playwrights-powerful-end-to-end-testing-data-kandukuri-ak6ac/)
 
 ## Output
 - path-to/your-filename.html  
