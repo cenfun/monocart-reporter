@@ -101,7 +101,19 @@ Single HTML file (data compressed), easy to transfer/deploy or open directly any
 - path-to/your-filename.json  (requires option `json` is true)
 Separated data file which can be used for debugging or data provider (It's included in the above HTML and compressed).
 - path-to/your-filename.zip  (requires option `zip` is true)
-Zip file for merging reports
+ Zip file for merging reports
+    - custom zip options
+```js
+{
+    zip: {
+        // custom zip `outputFile`, defaults to reporter `outputFile` but uses `.zip` extension
+        outputFile: path.resolve(YourOutputDir, `monocart-report-${your-shard-number}.zip`),
+        // clean other report files except for zip file, defaults to false
+        clean: true
+    }
+}
+```
+
 
 ## Reporter Options
 - Default options: [lib/default/options.js](./lib/default/options.js)
@@ -1050,6 +1062,7 @@ await merge(reportDataList, {
     }
 });
 ```
+see [Output](#output) for `zip` options
 
 > Note: The coverage reports will be merged automatically if we specify the `raw` report in coverage options:
 ```js
