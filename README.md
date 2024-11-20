@@ -105,9 +105,11 @@ Separated data file which can be used for debugging or data provider (It's inclu
     - custom zip options
 ```js
 {
+    // zip: true,
+    // zip: `${YourOutputDir}/monocart-shard-${your-shard-number}.zip`,
     zip: {
         // custom zip `outputFile`, defaults to reporter `outputFile` but uses `.zip` extension
-        outputFile: path.resolve(YourOutputDir, `monocart-report-${your-shard-number}.zip`),
+        outputFile: `${YourOutputDir}/monocart-shard-${your-shard-number}.zip`,
         // clean other report files except for zip file, defaults to false
         clean: true
     }
