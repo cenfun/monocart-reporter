@@ -1036,7 +1036,7 @@ const reportDataList = [
     'path-to/shard2/index.json',
     'path-to/shard3/index.json'
 
-    // Or load zip file directly if the output files is zipped
+    // Or load zip file directly if the output files is zipped with option `zip` is true
     // 'path-to/shard1/index.zip',
     // 'path-to/shard2/index.zip',
     // 'path-to/shard3/index.zip'
