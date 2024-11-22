@@ -47,7 +47,7 @@
         "koa": "^2.15.3",
         "koa-static-resolver": "^1.0.6",
         "lz-utils": "^2.1.0",
-        "monocart-coverage-reports": "^2.11.2",
+        "monocart-coverage-reports": "^2.11.3",
         "monocart-locator": "^1.0.2",
         "nodemailer": "^6.9.16"
     },
@@ -68,7 +68,7 @@
         "find-up": "^7.0.0",
         "github-markdown-css": "^5.8.0",
         "glob": "^11.0.0",
-        "marked": "^15.0.1",
+        "marked": "^15.0.2",
         "mermaid": "^11.4.0",
         "mitt": "^3.0.1",
         "monocart-code-viewer": "^1.1.4",
