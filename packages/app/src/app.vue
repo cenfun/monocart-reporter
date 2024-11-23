@@ -498,6 +498,7 @@ const init = async () => {
     state.columns = cloneColumns;
 
     state.title = reportData.name;
+    state.logo = reportData.logo;
     state.date = reportData.dateH;
     state.duration = reportData.durationH;
     state.mermaid = reportData.mermaid;
@@ -654,6 +655,13 @@ window.addEventListener('message', (e) => {
         gap="10px"
         wrap
       >
+        <img
+          v-if="state.logo"
+          class="mcr-logo"
+          :src="state.logo"
+          alt=""
+        >
+
         <div class="mcr-title">
           <a href="./">{{ state.title }}</a>
         </div>
@@ -1173,6 +1181,12 @@ a:not([href], [class]):hover {
 .mcr-header {
     color: #fff;
     background-color: #24292f;
+
+    .mcr-logo {
+        display: block;
+        max-height: 32px;
+        overflow: hidden;
+    }
 
     .mcr-title {
         height: 22px;

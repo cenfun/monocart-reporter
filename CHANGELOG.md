@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.11
+  - added new option `logo`
+
 * 2.9.10
   - fixed UI highlight
   - fixed UI icons

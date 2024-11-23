@@ -1,4 +1,5 @@
 const EC = require('eight-colors');
+const fs = require('fs');
 
 // for local test
 process.env.PASSWORD = 'my-password';
@@ -90,6 +91,9 @@ module.exports = {
             outputFile: '.temp/monocart/index.html',
 
             zip: '.temp/monocart-zip/mr.zip',
+
+            // image url (supports data url)
+            logo: `data:image/png;base64,${fs.readFileSync('docs/logo.png').toString('base64')}`,
 
             attachmentPath: (currentPath, extras) => {
                 // console.log(currentPath, extras);

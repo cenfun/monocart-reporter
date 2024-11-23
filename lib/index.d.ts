@@ -51,6 +51,12 @@ export type MonocartReporterOptions = {
     /** the report name */
     name?: string;
 
+    /** 
+     * image url, supports data url:
+     * `data:image/png;base64,${fs.readFileSync('path-to/your-logo.png').toString('base64')}`
+    */
+    logo?: string;
+
     /** the output file path (relative process.cwd) */
     outputFile?: string;
 
