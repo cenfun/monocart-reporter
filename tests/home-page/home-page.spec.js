@@ -170,8 +170,8 @@ test('multiple soft comparisons', async ({ page }) => {
     test.info().attach('text/markdown:', {
         contentType: 'text/markdown',
         body: `### monocart reporter
-        - playwright test reporter
-        - html reporter`
+- playwright test reporter
+- html reporter`
     });
 
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter/pulls');
