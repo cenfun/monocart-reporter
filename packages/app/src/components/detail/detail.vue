@@ -562,6 +562,7 @@ const onFocus = (e) => {
 }
 
 .markdown-body {
+    min-height: 10px;
     margin: 0;
     background: none;
 

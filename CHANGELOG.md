@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.12
+  - fixed markdown style
+
 * 2.9.11
   - added new option `logo`
 

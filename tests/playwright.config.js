@@ -371,6 +371,13 @@ module.exports = {
             onData: (reportData) => {
                 // console.log('onData', reportData);
                 // reportData.name = 'My Report Name';
+
+                reportData.artifacts.push({
+                    global: true,
+                    name: 'My custom global report name',
+                    path: 'path-to/my-report.html'
+                });
+
             },
 
             // async hook after report data generated
