@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.13
+  - fixed UI log error (#164)
+
 * 2.9.12
   - fixed markdown style
 

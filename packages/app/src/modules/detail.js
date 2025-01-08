@@ -22,6 +22,9 @@ const convert = new Convert({
 });
 
 const convertHtml = (str) => {
+    if (typeof str !== 'string') {
+        str = `${str}`;
+    }
 
     const reg = /\s$/;
     const endsWithN = reg.test(str) ? '' : '<br/>';
