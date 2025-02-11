@@ -96,6 +96,9 @@ export type MonocartReporterOptions = {
     /** normal or exclude-idle */
     durationStrategy?: 'normal' | 'exclude-idle',
 
+    /** Indicates whether to clean previous files in output dir before generating report. Defaults to true. */
+    clean?: boolean;
+
     /** global coverage options: https://github.com/cenfun/monocart-reporter?#code-coverage-report 
      * ```js
      * coverage: {

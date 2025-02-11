@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.14
+  - added new option `clean`
+
 * 2.9.13
   - fixed UI log error (#164)
 
