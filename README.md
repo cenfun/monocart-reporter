@@ -6,6 +6,11 @@
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 ![](https://img.shields.io/github/actions/workflow/status/cenfun/monocart-reporter/static.yml)
 
+![](/docs/report.gif)
+
+Preview: [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
+
+![](/docs/cli.png)
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
     - A `Tree Grid` style test reporter
@@ -15,7 +20,6 @@
     - Timeline Workers Graph
     - Monitor CPU and Memory Usage
     - Export Data (json)
-* [Preview](#preview)
 * [Install](#install)
 * [Playwright Config](#playwright-config)
 * [Examples](#examples)
@@ -53,15 +57,6 @@
 * [Integration Examples](#integration-examples)
 * [Contributing](#contributing)
 * [Changelog](CHANGELOG.md)
-
-
-## Preview
-[https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
-
-![](/docs/report.gif)
-
-![](/docs/cli.png)
-(For Github actions, we can enforce color with env: `FORCE_COLOR: true`)
 
 ## Install
 ```sh
