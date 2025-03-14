@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.16
+  - fixed (#171)
+
 * 2.9.15
   - fixed new option `clean` for `merge`
 
