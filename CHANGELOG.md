@@ -1,5 +1,9 @@
 ## Changelog
 
+* 2.9.17
+  - fixed mermaid for attachment
+  - fixed `_prompt` attachments
+
 * 2.9.16
   - fixed (#171)
 

@@ -5,6 +5,7 @@ import {
 
 import Util from '../../../utils/util.js';
 import { markdownFormatter } from '../../../modules/formatters.js';
+import state from '../../../modules/state.js';
 
 const props = defineProps({
     data: {
@@ -24,8 +25,13 @@ const showContent = () => {
     const { contentType, content } = props.data;
 
     if (Util.isMarkdownType(contentType)) {
-        // console.log('markdown', content);
         $el.innerHTML = markdownFormatter(content);
+        return;
+    }
+
+    if (Util.isMermaidType(contentType)) {
+        $el.innerHTML = `<pre class="mermaid">${content}</pre>`;
+        state.mermaidEnabled = true;
         return;
     }
 

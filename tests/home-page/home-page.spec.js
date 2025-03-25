@@ -225,6 +225,56 @@ test('text comparison', async ({ page }) => {
 - html reporter`
     });
 
+    test.info().attach('text/mermaid:', {
+        contentType: 'text/mermaid',
+        body: `
+        flowchart LR
+        id
+        `
+    });
+
+    test.info().attach('text/vnd.mermaid:', {
+        contentType: 'text/vnd.mermaid',
+        body: `
+        sequenceDiagram
+          autonumber
+          actor User as 🧑‍💻 User
+          participant Test as Playwright Test
+          participant HomePage as 🏠 Home Page
+          participant LoginPage as 🔐 Login Page
+          participant MailSlurp as 📧 MailSlurp API
+          participant TestData as 📂 Test Data Manager
+    
+          User->>Test: Start Test Execution 🚀
+          
+          Test->>HomePage: Navigate to URL
+          Test->>HomePage: Click Sign-In Button 🖱️
+          
+          Test->>MailSlurp: Initialize MailSlurpHelper(apiKEY)
+          Test->>TestData: Retrieve Login Credentials (LoginCredentials.json)
+          TestData-->>Test: Return { email, password, inboxId }
+    
+          Test->>LoginPage: Enter Email 📩
+          Test->>LoginPage: Enter Password 🔑
+          Test->>LoginPage: Click Login Button 🖱️
+          Test->>LoginPage: Click Send Verification Code Button 🔘
+    
+          Test->>MailSlurp: Fetch Verification Code from inboxId
+          MailSlurp-->>Test: Return Verification Code 📧
+    
+          Test->>Console: Log "Sciensus new verificationCode is ---> verificationCode" 📝
+    
+          alt Verification Code Found ✅
+              Test->>LoginPage: Enter Verification Code 🔢
+              Test->>LoginPage: Click Verify Code Button ✔
+              Test->>LoginPage: Click Continue Button ➡
+          else Verification Code Not Found ❌
+              Test->>Test: Throw Error "Verification code not found" ⚠️
+          end
+    
+          User->>Test: Test Completed 🎉`
+    });
+
     console.log('https://playwright.dev/');
     console.log('http://localhost:8080/?query=1#page=a%20&b=1?hash-query=%20%22');
 

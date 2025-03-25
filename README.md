@@ -45,6 +45,7 @@ Preview: [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/m
     - [Global Coverage Report](#global-coverage-report)
     - [Coverage Options](#coverage-options)
     - [Coverage Examples](#coverage-examples)
+* [Attach Markdown/Mermaid](#attach-markdownmermaid)
 * [Attach Lighthouse Audit Report](#attach-lighthouse-audit-report)
 * [Attach Network Report](#attach-network-report)
 * [Global State Management](#global-state-management)
@@ -828,6 +829,25 @@ see [Collecting V8 Coverage Data from Node.js](https://github.com/cenfun/monocar
     - [playwright-ct-svelte](https://github.com/cenfun/playwright-ct-svelte)
 - [nextjs-with-playwright](https://github.com/cenfun/nextjs-with-playwright)
 - [code-coverage-with-monocart-reporter](https://github.com/edumserrano/playwright-adventures/blob/main/demos/code-coverage-with-monocart-reporter/) 
+
+### Attach Markdown/Mermaid
+```js
+test.info().attach('text/markdown:', {
+    contentType: 'text/markdown',
+    body: `### My Markdown Title
+- item 1
+- item 2`
+});
+
+test.info().attach('text/mermaid:', {
+    contentType: 'text/mermaid',
+    body: `
+    flowchart LR
+    id
+    `
+});
+
+```
 
 ## Attach Lighthouse Audit Report
 Attach an audit report with API `attachAuditReport(runnerResult, testInfo)`. Arguments:
