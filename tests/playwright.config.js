@@ -73,14 +73,13 @@ module.exports = {
 
     outputDir: '../.temp/test-results/',
     reporter: [
+
         ['list'],
+
         ['json', {
             outputFile: '../.temp/json/results.json'
         }],
-        ['html', {
-            outputFolder: '../.temp/html',
-            open: 'never'
-        }],
+
         ['junit', {
             outputFile: '../.temp/junit/results.xml'
         }],
@@ -434,6 +433,13 @@ module.exports = {
                 }
 
             }
+        }],
+
+        ['html', {
+            outputFolder: '../.temp/html',
+            open: 'never'
         }]
+
+
     ]
 };
