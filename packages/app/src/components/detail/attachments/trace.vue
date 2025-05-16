@@ -47,18 +47,18 @@ onMounted(() => {
     direction="column"
     class="mcr-attachment-trace"
   >
-    <VuiFlex>
-      <IconLabel icon="item-arrow" />
+    <VuiFlex gap="3px">
+      <IconLabel icon="link" />
       <a
         :href="d.viewerUrl"
         target="_blank"
       >View trace</a>
     </VuiFlex>
-    <VuiFlex>
-      <IconLabel icon="item-arrow" />
+    <VuiFlex gap="3px">
+      <IconLabel icon="download" />
       <a
         :href="props.data.path"
-        :download="props.data.name"
+        :download="props.data.fileName || props.data.name"
         target="_blank"
       >Download</a>
     </VuiFlex>

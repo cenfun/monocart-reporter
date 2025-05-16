@@ -22,11 +22,11 @@ const props = defineProps({
       :src="props.data.path"
       :alt="props.data.name"
     >
-    <VuiFlex>
-      <IconLabel icon="item-arrow" />
+    <VuiFlex gap="3px">
+      <IconLabel icon="download" />
       <a
         :href="props.data.path"
-        :download="props.data.name"
+        :download="props.data.fileName || props.data.name"
         target="_blank"
       >Download image</a>
     </VuiFlex>
