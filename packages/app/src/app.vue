@@ -59,6 +59,10 @@ watchEffect(() => {
     document.title = t;
 });
 
+const onTitleClick = () => {
+    window.location.reload();
+};
+
 // =================================================================================
 
 const navItemClass = (item) => {
@@ -651,10 +655,7 @@ window.addEventListener('message', (e) => {
       gap="10px"
       shrink
     >
-      <VuiFlex
-        gap="10px"
-        wrap
-      >
+      <div class="mcr-header-left">
         <img
           v-if="state.logo"
           class="mcr-logo"
@@ -662,8 +663,11 @@ window.addEventListener('message', (e) => {
           alt=""
         >
 
-        <div class="mcr-title">
-          <a href="./">{{ state.title }}</a>
+        <div
+          class="mcr-title"
+          @click="onTitleClick"
+        >
+          {{ state.title }}
         </div>
 
         <IconLabel
@@ -681,7 +685,7 @@ window.addEventListener('message', (e) => {
         >
           {{ state.duration }}
         </IconLabel>
-      </VuiFlex>
+      </div>
 
       <div class="vui-flex-auto" />
 
@@ -1181,30 +1185,34 @@ a:not([href], [class]):hover {
 .mcr-header {
     color: #fff;
     background-color: #24292f;
+}
 
-    .mcr-logo {
-        display: block;
-        max-height: 32px;
-        overflow: hidden;
-    }
+.mcr-header-left {
+    display: flex;
+    flex: auto;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
 
-    .mcr-title {
-        height: 22px;
-        font-size: 18px;
-        line-height: 22px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+.mcr-logo {
+    display: block;
+    max-height: 32px;
+    overflow: hidden;
+}
 
-        a {
-            color: #fff;
-            text-decoration: none;
-        }
-    }
+.mcr-title {
+    height: 22px;
+    font-size: 18px;
+    line-height: 22px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
 
-    .mcr-icon-label {
-        color: #ccc;
-        font-size: 14px;
-    }
+.mcr-icon-label {
+    color: #ccc;
+    font-size: 14px;
 }
 
 .mcr-filter {
