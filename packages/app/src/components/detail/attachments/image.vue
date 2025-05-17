@@ -1,6 +1,9 @@
 <script setup>
+import { ref } from 'vue';
 import { components } from 'vine-ui';
 const { VuiFlex } = components;
+
+import Util from '../../../utils/util.js';
 import IconLabel from '../../icon-label.vue';
 
 const props = defineProps({
@@ -10,6 +13,17 @@ const props = defineProps({
     }
 });
 
+const imgClass = ref('mcr-attachment-image-class');
+const onImgLoad = (e) => {
+    const { naturalWidth, naturalHeight } = e.target;
+    if (Util.isNum(naturalWidth) && Util.isNum(naturalHeight)) {
+        const whScale = naturalWidth / naturalHeight;
+        if (whScale < 1) {
+            imgClass.value = 'mcr-attachment-image-class-v';
+        }
+    }
+};
+
 </script>
 
 <template>
@@ -18,10 +32,14 @@ const props = defineProps({
     direction="column"
     class="mcr-attachment-image"
   >
-    <img
-      :src="props.data.path"
-      :alt="props.data.name"
-    >
+    <div class="mcr-attachment-image-main">
+      <img
+        :src="props.data.path"
+        :alt="props.data.name"
+        :class="imgClass"
+        @load="onImgLoad"
+      >
+    </div>
     <VuiFlex gap="3px">
       <IconLabel icon="download" />
       <a
@@ -39,9 +57,24 @@ const props = defineProps({
 
     img {
         display: block;
-        max-width: 100%;
         min-height: 30px;
         box-shadow: var(--image-shadow);
     }
+}
+
+.mcr-attachment-image-main {
+    display: flex;
+    width: 100%;
+}
+
+.mcr-attachment-image-class {
+    max-width: 100%;
+}
+
+.mcr-attachment-image-class-v {
+    max-width: 100%;
+
+    /** remove header 40 + 60 */
+    max-height: calc(100vh - 100px);
 }
 </style>
