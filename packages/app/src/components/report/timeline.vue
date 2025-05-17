@@ -736,7 +736,7 @@ onMounted(() => {
             Started
             <span class="mcr-num">{{ Util.TF(chart.currentTimeStarted) }}</span>
           </IconLabel>
-          <div>{{ new Date(chart.currentTimestamp).toLocaleString() }}</div>
+          <div>{{ Util.dateFormat(chart.currentTimestamp, state.locale) }}</div>
         </VuiFlex>
       </VuiFlex>
     </VuiPopover>

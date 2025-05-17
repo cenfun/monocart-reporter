@@ -93,6 +93,9 @@ export type MonocartReporterOptions = {
     /** timezone offset in minutes, For example: GMT+0800 = -480 */
     timezoneOffset?: number;
 
+    /** For example: en-US, zh-CN */
+    locale?: string;
+
     /** normal or exclude-idle */
     durationStrategy?: 'normal' | 'exclude-idle',
 

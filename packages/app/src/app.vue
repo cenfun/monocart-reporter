@@ -503,7 +503,8 @@ const init = async () => {
 
     state.title = reportData.name;
     state.logo = reportData.logo;
-    state.date = reportData.dateH;
+    state.locale = reportData.locale;
+    state.date = Util.dateFormat(reportData.date, state.locale);
     state.duration = reportData.durationH;
     state.mermaid = reportData.mermaid;
 
@@ -1193,26 +1194,27 @@ a:not([href], [class]):hover {
     flex-wrap: wrap;
     gap: 10px;
     align-items: center;
-}
 
-.mcr-logo {
-    display: block;
-    max-height: 32px;
-    overflow: hidden;
-}
+    .mcr-logo {
+        display: block;
+        max-height: 32px;
+        overflow: hidden;
+    }
 
-.mcr-title {
-    height: 22px;
-    font-size: 18px;
-    line-height: 22px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    cursor: pointer;
-}
+    .mcr-title {
+        height: 22px;
+        font-size: 18px;
+        line-height: 22px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: pointer;
+    }
 
-.mcr-icon-label {
-    color: #ccc;
-    font-size: 14px;
+    /** only header */
+    .mcr-icon-label {
+        color: #ccc;
+        font-size: 14px;
+    }
 }
 
 .mcr-filter {

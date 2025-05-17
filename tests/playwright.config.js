@@ -113,6 +113,8 @@ module.exports = {
 
             timezoneOffset: 0,
 
+            // locale: 'en-US',
+
             // inline: false,
 
             // global coverage

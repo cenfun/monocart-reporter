@@ -115,7 +115,7 @@ const getResults = (item) => {
     const results = [];
 
     const d = new Date(item.date);
-    let dateH = d.toLocaleString();
+    let dateH = Util.dateFormat(d, state.locale);
 
     const items = chart.typeItems[chart.type];
     if (items) {
@@ -136,7 +136,7 @@ const getResults = (item) => {
         });
 
         if (density === 'day') {
-            dateH = d.toLocaleDateString();
+            dateH = Util.dateFormat(d, state.locale, 'date');
         }
 
     }
@@ -438,11 +438,11 @@ const render = () => {
     let endDate = new Date(list[list.length - 1].date);
 
     if (chart.density === 'day') {
-        startDate = startDate.toLocaleDateString();
-        endDate = endDate.toLocaleDateString();
+        startDate = Util.dateFormat(startDate, state.locale, 'date');
+        endDate = Util.dateFormat(endDate, state.locale, 'date');
     } else {
-        startDate = startDate.toLocaleString();
-        endDate = endDate.toLocaleString();
+        startDate = Util.dateFormat(startDate, state.locale);
+        endDate = Util.dateFormat(endDate, state.locale);
     }
 
     chart.startDate = startDate;
@@ -687,6 +687,7 @@ onMounted(() => {
 .popover-table {
     td {
         padding: 3px 10px 3px 0;
+        white-space: nowrap;
         text-align: center;
     }
 
