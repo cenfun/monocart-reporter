@@ -521,7 +521,9 @@ const onFocus = (e) => {
 
 .mcr-overview-search {
     position: relative;
-    width: 200px;
+    flex: auto;
+    min-width: 100px;
+    max-width: 300px;
 
     .mcr-search-icon {
         left: 5px;
