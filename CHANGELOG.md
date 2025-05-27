@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.20
+  - fixed #177 (UI issues)
+
 * 2.9.19
   - fixed #176 (UI issues)
   - added new option `locale`
