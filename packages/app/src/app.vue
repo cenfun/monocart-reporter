@@ -1198,15 +1198,15 @@ a:not([href], [class]):hover {
 
     .mcr-logo {
         display: block;
-        max-height: 22px;
+        max-height: 24px;
         cursor: pointer;
         overflow: hidden;
     }
 
     .mcr-title {
-        height: 22px;
+        height: 24px;
         font-size: 18px;
-        line-height: 22px;
+        line-height: 24px;
         white-space: nowrap;
         text-overflow: ellipsis;
         cursor: pointer;

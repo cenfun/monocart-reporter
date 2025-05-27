@@ -94,9 +94,10 @@ const onFlyoverResize = (width) => {
 }
 
 .mcr-flyover-title {
+    height: 24px;
     font-weight: bold;
     font-size: 16px;
-    line-height: 22px;
+    line-height: 24px;
 }
 
 .mcr-flyover-content {
