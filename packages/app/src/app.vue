@@ -662,6 +662,7 @@ window.addEventListener('message', (e) => {
           class="mcr-logo"
           :src="state.logo"
           alt=""
+          @click="onTitleClick"
         >
 
         <div
@@ -1197,7 +1198,8 @@ a:not([href], [class]):hover {
 
     .mcr-logo {
         display: block;
-        max-height: 32px;
+        max-height: 22px;
+        cursor: pointer;
         overflow: hidden;
     }
 
