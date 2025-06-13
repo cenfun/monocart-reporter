@@ -225,6 +225,15 @@ const initRows = (list, collection) => {
             if (it.stepType === 'retry') {
                 it.icon = 'retry';
             } else {
+
+                if (Util.isList(it.annotations)) {
+                    const hasSkip = it.annotations.find((annotation) => annotation.type === 'skip');
+                    if (hasSkip) {
+                        it.icon = 'skipped';
+                        it.classMap = 'mcr-step-skipped';
+                    }
+                }
+
                 collection.index += 1;
                 it.index = collection.index;
             }
@@ -559,6 +568,14 @@ const onFocus = (e) => {
                 border: 2px solid #80bdff;
                 pointer-events: none;
             }
+        }
+    }
+
+    .mcr-step-skipped.tg-row .tg-cell {
+        color: var(--color-skipped);
+
+        .mcr-step-index {
+            opacity: 0.62;
         }
     }
 }

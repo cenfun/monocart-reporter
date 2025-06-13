@@ -282,3 +282,33 @@ test('text comparison', async ({ page }) => {
     expect(await page.textContent('.page-url')).toMatchSnapshot();
 
 });
+
+test('my step test', async () => {
+    await Promise.all([
+        test.step('step 1', async () => {
+            await test.info().attach('my step attachment 1', {
+                body: 'foo'
+            });
+        }),
+        test.step('step 2', async () => {
+            await test.info().attach('my step attachment 2', {
+                body: 'bar'
+            });
+        })
+    ]);
+});
+
+test('A test with skipped steps', async ({ page }) => {
+
+    await test.step('A step that is skipped unconditionally', (step) => {
+        step.skip();
+    });
+
+    await test.step('A step that is skipped conditionally', (step) => {
+        step.skip(true);
+    });
+
+    await test.step('A step that is skipped conditionally (with message)', (step) => {
+        step.skip(true, 'This step is skipped because the condition was met.');
+    });
+});
