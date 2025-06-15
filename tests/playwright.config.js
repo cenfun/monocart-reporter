@@ -1,5 +1,6 @@
 const EC = require('eight-colors');
 const fs = require('fs');
+// const cp = require('child_process');
 
 // for local test
 process.env.PASSWORD = 'my-password';
@@ -433,6 +434,10 @@ module.exports = {
                 } else {
                     EC.logGreen('check test done');
                 }
+
+                // cp.spawnSync('npx playwright test --last-failed', {
+                //     shell: true
+                // });
 
             }
         }],

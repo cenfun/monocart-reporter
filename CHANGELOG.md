@@ -1,5 +1,9 @@
 ## Changelog
 
+* 2.9.21
+  - fixed UI issues (#178)
+  - fixed skipped steps (#180)
+
 * 2.9.20
   - fixed #177 (UI issues)
 
