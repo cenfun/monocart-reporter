@@ -543,7 +543,6 @@ const onFocus = (e) => {
     }
 
     input {
-        height: 30px;
         padding-right: 25px;
         padding-left: 25px;
         border-radius: 10px;

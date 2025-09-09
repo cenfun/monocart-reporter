@@ -1230,7 +1230,7 @@ a:not([href], [class]):hover {
     flex-direction: row;
     flex-shrink: 1;
     border: thin solid #6c757d;
-    border-radius: 5px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
@@ -1327,7 +1327,6 @@ a:not([href], [class]):hover {
     padding: 5px;
 
     input {
-        height: 30px;
         padding-right: 50px;
         padding-left: 30px;
         border-radius: 10px;
@@ -1454,6 +1453,8 @@ a:not([href], [class]):hover {
 }
 
 .mcr-grid {
+    overflow: hidden;
+
     .tg-pane.tg-frozen-line-v {
         border-right: thin solid #ddd;
     }
@@ -1574,6 +1575,7 @@ a:not([href], [class]):hover {
     min-width: 18px;
     min-height: 18px;
     padding: 0 5px;
+    box-sizing: border-box;
     color: #fff;
     font-weight: normal;
     font-size: 12px;

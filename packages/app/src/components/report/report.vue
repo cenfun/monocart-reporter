@@ -390,18 +390,24 @@ onActivated(() => {
         </VuiFlex>
       </div>
       <div class="mcr-report-chart">
-        <VuiFlex wrap>
+        <VuiFlex
+          wrap
+          overflow="hidden"
+        >
           <Pie :pie-chart="report.pieChart" />
           <VuiFlex
             gap="15px"
             direction="column"
             padding="10px"
+            overflow="hidden"
+            style="max-width: 100%;"
           >
             <template v-if="report.amountList">
               <VuiFlex
                 v-for="(group, i) in report.amountList"
                 :key="i"
                 gap="15px"
+                overflow="hidden"
                 wrap
               >
                 <VuiFlex

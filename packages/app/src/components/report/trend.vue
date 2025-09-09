@@ -563,12 +563,14 @@ onMounted(() => {
           v-model="chart.density"
           :options="chart.densityOptions"
           label="x"
+          width="auto"
         />
 
         <VuiSelect
           v-model="chart.type"
           :options="chart.typeOptions"
           label="y"
+          width="auto"
         />
       </VuiFlex>
     </div>
