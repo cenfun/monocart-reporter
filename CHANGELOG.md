@@ -2,6 +2,7 @@
 
 * 2.9.22
   - fixed (#185)
+  - fixed timezone offset
 
 * 2.9.21
   - fixed UI issues (#178)
