@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.9.23
+  - fixed dateH with timezoneOffset
+
 * 2.9.22
   - fixed (#185)
   - fixed timezone offset
