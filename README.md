@@ -1128,7 +1128,7 @@ The `onEnd` function will be executed after report generated. Arguments:
 - `reportData` all report data, properties:
     - `name` (String) report name 
     - `date` (Number) start date in milliseconds 
-    - `dateH` (String) human-readable date with `Date.toLocaleString()` 
+    - `dateH` (String) human-readable date
     - `duration` (Number) test duration in milliseconds 
     - `durationH` (String) human-readable duration
     - `summary` (Object) test summary, includes `tests`, `suites`, `steps`, etc.
