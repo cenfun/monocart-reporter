@@ -1,6 +1,6 @@
 {
     "name": "monocart-reporter-vendor",
-    "version": "2.9.22",
+    "version": "2.9.23",
     "private": true,
     "main": "dist/monocart-reporter-vendor.js",
     "files": [
