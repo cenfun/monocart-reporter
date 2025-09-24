@@ -112,7 +112,8 @@ module.exports = {
                 }
             },
 
-            timezoneOffset: 0,
+            // Local(-480) or Github Actions(480)
+            timezoneOffset: new Date().getTimezoneOffset() === -480 ? 0 : 480,
 
             // locale: 'en-US',
 
