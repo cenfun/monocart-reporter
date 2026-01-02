@@ -1217,19 +1217,4 @@ By using the `onEnd` hook, we can integrate Playwright report with any other too
 See [playwright-reporter-integrations](https://github.com/cenfun/playwright-reporter-integrations)
 
 ## Contributing
-```sh
-# Node.js 20+
-npm install starfall-cli -g
-npm install
-
-npm run build
-npm run test
-
-npm run dev
-```
-### Dependencies
-- UI Framework [Vue 3](https://github.com/vuejs/core)
-- Lightweight UI Components [vine-ui](https://github.com/cenfun/vine-ui)
-- High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
-- String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
-- Coverage Reporter [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local setup steps, development scripts, and dependency details.

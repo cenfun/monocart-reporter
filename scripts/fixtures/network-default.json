@@ -1,0 +1,20 @@
+{
+    "title": "Network Report Demo",
+    "name": "Network Report Demo",
+    "summary": {
+        "requests": 0,
+        "size": 0,
+        "status": {},
+        "methods": {},
+        "waterfalls": {}
+    },
+    "log": {
+        "version": "1.2",
+        "creator": {
+            "name": "Monocart Reporter",
+            "version": "2.9.23"
+        },
+        "pages": [],
+        "entries": []
+    }
+}

@@ -4,12 +4,111 @@
 const fs = require('fs');
 const path = require('path');
 
+const { deflateSync } = require('lz-utils');
+const Util = require('../lib/utils/util.js');
+const pkg = require('../package.json');
+const getDefaultSummary = require('../lib/default/summary.js');
+const getDefaultColumns = require('../lib/default/columns.js');
+
+const DEFAULT_OUTPUT_DIR = '.temp/monocart';
+const DEFAULT_OUTPUT_FILE = 'index.html';
+const FIXTURES_DIR = path.resolve(__dirname, './fixtures');
+const REPORT_FIXTURE = path.resolve(FIXTURES_DIR, 'report-default.json');
+const NETWORK_FIXTURE = path.resolve(FIXTURES_DIR, 'network-default.json');
+
+const createDefaultSummary = () => {
+    const summary = getDefaultSummary();
+    Object.keys(summary).forEach((key) => {
+        const item = summary[key];
+        item.id = key;
+        item.value = item.value || 0;
+    });
+    return summary;
+};
+
+const createDefaultSystem = () => {
+    const now = Date.now();
+    return {
+        timestampStart: now,
+        timestampEnd: now,
+        ticks: [],
+        workers: 0,
+        jobs: [],
+        cwd: process.cwd(),
+        outputDir: DEFAULT_OUTPUT_DIR,
+        outputFile: DEFAULT_OUTPUT_FILE,
+        playwright: '',
+        monocart: pkg.version
+    };
+};
+
+const createDefaultReportData = () => {
+    const now = Date.now();
+    const locale = 'en-US';
+    const timezone = new Date().getTimezoneOffset() / 60;
+    return {
+        title: 'Monocart Reporter',
+        name: 'Monocart Reporter',
+        version: pkg.version,
+        logo: '',
+        date: now,
+        dateH: new Date(now).toLocaleString(locale),
+        duration: 0,
+        durationH: '0s',
+        timezone,
+        timezoneOffset: timezone,
+        locale,
+        cwd: process.cwd(),
+        outputFile: DEFAULT_OUTPUT_FILE,
+        outputDir: DEFAULT_OUTPUT_DIR,
+        metadata: {},
+        system: createDefaultSystem(),
+        artifacts: [],
+        trends: [],
+        suiteTypes: ['project', 'file', 'describe', 'shard'],
+        caseTypes: ['failed', 'flaky', 'skipped', 'passed'],
+        traceViewerUrl: '',
+        mermaid: null,
+        groupOptions: [],
+        columns: getDefaultColumns(),
+        rows: [],
+        formatters: {},
+        tags: {},
+        summary: createDefaultSummary(),
+        pieChart: null
+    };
+};
+
+const createDefaultNetworkData = () => ({
+    title: 'Network Report',
+    name: 'Network Report',
+    summary: {
+        requests: 0,
+        size: 0,
+        status: {},
+        methods: {},
+        waterfalls: {}
+    },
+    log: {
+        version: '1.2',
+        creator: {
+            name: 'Monocart Reporter',
+            version: pkg.version
+        },
+        pages: [],
+        entries: []
+    }
+});
+
+const createReportDataScript = (data) => {
+    const compressed = deflateSync(JSON.stringify(data));
+    return `window.reportData = '${compressed}';`;
+};
+
 // eslint-disable-next-line complexity
-const beforeReporter = (item, Util) => {
+const beforeReporter = (item, _cliUtil) => {
 
     const EC = require('eight-colors');
-    const { deflateSync } = require('lz-utils');
-    const { forEach, formatPath } = require('../lib/utils/util.js');
 
     // generate reportData for demo
     const jsonPath = path.resolve(__dirname, '../.temp/monocart/index.json');
@@ -29,16 +128,20 @@ const beforeReporter = (item, Util) => {
     // ten-minutes
     // const jsonPath = path.resolve(__dirname, '../../monocart-reporter-examples/docs/ten-minutes/index.json');
 
-    if (!fs.existsSync(jsonPath)) {
-        EC.logRed(`ERROR: Not found test json: ${jsonPath}`);
-        return 0;
+    let reportData;
+    if (fs.existsSync(jsonPath)) {
+        reportData = Util.readJSONSync(jsonPath);
     }
 
-    const reportData = Util.readJSONSync(jsonPath);
-    if (!reportData) {
-        EC.logRed(`ERROR: Invalid json: ${jsonPath}`);
-        return 0;
+    if (!reportData && fs.existsSync(REPORT_FIXTURE)) {
+        reportData = Util.readJSONSync(REPORT_FIXTURE);
     }
+
+    if (!reportData) {
+        reportData = createDefaultReportData();
+    }
+
+    reportData.title = reportData.title || reportData.name || 'Monocart Reporter';
 
     // const addedData = Util.readJSONSync(path.resolve(__dirname, '../.temp/steps.json'));
     // reportData.rows = reportData.rows.concat(addedData.rows);
@@ -49,14 +152,14 @@ const beforeReporter = (item, Util) => {
             const newDir = item.devPath;
             // console.log(prevPath, newDir);
             const newPath = path.relative(newDir, prevPath);
-            return formatPath(newPath);
+            return Util.formatPath(newPath);
         }
         return p;
     };
 
     // attachment path handler for preview
     if (!item.production) {
-        forEach(reportData.rows, (row) => {
+        Util.forEach(reportData.rows, (row) => {
             if (row.type === 'case' && row.attachments) {
                 row.attachments.forEach((attachment) => {
                     attachment.path = convertDevPath(attachment.path);
@@ -78,8 +181,7 @@ const beforeReporter = (item, Util) => {
 
     }
 
-    const reportDataStr = deflateSync(JSON.stringify(reportData));
-    const jsContent = `window.reportData = '${reportDataStr}';`;
+    const jsContent = createReportDataScript(reportData);
 
     const jsPath = path.resolve(item.buildPath, 'report-data.js');
     Util.writeFileSync(jsPath, jsContent);
@@ -91,7 +193,7 @@ const beforeReporter = (item, Util) => {
     return 0;
 };
 
-const beforeNetwork = (item, Util) => {
+const beforeNetwork = (item, _cliUtil) => {
 
     const EC = require('eight-colors');
 
@@ -106,14 +208,25 @@ const beforeNetwork = (item, Util) => {
         }
     }
 
-    if (!jsDataPath) {
-        EC.logRed(`ERROR: Not found ${dataFile} in ${reporterDir}`);
-        return 0;
-    }
-
     const jsPath = path.resolve(item.buildPath, dataFile);
-    fs.copyFileSync(jsDataPath, jsPath);
-    EC.logGreen(`network data file copied: ${dataFile}`);
+
+    if (!jsDataPath) {
+        let networkData = null;
+        if (fs.existsSync(NETWORK_FIXTURE)) {
+            networkData = Util.readJSONSync(NETWORK_FIXTURE);
+        }
+        if (!networkData) {
+            networkData = createDefaultNetworkData();
+        }
+        const placeholderContent = createReportDataScript(networkData);
+        fs.mkdirSync(item.buildPath, {
+            recursive: true
+        });
+        fs.writeFileSync(jsPath, placeholderContent);
+    } else {
+        fs.copyFileSync(jsDataPath, jsPath);
+        EC.logGreen(`network data file copied: ${dataFile}`);
+    }
 
     if (!item.dependencies.files.includes(jsPath)) {
         item.dependencies.files.unshift(jsPath);

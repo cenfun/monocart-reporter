@@ -1,8 +1,9 @@
-/.temp
-/node_modules
-/packages/**/dist
-/package-lock.json
-/lib/packages
-/.env
-/scripts/mock/demo/dist/
-/packages/*/node_modules
+*.local.*
+.env/
+.idea/
+.temp/
+lib/packages/
+node_modules/
+packages/**/dist/
+packages/*/node_modules/
+scripts/mock/demo/dist/

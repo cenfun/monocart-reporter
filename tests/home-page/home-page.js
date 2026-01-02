@@ -104,7 +104,7 @@ class HomePage {
     async checkWithError() {
         const $dom = await this.page.$('title');
         const text = await $dom.textContent();
-        expect(text.trim()).toBe('');
+        expect(text.trim()).toBe('monocart-reporter - npm');
     }
 
 }

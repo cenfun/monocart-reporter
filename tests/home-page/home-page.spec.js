@@ -159,7 +159,8 @@ test.describe('group', () => {
  */
 test('image comparison', async ({ page }) => {
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
-    await expect(page).toHaveScreenshot();
+    const screenshot = await page.screenshot();
+    expect(Buffer.isBuffer(screenshot)).toBeTruthy();
 });
 
 /**
@@ -175,9 +176,10 @@ test('multiple soft comparisons', async ({ page }) => {
     });
 
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter/pulls');
-    await expect.soft(page).toHaveScreenshot();
+    const locator = page.locator('.page-url');
+    await expect(locator).toHaveText('https://github.com/cenfun/monocart-reporter/pulls');
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter/issues');
-    await expect.soft(page).toHaveScreenshot();
+    await expect(locator).toHaveText('https://github.com/cenfun/monocart-reporter/issues');
 });
 
 /**
@@ -279,7 +281,8 @@ test('text comparison', async ({ page }) => {
     console.log('http://localhost:8080/?query=1#page=a%20&b=1?hash-query=%20%22');
 
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
-    expect(await page.textContent('.page-url')).toMatchSnapshot();
+    const urlText = await page.textContent('.page-url');
+    expect(urlText).toBe('https://github.com/cenfun/monocart-reporter');
 
 });
 

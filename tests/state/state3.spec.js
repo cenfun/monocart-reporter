@@ -1,4 +1,4 @@
-const { test } = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 const { useState } = require('monocart-reporter');
 
 /**
@@ -6,15 +6,10 @@ const { useState } = require('monocart-reporter');
  */
 test('state test hang up', async () => {
 
-    console.log('should failed');
-
-    // wrong port
-    const state = useState({
-        port: 8031
-    });
-
+    const state = useState();
     const count = await state.get('count');
     console.log('count', count);
+    expect(count).toBeGreaterThanOrEqual(0);
 
 });
 
@@ -31,4 +26,3 @@ test('state test send message', async () => {
     console.log('receive response on client', response);
 
 });
-

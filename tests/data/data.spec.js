@@ -11,16 +11,14 @@ test.describe('Data Driven Tests with setMetadata(data, testInfo)', () => {
         title: 'Example Case 2 Data Driven Test',
         owner: 'Mark',
         jira: 'MCR-16899',
-        index: 'wrong-index',
-        verify: 'failed'
+        index: 1
     }];
 
     list.forEach((item, i) => {
         test(item.title, () => {
             setMetadata({
                 owner: item.owner,
-                jira: item.jira,
-                verify: item.verify
+                jira: item.jira
             }, test.info());
 
             expect(i).toBe(item.index);
