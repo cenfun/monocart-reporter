@@ -570,9 +570,22 @@ const updateSearchHistoryAsync = debounce(() => {
 }, 1000);
 
 const updateGridAsync = debounce(updateGrid, 200);
+
+// Extract @tag patterns from keywords and sync to hash
+const syncTagsToHash = (keywords) => {
+    const tagMatches = keywords.match(/@[\w-]+/g);
+    if (tagMatches && tagMatches.length > 0) {
+        const tags = tagMatches.map((t) => t.slice(1)).join(',');
+        hash.set('tags', tags);
+    } else {
+        hash.remove('tags');
+    }
+};
+
 watch(() => state.keywords, (v) => {
     updateGridAsync();
     updateSearchHistoryAsync();
+    syncTagsToHash(v);
 });
 
 watch(() => searchable.columns, (v) => {
@@ -624,6 +637,15 @@ watch(() => state.mermaidEnabled, (v) => {
 window.addEventListener('popstate', microtask(() => {
     const caseType = hash.get('caseType');
     state.caseType = caseType || 'tests';
+
+    // Restore tags from hash
+    const tags = hash.get('tags');
+    if (tags) {
+        state.keywords = tags.split(',').map((t) => `@${t.trim()}`).filter((t) => t !== '@').join(' ');
+    } else {
+        state.keywords = '';
+    }
+
     displayFlyoverWithHash();
 }));
 
