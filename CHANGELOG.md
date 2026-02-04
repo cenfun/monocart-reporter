@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.10.0
+  - feat: add tag deep linking support (#192)
+
 * 2.9.23
   - fixed dateH with timezoneOffset
 
