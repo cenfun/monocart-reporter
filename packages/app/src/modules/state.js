@@ -14,6 +14,15 @@ export const defaultGroups = {
     merge: false
 };
 
+// Convert comma-separated tags from hash to @tag keywords format
+const getTagsKeywords = () => {
+    const tags = hash.get('tags');
+    if (tags) {
+        return tags.split(',').map((t) => `@${t.trim()}`).filter((t) => t !== '@').join(' ');
+    }
+    return '';
+};
+
 // do not use reactive for grid data
 const state = shallowReactive({
     title: '',
@@ -21,7 +30,7 @@ const state = shallowReactive({
     summary: {},
 
     // filter
-    keywords: '',
+    keywords: getTagsKeywords(),
     searchableAllKeys: [],
     searchableKeys: [],
 
