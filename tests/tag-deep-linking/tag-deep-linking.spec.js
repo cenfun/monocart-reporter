@@ -5,7 +5,7 @@ const fs = require('fs');
 /**
  * Test suite for tag deep linking feature
  * Tests URL hash parameter support for filtering by tags
- * 
+ *
  * NOTE: These tests require a pre-generated report at .temp/monocart/index.html
  * Run `npm run test-example` first to generate the report, then run these tests
  */
@@ -30,7 +30,9 @@ test.describe('Tag Deep Linking', () => {
         await page.goto(`${reportUrl}#tags=smoke`);
 
         // Wait for the report to load
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Check that search box contains @smoke
         const searchInput = page.locator('.mcr-search input');
@@ -45,7 +47,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate to report with multiple tags
         await page.goto(`${reportUrl}#tags=smoke,slow`);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Check that search box contains @smoke @slow
         const searchInput = page.locator('.mcr-search input');
@@ -60,7 +64,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate with both caseType and tags
         await page.goto(`${reportUrl}#caseType=failed&tags=sanity`);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Check search box has tag
         const searchInput = page.locator('.mcr-search input');
@@ -76,7 +82,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate to report without hash
         await page.goto(reportUrl);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Type tags in search box
         const searchInput = page.locator('.mcr-search input');
@@ -94,7 +102,9 @@ test.describe('Tag Deep Linking', () => {
         // Start with tags in hash
         await page.goto(`${reportUrl}#tags=smoke`);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Clear the search box
         const searchInput = page.locator('.mcr-search input');
@@ -111,7 +121,9 @@ test.describe('Tag Deep Linking', () => {
     test('should handle browser back/forward navigation', async ({ page }) => {
         // Start with one tag
         await page.goto(`${reportUrl}#tags=smoke`);
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         let searchInput = page.locator('.mcr-search input');
         await expect(searchInput).toHaveValue('@smoke');
@@ -144,7 +156,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate with non-existent tag
         await page.goto(`${reportUrl}#tags=nonexistent999`);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Check that search box shows the tag even if it doesn't exist
         const searchInput = page.locator('.mcr-search input');
@@ -159,7 +173,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate with tag containing dash
         await page.goto(`${reportUrl}#tags=some-tag`);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Check that it's parsed correctly
         const searchInput = page.locator('.mcr-search input');
@@ -170,7 +186,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate to report
         await page.goto(reportUrl);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Type mixed content: tags and regular text
         const searchInput = page.locator('.mcr-search input');
@@ -189,7 +207,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate to report
         await page.goto(reportUrl);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Type multiple tags with other text
         const searchInput = page.locator('.mcr-search input');
@@ -207,7 +227,9 @@ test.describe('Tag Deep Linking', () => {
         // Navigate with tags that might need encoding
         await page.goto(`${reportUrl}#tags=smoke,slow`);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Verify tags are parsed correctly
         const searchInput = page.locator('.mcr-search input');
@@ -218,7 +240,9 @@ test.describe('Tag Deep Linking', () => {
         // Start with tags and failed filter
         await page.goto(`${reportUrl}#caseType=failed&tags=smoke`);
 
-        await page.waitForSelector('.mcr-search input', { timeout: 5000 });
+        await page.waitForSelector('.mcr-search input', {
+            timeout: 5000
+        });
 
         // Verify initial state
         const searchInput = page.locator('.mcr-search input');

@@ -267,7 +267,7 @@ const formatters = {
         if (!value) {
             return '';
         }
-        let formattedValue = value;
+        let formattedValue;
         if (Util.isList(value)) {
             // only show type in grid
             formattedValue = annotationTypeFormatter(value);
