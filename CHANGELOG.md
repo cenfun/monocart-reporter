@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.10.1
+  - update dependencies (#193)
+
 * 2.10.0
   - feat: add tag deep linking support (#192)
 
