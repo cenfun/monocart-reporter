@@ -185,6 +185,13 @@ export type MonocartReporterOptions = {
     /** onEnd hook: https://github.com/cenfun/monocart-reporter?#onend-hook */
     onEnd?: (reportData: any, helper: Helper) => Promise<void>;
 
+    /**
+     * onExit hook: called immediately before the Playwright test runner exits,
+     * after all reporters have received onEnd. Useful for uploading reports or
+     * other post-completion side effects.
+     */
+    onExit?: (options: MonocartReporterOptions) => Promise<void> | void;
+
 }
 
 /**
