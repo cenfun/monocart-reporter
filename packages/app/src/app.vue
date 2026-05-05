@@ -1609,20 +1609,13 @@ a:not([href], [class]):hover {
 
     summary {
         position: relative;
-        padding: 3px 0;
-        padding-left: 20px;
-        background: url("./images/arrow-right.svg") left center no-repeat;
-        background-size: 16px 16px;
-        list-style: none;
+        padding: 3px 0 3px 3px;
+        text-transform: capitalize;
         cursor: default;
     }
 
     summary:hover {
         background-color: #f8f8f8;
-    }
-
-    details[open] > summary {
-        background-image: url("./images/arrow-down.svg");
     }
 }
 
@@ -1717,6 +1710,7 @@ a:not([href], [class]):hover {
     animation-timing-function: linear;
 }
 
+/** fixed popover theme */
 .vui-popover,
 .vui-tooltip {
     color: #1e1e1e;
@@ -1755,6 +1749,12 @@ a:not([href], [class]):hover {
     .mcr-report-head {
         border-bottom: 1px solid #1e1e1e;
         background-color: #333;
+    }
+
+    .mcr-details-summary {
+        summary:hover {
+            background-color: #333;
+        }
     }
 }
 </style>

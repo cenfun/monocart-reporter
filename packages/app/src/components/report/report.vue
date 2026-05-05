@@ -675,7 +675,7 @@ onActivated(() => {
             :key="i"
             open
           >
-            <summary class="mcr-artifact-name">
+            <summary>
               {{ group.name }}
             </summary>
             <VuiFlex
@@ -806,10 +806,6 @@ onActivated(() => {
     .mcr-num {
         background-color: #0888f0;
     }
-
-    a {
-        color: #333;
-    }
 }
 
 .mcr-report-chart {
@@ -847,10 +843,6 @@ onActivated(() => {
     .mcr-tag {
         opacity: 0.9;
     }
-}
-
-.mcr-artifact-name {
-    text-transform: capitalize;
 }
 
 .mcr-artifact-list {
