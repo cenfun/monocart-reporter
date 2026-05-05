@@ -429,6 +429,8 @@ const getGridSortComparers = () => {
 const getGridOption = () => {
     const options = {
 
+        theme: state.theme,
+
         bindWindowResize: true,
         scrollbarRound: true,
         textSelectable: true,

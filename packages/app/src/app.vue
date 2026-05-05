@@ -429,6 +429,16 @@ const updateTheme = () => {
             html.remove('mcr-dark');
         }
     }
+
+    const gridList = Array.from(document.querySelectorAll('.tg-turbogrid'));
+    gridList.forEach((grid) => {
+        if (state.theme === 'dark') {
+            grid.classList.add('tg-dark');
+        } else {
+            grid.classList.remove('tg-dark');
+        }
+    });
+
 };
 
 const onThemeClick = () => {
@@ -737,7 +747,7 @@ window.addEventListener('message', (e) => {
       >
         <IconLabel
           :icon="state.theme + '-mode'"
-          size="20px"
+          size="24px"
         />
       </div>
 
@@ -770,14 +780,8 @@ window.addEventListener('message', (e) => {
           :class="navItemClass(item)"
           @click="onNavItemClick(item)"
         >
-          <VuiFlex
-            gap="5px"
-            wrap
-            center
-          >
-            <b>{{ item.name }}</b>
-            <span>{{ Util.NF(item.value) }}</span>
-          </VuiFlex>
+          <b>{{ item.name }}</b>
+          <span>{{ Util.NF(item.value) }}</span>
         </div>
       </div>
 
@@ -1109,40 +1113,9 @@ window.addEventListener('message', (e) => {
 </template>
 
 <style lang="scss">
-@keyframes mcr-blink-fade-in {
-    0% {
-        opacity: 0;
-    }
-
-    50% {
-        opacity: 0.3;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
-.mcr-blink::after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    z-index: 10;
-    width: 100%;
-    height: 100%;
-    background: gray;
-    animation-name: mcr-blink-fade-in;
-    animation-duration: 0.3s;
-    animation-timing-function: linear;
-}
-
-html {
-    height: 100%;
-}
-
-body {
+:root {
     --font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
+    --font-default: "Helvetica Neue", helvetica, arial, sans-serif;
     --bg-failed: #fff0ef;
     --bg-flaky: #fcf7de;
     --color-passed: green;
@@ -1151,15 +1124,30 @@ body {
     --color-skipped: gray;
     --border-failed: rgb(180 0 0 / 50%);
     --image-shadow: rgb(0 0 0 / 35%) 0 2px 8px;
+}
 
+* {
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+html {
+    height: 100%;
+}
+
+body {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
     color: #333;
     font-size: 14px;
-    font-family: arial, sans-serif;
+    font-family: var(--font-default) !important;
     overflow: hidden;
+}
+
+.tg-turbogrid {
+    font-family: var(--default-font) !important;
 }
 
 svg {
@@ -1235,8 +1223,8 @@ a:not([href], [class]):hover {
 /* header */
 
 .mcr-header {
-    color: #fff;
-    background-color: #24292f;
+    flex-shrink: 0;
+    border-bottom: 1px solid #ccc;
 }
 
 .mcr-header-left {
@@ -1245,6 +1233,7 @@ a:not([href], [class]):hover {
     flex-wrap: wrap;
     gap: 10px;
     align-items: center;
+    line-height: 100%;
 
     .mcr-logo {
         display: block;
@@ -1255,17 +1244,30 @@ a:not([href], [class]):hover {
 
     .mcr-title {
         height: 24px;
-        font-size: 18px;
+        font-weight: bold;
+        font-size: 16px;
         line-height: 24px;
         white-space: nowrap;
         text-overflow: ellipsis;
         cursor: pointer;
     }
 
-    /** only header */
     .mcr-icon-label {
-        color: #ccc;
-        font-size: 14px;
+        font-size: 13px;
+    }
+}
+
+@media (width <= 800px) {
+    .mcr-header-left {
+        gap: 5px;
+
+        .mcr-title {
+            font-size: 14px;
+        }
+
+        .mcr-icon-label {
+            font-size: 12px;
+        }
     }
 }
 
@@ -1298,20 +1300,26 @@ a:not([href], [class]):hover {
 }
 
 .mcr-nav-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
     padding: 8px 10px;
+    font-size: 14px;
+    text-align: center;
     border-left: thin solid #6c757d;
     cursor: pointer;
 
     &:first-child {
         border-left: none;
     }
+}
 
-    .vui-flex {
-        align-items: baseline;
-    }
-
-    i {
-        font-size: 13px;
+@media (width <= 500px) {
+    .mcr-nav-item {
+        padding: 5px 6px;
+        font-size: 12px;
     }
 }
 
@@ -1359,24 +1367,6 @@ a:not([href], [class]):hover {
 .mcr-nav-skipped.mcr-nav-selected {
     color: #fff;
     background-color: var(--color-skipped);
-}
-
-.mcr-nav-value {
-    width: 81px;
-    margin: 0 auto 5px;
-    padding: 5px;
-    font-size: 16px;
-    text-align: center;
-    border-radius: 10px;
-    background-color: #f5f5f5;
-
-    span {
-        display: block;
-        height: 20px;
-        margin-top: 3px;
-        font-size: 12px;
-        line-height: 20px;
-    }
 }
 
 .mcr-search-holder {
@@ -1696,4 +1686,51 @@ a:not([href], [class]):hover {
     }
 }
 
+@keyframes mcr-blink-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.mcr-blink::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background: gray;
+    animation-name: mcr-blink-fade-in;
+    animation-duration: 0.3s;
+    animation-timing-function: linear;
+}
+
+.mcr-dark {
+    body {
+        background-color: #24292f;
+    }
+
+    .tg-dark {
+        background-color: #24292f;
+    }
+
+    .mcr-header {
+        color: #fff;
+
+        .mcr-header-left {
+            .mcr-icon-label {
+                color: #ccc;
+            }
+        }
+    }
+}
 </style>

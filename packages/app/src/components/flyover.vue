@@ -98,6 +98,9 @@ const onFlyoverResize = (width) => {
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .mcr-flyover-content {

@@ -42,7 +42,7 @@ const el = ref(null);
 const slots = useSlots();
 
 const classMap = computed(() => {
-    const list = ['mcr-icon-label', 'vui-flex-row'];
+    const list = ['mcr-icon-label'];
     if (props.button) {
         list.push('mcr-icon-label-button');
         if (props.primary) {
@@ -126,7 +126,10 @@ watch(() => props.icon, () => {
     --mcr-icon-color: inherit;
 
     position: relative;
+    display: flex;
     gap: var(--mcr-icon-gap);
+    align-items: center;
+    line-height: 100%;
 }
 
 .mcr-icon-label-icon {
