@@ -594,6 +594,7 @@ onMounted(() => {
           <g
             pointer-events="none"
             font-family="Verdana,Helvetica,sans-serif"
+            fill="currentColor"
           >
 
             <g

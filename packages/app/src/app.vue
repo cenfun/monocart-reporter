@@ -1717,9 +1717,13 @@ a:not([href], [class]):hover {
     animation-timing-function: linear;
 }
 
-.vui-flyover,
 .vui-popover,
 .vui-tooltip {
+    color: #1e1e1e;
+    background-color: #fff;
+}
+
+.vui-flyover {
     color: var(--color-default);
     background-color: var(--bg-default);
 }

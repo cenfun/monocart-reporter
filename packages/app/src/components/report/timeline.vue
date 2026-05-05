@@ -256,7 +256,6 @@ const workerListHandler = () => {
         item.y = barY;
         item.width = width;
         item.height = height;
-        item.color = '#333';
         item.name = `Worker ${(item.index + 1)}`;
         barY += height + chart.gap;
     });
@@ -490,7 +489,6 @@ const axisHandler = () => {
         return {
             x: labelX + item.x,
             y: height,
-            color: '#666',
             anchor: item.anchor,
             label: item.label
         };
@@ -538,6 +536,7 @@ onMounted(() => {
           pointer-events="none"
           font-family="Verdana,Helvetica,sans-serif"
           font-size="12px"
+          fill="currentColor"
         >
 
           <g
@@ -551,7 +550,6 @@ onMounted(() => {
               <text
                 :x="chart.padding"
                 :y="item.y+item.height*0.5"
-                :fill="item.color"
                 alignment-baseline="middle"
               >{{ item.name }}</text>
 
@@ -639,7 +637,6 @@ onMounted(() => {
                 :x="item.x"
                 :y="item.y"
                 :text-anchor="item.anchor"
-                :fill="item.color"
                 alignment-baseline="baseline"
               >{{ item.label }}</text>
             </g>
