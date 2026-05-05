@@ -1116,6 +1116,8 @@ window.addEventListener('message', (e) => {
 :root {
     --font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
     --font-default: "Helvetica Neue", helvetica, arial, sans-serif;
+    --bg-default: #fff;
+    --color-default: #1e1e1e;
     --bg-failed: #fff0ef;
     --bg-flaky: #fcf7de;
     --color-passed: green;
@@ -1140,9 +1142,10 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
-    color: #333;
+    color: var(--color-default);
     font-size: 14px;
     font-family: var(--font-default) !important;
+    background-color: var(--bg-default);
     overflow: hidden;
 }
 
@@ -1714,18 +1717,31 @@ a:not([href], [class]):hover {
     animation-timing-function: linear;
 }
 
+.vui-popover {
+    color: #1e1e1e;
+}
+
+.vui-tooltip {
+    color: #1e1e1e;
+}
+
 .mcr-dark {
-    body {
-        background-color: #24292f;
-    }
+    --bg-default: #1e1e1e;
+    --color-default: #fff;
+    --bg-failed: #4d0f0f;
+    --bg-flaky: #4d3b0f;
 
     .tg-dark {
-        background-color: #24292f;
+        background-color: var(--bg-default);
+
+        .tg-row {
+            .tg-cell {
+                color: var(--color-default);
+            }
+        }
     }
 
     .mcr-header {
-        color: #fff;
-
         .mcr-header-left {
             .mcr-icon-label {
                 color: #ccc;
