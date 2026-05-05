@@ -88,7 +88,8 @@ const removeHighlight = () => {
 
 const getGrid = () => {
     if (data.grid) {
-        return data.grid;
+        data.grid.destroy();
+        data.grid = null;
     }
 
     const grid = new Grid(document.querySelector('.mcr-overview-grid'));
@@ -109,6 +110,8 @@ const getGrid = () => {
     });
 
     grid.setOption({
+
+        theme: state.theme,
 
         headerVisible: false,
 

@@ -1756,5 +1756,13 @@ a:not([href], [class]):hover {
             background-color: #333;
         }
     }
+
+    .mcr-search,
+    .mcr-overview-search {
+        .vui-input input {
+            color: var(--color-default);
+            background-color: #333;
+        }
+    }
 }
 </style>
