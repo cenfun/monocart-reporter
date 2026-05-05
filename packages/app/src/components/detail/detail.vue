@@ -87,27 +87,25 @@ const removeHighlight = () => {
 };
 
 const getGrid = () => {
-    if (data.grid) {
-        data.grid.destroy();
-        data.grid = null;
-    }
+    let grid = data.grid;
+    if (!grid) {
+        grid = new Grid(document.querySelector('.mcr-overview-grid'));
+        data.grid = grid;
 
-    const grid = new Grid(document.querySelector('.mcr-overview-grid'));
-    data.grid = grid;
-
-    grid.bind('onResize onLayout', function(e, d) {
-        updateColumnWidth(grid);
-    });
-
-    grid.bind('onUpdated', (e, d) => {
-        nextTick(() => {
-            renderMermaid();
+        grid.bind('onResize onLayout', function(e, d) {
+            updateColumnWidth(grid);
         });
-    });
 
-    grid.bind('onClick', (e, d) => {
-        removeHighlight();
-    });
+        grid.bind('onUpdated', (e, d) => {
+            nextTick(() => {
+                renderMermaid();
+            });
+        });
+
+        grid.bind('onClick', (e, d) => {
+            removeHighlight();
+        });
+    }
 
     grid.setOption({
 

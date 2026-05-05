@@ -1746,6 +1746,10 @@ a:not([href], [class]):hover {
         }
     }
 
+    .mcr-flyover-header {
+        background-color: #00467f;
+    }
+
     .mcr-report-head {
         border-bottom: 1px solid #1e1e1e;
         background-color: #333;

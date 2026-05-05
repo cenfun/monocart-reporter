@@ -54,15 +54,16 @@ const getColumnComponent = (componentType) => {
     >
       <IconLabel
         :icon="column.icon"
-        :button="false"
-      />
+      >
+        <VuiFlex gap="5px">
+          {{ column.data.name }}
+          <IconLabel
+            :icon="column.tg_state.collapsed?'collapsed':'expanded'"
+            :button="false"
+          />
+        </VuiFlex>
+      </IconLabel>
 
-      <div>{{ column.data.name }}</div>
-
-      <IconLabel
-        :icon="column.tg_state.collapsed?'collapsed':'expanded'"
-        :button="false"
-      />
 
       <div class="vui-flex-auto" />
       <div
@@ -85,7 +86,6 @@ const getColumnComponent = (componentType) => {
 <style lang="scss">
 .mcr-detail-column {
     position: relative;
-    color: #333;
     overflow: hidden;
 }
 
@@ -94,10 +94,6 @@ const getColumnComponent = (componentType) => {
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
-}
-
-.mcr-column-head:hover {
-    color: #000;
 }
 
 .mcr-column-content {
