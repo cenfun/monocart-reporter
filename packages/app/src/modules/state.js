@@ -25,6 +25,8 @@ const getTagsKeywords = () => {
 
 // do not use reactive for grid data
 const state = shallowReactive({
+    theme: localStorage.getItem('mcr-theme') || 'light',
+
     title: '',
     date: '',
     summary: {},

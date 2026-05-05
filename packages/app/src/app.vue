@@ -420,6 +420,22 @@ const onSuiteDropdownClick = (e) => {
 };
 
 // =================================================================================
+const updateTheme = () => {
+    const html = document.documentElement.classList;
+    if (html) {
+        if (state.theme === 'dark') {
+            html.add('mcr-dark');
+        } else {
+            html.remove('mcr-dark');
+        }
+    }
+};
+
+const onThemeClick = () => {
+    state.theme = state.theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('mcr-theme', state.theme);
+    updateTheme();
+};
 
 const onMenuClick = (e) => {
     hash.set('page', 'report');
@@ -477,6 +493,8 @@ const onExportClick = () => {
 
 // =================================================================================
 const init = async () => {
+
+    updateTheme();
 
     const reportStr = await inflate(window.reportData);
     const reportData = JSON.parse(reportStr);
@@ -712,6 +730,16 @@ window.addEventListener('message', (e) => {
       </div>
 
       <div class="vui-flex-auto" />
+
+      <div
+        :class="['mcr-theme', 'mcr-theme-'+state.theme]"
+        @click="onThemeClick"
+      >
+        <IconLabel
+          :icon="state.theme + '-mode'"
+          size="20px"
+        />
+      </div>
 
       <IconLabel
         icon="menu"
@@ -1239,6 +1267,19 @@ a:not([href], [class]):hover {
         color: #ccc;
         font-size: 14px;
     }
+}
+
+.mcr-theme {
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.mcr-theme-light:hover {
+    background-color: #ddd;
+}
+
+.mcr-theme-dark:hover {
+    background-color: #444;
 }
 
 .mcr-filter {
