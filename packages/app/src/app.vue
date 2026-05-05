@@ -1717,12 +1717,11 @@ a:not([href], [class]):hover {
     animation-timing-function: linear;
 }
 
-.vui-popover {
-    color: #1e1e1e;
-}
-
+.vui-flyover,
+.vui-popover,
 .vui-tooltip {
-    color: #1e1e1e;
+    color: var(--color-default);
+    background-color: var(--bg-default);
 }
 
 .mcr-dark {
@@ -1747,6 +1746,11 @@ a:not([href], [class]):hover {
                 color: #ccc;
             }
         }
+    }
+
+    .mcr-report-head {
+        border-bottom: 1px solid #1e1e1e;
+        background-color: #333;
     }
 }
 </style>
