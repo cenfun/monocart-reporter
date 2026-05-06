@@ -1,17 +1,26 @@
+/** fixed popover theme */
+.vui-popover,
+.vui-tooltip {
+    color: var(--color-primary-fixed);
+    background-color: var(--bg-primary-fixed);
+}
+
 .mcr-dark {
-    --bg-default: #1e1e1e;
-    --color-default: #fff;
+    --bg-primary: #1e1e1e;
+    --bg-html-content: #2e2e2e;
+    --color-primary: #fff;
+    --color-secondary: #ccc;
     --bg-failed: #4d0f0f;
     --bg-flaky: #4d3b0f;
+    --border-column-content: #555;
 
-    /** fixed popover theme */
-    .vui-popover,
-    .vui-tooltip {
-        color: #1e1e1e;
-        background-color: #fff;
+    .mcr-column-copy {
+        background-color: rgb(0 0 0 / 60%);
+
+        .mcr-icon-label {
+            background-color: #1e1e1e;
+        }
     }
-
-
 
     .mcr-header {
         .mcr-header-left {
@@ -39,16 +48,16 @@
     .mcr-search,
     .mcr-overview-search {
         .vui-input input {
-            color: var(--color-default);
+            color: var(--color-primary);
             background-color: #333;
         }
     }
 }
 
 .tg-dark {
-    background-color: var(--bg-default);
+    background-color: var(--bg-primary);
 
     .tg-cell {
-        color: var(--color-default);
+        color: var(--color-primary);
     }
 }

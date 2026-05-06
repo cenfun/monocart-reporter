@@ -53,7 +53,7 @@ const onCopyClick = (e, column) => {
 .mcr-html-content {
     position: relative;
     padding: 0;
-    background-color: #f6f8fa;
+    background-color: var(--bg-html-content);
 }
 
 .mcr-column-html {

@@ -99,7 +99,7 @@ const getColumnComponent = (componentType) => {
 .mcr-column-content {
     position: relative;
     margin-bottom: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-column-content);
     border-radius: 5px;
     overflow: auto hidden;
 }
@@ -114,8 +114,9 @@ const getColumnComponent = (componentType) => {
     }
 
     .mcr-column-content {
+        color: var(--color-primary-fixed);
         border-color: var(--border-failed);
-        background-color: var(--bg-failed);
+        background-color: var(--bg-failed-fixed);
     }
 }
 
