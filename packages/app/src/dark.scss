@@ -10,9 +10,10 @@
     --color-secondary: #ccc;
     --bg-primary: #1e1e1e;
     --bg-secondary: #2e2e2e;
-    --bg-failed: #4d0f0f;
-    --bg-flaky: #4d3b0f;
+    --bg-failed: #230000;
+    --bg-flaky: #342500;
     --border-primary: #555;
+    --border-failed: #500;
 
     .mcr-column-copy {
         background-color: rgb(0 0 0 / 60%);
