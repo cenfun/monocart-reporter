@@ -11,6 +11,10 @@
     --color-skipped: gray;
     --border-failed: rgb(180 0 0 / 50%);
     --image-shadow: rgb(0 0 0 / 35%) 0 2px 8px;
+    --scrollbar-track-color: #f2f2f2;
+    --scrollbar-thumb-color: #808080;
+    --scrollbar-thumb-hover-color: #5e5e5e;
+    --scrollbar-thumb-hold-color: #666;
 }
 
 * {
@@ -36,6 +40,60 @@ body {
 
 .tg-turbogrid {
     font-family: var(--default-font) !important;
+
+    .tg-scrollbar {
+        .tg-scrollbar-track {
+            background: var(--scrollbar-track-color);
+        }
+
+        .tg-scrollbar-thumb {
+            background: var(--scrollbar-thumb-color);
+        }
+
+        .tg-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover-color);
+        }
+
+        .tg-scrollbar-thumb-hold {
+            background: var(--scrollbar-thumb-hold-color);
+        }
+
+        .tg-scrollbar-thumb-hold:hover {
+            background: var(--scrollbar-thumb-hold-color);
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track:horizontal {
+    background: var(--scrollbar-track-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background: var(--scrollbar-thumb-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+    background: var(--scrollbar-thumb-hover-color);
 }
 
 svg {

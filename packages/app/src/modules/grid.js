@@ -462,6 +462,7 @@ const getGridOption = () => {
         frozenColumn: 1,
 
         // scrollbarFade: true,
+        scrollbarSize: 10,
 
         // do not watch sort in state
         sortField: state.sortField,

@@ -109,6 +109,7 @@ const onFlyoverResize = (width) => {
 }
 
 .mcr-flyover-content {
+    position: relative;
     overflow: auto;
 }
 

@@ -1,8 +1,4 @@
 <script setup>
-import { components } from 'vine-ui';
-
-const { VuiFlex } = components;
-
 const props = defineProps({
     pieChart: {
         type: Object,
@@ -12,8 +8,8 @@ const props = defineProps({
 
 const pieStyle = (pieChart) => {
     return {
-        width: `${pieChart.width}px`,
-        height: `${pieChart.height}px`
+        'max-width': `${pieChart.width}px`,
+        'max-height': `${pieChart.height}px`
     };
 };
 
@@ -52,23 +48,19 @@ const onPieClick = (e) => {
 </script>
 
 <template>
-  <VuiFlex
+  <div
     v-if="props.pieChart"
     class="mcr-pie-chart"
-    gap="20px"
-  >
-    <div
-      :style="pieStyle(props.pieChart)"
-      @click="onPieClick($event)"
-      v-html="props.pieChart.svg"
-    />
-  </VuiFlex>
+    :style="pieStyle(props.pieChart)"
+    @click="onPieClick($event)"
+    v-html="props.pieChart.svg"
+  />
 </template>
 
 <style lang="scss">
 .mcr-pie-chart {
     position: relative;
-    margin-right: 20px;
+    width: 100%;
     overflow: hidden;
 
     svg {

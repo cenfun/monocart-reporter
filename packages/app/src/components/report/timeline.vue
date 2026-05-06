@@ -514,9 +514,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="mcr-timeline-chart"
-  >
+  <div class="mcr-timeline-chart">
     <div>
       <svg
         :viewBox="viewBox"

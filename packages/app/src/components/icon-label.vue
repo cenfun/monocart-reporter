@@ -113,9 +113,12 @@ watch(() => props.icon, () => {
       ref="el"
       class="mcr-icon-label-icon"
     />
-    <label v-if="labelContent">
+    <div
+      v-if="labelContent"
+      class="mcr-icon-label-label"
+    >
       <slot>{{ props.label }}</slot>
-    </label>
+    </div>
   </div>
 </template>
 
@@ -129,7 +132,6 @@ watch(() => props.icon, () => {
     display: flex;
     gap: var(--mcr-icon-gap);
     align-items: center;
-    line-height: 100%;
 }
 
 .mcr-icon-label-icon {
@@ -150,7 +152,7 @@ watch(() => props.icon, () => {
     cursor: pointer;
     opacity: 0.8;
 
-    label {
+    .mcr-icon-label-label {
         white-space: nowrap;
         text-overflow: ellipsis;
         cursor: pointer;
@@ -169,5 +171,4 @@ watch(() => props.icon, () => {
 .mcr-icon-label-primary:hover {
     color: #0a58ca;
 }
-
 </style>

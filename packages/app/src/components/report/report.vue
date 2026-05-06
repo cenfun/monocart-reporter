@@ -1,6 +1,6 @@
 <script setup>
 import {
-    shallowReactive, watch, onActivated
+    shallowReactive, watch, onActivated, reactive
 } from 'vue';
 
 import { components } from 'vine-ui';
@@ -136,7 +136,7 @@ const timelineHandler = () => {
     const system = state.system;
     report.playwright = `Playwright Test v${system.playwright}`;
     report.monocart = `Monocart Reporter v${system.monocart}`;
-    report.usageList = [{
+    report.usageList = reactive([{
         icon: 'worker',
         name: 'Workers',
         value: `${Util.NF(system.workers)} (Max)`
@@ -150,9 +150,9 @@ const timelineHandler = () => {
         name: 'Memory',
         value: Util.BF(system.mem.total),
         color: system.mem.color
-    }];
+    }]);
 
-    report.infoList = [{
+    report.infoList = reactive([{
         list: [{
             icon: 'host',
             name: 'Host',
@@ -188,7 +188,25 @@ const timelineHandler = () => {
             name: 'Output Dir',
             value: system.outputDir
         }]
-    }];
+    }]);
+};
+
+const onUsageClick = (item) => {
+    const copiedText = 'copied';
+
+    if (item.value === copiedText) {
+        return;
+    }
+
+    const originalValue = item.value;
+    Util.copyText(`${item.name}: ${item.value}`).then((res) => {
+        if (res) {
+            item.value = copiedText;
+            setTimeout(() => {
+                item.value = originalValue;
+            }, 1000);
+        }
+    });
 };
 
 // ====================================================================================
@@ -390,67 +408,46 @@ onActivated(() => {
         </VuiFlex>
       </div>
       <div class="mcr-report-chart">
-        <VuiFlex
-          wrap
-          overflow="hidden"
-        >
-          <Pie :pie-chart="report.pieChart" />
-          <VuiFlex
-            gap="15px"
-            direction="column"
-            padding="10px"
-            overflow="hidden"
-            style="max-width: 100%;"
+        <Pie :pie-chart="report.pieChart" />
+        <div class="mcr-amount-list">
+          <template
+            v-for="(group, i) in report.amountList"
+            :key="i"
           >
-            <template v-if="report.amountList">
-              <VuiFlex
-                v-for="(group, i) in report.amountList"
-                :key="i"
-                gap="15px"
-                overflow="hidden"
-                wrap
-              >
-                <VuiFlex
-                  v-for="(item, j) in group.list"
-                  :key="j"
-                  gap="5px"
-                >
-                  <IconLabel
-                    :icon="item.icon || group.icon"
-                    :button="group.button"
-                    :primary="group.primary"
-                    :tooltip="item.description"
-                    @click="onAmountClick(item)"
-                  >
-                    {{ item.name }}
-                  </IconLabel>
-                  <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-                </VuiFlex>
-              </VuiFlex>
-            </template>
-
             <VuiFlex
-              gap="15px"
-              wrap
+              v-for="(item, j) in group.list"
+              :key="j"
+              gap="5px"
             >
               <IconLabel
-                icon="sort"
-                primary
-                @click="onSortClick('tests','duration')"
+                :icon="item.icon || group.icon"
+                :button="group.button"
+                :primary="group.primary"
+                :tooltip="item.description"
+                @click="onAmountClick(item)"
               >
-                Top Slowest
+                {{ item.name }}
               </IconLabel>
-
-              <IconLabel
-                icon="sort"
-                primary
-                @click="onSortClick('failed','duration')"
-              >
-                Top Failed Slowest
-              </IconLabel>
+              <span class="mcr-num">{{ Util.NF(item.value) }}</span>
             </VuiFlex>
-          </VuiFlex>
-        </VuiFlex>
+          </template>
+
+          <IconLabel
+            icon="sort"
+            primary
+            @click="onSortClick('tests','duration')"
+          >
+            Top Slowest
+          </IconLabel>
+
+          <IconLabel
+            icon="sort"
+            primary
+            @click="onSortClick('failed','duration')"
+          >
+            Top Failed Slowest
+          </IconLabel>
+        </div>
       </div>
     </div>
 
@@ -509,60 +506,50 @@ onActivated(() => {
       <div class="mcr-report-chart">
         <Timeline />
 
-        <VuiFlex
+        <div
           v-if="report.usageList"
-          gap="10px"
-          padding="5px 10px 0 10px"
-          wrap
+          class="mcr-usage-list"
         >
-          <VuiFlex
+          <div
             v-for="(item, j) in report.usageList"
             :key="j"
-            gap="5px"
+            class="mcr-usage-item"
+            @click="onUsageClick(item)"
           >
             <IconLabel
               :icon="item.icon"
               :button="false"
               :style="'color:'+item.color"
             >
-              <b>{{ item.name }}</b>
+              {{ item.name }}
             </IconLabel>
             <div class="mcr-long-label">
               {{ item.value }}
             </div>
-          </VuiFlex>
-        </VuiFlex>
-
-        <VuiFlex
-          v-if="report.infoList"
-          gap="10px"
-          direction="column"
-          padding="10px"
-        >
-          <VuiFlex
+          </div>
+          <template
             v-for="(group, i) in report.infoList"
             :key="i"
-            gap="10px"
-            wrap
           >
-            <VuiFlex
+            <div
               v-for="(item, j) in group.list"
               :key="j"
-              gap="5px"
+              class="mcr-usage-item"
+              @click="onUsageClick(item)"
             >
               <IconLabel
                 :icon="item.icon"
                 :button="false"
                 :style="'color:'+item.color"
               >
-                <b>{{ item.name }}</b>
+                {{ item.name }}
               </IconLabel>
               <div class="mcr-long-label">
                 {{ item.value }}
               </div>
-            </VuiFlex>
-          </VuiFlex>
-        </VuiFlex>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
 
@@ -809,15 +796,43 @@ onActivated(() => {
 }
 
 .mcr-report-chart {
+    position: relative;
     padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.mcr-amount-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    max-width: 100%;
+    padding: 10px;
+}
+
+.mcr-usage-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.mcr-usage-item {
+    display: flex;
+    gap: 5px;
+    max-width: 100%;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    overflow: hidden;
 }
 
 .mcr-long-label {
     flex-shrink: 1;
-    max-width: 300px;
+    font-weight: 300;
     white-space: nowrap;
     text-overflow: ellipsis;
-    cursor: default;
     overflow: hidden;
 }
 
@@ -849,7 +864,10 @@ onActivated(() => {
     margin-top: 5px;
 
     .mcr-artifact-item {
+        max-width: 100%;
         margin-right: 10px;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .mcr-show-more {

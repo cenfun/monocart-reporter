@@ -124,6 +124,8 @@ const initGrid = () => {
         bindWindowResize: true,
 
         scrollbarRound: true,
+        scrollbarSize: 10,
+
         textSelectable: true,
 
         rowCacheLength: 30,
