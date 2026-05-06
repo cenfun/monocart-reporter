@@ -152,7 +152,9 @@ watch(() => props.icon, () => {
 
     label {
         white-space: nowrap;
+        text-overflow: ellipsis;
         cursor: pointer;
+        overflow: hidden;
     }
 }
 

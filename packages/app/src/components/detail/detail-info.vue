@@ -16,6 +16,8 @@ import DetailColumn from './detail-column.vue';
 
 const { VuiFlex, VuiSwitch } = components;
 
+const emit = defineEmits(['update']);
+
 const props = defineProps({
     rowItem: {
         type: Object,
@@ -91,6 +93,10 @@ const onMouseleave = (e) => {
     hideTooltip();
 };
 
+const onRowUpdate = () => {
+    emit('update');
+};
+
 </script>
 
 <template>
@@ -108,10 +114,13 @@ const onMouseleave = (e) => {
       v-else
       gap="10px"
       class="mcr-detail-head"
+      wrap
     >
       <VuiFlex
         gap="5px"
         class="vui-flex-auto"
+        wrap
+        overflow="hidden"
       >
         <IconLabel
           v-if="data.iconType"
@@ -158,7 +167,10 @@ const onMouseleave = (e) => {
         />
       </VuiFlex>
 
-      <DurationLocation :row-item="rowItem" />
+      <DurationLocation
+        :row-item="rowItem"
+        @update="onRowUpdate"
+      />
     </VuiFlex>
   </VuiFlex>
 </template>
@@ -178,7 +190,14 @@ const onMouseleave = (e) => {
 }
 
 .mcr-detail-title {
+    min-width: 81px;
     text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
+
+    a {
+        color: inherit;
+    }
 }
 
 .mcr-detail-step-info .mcr-detail-title {

@@ -75,6 +75,11 @@ const onFlyoverResize = (width) => {
 </template>
 
 <style lang="scss">
+.vui-flyover {
+    color: var(--color-default);
+    background-color: var(--bg-default);
+}
+
 .mcr-flyover-icon {
     position: absolute;
     top: 0;

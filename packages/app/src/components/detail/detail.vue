@@ -39,14 +39,21 @@ const createDetailInfo = (rowItem, columnItem, cellNode) => {
             render() {
                 return h(DetailInfo, {
                     rowItem,
-                    columnItem
+                    columnItem,
+                    onUpdate: () => {
+                        // updateColumnWidth();
+                    }
                 });
             }
         }).mount(container);
     }
 };
 
-const updateColumnWidth = function(grid) {
+const updateColumnWidth = function() {
+    const grid = data.grid;
+    if (!grid) {
+        return;
+    }
     const titleColumn = grid.getColumnItem('title');
     const containerWidth = grid.containerWidth;
     // 5px padding right
@@ -86,14 +93,14 @@ const removeHighlight = () => {
     }
 };
 
-const getGrid = () => {
+const initGrid = () => {
     let grid = data.grid;
     if (!grid) {
         grid = new Grid(document.querySelector('.mcr-overview-grid'));
         data.grid = grid;
 
         grid.bind('onResize onLayout', function(e, d) {
-            updateColumnWidth(grid);
+            updateColumnWidth();
         });
 
         grid.bind('onUpdated', (e, d) => {
@@ -123,7 +130,7 @@ const getGrid = () => {
         rowHeight: 36,
         rowNotFound: 'No Results',
         cellResizeObserver: (rowItem, columnItem) => {
-            if (columnItem.id === 'title' && rowItem.hasDetails) {
+            if (columnItem.id === 'title') {
                 return true;
             }
         },
@@ -334,7 +341,7 @@ const collapseSteps = (gridData) => {
 };
 
 const renderSteps = () => {
-    const grid = getGrid();
+    const grid = data.grid;
     if (!grid) {
         return;
     }
@@ -372,7 +379,7 @@ const renderSteps = () => {
 };
 
 const renderGrid = (caseItem) => {
-    const grid = getGrid();
+    const grid = initGrid();
     const gridData = getGridData(grid, caseItem);
     collapseSteps(gridData);
     grid.setData(gridData);

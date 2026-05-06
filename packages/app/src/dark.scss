@@ -1,0 +1,52 @@
+.mcr-dark {
+    --bg-default: #1e1e1e;
+    --color-default: #fff;
+    --bg-failed: #4d0f0f;
+    --bg-flaky: #4d3b0f;
+
+    /** fixed popover theme */
+    .vui-popover,
+    .vui-tooltip {
+        color: #1e1e1e;
+        background-color: #fff;
+    }
+
+    .tg-dark {
+        background-color: var(--bg-default);
+
+        .tg-cell {
+            color: var(--color-default);
+        }
+    }
+
+    .mcr-header {
+        .mcr-header-left {
+            .mcr-icon-label {
+                color: #ccc;
+            }
+        }
+    }
+
+    .mcr-flyover-header {
+        background-color: #00467f;
+    }
+
+    .mcr-report-head {
+        border-bottom: 1px solid #1e1e1e;
+        background-color: #333;
+    }
+
+    .mcr-details-summary {
+        summary:hover {
+            background-color: #333;
+        }
+    }
+
+    .mcr-search,
+    .mcr-overview-search {
+        .vui-input input {
+            color: var(--color-default);
+            background-color: #333;
+        }
+    }
+}

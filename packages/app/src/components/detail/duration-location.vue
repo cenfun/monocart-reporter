@@ -1,5 +1,7 @@
 <script setup>
-import { shallowReactive } from 'vue';
+import {
+    onMounted, shallowReactive, watch
+} from 'vue';
 import { components } from 'vine-ui';
 
 import IconLabel from '../icon-label.vue';
@@ -8,58 +10,66 @@ import Util from '../../utils/util.js';
 
 const { VuiFlex } = components;
 
-defineProps({
+const props = defineProps({
     rowItem: {
         type: Object,
         default: () => {}
     }
 });
 
+const emit = defineEmits(['update']);
+
 const data = shallowReactive({
 
 });
 
-const onLocationClick = (rowItem) => {
-    if (data.locationLabel) {
-
-        Util.copyText(rowItem.location).then((res) => {
+const onLocationClick = () => {
+    if (data.copiedLabel) {
+        Util.copyText(data.locationLabel).then((res) => {
             if (res) {
-                data.locationLabel = 'copied';
+                data.copiedLabel = 'copied';
                 setTimeout(() => {
-                    data.locationLabel = '';
+                    data.copiedLabel = '';
                 }, 1000);
-            } else {
-                data.locationLabel = '';
             }
         });
-
     } else {
-        data.locationLabel = rowItem.location;
+        data.copiedLabel = data.locationLabel;
     }
 };
+
+watch(() => data.copiedLabel, (val) => {
+    emit('update');
+});
+
+onMounted(() => {
+    data.durationLabel = Util.isNum(props.rowItem.duration) ? Util.TF(props.rowItem.duration) : '';
+    data.locationLabel = props.rowItem.location;
+});
 
 </script>
 
 <template>
   <VuiFlex
+    v-if="data.durationLabel || data.locationLabel"
     gap="10px"
     class="mcr-duration-location"
   >
     <div
-      v-if="Util.isNum(rowItem.duration)"
+      v-if="data.durationLabel"
       class="mcr-detail-duration"
     >
-      {{ Util.TF(rowItem.duration) }}
+      {{ data.durationLabel }}
     </div>
 
     <IconLabel
-      v-if="rowItem.location"
+      v-if="data.locationLabel"
       class="mcr-detail-location"
       icon="location"
-      :tooltip="rowItem.location"
-      @click="onLocationClick(rowItem)"
+      :tooltip="data.locationLabel"
+      @click="onLocationClick"
     >
-      {{ data.locationLabel }}
+      {{ data.copiedLabel }}
     </IconLabel>
   </VuiFlex>
 </template>
@@ -67,6 +77,7 @@ const onLocationClick = (rowItem) => {
 <style>
 .mcr-duration-location {
     position: relative;
+    flex-shrink: 0;
     font-weight: normal;
 }
 </style>
