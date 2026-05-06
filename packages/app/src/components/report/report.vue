@@ -1,6 +1,7 @@
 <script setup>
 import {
-    shallowReactive, watch, onActivated, reactive
+    shallowReactive, watch, onActivated, reactive,
+    nextTick
 } from 'vue';
 
 import { components } from 'vine-ui';
@@ -58,61 +59,59 @@ const getExportCases = (caseType) => {
 
 const exportHandler = () => {
     report.exportList = [{
-        list: [{
-            name: 'Report Data',
-            icon: 'item',
-            getData: () => {
-                return state.reportData;
-            }
-        }, {
-            name: 'Summary',
-            icon: 'item',
-            getData: () => {
-                return state.reportData.summary;
-            }
-        }, {
-            name: 'Pie Chart',
-            icon: 'item',
-            getData: () => {
-                return report.pieChart;
-            }
-        }, {
-            name: 'Errors',
-            icon: 'item',
-            getData: () => {
-                const list = [];
-                Util.forEach(state.reportData.rows, (item) => {
-                    if (item.errors) {
-                        const it = {
-                            ... item
-                        };
-                        delete it.subs;
-                        delete it.steps;
-                        list.push(it);
-                    }
-                });
-                return list;
-            }
-        }, {
-            name: 'Failed Cases',
-            icon: 'item',
-            getData: () => {
-                return getExportCases('failed');
-            }
-        }, {
-            name: 'Skipped Cases',
-            icon: 'item',
-            getData: () => {
-                return getExportCases('skipped');
-            }
-        }, {
-            name: 'Selected Rows',
-            icon: 'item',
-            asyncExport: () => {
-                state.exportSelected = true;
-                hideFlyover(true);
-            }
-        }]
+        name: 'Report Data',
+        icon: 'item',
+        getData: () => {
+            return state.reportData;
+        }
+    }, {
+        name: 'Summary',
+        icon: 'item',
+        getData: () => {
+            return state.reportData.summary;
+        }
+    }, {
+        name: 'Pie Chart',
+        icon: 'item',
+        getData: () => {
+            return report.pieChart;
+        }
+    }, {
+        name: 'Errors',
+        icon: 'item',
+        getData: () => {
+            const list = [];
+            Util.forEach(state.reportData.rows, (item) => {
+                if (item.errors) {
+                    const it = {
+                        ... item
+                    };
+                    delete it.subs;
+                    delete it.steps;
+                    list.push(it);
+                }
+            });
+            return list;
+        }
+    }, {
+        name: 'Failed Cases',
+        icon: 'item',
+        getData: () => {
+            return getExportCases('failed');
+        }
+    }, {
+        name: 'Skipped Cases',
+        icon: 'item',
+        getData: () => {
+            return getExportCases('skipped');
+        }
+    }, {
+        name: 'Selected Rows',
+        icon: 'item',
+        asyncExport: () => {
+            state.exportSelected = true;
+            hideFlyover(true);
+        }
     }];
 };
 
@@ -199,7 +198,7 @@ const onUsageClick = (item) => {
     }
 
     const originalValue = item.value;
-    Util.copyText(`${item.name}: ${item.value}`).then((res) => {
+    Util.copyText(item.value).then((res) => {
         if (res) {
             item.value = copiedText;
             setTimeout(() => {
@@ -212,10 +211,12 @@ const onUsageClick = (item) => {
 // ====================================================================================
 
 const onTagClick = (tag) => {
-    state.flyoverVisible = false;
     state.caseType = 'tests';
     state.keywords = `@${tag.name}`;
     updateGrid();
+    nextTick(() => {
+        state.flyoverVisible = false;
+    });
 };
 
 const tagsHandler = () => {
@@ -520,11 +521,9 @@ onActivated(() => {
               :icon="item.icon"
               :button="false"
               :style="'color:'+item.color"
-            >
-              {{ item.name }}
-            </IconLabel>
+            />
             <div class="mcr-long-label">
-              {{ item.value }}
+              {{ item.name }} {{ item.value }}
             </div>
           </div>
           <template
@@ -541,11 +540,9 @@ onActivated(() => {
                 :icon="item.icon"
                 :button="false"
                 :style="'color:'+item.color"
-              >
-                {{ item.name }}
-              </IconLabel>
+              />
               <div class="mcr-long-label">
-                {{ item.value }}
+                {{ item.name }} {{ item.value }}
               </div>
             </div>
           </template>
@@ -583,16 +580,14 @@ onActivated(() => {
         </VuiFlex>
       </div>
       <div class="mcr-report-chart">
-        <VuiFlex
+        <div
           v-if="report.tagList"
-          gap="15px"
-          padding="10px"
-          wrap
+          class="mcr-tag-list"
         >
           <div
             v-for="(item, i) in report.tagList"
             :key="i"
-            class="mcr-report-tag"
+            class="mcr-tag-item"
             @click="onTagClick(item)"
           >
             <span
@@ -605,7 +600,7 @@ onActivated(() => {
               class="mcr-num"
             >{{ Util.NF(item.value) }}</span>
           </div>
-        </VuiFlex>
+        </div>
       </div>
     </div>
 
@@ -716,29 +711,21 @@ onActivated(() => {
         </VuiFlex>
       </div>
       <div class="mcr-report-chart">
-        <VuiFlex
-          gap="15px"
-          direction="column"
-          padding="10px"
-          class="mcr-report-export"
-        >
-          <VuiFlex
-            v-for="(group, i) in report.exportList"
+        <div class="mcr-export-list">
+          <div
+            v-for="(item, i) in report.exportList"
             :key="i"
-            gap="15px"
-            wrap
+            class="mcr-export-item"
           >
             <IconLabel
-              v-for="(item, j) in group.list"
-              :key="j"
               :icon="item.icon"
               primary
               @click="onExportClick(item)"
             >
               {{ item.name }}
             </IconLabel>
-          </VuiFlex>
-        </VuiFlex>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -820,23 +807,28 @@ onActivated(() => {
 .mcr-usage-item {
     display: flex;
     gap: 5px;
+    align-items: flex-start;
     max-width: 100%;
     font-weight: 500;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     cursor: pointer;
     overflow: hidden;
 }
 
 .mcr-long-label {
-    flex-shrink: 1;
     font-weight: 300;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
-.mcr-report-tag {
+.mcr-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+
+.mcr-tag-item {
     position: relative;
     cursor: pointer;
 
@@ -852,11 +844,11 @@ onActivated(() => {
         margin-left: -5px;
         vertical-align: middle;
     }
-}
 
-.mcr-report-tag:hover {
-    .mcr-tag {
-        opacity: 0.9;
+    &:hover {
+        .mcr-tag {
+            opacity: 0.9;
+        }
     }
 }
 
@@ -873,5 +865,12 @@ onActivated(() => {
     .mcr-show-more {
         width: 100%;
     }
+}
+
+.mcr-export-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 10px;
 }
 </style>
