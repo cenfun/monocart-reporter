@@ -17,6 +17,8 @@ const props = defineProps({
 const el = ref(null);
 let $el;
 
+const styleMap = ref('');
+
 const showContent = () => {
     if (!$el) {
         return;
@@ -26,16 +28,25 @@ const showContent = () => {
 
     if (Util.isMarkdownType(contentType)) {
         $el.innerHTML = markdownFormatter(content);
+        styleMap.value = {
+            'background-color': 'var(--bg-primary-fixed)'
+        };
         return;
     }
 
     if (Util.isMermaidType(contentType)) {
         $el.innerHTML = `<pre class="mermaid">${content}</pre>`;
         state.mermaidEnabled = true;
+        styleMap.value = {
+            'background-color': 'var(--bg-primary-fixed)'
+        };
         return;
     }
 
     $el.innerHTML = `<pre><code>${content}</code></pre>`;
+    styleMap.value = {
+        'background-color': 'var(--bg-secondary)'
+    };
 };
 
 onMounted(() => {
@@ -54,13 +65,13 @@ watch(() => props.data, () => {
   <div
     ref="el"
     class="mcr-attachment-content"
+    :style="styleMap"
   />
 </template>
 
 <style lang="scss">
 .mcr-attachment-content {
     padding: 10px;
-    background-color: #f6f8fa;
 
     pre {
         margin: 0;

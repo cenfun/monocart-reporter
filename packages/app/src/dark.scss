@@ -6,13 +6,13 @@
 }
 
 .mcr-dark {
-    --bg-primary: #1e1e1e;
-    --bg-html-content: #2e2e2e;
     --color-primary: #fff;
     --color-secondary: #ccc;
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2e2e2e;
     --bg-failed: #4d0f0f;
     --bg-flaky: #4d3b0f;
-    --border-column-content: #555;
+    --border-primary: #555;
 
     .mcr-column-copy {
         background-color: rgb(0 0 0 / 60%);

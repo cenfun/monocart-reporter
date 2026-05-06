@@ -1,5 +1,5 @@
 <script setup>
-import Util from '../../utils/util';
+import Util from '../../utils/util.js';
 import IconLabel from '../icon-label.vue';
 
 const props = defineProps({
@@ -53,7 +53,7 @@ const onCopyClick = (e, column) => {
 .mcr-html-content {
     position: relative;
     padding: 0;
-    background-color: var(--bg-html-content);
+    background-color: var(--bg-secondary);
 }
 
 .mcr-column-html {
