@@ -1,6 +1,8 @@
 <script setup>
+import { onMounted, ref } from 'vue';
 import Util from '../../utils/util.js';
 import IconLabel from '../icon-label.vue';
+import { convertHtml } from '../../modules/detail.js';
 
 const props = defineProps({
     column: {
@@ -8,6 +10,8 @@ const props = defineProps({
         default: () => {}
     }
 });
+
+const html = ref('');
 
 const onCopyClick = (e, column) => {
     const container = e.currentTarget && e.currentTarget.parentNode;
@@ -30,13 +34,22 @@ const onCopyClick = (e, column) => {
 
 };
 
+onMounted(() => {
+    let content = props.column.content;
+    if (Util.isList(content)) {
+        content = content.map((it) => convertHtml(it)).join('');
+    }
+
+    html.value = content;
+});
+
 </script>
 
 <template>
   <div class="mcr-html-content">
     <div
       class="mcr-column-html"
-      v-html="props.column.content"
+      v-html="html"
     />
     <div
       class="mcr-column-copy"

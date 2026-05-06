@@ -14,14 +14,21 @@ import Autolinker from 'autolinker';
 // ===========================================================================
 // errors logs html
 
-const convert = new Convert({
+const convertLight = new Convert({
     fg: '#333',
-    bg: '#F6F8FA',
+    bg: '#f6f8fa',
     newline: true,
     escapeXML: true
 });
 
-const convertHtml = (str) => {
+const convertDark = new Convert({
+    fg: '#ccc',
+    bg: '#1e1e1e',
+    newline: true,
+    escapeXML: true
+});
+
+export const convertHtml = (str) => {
     if (typeof str !== 'string') {
         str = `${str}`;
     }
@@ -29,7 +36,8 @@ const convertHtml = (str) => {
     const reg = /\s$/;
     const endsWithN = reg.test(str) ? '' : '<br/>';
 
-    str = convert.toHtml(str) + endsWithN;
+    const converter = state.theme === 'dark' ? convertDark : convertLight;
+    str = converter.toHtml(str) + endsWithN;
 
     // link
     str = Autolinker.link(str, {
@@ -59,14 +67,12 @@ const getErrors = (item, column, collection) => {
         rowId: item.id,
         columnId: column.id
     };
-    const list = errors.map((error) => {
+    errors.forEach((error) => {
         collection.errors.push({
             error,
             position
         });
-        return convertHtml(error);
     });
-    const content = list.join('');
 
     return {
         id: getPositionId(item.id, column.id),
@@ -77,7 +83,7 @@ const getErrors = (item, column, collection) => {
         data: column,
         // for row filter
         errorNum: 1,
-        content
+        content: errors
     };
 };
 
@@ -87,11 +93,6 @@ const getLogs = (item, column, collection) => {
         return;
     }
 
-    const list = logs.map((log) => {
-        return convertHtml(log);
-    });
-    const content = list.join('');
-
     return {
         id: getPositionId(item.id, column.id),
         type: 'details',
@@ -99,7 +100,7 @@ const getLogs = (item, column, collection) => {
         hasDetails: true,
         hoverable: false,
         data: column,
-        content
+        content: logs
     };
 };
 

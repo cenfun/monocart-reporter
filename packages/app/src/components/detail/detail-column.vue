@@ -115,9 +115,9 @@ const getColumnComponent = (componentType) => {
     }
 
     .mcr-column-content {
-        color: var(--color-primary-fixed);
+        color: var(--color-primary);
         border-color: var(--border-failed);
-        background-color: var(--bg-failed-fixed);
+        background-color: var(--bg-failed);
     }
 }
 
