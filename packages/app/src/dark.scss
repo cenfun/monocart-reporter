@@ -11,13 +11,7 @@
         background-color: #fff;
     }
 
-    .tg-dark {
-        background-color: var(--bg-default);
 
-        .tg-cell {
-            color: var(--color-default);
-        }
-    }
 
     .mcr-header {
         .mcr-header-left {
@@ -48,5 +42,13 @@
             color: var(--color-default);
             background-color: #333;
         }
+    }
+}
+
+.tg-dark {
+    background-color: var(--bg-default);
+
+    .tg-cell {
+        color: var(--color-default);
     }
 }

@@ -191,6 +191,7 @@ const onRowUpdate = () => {
 
 .mcr-detail-title {
     min-width: 81px;
+    line-height: 100%;
     text-overflow: ellipsis;
     word-break: break-all;
     overflow: hidden;
@@ -209,11 +210,11 @@ const onRowUpdate = () => {
 }
 
 .mcr-detail-status {
-    padding: 8px 12px;
+    padding: 6px 8px;
     color: #fff;
-    font-weight: bold;
+    line-height: 100%;
     text-transform: capitalize;
-    border-radius: 10px;
+    border-radius: 6px;
 }
 
 .mcr-status-failed {
