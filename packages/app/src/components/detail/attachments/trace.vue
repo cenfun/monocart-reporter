@@ -96,7 +96,6 @@ onMounted(() => {
 <style lang="scss">
 .mcr-attachment-trace {
     padding: 10px;
-    background-color: #f6f8fa;
 
     a {
         white-space: nowrap;
@@ -106,7 +105,7 @@ onMounted(() => {
         margin-left: 5px;
 
         summary {
-            color: #666;
+            color: var(--text-secondary);
             cursor: pointer;
             user-select: none;
         }

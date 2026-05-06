@@ -101,6 +101,7 @@ const getColumnComponent = (componentType) => {
     margin-bottom: 5px;
     border: 1px solid var(--border-primary);
     border-radius: 5px;
+    background-color: var(--bg-secondary);
     overflow: auto hidden;
 }
 

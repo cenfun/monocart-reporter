@@ -904,9 +904,8 @@ onUnmounted(() => {
         pre {
             margin: 0;
             padding: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-primary);
             border-radius: 5px;
-            background: #f8f8f8;
             overflow-x: auto;
         }
 

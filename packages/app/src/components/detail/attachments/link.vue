@@ -21,7 +21,10 @@ const download = computed(() => {
 </script>
 
 <template>
-  <div class="mcr-attachment-link">
+  <div
+    v-if="props.data.path"
+    class="mcr-attachment-link"
+  >
     <VuiFlex gap="3px">
       <IconLabel :icon="download?'download':'link'" />
       <a
@@ -36,6 +39,5 @@ const download = computed(() => {
 <style lang="scss">
 .mcr-attachment-link {
     padding: 10px;
-    background-color: #f6f8fa;
 }
 </style>
