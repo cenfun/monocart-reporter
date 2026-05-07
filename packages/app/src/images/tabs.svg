@@ -1,0 +1,6 @@
+<svg viewBox="0 0 11 20" width="100%" height="100%" pointer-events="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="11" height="20" fill="#000"/> 
+    <path d="M0,10 h11 v-10 h-1 Q10,10 0,10 z" fill="gray"/>
+    <path d="M11,10 h-11 v-10 h1 Q1,10 11,10 z" fill="gray" transform="translate(0,10)" />
+</svg> 
