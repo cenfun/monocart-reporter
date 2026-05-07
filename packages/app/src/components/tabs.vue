@@ -17,6 +17,7 @@ const props = defineProps({
     },
     colors: {
         type: Object,
+        // separator, hover, selected
         default: () => ({})
     }
 });
@@ -27,7 +28,18 @@ const data = reactive({
 
 const styleMap = computed(() => {
     const st = {};
-
+    const {
+        separator, hover, selected
+    } = props.colors;
+    if (separator) {
+        st['--tabs-color-separator'] = separator;
+    }
+    if (hover) {
+        st['--tabs-color-hover'] = hover;
+    }
+    if (selected) {
+        st['--tabs-color-selected'] = selected;
+    }
 
     return st;
 });
@@ -90,19 +102,19 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <slot />
   </div>
 </template>
 
 <style lang="scss">
 .mcr-tabs {
-    --color-separator: #666;
-    --color-hover: #e0e0e0;
-    --color-selected: #fff;
+    --tabs-color-separator: #666;
+    --tabs-color-hover: #e0e0e0;
+    --tabs-color-selected: #fff;
     --path-left: path("M0,10 h11 v-10 h-1 Q10,10 0,10 z");
     --path-right: path("M11,10 h-11 v-10 h1 Q1,10 11,10 z");
 
     position: relative;
-    padding-top: 10px;
 }
 
 .mcr-tabs-header {
@@ -140,14 +152,14 @@ onMounted(() => {
         content: "";
         width: 1px;
         height: 16px;
-        background-color: var(--color-separator);
+        background-color: var(--tabs-color-separator);
         transform: translateY(50%);
     }
 
     &.mcr-tabs-selected {
         position: relative;
         z-index: 1000;
-        background-color: var(--color-selected);
+        background-color: var(--tabs-color-selected);
 
         & + .mcr-tabs-item::before {
             display: none;
@@ -160,7 +172,7 @@ onMounted(() => {
             content: "";
             width: 11px;
             height: 10px;
-            background-color: var(--color-selected);
+            background-color: var(--tabs-color-selected);
             transform: none;
             clip-path: var(--path-left);
         }
@@ -172,7 +184,7 @@ onMounted(() => {
             content: "";
             width: 11px;
             height: 10px;
-            background-color: var(--color-selected);
+            background-color: var(--tabs-color-selected);
             transform: none;
             clip-path: var(--path-right);
         }
@@ -185,7 +197,7 @@ onMounted(() => {
 
     &:hover:not(.mcr-tabs-selected) {
         z-index: 100;
-        background-color: var(--color-hover);
+        background-color: var(--tabs-color-hover);
 
         &::before {
             position: absolute;
@@ -194,7 +206,7 @@ onMounted(() => {
             content: "";
             width: 11px;
             height: 10px;
-            background-color: var(--color-hover);
+            background-color: var(--tabs-color-hover);
             transform: none;
             clip-path: var(--path-left);
         }
@@ -206,7 +218,7 @@ onMounted(() => {
             content: "";
             width: 11px;
             height: 10px;
-            background-color: var(--color-hover);
+            background-color: var(--tabs-color-hover);
             transform: none;
             clip-path: var(--path-right);
         }

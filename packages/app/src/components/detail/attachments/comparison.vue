@@ -12,9 +12,10 @@ import { setPosition } from '../../../modules/detail.js';
 import SME from '../../../common/start-move-end.js';
 
 import IconLabel from '../../icon-label.vue';
+import Tabs from '../../tabs.vue';
 
 const {
-    VuiFlex, VuiTab, VuiSwitch, VuiProgress
+    VuiFlex, VuiSwitch, VuiProgress
 } = components;
 
 const props = defineProps({
@@ -88,6 +89,19 @@ const initImageComparison = (list) => {
 
         return item;
     });
+
+    d.tabOptions = d.imageList.map((item) => item.title).concat(['Side by side', 'Slider']).map((label, i) => {
+        return {
+            label,
+            value: i
+        };
+    });
+
+    d.tabColors = {
+        separator: 'var(--border-primary)',
+        hover: 'var(--bg-hover)',
+        selected: 'var(--bg-primary)'
+    };
 
     // console.log(imageMap);
     d.imageMap = imageMap;
@@ -617,10 +631,16 @@ const initEvents = () => {
 
 const updateCurrentTabContainer = () => {
     const $el = el.value;
-    const $pane = $el.querySelector(`.vui-tab-pane[index="${d.tabIndex}"]`);
-    if ($pane) {
-        d.container = $pane.querySelector('.mcr-comparison-image');
-    }
+
+    Array.from($el.querySelectorAll('.mcr-tab-pane')).forEach(($pane, i) => {
+        if (i === d.tabIndex) {
+            $pane.style.display = 'block';
+            d.container = $pane.querySelector('.mcr-comparison-image');
+            return;
+        }
+        $pane.style.display = 'none';
+    });
+
 };
 
 watchEffect(() => {
@@ -673,24 +693,17 @@ onUnmounted(() => {
     ref="el"
     class="mcr-attachment-comparison"
   >
-    <VuiTab
-      v-if="d.imageList"
+    <Tabs
       v-model="d.tabIndex"
+      :options="d.tabOptions"
+      :colors="d.tabColors"
     >
-      <template #tabs>
+      <div class="mcr-tab-list">
         <div
           v-for="(item, i) of d.imageList"
           :key="i"
-        >
-          {{ item.title }}
-        </div>
-        <div>Side by side</div>
-        <div>Slider</div>
-      </template>
-      <template #panes>
-        <div
-          v-for="(item, i) of d.imageList"
-          :key="i"
+          class="mcr-tab-pane"
+          :index="i"
         >
           <div
             class="mcr-comparison-image"
@@ -704,7 +717,10 @@ onUnmounted(() => {
             >
           </div>
         </div>
-        <div>
+        <div
+          class="mcr-tab-pane"
+          index="3"
+        >
           <div
             v-if="d.imageMap"
             class="mcr-side-by-side"
@@ -734,7 +750,10 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <div>
+        <div
+          class="mcr-tab-pane"
+          index="4"
+        >
           <div
             class="mcr-comparison-image"
             :style="d.img.wrapperStyle"
@@ -768,8 +787,8 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-      </template>
-    </VuiTab>
+      </div>
+    </Tabs>
 
     <VuiFlex
       v-if="d.imageList"
@@ -924,25 +943,15 @@ onUnmounted(() => {
         min-width: 420px;
     }
 
-    .vui-tab-header {
-        background: #f5f5f5;
-    }
+    .mcr-tab-list {
+        position: relative;
+        padding: 10px;
+        background-color: var(--bg-primary);
 
-    .vui-tab-tabs {
-        padding-top: 5px;
-    }
-
-    .vui-tab-item {
-        justify-content: center;
-        height: 30px;
-        min-width: 60px;
-        line-height: 30px;
-        text-align: center;
-    }
-
-    .vui-tab-item::before {
-        bottom: 10px;
-        height: 15px;
+        .mcr-tab-pane {
+            position: relative;
+            display: none;
+        }
     }
 
     .mcr-comparison-toolbar {
@@ -951,8 +960,7 @@ onUnmounted(() => {
     }
 
     .mcr-comparison-image {
-        width: calc(100% - 20px);
-        margin: 10px;
+        width: 100%;
         box-shadow: var(--image-shadow);
         cursor: default;
         overflow: hidden;
@@ -968,6 +976,7 @@ onUnmounted(() => {
 
     .mcr-side-by-side {
         display: flex;
+        gap: 10px;
         user-select: none;
     }
 
