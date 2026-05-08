@@ -283,7 +283,7 @@ const formatters = {
         if (rowItem.errorNum) {
             return iconFormatter({
                 icon: 'error',
-                color: '#dd0000',
+                color: 'var(--color-failed)',
                 button: true
             });
         }
