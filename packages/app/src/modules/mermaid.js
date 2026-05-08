@@ -11,6 +11,22 @@ export const renderMermaid = async () => {
     }
 };
 
+export const initMermaid = () => {
+    if (!state.mermaidLoaded) {
+        return;
+    }
+
+    const mermaidOptions = state.mermaid;
+    const mermaidConfig = {
+        theme: state.theme === 'dark' ? 'dark' : 'default',
+        ... mermaidOptions?.config
+    };
+    window.mermaid.initialize(mermaidConfig);
+
+    renderMermaid();
+
+};
+
 export const loadMermaid = () => {
     // console.log('loadMermaid');
 
@@ -27,18 +43,14 @@ export const loadMermaid = () => {
     if (!scriptSrc) {
         return;
     }
-
-    const config = {
-        ... mermaidOptions.config
-    };
     // console.log(config);
 
     const script = document.createElement('script');
     script.src = scriptSrc;
     script.onload = () => {
-        window.mermaid.initialize(config);
         state.mermaidLoaded = true;
-        renderMermaid();
+        initMermaid();
     };
     document.body.appendChild(script);
 };
+

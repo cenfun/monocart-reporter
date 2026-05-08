@@ -15,8 +15,6 @@ import { renderMermaid } from '../../modules/mermaid.js';
 import IconLabel from '../icon-label.vue';
 import DetailInfo from './detail-info.vue';
 
-import 'github-markdown-css/github-markdown-light.css';
-
 const {
     VuiFlex, VuiSwitch, VuiInput
 } = components;
@@ -39,10 +37,7 @@ const createDetailInfo = (rowItem, columnItem, cellNode) => {
             render() {
                 return h(DetailInfo, {
                     rowItem,
-                    columnItem,
-                    onUpdate: () => {
-                        // updateColumnWidth();
-                    }
+                    columnItem
                 });
             }
         }).mount(container);

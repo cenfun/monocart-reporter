@@ -17,7 +17,7 @@ import IconLabel from './components/icon-label.vue';
 
 import state, { defaultGroups } from './modules/state.js';
 
-import { loadMermaid } from './modules/mermaid.js';
+import { loadMermaid, initMermaid } from './modules/mermaid.js';
 
 const {
     VuiInput,
@@ -438,6 +438,8 @@ const updateTheme = () => {
             grid.classList.remove('tg-dark');
         }
     });
+
+    initMermaid();
 
 };
 
@@ -1115,4 +1117,5 @@ window.addEventListener('message', (e) => {
 <style lang="scss">
 @import url("./default.scss");
 @import url("./dark.scss");
+@import url("./markdown.scss");
 </style>

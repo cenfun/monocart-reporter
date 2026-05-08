@@ -49,6 +49,7 @@ const imgH = reactive({
 
 const d = shallowReactive({
     tabIndex: 0,
+    tabOptions: [],
     tempIndex: 0,
     img: imgF
 });
@@ -694,6 +695,7 @@ onUnmounted(() => {
     class="mcr-attachment-comparison"
   >
     <Tabs
+      v-if="d.imageMap"
       v-model="d.tabIndex"
       :options="d.tabOptions"
       :colors="d.tabColors"
@@ -721,10 +723,7 @@ onUnmounted(() => {
           class="mcr-tab-pane"
           index="3"
         >
-          <div
-            v-if="d.imageMap"
-            class="mcr-side-by-side"
-          >
+          <div class="mcr-side-by-side">
             <div
               class="mcr-comparison-image"
               :style="d.img.wrapperStyle"

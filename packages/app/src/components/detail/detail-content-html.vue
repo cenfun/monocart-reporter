@@ -12,7 +12,6 @@ const props = defineProps({
 });
 
 const html = ref('');
-const isMarkdown = ref(false);
 
 const onCopyClick = (e, column) => {
     const container = e.currentTarget && e.currentTarget.parentNode;
@@ -40,16 +39,13 @@ onMounted(() => {
     if (Util.isList(content)) {
         content = content.map((it) => convertHtml(it)).join('');
     }
-
-    isMarkdown.value = content?.includes('markdown-body');
-
     html.value = content;
 });
 
 </script>
 
 <template>
-  <div :class="['mcr-html-content', isMarkdown ? 'mcr-html-markdown' : '']">
+  <div class="mcr-html-content">
     <div
       class="mcr-column-html"
       v-html="html"
@@ -88,21 +84,6 @@ onMounted(() => {
 
     .mcr-icon-label {
         background-color: #fff;
-    }
-}
-
-.mcr-html-content.mcr-html-markdown {
-    .mcr-column-html {
-        background-color: var(--bg-primary-fixed);
-    }
-
-    .mcr-column-copy {
-        background-color: rgb(255 255 255 / 60%);
-
-        .mcr-icon-label {
-            color: var(--color-primary-fixed);
-            background-color: #fff;
-        }
     }
 }
 
