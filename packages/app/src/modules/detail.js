@@ -14,16 +14,9 @@ import Autolinker from 'autolinker';
 // ===========================================================================
 // errors logs html
 
-const convertLight = new Convert({
-    fg: '#333',
-    bg: '#f6f8fa',
-    newline: true,
-    escapeXML: true
-});
-
-const convertDark = new Convert({
-    fg: '#ccc',
-    bg: '#1e1e1e',
+const convert = new Convert({
+    fg: 'var(--color-primary)',
+    bg: 'var(--bg-primary)',
     newline: true,
     escapeXML: true
 });
@@ -36,8 +29,7 @@ export const convertHtml = (str) => {
     const reg = /\s$/;
     const endsWithN = reg.test(str) ? '' : '<br/>';
 
-    const converter = state.theme === 'dark' ? convertDark : convertLight;
-    str = converter.toHtml(str) + endsWithN;
+    str = convert.toHtml(str) + endsWithN;
 
     // link
     str = Autolinker.link(str, {
