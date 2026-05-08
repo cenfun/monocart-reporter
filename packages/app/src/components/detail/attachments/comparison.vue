@@ -807,11 +807,14 @@ onUnmounted(() => {
           :label-clickable="true"
           label-position="right"
         >
-          <VuiFlex gap="5px">
+          <VuiFlex gap="10px">
             <div>Zoom In/Out</div>
-            <b v-if="state.imageZoom">
-              {{ d.img.percent }}%
-            </b>
+            <div
+              v-if="state.imageZoom"
+              class="mcr-zoom-value"
+            >
+              {{ d.img.percent }}% <span>({{ d.img.imageLeft }}, {{ d.img.imageTop }})</span>
+            </div>
           </VuiFlex>
         </VuiSwitch>
 
@@ -1067,6 +1070,19 @@ in tooltip, out of component
 
     h3 {
         margin: 5px 0;
+    }
+}
+
+.mcr-zoom-value {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: bold;
+
+    span {
+        color: var(--text-secondary);
+        font-weight: 300;
+        font-size: 12px;
     }
 }
 </style>
