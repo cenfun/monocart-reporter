@@ -28,6 +28,10 @@ const props = defineProps({
         type: String,
         default: ''
     },
+    opacity: {
+        type: Number,
+        default: 1
+    },
     button: {
         type: Boolean,
         default: true
@@ -62,6 +66,9 @@ const styleMap = computed(() => {
     }
     if (props.gap) {
         st['--mcr-icon-gap'] = props.gap;
+    }
+    if (props.opacity) {
+        st['--mcr-icon-opacity'] = props.opacity;
     }
     return st;
 });
@@ -127,11 +134,13 @@ watch(() => props.icon, () => {
     --mcr-icon-size: 16px;
     --mcr-icon-gap: 3px;
     --mcr-icon-color: inherit;
+    --mcr-icon-opacity: 1;
 
     position: relative;
     display: flex;
     gap: var(--mcr-icon-gap);
     align-items: center;
+    opacity: var(--mcr-icon-opacity);
 }
 
 .mcr-icon-label-icon {

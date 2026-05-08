@@ -42,13 +42,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <VuiFlex
-    gap="10px"
-    direction="column"
-    class="mcr-attachment-trace"
-  >
+  <div class="mcr-attachment-trace">
     <VuiFlex gap="3px">
-      <IconLabel icon="link" />
+      <IconLabel
+        icon="link"
+        :button="false"
+      />
       <a
         :href="d.viewerUrl"
         target="_blank"
@@ -90,12 +89,17 @@ onMounted(() => {
         </dd>
       </dl>
     </details>
-  </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-trace {
-    padding: 10px;
+    display: flex;
+    flex: auto;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 0 10px;
 
     a {
         white-space: nowrap;

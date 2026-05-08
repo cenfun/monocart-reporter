@@ -135,10 +135,17 @@ export const groupAttachments = (attachments) => {
                 group = null;
             }
 
-            list.push({
+            const it = {
                 component: getAttachmentComponent(attachment),
                 data: attachment
-            });
+            };
+
+            // inline components
+            if (['link', 'trace'].includes(it.component)) {
+                it.inline = true;
+            }
+
+            list.push(it);
 
         }
     });

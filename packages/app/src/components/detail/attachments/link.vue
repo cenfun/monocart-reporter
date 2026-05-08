@@ -1,7 +1,5 @@
 <script setup>
 import { computed } from 'vue';
-import { components } from 'vine-ui';
-const { VuiFlex } = components;
 import IconLabel from '../../icon-label.vue';
 
 const props = defineProps({
@@ -25,19 +23,24 @@ const download = computed(() => {
     v-if="props.data.path"
     class="mcr-attachment-link"
   >
-    <VuiFlex gap="3px">
-      <IconLabel :icon="download?'download':'link'" />
-      <a
-        :href="props.data.path"
-        :download="download"
-        target="_blank"
-      >{{ download ? "Download" : "Open" }}</a>
-    </VuiFlex>
+    <IconLabel
+      :icon="download?'download':'link'"
+      :button="false"
+    />
+    <a
+      :href="props.data.path"
+      :download="download"
+      target="_blank"
+    >{{ download ? "Download" : "Open" }}</a>
   </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-link {
-    padding: 10px;
+    position: relative;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 0 10px;
 }
 </style>

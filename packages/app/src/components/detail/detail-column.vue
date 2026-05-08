@@ -47,39 +47,58 @@ const getColumnComponent = (componentType) => {
 
 <template>
   <div :class="itemColumnClass(column.data)">
-    <VuiFlex
-      class="mcr-column-head"
-      gap="5px"
-      @click="onColumnHeadClick(column)"
+    <div
+      v-if="column.inline"
+      class="mcr-column-inline"
     >
       <IconLabel
         :icon="column.icon"
+        :button="false"
+        opacity="0.8"
       >
-        <VuiFlex gap="5px">
-          {{ column.data.name }}
-          <IconLabel
-            :icon="column.tg_state.collapsed?'collapsed':'expanded'"
-            :button="false"
-          />
-        </VuiFlex>
+        {{ column.data.name }}
       </IconLabel>
 
+      <component
+        :is="getColumnComponent(column.componentType)"
+        class="mcr-inline-content"
+        :column="column"
+      />
+    </div>
 
-      <div class="vui-flex-auto" />
-      <div
-        v-if="column.data.retry"
-        class="mcr-attachment-retry"
+    <template v-else>
+      <VuiFlex
+        class="mcr-column-head"
+        gap="5px"
+        @click="onColumnHeadClick(column)"
       >
-        Retry #{{ column.data.retry }}
-      </div>
-    </VuiFlex>
+        <IconLabel :icon="column.icon">
+          <VuiFlex gap="5px">
+            {{ column.data.name }}
+            <IconLabel
+              :icon="column.tg_state.collapsed?'collapsed':'expanded'"
+              :button="false"
+            />
+          </VuiFlex>
+        </IconLabel>
 
-    <component
-      :is="getColumnComponent(column.componentType)"
-      v-if="!column.tg_state.collapsed"
-      class="mcr-column-content"
-      :column="column"
-    />
+
+        <div class="vui-flex-auto" />
+        <div
+          v-if="column.data.retry"
+          class="mcr-attachment-retry"
+        >
+          Retry #{{ column.data.retry }}
+        </div>
+      </VuiFlex>
+
+      <component
+        :is="getColumnComponent(column.componentType)"
+        v-if="!column.tg_state.collapsed"
+        class="mcr-column-content"
+        :column="column"
+      />
+    </template>
   </div>
 </template>
 
@@ -94,6 +113,12 @@ const getColumnComponent = (componentType) => {
     border-radius: 5px;
     cursor: pointer;
     user-select: none;
+}
+
+.mcr-column-inline {
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }
 
 .mcr-column-content {
