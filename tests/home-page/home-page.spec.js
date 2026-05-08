@@ -47,14 +47,19 @@ test('test home page', async ({ page, context }, testInfo) => {
     const outputPath = testInfo.outputPath('screenshot.png');
     console.log('outputPath(screenshot.png)', outputPath);
 
-    await testInfo.attach('link', {
+    await testInfo.attach('PDF', {
         path: `${testInfo.snapshotDir}/report.pdf`,
         contentType: 'application/pdf'
     });
 
-    await testInfo.attach('downloaded', {
+    await testInfo.attach('Zip', {
         contentType: 'application/zip',
         path: `${testInfo.snapshotDir}/report.zip`
+    });
+
+    await testInfo.attach('Excel', {
+        contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        path: `${testInfo.snapshotDir}/report.xlsx`
     });
 
     const screenshot = await page.screenshot();
