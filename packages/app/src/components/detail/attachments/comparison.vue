@@ -431,16 +431,16 @@ const updateGutter = ($gutter) => {
         return;
     }
 
-    const padding = 10;
+    const gutterWidth = 10;
     const $top = $gutter.parentNode.parentNode.querySelector('.mcr-slider-top');
 
     const max = $gutter.parentNode.getBoundingClientRect().width;
     if (max > 0) {
         const x = Math.max(Math.min(d.gutterLeft, max), 0);
-        $gutter.style.left = `${x - padding / 2}px`;
-        $top.style.maskImage = getMaskImage(`${x + padding}px`);
+        $gutter.style.left = `${x - gutterWidth / 2}px`;
+        $top.style.maskImage = getMaskImage(`${x}px`);
     } else {
-        $gutter.style.left = `calc(50% - ${padding / 2}px)`;
+        $gutter.style.left = `calc(50% - ${gutterWidth / 2}px)`;
         $top.style.maskImage = getMaskImage('50%');
     }
 
@@ -528,7 +528,7 @@ const getEventTargetContainer = (e) => {
     let node = e.target;
 
     // slider is top
-    if (node.classList.contains('mcr-slider')) {
+    if (node.classList.contains('mcr-slider-thumb')) {
         return node.parentNode.querySelector('.mcr-comparison-image');
     }
 
@@ -754,36 +754,38 @@ onUnmounted(() => {
           class="mcr-tab-pane"
           index="4"
         >
-          <div
-            class="mcr-comparison-image"
-            :style="d.img.wrapperStyle"
-          >
-            <img
-              :src="d.imageMap.expected.path"
-              :alt="d.imageMap.expected.name"
-              :style="d.img.imageStyle"
-            >
-          </div>
-
-          <div class="mcr-slider-top">
+          <div class="mcr-slider-pane">
             <div
               class="mcr-comparison-image"
               :style="d.img.wrapperStyle"
             >
               <img
-                :src="d.imageMap.actual.path"
-                :alt="d.imageMap.actual.name"
-                :style="updateOpacity(d.img.imageStyle)"
+                :src="d.imageMap.expected.path"
+                :alt="d.imageMap.expected.name"
+                :style="d.img.imageStyle"
               >
             </div>
-          </div>
 
-          <div class="mcr-slider">
-            <div
-              ref="gutter"
-              :class="['mcr-slider-gutter', d.gutterEnabled?'mcr-slider-gutter-moving':'']"
-            >
-              <div />
+            <div class="mcr-slider-top">
+              <div
+                class="mcr-comparison-image"
+                :style="d.img.wrapperStyle"
+              >
+                <img
+                  :src="d.imageMap.actual.path"
+                  :alt="d.imageMap.actual.name"
+                  :style="updateOpacity(d.img.imageStyle)"
+                >
+              </div>
+            </div>
+
+            <div class="mcr-slider-thumb">
+              <div
+                ref="gutter"
+                :class="['mcr-slider-gutter', d.gutterEnabled?'mcr-slider-gutter-moving':'']"
+              >
+                <div />
+              </div>
             </div>
           </div>
         </div>
@@ -794,7 +796,7 @@ onUnmounted(() => {
       v-if="d.imageList"
       class="mcr-comparison-toolbar"
       align="space-between"
-      padding="5px 10px 10px 10px"
+      padding="10px 10px"
     >
       <VuiFlex gap="20px">
         <VuiSwitch
@@ -955,7 +957,7 @@ onUnmounted(() => {
     }
 
     .mcr-comparison-toolbar {
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid var(--border-primary);
         user-select: none;
     }
 
@@ -980,7 +982,13 @@ onUnmounted(() => {
         user-select: none;
     }
 
-    .mcr-slider {
+    .mcr-slider-pane {
+        position: relative;
+        padding: 10px;
+        background-color: var(--bg-primary-fixed);
+    }
+
+    .mcr-slider-thumb {
         position: absolute;
         top: 10px;
         left: 10px;
@@ -1040,10 +1048,10 @@ onUnmounted(() => {
 
     .mcr-slider-top {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 10px;
+        left: 10px;
         z-index: 10;
-        width: 100%;
+        width: calc(100% - 20px);
 
         .mcr-comparison-image {
             box-shadow: none;
