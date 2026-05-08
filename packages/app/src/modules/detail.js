@@ -9,7 +9,6 @@ import { groupAttachments } from './attachments.js';
 
 import Util from '../utils/util.js';
 import state from './state.js';
-import Autolinker from 'autolinker';
 
 // ===========================================================================
 // errors logs html
@@ -54,13 +53,6 @@ export const convertHtml = (str) => {
 
     const convert = state.theme === 'dark' ? convertDark : convertLight;
     str = convert.toHtml(str) + endsWithN;
-
-    // link
-    str = Autolinker.link(str, {
-        stripPrefix: false,
-        stripTrailingSlash: false,
-        decodePercentEncoding: false
-    });
 
     return str;
 };
