@@ -113,12 +113,6 @@ const getColumnComponent = (componentType) => {
     .mcr-column-head {
         color: var(--color-failed);
     }
-
-    .mcr-column-content {
-        color: var(--color-primary);
-        border-color: var(--border-failed);
-        background-color: var(--bg-failed);
-    }
 }
 
 .mcr-detail-errors,
