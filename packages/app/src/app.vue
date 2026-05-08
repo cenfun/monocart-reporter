@@ -443,6 +443,25 @@ const updateTheme = () => {
 
 };
 
+const initTheme = () => {
+
+    const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    darkQuery.addEventListener('change', (e) => {
+        state.theme = e.matches ? 'dark' : 'light';
+        localStorage.removeItem('mcr-theme');
+        updateTheme();
+    });
+
+    const theme = localStorage.getItem('mcr-theme');
+    if (theme === 'light' || theme === 'dark') {
+        state.theme = theme;
+    } else {
+        // auto detect
+        state.theme = darkQuery.matches ? 'dark' : 'light';
+    }
+
+};
+
 const onThemeClick = () => {
     state.theme = state.theme === 'light' ? 'dark' : 'light';
     localStorage.setItem('mcr-theme', state.theme);
@@ -506,6 +525,7 @@ const onExportClick = () => {
 // =================================================================================
 const init = async () => {
 
+    initTheme();
     updateTheme();
 
     const reportStr = await inflate(window.reportData);
