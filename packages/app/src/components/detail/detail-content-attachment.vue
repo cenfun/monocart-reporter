@@ -52,14 +52,17 @@ const getComponent = (component) => {
 <style lang="scss">
 .mcr-attachment-body {
     .mcr-low {
+        color: var(--color-primary-fixed);
         background: #fce1e5;
     }
 
     .mcr-medium {
+        color: var(--color-primary-fixed);
         background: #fff4c2;
     }
 
     .mcr-high {
+        color: var(--color-primary-fixed);
         background: rgb(230 245 208);
     }
 
