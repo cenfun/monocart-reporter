@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.11.1
+  - fixed UI issues
+
 * 2.11.0
   - feat: dark and light theme (#195)
 
