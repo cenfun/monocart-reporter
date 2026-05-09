@@ -64,6 +64,13 @@ const getColumnComponent = (componentType) => {
         class="mcr-inline-content"
         :column="column"
       />
+
+      <div
+        v-if="column.data.retry"
+        class="mcr-attachment-retry"
+      >
+        Retry #{{ column.data.retry }}
+      </div>
     </div>
 
     <template v-else>
@@ -158,6 +165,7 @@ const getColumnComponent = (componentType) => {
     margin-right: 10px;
     color: var(--color-flaky);
     font-size: small;
+    white-space: nowrap;
     cursor: default;
     user-select: none;
 }

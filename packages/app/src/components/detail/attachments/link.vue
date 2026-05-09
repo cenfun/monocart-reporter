@@ -39,6 +39,7 @@ const download = computed(() => {
 .mcr-attachment-link {
     position: relative;
     display: flex;
+    flex: auto;
     gap: 5px;
     align-items: center;
     padding: 0 10px;
