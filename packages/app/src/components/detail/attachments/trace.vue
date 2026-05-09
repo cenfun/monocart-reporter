@@ -19,13 +19,13 @@ const d = shallowReactive({
 
 });
 
-const showHelp = (e) => {
-    state.trace = {
+const showTraceHelp = (e) => {
+    Object.assign(state.trace, {
         color: d.color,
         protocol: d.protocol,
         popoverTarget: e.currentTarget,
         popoverVisible: true
-    };
+    });
 };
 
 
@@ -73,7 +73,7 @@ onMounted(() => {
     </VuiFlex>
     <IconLabel
       icon="help"
-      @click="showHelp"
+      @click="showTraceHelp"
     />
   </div>
 </template>

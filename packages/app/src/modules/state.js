@@ -42,6 +42,8 @@ const state = shallowReactive({
         ... defaultGroups
     }),
 
+    trace: shallowReactive({}),
+
     windowWidth: window.innerWidth,
 
     // flyover detail
