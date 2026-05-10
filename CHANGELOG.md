@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.11.2
+  - updated metadata and annotations
+
 * 2.11.1
   - fixed UI issues
 
