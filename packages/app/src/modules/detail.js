@@ -121,7 +121,9 @@ const getAnnotationList = (item) => {
     if (typeof annotations === 'string' && annotations) {
         return [{
             icon,
-            title: markdownFormatter(annotations, true)
+            name: '',
+            isHtml: true,
+            value: markdownFormatter(annotations, true)
         }];
     }
 
@@ -133,7 +135,7 @@ const getAnnotationList = (item) => {
     // console.log(map);
 
     const list = Object.keys(map).map((k) => {
-        const res = [`<b>${k}</b>`];
+        const res = [];
         const v = map[k];
         v.forEach((des) => {
             if (des) {
@@ -142,15 +144,11 @@ const getAnnotationList = (item) => {
         });
         return {
             icon,
-            title: `<div class="mcr-annotation-item">${res.join('')}</div>`
+            name: k,
+            isHtml: true,
+            value: res.join('')
         };
     });
-    // console.log(list);
-
-    const content = list.join('');
-    if (!content) {
-        return;
-    }
 
     return list;
 };
@@ -158,13 +156,16 @@ const getAnnotationList = (item) => {
 const getAnnotations = (item, column, collection) => {
 
     const list = getAnnotationList(item);
-
-    if (list && list.length) {
+    if (Util.isList(list)) {
         return {
             id: getPositionId(item.id, column.id),
+            componentType: 'metadata',
+            type: 'details',
             icon: 'annotation',
-            title: column.name,
-            subs: list
+            hasDetails: true,
+            hoverable: false,
+            data: column,
+            content: list
         };
     }
 

@@ -55,7 +55,7 @@ const onMetadataClick = (e, data) => {
           :icon="item.icon"
           :button="false"
         >
-          <b>{{ item.name }}</b>
+          <b v-if="item.name">{{ item.name }}</b>
         </IconLabel>
         <IconLabel
           v-if="item.isObject"
@@ -67,6 +67,11 @@ const onMetadataClick = (e, data) => {
           :href="item.value"
           target="_blank"
         >{{ item.value }}</a>
+        <div
+          v-else-if="item.isHtml"
+          class="mcr-metadata-html"
+          v-html="item.value"
+        />
         <span v-else>{{ item.value }}</span>
       </VuiFlex>
     </VuiFlex>
@@ -76,5 +81,13 @@ const onMetadataClick = (e, data) => {
 <style lang="scss">
 .mcr-metadata-list {
     position: relative;
+}
+
+.mcr-metadata-html {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    word-break: break-all;
 }
 </style>

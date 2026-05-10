@@ -156,12 +156,6 @@ const getColumnComponent = (componentType) => {
     }
 }
 
-.mcr-annotation-item {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
 .mcr-attachment-retry {
     margin-right: 10px;
     color: var(--color-flaky);
