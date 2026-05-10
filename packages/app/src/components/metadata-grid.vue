@@ -89,7 +89,6 @@ watch(() => state.metadata.popoverVisible, (visible) => {
 
     a,
     span {
-        color: var(--color-secondary);
         font-weight: normal;
         word-break: break-all;
         overflow: hidden;
