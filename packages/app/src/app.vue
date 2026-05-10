@@ -1090,6 +1090,15 @@ window.addEventListener('message', (e) => {
     </VuiPopover>
 
     <VuiPopover
+      v-if="state.metadata"
+      v-model="state.metadata.popoverVisible"
+      :target="state.metadata.popoverTarget"
+      width="320px"
+    >
+      <div ref="metadataEl" />
+    </VuiPopover>
+
+    <VuiPopover
       v-if="state.trace"
       v-model="state.trace.popoverVisible"
       :target="state.trace.popoverTarget"

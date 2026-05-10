@@ -269,26 +269,6 @@ const getCustom = (item, column) => {
     };
 };
 
-// ===========================================================================
-
-const getColumn = (item, column, collection) => {
-
-    if (!column.name) {
-        return;
-    }
-
-    const defaultHandler = {
-        errors: getErrors,
-        logs: getLogs,
-        annotations: getAnnotations,
-        attachments: getAttachments
-    };
-
-    const handler = defaultHandler[column.id] || getCustom;
-
-    return handler(item, column, collection);
-};
-
 const getProjectMetadata = (item) => {
     const metadata = item.metadata;
     if (!metadata || typeof metadata !== 'object') {
@@ -316,6 +296,38 @@ const getProjectMetadata = (item) => {
         icon: 'metadata',
         subs: metadataList
     };
+
+    // return {
+    //     id: getPositionId(item.id, 'metadata'),
+    //     type: 'details',
+    //     // name: 'Metadata',
+    //     icon: 'metadata',
+    //     hasDetails: true,
+    //     hoverable: false,
+    //     data: metadataList
+    //     // subs: metadataList
+    // };
+};
+
+
+// ===========================================================================
+
+const getColumn = (item, column, collection) => {
+
+    if (!column.name) {
+        return;
+    }
+
+    const defaultHandler = {
+        errors: getErrors,
+        logs: getLogs,
+        annotations: getAnnotations,
+        attachments: getAttachments
+    };
+
+    const handler = defaultHandler[column.id] || getCustom;
+
+    return handler(item, column, collection);
 };
 
 const forEachColumn = (list, item, columns, collection) => {

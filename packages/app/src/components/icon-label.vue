@@ -114,6 +114,7 @@ watch(() => props.icon, () => {
   <div
     :class="classMap"
     :style="styleMap"
+    :name="props.icon"
   >
     <div
       v-if="props.icon"

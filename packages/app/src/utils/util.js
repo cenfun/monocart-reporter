@@ -61,15 +61,28 @@ const Util = {
             return metadataList;
         }
         Object.keys(metadata).map((k) => {
-            const str = `${metadata[k]}`.trim();
+
             const it = {
                 icon: 'item-arrow',
-                name: k,
-                value: str
+                name: k
             };
-            if (str.startsWith('http://') || str.startsWith('https://')) {
-                it.isLink = true;
+
+            const v = metadata[k];
+            if (typeof v === 'object' && v) {
+                if (Object.keys(v).length > 0) {
+                    it.isObject = true;
+                    it.value = v;
+                } else {
+                    it.value = JSON.stringify(v);
+                }
+            } else {
+                const str = `${v}`.trim();
+                if (str.startsWith('http://') || str.startsWith('https://')) {
+                    it.isLink = true;
+                }
+                it.value = str;
             }
+
             metadataList.push(it);
         });
         return metadataList;

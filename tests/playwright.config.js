@@ -26,6 +26,30 @@ module.exports = {
         type: 'Regression',
         executor: 'Mono',
 
+        ci: {
+            buildHref: 'https://github.com/cenfun/monocart-reporter/actions/runs/25599555127',
+            commitHash: 'b8d07b8944bb824b10f9243d9a0403252eb29909',
+            commitHref: 'https://github.com/cenfun/monocart-reporter/commit/b8d07b8944bb824b10f9243d9a0403252eb29909'
+        },
+
+        gitCommit: {
+            'shortHash': 'b8d07b8',
+            'hash': 'b8d07b8944bb824b10f9243d9a0403252eb29909',
+            'subject': 'updated version: 2.11.0 => 2.11.1',
+            'body': 'updated version: 2.11.0 => 2.11.1\n',
+            'author': {
+                'name': 'CenFun',
+                'email': 'cenfun@qq.com',
+                'time': 1778324647000
+            },
+            'committer': {
+                'name': 'CenFun',
+                'email': 'cenfun@qq.com',
+                'time': 1778324647000
+            },
+            'branch': 'main'
+        },
+
         // test home page object model
         url: 'https://www.npmjs.org/package/monocart-reporter'
     },

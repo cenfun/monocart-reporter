@@ -43,6 +43,7 @@ const state = shallowReactive({
     }),
 
     trace: shallowReactive({}),
+    metadata: shallowReactive({}),
 
     windowWidth: window.innerWidth,
 

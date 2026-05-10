@@ -1,6 +1,9 @@
 <script setup>
 import { components } from 'vine-ui';
-import IconLabel from './icon-label.vue';
+
+import state from '../../modules/state.js';
+
+import IconLabel from '../icon-label.vue';
 const { VuiFlex } = components;
 
 const props = defineProps({
@@ -9,6 +12,24 @@ const props = defineProps({
         default: () => []
     }
 });
+
+
+const onMetadataClick = (e, data) => {
+    // already open, after close it
+    const currentTarget = e.currentTarget;
+    if (state.metadata.popoverVisible) {
+        setTimeout(() => {
+            onMetadataClick({
+                currentTarget
+            }, data);
+        }, 100);
+        return;
+    }
+    // console.log('metadata click', data, state.metadata);
+    state.metadata.popoverTarget = currentTarget;
+    state.metadata.data = data;
+    state.metadata.popoverVisible = true;
+};
 
 </script>
 
@@ -33,8 +54,13 @@ const props = defineProps({
         >
           <b>{{ item.name }}</b>
         </IconLabel>
+        <IconLabel
+          v-if="item.isObject"
+          icon="comment-popover"
+          @click="onMetadataClick($event, item.value)"
+        />
         <a
-          v-if="item.isLink"
+          v-else-if="item.isLink"
           :href="item.value"
           target="_blank"
         >{{ item.value }}</a>
@@ -44,7 +70,7 @@ const props = defineProps({
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .mcr-metadata-list {
     position: relative;
 }
