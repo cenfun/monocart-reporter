@@ -1095,7 +1095,10 @@ window.addEventListener('message', (e) => {
       :target="state.metadata.popoverTarget"
       width="320px"
     >
-      <div ref="metadataEl" />
+      <div
+        ref="metadataEl"
+        class="mcr-metadata-grid"
+      />
     </VuiPopover>
 
     <VuiPopover

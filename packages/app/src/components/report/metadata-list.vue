@@ -17,6 +17,10 @@ const props = defineProps({
 const onMetadataClick = (e, data) => {
     // already open, after close it
     const currentTarget = e.currentTarget;
+    if (currentTarget === state.metadata.popoverTarget && state.metadata.popoverVisible) {
+        return;
+    }
+
     if (state.metadata.popoverVisible) {
         setTimeout(() => {
             onMetadataClick({
@@ -56,7 +60,7 @@ const onMetadataClick = (e, data) => {
         </IconLabel>
         <IconLabel
           v-if="item.isObject"
-          icon="comment-popover"
+          icon="more"
           @click="onMetadataClick($event, item.value)"
         />
         <a

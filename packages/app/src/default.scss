@@ -659,3 +659,9 @@ a:not([href], [class]):hover {
     animation-duration: 0.3s;
     animation-timing-function: linear;
 }
+
+.mcr-metadata-grid {
+    min-height: 300px;
+    max-height: 80%;
+    overflow: hidden;
+}
