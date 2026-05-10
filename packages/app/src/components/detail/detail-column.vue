@@ -5,6 +5,7 @@ import { components } from 'vine-ui';
 import IconLabel from '../icon-label.vue';
 import ContentAttachment from './detail-content-attachment.vue';
 import ContentHtml from './detail-content-html.vue';
+import ContentMetadata from './detail-content-metadata.vue';
 
 import { renderMermaid } from '../../modules/mermaid.js';
 
@@ -12,6 +13,7 @@ const { VuiFlex } = components;
 
 const columnComponents = {
     attachment: ContentAttachment,
+    metadata: ContentMetadata,
     html: ContentHtml
 };
 
@@ -88,7 +90,6 @@ const getColumnComponent = (componentType) => {
             />
           </VuiFlex>
         </IconLabel>
-
 
         <div class="vui-flex-auto" />
         <div

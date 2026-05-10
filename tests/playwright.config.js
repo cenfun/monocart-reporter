@@ -91,7 +91,12 @@ module.exports = {
             metadata: {
                 projectData: 'project level metadata',
                 owner: 'PO',
-                link: 'https://github.com/cenfun/monocart-reporter'
+                link: 'https://github.com/cenfun/monocart-reporter',
+                tags: ['smoke', 'critical'],
+                info: {
+                    platform: 'desktop',
+                    browser: 'chromium'
+                }
             }
         }
     ],

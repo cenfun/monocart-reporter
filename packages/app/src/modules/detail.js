@@ -280,33 +280,18 @@ const getProjectMetadata = (item) => {
         return;
     }
 
-    metadataList.forEach((it) => {
-        let title = `<b>${it.name}</b>: `;
-        if (it.isLink) {
-            title += `<a href="${it.value}" target="_blank">${it.value}</a>`;
-        } else {
-            title += it.value;
-        }
-        it.title = title;
-    });
-
     return {
         id: getPositionId(item.id, 'metadata'),
-        title: 'Metadata',
+        componentType: 'metadata',
+        type: 'details',
         icon: 'metadata',
-        subs: metadataList
+        hasDetails: true,
+        hoverable: false,
+        data: {
+            name: 'Metadata'
+        },
+        content: metadataList
     };
-
-    // return {
-    //     id: getPositionId(item.id, 'metadata'),
-    //     type: 'details',
-    //     // name: 'Metadata',
-    //     icon: 'metadata',
-    //     hasDetails: true,
-    //     hoverable: false,
-    //     data: metadataList
-    //     // subs: metadataList
-    // };
 };
 
 
