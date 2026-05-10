@@ -1,5 +1,5 @@
 <script setup>
-import MetadataList from '../report/metadata-list.vue';
+import MetadataList from '../metadata-list.vue';
 
 const props = defineProps({
     column: {

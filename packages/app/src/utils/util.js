@@ -77,7 +77,7 @@ const Util = {
                 }
             } else {
                 const str = `${v}`.trim();
-                if (str.startsWith('http://') || str.startsWith('https://')) {
+                if (Util.isLink(str)) {
                     it.isLink = true;
                 }
                 it.value = str;

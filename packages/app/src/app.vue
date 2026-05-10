@@ -14,6 +14,7 @@ import {
 
 import Flyover from './components/flyover.vue';
 import IconLabel from './components/icon-label.vue';
+import MetadataGrid from './components/metadata-grid.vue';
 
 import state, { defaultGroups } from './modules/state.js';
 
@@ -1090,18 +1091,6 @@ window.addEventListener('message', (e) => {
     </VuiPopover>
 
     <VuiPopover
-      v-if="state.metadata"
-      v-model="state.metadata.popoverVisible"
-      :target="state.metadata.popoverTarget"
-      width="320px"
-    >
-      <div
-        ref="metadataEl"
-        class="mcr-metadata-grid"
-      />
-    </VuiPopover>
-
-    <VuiPopover
       v-if="state.trace"
       v-model="state.trace.popoverVisible"
       :target="state.trace.popoverTarget"
@@ -1130,6 +1119,8 @@ window.addEventListener('message', (e) => {
         </dd>
       </dl>
     </VuiPopover>
+
+    <MetadataGrid />
 
     <VuiTooltip
       :class="tooltip.classMap"

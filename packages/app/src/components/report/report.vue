@@ -12,7 +12,7 @@ import {
     renderGrid, updateGrid, hideFlyover
 } from '../../modules/grid.js';
 
-import MetadataList from './metadata-list.vue';
+import MetadataList from '../metadata-list.vue';
 import IconLabel from '../icon-label.vue';
 import Pie from './pie.vue';
 import Timeline from './timeline.vue';

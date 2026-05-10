@@ -1,9 +1,9 @@
 <script setup>
 import { components } from 'vine-ui';
 
-import state from '../../modules/state.js';
+import state from '../modules/state.js';
 
-import IconLabel from '../icon-label.vue';
+import IconLabel from './icon-label.vue';
 const { VuiFlex } = components;
 
 const props = defineProps({
@@ -12,7 +12,6 @@ const props = defineProps({
         default: () => []
     }
 });
-
 
 const onMetadataClick = (e, data) => {
     // already open, after close it
