@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - fixed relative path resolution (#196)
+
 * 2.11.2
   - updated metadata and annotations
 
