@@ -1,6 +1,6 @@
 ## Changelog
 
-* Unreleased
+* 2.11.3
   - fixed relative path resolution (#196)
 
 * 2.11.2
