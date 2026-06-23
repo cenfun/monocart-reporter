@@ -38,6 +38,8 @@ onMounted(() => {
     d.protocol = window.location.protocol;
     const isOnline = ['http:', 'https:'].includes(d.protocol);
 
+    d.icon = isOnline ? 'help' : 'error';
+    d.iconStyle = isOnline ? '' : 'color: var(--color-flaky);';
     d.color = isOnline ? 'color: green;' : 'color: red;';
 
     const { path } = props.data;
@@ -63,6 +65,11 @@ onMounted(() => {
         target="_blank"
       >View trace</a>
     </VuiFlex>
+    <IconLabel
+      :icon="d.icon"
+      :style="d.iconStyle"
+      @click="showTraceHelp"
+    />
     <VuiFlex gap="3px">
       <IconLabel icon="download" />
       <a
@@ -71,10 +78,6 @@ onMounted(() => {
         target="_blank"
       >Download</a>
     </VuiFlex>
-    <IconLabel
-      icon="help"
-      @click="showTraceHelp"
-    />
   </div>
 </template>
 
