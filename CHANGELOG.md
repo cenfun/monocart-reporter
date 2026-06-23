@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - updated trace viewer help style (#198)
+
 * 2.11.3
   - fixed relative path resolution (#196)
 
