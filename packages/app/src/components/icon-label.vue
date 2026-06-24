@@ -1,6 +1,6 @@
 <script setup>
 import {
-    computed, onMounted, ref, useSlots, watch
+    computed, nextTick, onMounted, ref, useSlots, watch
 } from 'vue';
 
 import { decodeIcons } from '../common/common.js';
@@ -95,9 +95,16 @@ const showIcon = () => {
     if (!svg) {
         return;
     }
-    const $el = el.value;
 
-    $el.innerHTML = svg;
+    const setSvg = () => {
+        if (el.value) {
+            el.value.innerHTML = svg;
+        }
+    };
+    if (!el.value) {
+        return nextTick(setSvg);
+    }
+    setSvg();
 };
 
 onMounted(() => {
