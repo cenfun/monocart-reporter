@@ -45,6 +45,8 @@ jobs:
 
       - run: npx playwright test -c tests || exit 0
 
+      - run: cp ./.temp/monocart-zip/mr.zip ./.temp/monocart/mr.zip
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
