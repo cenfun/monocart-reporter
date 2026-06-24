@@ -1,7 +1,8 @@
 ## Changelog
 
-* Unreleased
+* 2.12.0
   - updated trace viewer help style (#198)
+  - (Breaking) nodemailer is no longer a built-in dependency, please run `npm install nodemailer` to use the email feature; added a friendly error prompt when nodemailer is not installed
 
 * 2.11.3
   - fixed relative path resolution (#196)
