@@ -200,9 +200,7 @@ module.exports = {
     },
 
     outdate: {
-        exclude: [
-            'open'
-        ]
+        exclude: []
     },
 
     build: {
