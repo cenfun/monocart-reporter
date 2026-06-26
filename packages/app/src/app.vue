@@ -84,6 +84,11 @@ const initStore = () => {
         state.collapseSteps = true;
     }
 
+    const collapseAttachments = store.get('collapseAttachments');
+    if (collapseAttachments === 'true') {
+        state.collapseAttachments = true;
+    }
+
     const groupsStr = store.get('groups');
     if (!groupsStr) {
         return;
@@ -671,6 +676,10 @@ watch(() => state.imageZoom, () => {
 
 watch(() => state.collapseSteps, () => {
     store.set('collapseSteps', state.collapseSteps);
+});
+
+watch(() => state.collapseAttachments, () => {
+    store.set('collapseAttachments', state.collapseAttachments);
 });
 
 watch([

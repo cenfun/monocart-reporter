@@ -199,6 +199,8 @@ const getAttachments = (item, column, collection) => {
 
     return {
         id: getPositionId(item.id, column.id),
+        // for grid row search
+        type: 'attachment',
         icon: 'attachment',
         title: column.name,
         subs

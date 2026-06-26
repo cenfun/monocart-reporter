@@ -326,7 +326,7 @@ const getGridData = (grid, caseItem) => {
     return gridData;
 };
 
-const collapseSteps = (gridData) => {
+const initCollapseSteps = (gridData) => {
     const stepInfo = gridData.rows.find((it) => it.type === 'step-info');
     if (stepInfo && stepInfo.subs) {
         stepInfo.subs.forEach((it) => {
@@ -334,6 +334,23 @@ const collapseSteps = (gridData) => {
                 it.collapsed = state.collapseSteps;
             }
         });
+    }
+};
+
+const initCollapseAttachments = (gridData) => {
+    const caseItem = gridData.rows.find((it) => it.type === 'case');
+    if (caseItem && caseItem.subs) {
+        const attachmentItem = caseItem.subs.find((it) => it.type === 'attachment');
+        if (attachmentItem && attachmentItem.subs) {
+            attachmentItem.subs.forEach((it) => {
+                if (it.inline) {
+                    return;
+                }
+                if (it.tg_state) {
+                    it.tg_state.collapsed = state.collapseAttachments;
+                }
+            });
+        }
     }
 };
 
@@ -375,10 +392,19 @@ const renderSteps = () => {
 
 };
 
+const renderAttachments = () => {
+    const grid = data.grid;
+    if (!grid) {
+        return;
+    }
+    initCollapseAttachments(grid.getData());
+};
+
 const renderGrid = (caseItem) => {
     const grid = initGrid();
     const gridData = getGridData(grid, caseItem);
-    collapseSteps(gridData);
+    initCollapseSteps(gridData);
+    initCollapseAttachments(gridData);
     grid.setData(gridData);
     grid.render();
 };
@@ -414,6 +440,10 @@ const updatePosition = (position) => {
 
 watch(() => state.collapseSteps, () => {
     renderSteps();
+});
+
+watch(() => state.collapseAttachments, () => {
+    renderAttachments();
 });
 
 

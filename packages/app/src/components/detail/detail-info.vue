@@ -31,7 +31,7 @@ const props = defineProps({
 
 const data = shallowReactive({
     iconType: '',
-    showCollapse: false
+    showStepsCollapse: false
 });
 
 const classMap = computed(() => {
@@ -40,6 +40,7 @@ const classMap = computed(() => {
     return ls;
 });
 
+// eslint-disable-next-line complexity
 onMounted(() => {
     const rowItem = props.rowItem;
 
@@ -69,11 +70,21 @@ onMounted(() => {
 
     if (rowItem.type === 'step-info') {
         // step-info
-        data.showCollapse = false;
+        data.showStepsCollapse = false;
         if (rowItem.subs) {
             const groupStep = rowItem.subs.find((it) => it.subs);
             if (groupStep) {
-                data.showCollapse = true;
+                data.showStepsCollapse = true;
+            }
+        }
+    }
+
+    if (rowItem.type === 'attachment') {
+        data.showAttachmentsCollapse = false;
+        if (rowItem.subs) {
+            const detailItem = rowItem.subs.find((it) => !it.inline);
+            if (detailItem) {
+                data.showAttachmentsCollapse = true;
             }
         }
     }
@@ -144,18 +155,33 @@ const onRowUpdate = () => {
         </div>
 
         <div
-          :class="['mcr-detail-title', data.showCollapse?'':'vui-flex-auto']"
+          :class="['mcr-detail-title', (data.showStepsCollapse||data.showAttachmentsCollapse)?'':'vui-flex-auto']"
           @mouseenter="onMouseenter"
           @mouseleave="onMouseleave"
           v-html="data.html"
         />
 
         <VuiSwitch
-          v-if="data.showCollapse"
+          v-if="data.showAttachmentsCollapse"
+          v-model="state.collapseAttachments"
+          :disabled="rowItem.collapsed"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+          class="mcr-detail-collapse"
+        >
+          Collapse
+        </VuiSwitch>
+
+        <VuiSwitch
+          v-if="data.showStepsCollapse"
           v-model="state.collapseSteps"
           :disabled="rowItem.collapsed"
           :label-clickable="true"
           label-position="right"
+          width="28px"
+          height="16px"
           class="mcr-detail-collapse"
         >
           Collapse

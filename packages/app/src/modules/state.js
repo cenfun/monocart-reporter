@@ -64,6 +64,7 @@ const state = shallowReactive({
 
     onlyFailedSteps: false,
     collapseSteps: false,
+    collapseAttachments: false,
 
     loading: false,
     initializing: true
