@@ -1,5 +1,9 @@
 ## Changelog
 
+* 2.12.1
+  - feat: collapse attachments (switch to collapse/expand all attachments)
+  - support copyAttachments disabled when outputDir is same as testOutputDir (attachments are already in place)
+
 * 2.12.0
   - updated trace viewer help style (#198)
   - (Breaking) nodemailer is no longer a built-in dependency, please run `npm install nodemailer` to use the email feature; added a friendly error prompt when nodemailer is not installed

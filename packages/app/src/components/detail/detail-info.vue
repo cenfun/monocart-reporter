@@ -31,7 +31,8 @@ const props = defineProps({
 
 const data = shallowReactive({
     iconType: '',
-    showStepsCollapse: false
+    showStepsCollapse: false,
+    showAttachmentsCollapse: false
 });
 
 const classMap = computed(() => {
