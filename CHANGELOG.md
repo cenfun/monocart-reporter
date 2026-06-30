@@ -1,7 +1,8 @@
 ## Changelog
 
-* Unreleased
+* 2.12.2
   - feat: style and word wrap test metadata (#201)
+  - fixed tooltip overflow and positioning
 
 * 2.12.1
   - feat: collapse attachments (switch to collapse/expand all attachments)
