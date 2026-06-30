@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - feat: style and word wrap test metadata (#201)
+
 * 2.12.1
   - feat: collapse attachments (switch to collapse/expand all attachments)
   - support copyAttachments disabled when outputDir is same as testOutputDir (attachments are already in place)
