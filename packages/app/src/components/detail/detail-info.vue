@@ -4,7 +4,6 @@ import {
 } from 'vue';
 import { components } from 'vine-ui';
 
-import { showTooltip, hideTooltip } from '../../modules/tooltip.js';
 import Util from '../../utils/util.js';
 import { titleTagsFormatter } from '../../modules/formatters.js';
 import state from '../../modules/state.js';
@@ -92,18 +91,6 @@ onMounted(() => {
 
 });
 
-const onMouseenter = (e) => {
-    const node = e.target;
-    if (node.clientWidth < node.scrollWidth) {
-        const html = false;
-        const text = node.innerText;
-        showTooltip(node, text, html);
-    }
-};
-
-const onMouseleave = (e) => {
-    hideTooltip();
-};
 
 const onRowUpdate = () => {
     emit('update');
@@ -157,8 +144,7 @@ const onRowUpdate = () => {
 
         <div
           :class="['mcr-detail-title', (data.showStepsCollapse||data.showAttachmentsCollapse)?'':'vui-flex-auto']"
-          @mouseenter="onMouseenter"
-          @mouseleave="onMouseleave"
+          tooltip
           v-html="data.html"
         />
 

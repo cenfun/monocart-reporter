@@ -2,7 +2,7 @@
 import {
     watch, onMounted, reactive, computed, watchEffect
 } from 'vue';
-import { components, generateTooltips } from 'vine-ui';
+import { components } from 'vine-ui';
 import {
     debounce, microtask, inflate, store, hash, setFavicon
 } from './common/common.js';
@@ -19,6 +19,8 @@ import MetadataGrid from './components/metadata-grid.vue';
 import state, { defaultGroups } from './modules/state.js';
 
 import { loadMermaid, initMermaid } from './modules/mermaid.js';
+
+import { initTooltip } from './modules/tooltip.js';
 
 const {
     VuiInput,
@@ -248,47 +250,6 @@ const initCaseMap = (rows) => {
 };
 
 // =================================================================================
-
-// let timeout_tooltip;
-const initTooltip = () => {
-
-    const getTooltip = (target) => {
-        const text = target.getAttribute('tooltip');
-        if (text) {
-            return text;
-        }
-        if (target.classList.contains('mcr-long-label')) {
-
-            if (target.clientWidth < target.scrollWidth) {
-                return target.innerText;
-            }
-
-        }
-    };
-
-
-    generateTooltips((target, text) => {
-        // clearTimeout(timeout_tooltip);
-
-        if (Util.isTouchDevice()) {
-            return;
-        }
-
-        tooltip.visible = true;
-        tooltip.target = target;
-        tooltip.text = text;
-
-        // timeout_tooltip = setTimeout(() => {
-        //     tooltip.visible = false;
-        //     tooltip.text = '';
-        // }, 2000);
-
-    }, (target) => {
-        //  clearTimeout(timeout_tooltip);
-        tooltip.visible = false;
-        tooltip.text = '';
-    }, getTooltip);
-};
 
 const initFlyoverSize = () => {
     state.windowWidth = window.innerWidth;

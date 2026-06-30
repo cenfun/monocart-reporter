@@ -4,7 +4,7 @@ const { setMetadata } = require('monocart-reporter');
 test.describe('Data Driven Tests with setMetadata(data, testInfo)', () => {
     const list = [{
         title: 'Example Case 1 Data Driven Test',
-        owner: 'Jensen',
+        owner: 'Jensen Long Name Long Name Long Name Long Name Long Name 中文 align',
         jira: 'MCR-16889',
         index: 0
     }, {
