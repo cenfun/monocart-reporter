@@ -159,7 +159,7 @@ const tagsFormatter = (tags) => {
 };
 
 const titleTagsFormatter = (rowItem, columnItem) => {
-    const title = rowItem.title;
+    const title = Util.quoteAttr(rowItem.title);
 
     if (columnItem && columnItem.titleTagsDisabled) {
         return title;

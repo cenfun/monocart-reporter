@@ -62,9 +62,7 @@ onMounted(() => {
 
     if (rowItem.type === 'step') {
         // step
-        if (rowItem.stepType === 'retry') {
-            data.html = rowItem.title;
-        }
+        data.html = Util.quoteAttr(rowItem.title);
         return;
     }
 
