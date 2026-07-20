@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - fixed HTML injection in titles and step names (#203)
+
 * 2.12.2
   - feat: style and word wrap test metadata (#201)
   - fixed tooltip overflow and positioning
