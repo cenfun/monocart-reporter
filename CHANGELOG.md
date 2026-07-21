@@ -1,6 +1,6 @@
 ## Changelog
 
-* Unreleased
+* 2.12.3
   - fixed HTML injection in titles and step names (#203)
 
 * 2.12.2
