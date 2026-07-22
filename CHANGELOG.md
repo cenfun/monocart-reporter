@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - feat: new search parser (#204)
+
 * 2.12.3
   - fixed HTML injection in titles and step names (#203)
 
