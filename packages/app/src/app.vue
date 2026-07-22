@@ -659,12 +659,14 @@ window.addEventListener('popstate', microtask(() => {
     const caseType = hash.get('caseType');
     state.caseType = caseType || 'tests';
 
-    // Restore tags from hash
-    const tags = hash.get('tags');
-    if (tags) {
-        state.keywords = tags.split(',').map((t) => `@${t.trim()}`).filter((t) => t !== '@').join(' ');
-    } else {
-        state.keywords = '';
+    // Restore tags from hash (only if search input is not focused)
+    if (!state.searchHelperTarget) {
+        const tags = hash.get('tags');
+        if (tags) {
+            state.keywords = tags.split(',').map((t) => `@${t.trim()}`).filter((t) => t !== '@').join(' ');
+        } else {
+            state.keywords = '';
+        }
     }
 
     displayFlyoverWithHash();

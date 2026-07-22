@@ -386,6 +386,27 @@ const getRowNumberFilter = () => {
     };
 };
 
+/*
+- Keywords separated by spaces
+- Double quotes create single keywords with spaces (inner quotes escaped with \)
+- Leading hyphen negates the keyword
+- All keywords are case-insensitive
+*/
+const parseKeywords = (keywords) => {
+    const parsed = [];
+    if (!keywords) {
+        return parsed;
+    }
+    const regex = /(?<=^|\s)(-?)(?:"((?:.(?:\\")?)+?)"|([^\s]+))(?=\s|$)/g;
+    let match;
+    while ((match = regex.exec(keywords))) {
+        parsed.push({
+            text: (match[2]?.replace(/\\"/g, '"') ?? match[3]).toLowerCase(),
+            negate: match[1] === '-'
+        });
+    }
+    return parsed;
+};
 
 const getGridSortComparers = () => {
     return {
@@ -450,13 +471,22 @@ const getGridOption = () => {
             }
         },
         rowFilter: function(rowItem) {
-
             const searchableAllKeys = state.searchableAllKeys;
-
-            const hasMatched = this.highlightKeywordsFilter(rowItem, searchableAllKeys, state.keywords);
-
-            return hasMatched;
-
+            let text = '';
+            for (const key of searchableAllKeys) {
+                text = `${text} ${String(rowItem[key]).replace(/[\t\r\n]+/g, ' ')}`;
+            }
+            text = text.toLowerCase();
+            const keywords = parseKeywords(state.keywords);
+            for (const keyword of keywords) {
+                if (
+                    (!keyword.negate && !text.includes(keyword.text))
+                    || (keyword.negate && text.includes(keyword.text))
+                ) {
+                    return false;
+                }
+            }
+            return true;
         },
         rowNotFound: '<div class="mcr-no-results">No Results</div>',
         frozenColumn: 1,
