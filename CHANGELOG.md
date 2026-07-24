@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - feat: tag styling by regular expressions (#205)
+
 * 2.12.3
   - fixed HTML injection in titles and step names (#203)
 

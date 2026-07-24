@@ -271,7 +271,10 @@ module.exports = {
                 critical: {
                     background: '#c00'
                 },
-                slow: 'background:orange;'
+                '/^(slow|flaky)$/': 'background:orange;',
+                '/^feature(:|$)/': {
+                    background: '#0066CC'
+                }
             },
 
             // custom columns

@@ -545,6 +545,9 @@ module.exports = {
                 },
                 critical: {
                     background: '#c00'
+                },
+                '/^feature(:|$)/': {
+                    background: '#0066CC'
                 }
             }
         }]
