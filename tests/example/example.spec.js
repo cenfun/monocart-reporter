@@ -481,7 +481,7 @@ test.describe('next group', () => {
 
 test.describe('new syntax for tag and annotation in playwright v1.42.0', {
     // tag all tests in a group
-    tag: '@report',
+    tag: ['@feature:annotations', '@feature:tags', '@report'],
     // annotate all tests in a group
     annotation: {
         type: 'category', description: 'report'

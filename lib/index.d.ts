@@ -138,6 +138,9 @@ export type MonocartReporterOptions = {
      *   },
      *   sanity: {
      *     'background': '#178F43'
+     *   },
+     *   '/^feature(:|$)/': {
+     *     'background': '#0066CC'
      *   }
      * }
      * ```
