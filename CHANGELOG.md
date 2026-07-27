@@ -1,6 +1,6 @@
 ## Changelog
 
-* Unreleased
+* 2.12.4
   - feat: tag styling by regular expressions (#205)
 
 * 2.12.3
