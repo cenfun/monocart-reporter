@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.12.5
+  - updated turbogrid to support advanced search
+
 * 2.12.4
   - feat: tag styling by regular expressions (#205)
 
