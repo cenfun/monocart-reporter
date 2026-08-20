@@ -166,7 +166,7 @@ const initTagList = (tagMap) => {
     }
 
     tagList.sort((a, b) => {
-        return b.value - a.value;
+        return a.name.localeCompare(b.name);
     });
 
     state.tagList = tagList;

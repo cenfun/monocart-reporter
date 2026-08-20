@@ -371,11 +371,13 @@ a:not([href], [class]):hover {
 
 .mcr-search-helper {
     position: absolute;
+    max-height: max(50px, calc((100vh - 256px) / 2));
     padding: 10px;
     box-sizing: border-box;
     border-radius: 10px;
     background-color: #fff;
     filter: drop-shadow(1px 2px 2px rgb(0 0 0 / 20%));
+    overflow-y: auto;
 
     .mcr-tag {
         cursor: pointer;
