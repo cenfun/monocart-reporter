@@ -18,9 +18,18 @@ export const defaultGroups = {
 export const getTagsKeywords = () => {
     const tags = hash.get('tags');
     if (tags) {
-        return decodeURIComponent(tags);
+        return tags.split(',').join(' ');
     }
     return '';
+};
+
+// Extract @tag patterns from keywords and sync to hash
+export const syncTagsToHash = (keywords) => {
+    if (keywords.includes('@')) {
+        hash.set('tags', keywords.trim());
+    } else {
+        hash.remove('tags');
+    }
 };
 
 // do not use reactive for grid data

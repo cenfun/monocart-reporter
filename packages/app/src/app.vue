@@ -16,7 +16,9 @@ import Flyover from './components/flyover.vue';
 import IconLabel from './components/icon-label.vue';
 import MetadataGrid from './components/metadata-grid.vue';
 
-import state, { defaultGroups, getTagsKeywords } from './modules/state.js';
+import state, {
+    defaultGroups, getTagsKeywords, syncTagsToHash
+} from './modules/state.js';
 
 import { loadMermaid, initMermaid } from './modules/mermaid.js';
 
@@ -588,14 +590,6 @@ const updateSearchHistoryAsync = debounce(() => {
 
 const updateGridAsync = debounce(updateGrid, 200);
 
-// Extract @tag patterns from keywords and sync to hash
-const syncTagsToHash = (keywords) => {
-    if (keywords.includes('@')) {
-        hash.set('tags', encodeURIComponent(keywords));
-    } else {
-        hash.remove('tags');
-    }
-};
 
 watch(() => state.keywords, (v) => {
     updateGridAsync();
