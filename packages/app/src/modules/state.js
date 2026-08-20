@@ -15,10 +15,10 @@ export const defaultGroups = {
 };
 
 // Convert comma-separated tags from hash to @tag keywords format
-const getTagsKeywords = () => {
+export const getTagsKeywords = () => {
     const tags = hash.get('tags');
     if (tags) {
-        return tags.split(',').map((t) => `@${t.trim()}`).filter((t) => t !== '@').join(' ');
+        return decodeURIComponent(tags);
     }
     return '';
 };

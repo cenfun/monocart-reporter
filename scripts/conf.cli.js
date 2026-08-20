@@ -200,7 +200,7 @@ module.exports = {
     },
 
     outdate: {
-        exclude: []
+        exclude: ['starfall-cli', 'vine-ui']
     },
 
     build: {

@@ -16,7 +16,7 @@ import Flyover from './components/flyover.vue';
 import IconLabel from './components/icon-label.vue';
 import MetadataGrid from './components/metadata-grid.vue';
 
-import state, { defaultGroups } from './modules/state.js';
+import state, { defaultGroups, getTagsKeywords } from './modules/state.js';
 
 import { loadMermaid, initMermaid } from './modules/mermaid.js';
 
@@ -590,10 +590,8 @@ const updateGridAsync = debounce(updateGrid, 200);
 
 // Extract @tag patterns from keywords and sync to hash
 const syncTagsToHash = (keywords) => {
-    const tagMatches = keywords.match(/@[\w-]+/g);
-    if (tagMatches && tagMatches.length > 0) {
-        const tags = tagMatches.map((t) => t.slice(1)).join(',');
-        hash.set('tags', tags);
+    if (keywords.includes('@')) {
+        hash.set('tags', encodeURIComponent(keywords));
     } else {
         hash.remove('tags');
     }
@@ -660,12 +658,7 @@ window.addEventListener('popstate', microtask(() => {
     state.caseType = caseType || 'tests';
 
     // Restore tags from hash
-    const tags = hash.get('tags');
-    if (tags) {
-        state.keywords = tags.split(',').map((t) => `@${t.trim()}`).filter((t) => t !== '@').join(' ');
-    } else {
-        state.keywords = '';
-    }
+    state.keywords = getTagsKeywords();
 
     displayFlyoverWithHash();
 }));
