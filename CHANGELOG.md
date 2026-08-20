@@ -1,7 +1,8 @@
 ## Changelog
 
-* Unreleased
+* 2.12.6
   - feat: sort search tags alphabetically and overflow list (#206)
+  - fixed tags sync with hash
 
 * 2.12.5
   - updated turbogrid to support advanced search
