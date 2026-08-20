@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - feat: sort search tags alphabetically and overflow list (#206)
+
 * 2.12.5
   - updated turbogrid to support advanced search
 
