@@ -1,8 +1,10 @@
 /** fixed popover theme */
-.vui-popover,
-.vui-tooltip {
-    color: var(--color-primary-fixed);
-    background-color: var(--bg-primary-fixed);
+.vui {
+    .vui-popover,
+    .vui-tooltip {
+        color: var(--color-primary-fixed);
+        background-color: var(--bg-primary-fixed);
+    }
 }
 
 .mcr-dark {
