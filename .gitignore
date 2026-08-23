@@ -1,10 +1,9 @@
 /.temp
 /node_modules
-/packages/**/dist
 /package-lock.json
 /lib/packages
 /.env
 /scripts/mock/demo/dist/
-/packages/*/node_modules
+/dist
 
 /.claude

@@ -81,8 +81,8 @@ This is the default location where `npm run test-example` generates the report.
 ## Implementation Files
 
 The feature is implemented in:
-- `packages/app/src/modules/state.js` - Initializes keywords from tags hash
-- `packages/app/src/app.vue` - Syncs keywords to/from hash, handles popstate
+- `src/app/modules/state.js` - Initializes keywords from tags hash
+- `src/app/app.vue` - Syncs keywords to/from hash, handles popstate
 
 ## Manual Testing
 

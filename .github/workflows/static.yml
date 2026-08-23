@@ -37,7 +37,6 @@ jobs:
         with:
           node-version: 24
           cache: ''
-      - run: npm i starfall-cli -g
       - run: npm i
       - run: npx playwright install --with-deps
       - run: npm run build

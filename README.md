@@ -1221,14 +1221,15 @@ See [playwright-reporter-integrations](https://github.com/cenfun/playwright-repo
 
 ## Contributing
 ```sh
-# Node.js 20+
-npm install starfall-cli -g
+# Node.js 22.12+
 npm install
 
 npm run build
 npm run test
 
-npm run dev
+npm run dev         # App (default)
+npm run dev-app     # App
+npm run dev-network # Network
 ```
 ### Dependencies
 - UI Framework [Vue 3](https://github.com/vuejs/core)

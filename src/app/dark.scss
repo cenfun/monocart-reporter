@@ -1,0 +1,70 @@
+/** fixed popover theme */
+.vui-popover,
+.vui-tooltip {
+    color: var(--color-primary-fixed);
+    background-color: var(--bg-primary-fixed);
+}
+
+.mcr-dark {
+    --color-primary: #fff;
+    --color-secondary: #ccc;
+    --color-failed: #e00;
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2e2e2e;
+    --bg-hover: #272727;
+    --bg-failed: #230000;
+    --bg-flaky: #342500;
+    --border-primary: #555;
+    --border-failed: #500;
+
+    .vui-flyover {
+        background-color: var(--bg-primary);
+    }
+
+    .mcr-column-copy {
+        background-color: rgb(0 0 0 / 60%);
+
+        .vui-icon-label {
+            background-color: #1e1e1e;
+        }
+    }
+
+    .mcr-header {
+        .mcr-header-left {
+            .vui-icon-label {
+                color: #ccc;
+            }
+        }
+    }
+
+    .mcr-flyover-header {
+        background-color: #00467f;
+    }
+
+    .mcr-report-head {
+        border-bottom: 1px solid #1e1e1e;
+        background-color: #333;
+    }
+
+    .mcr-details-summary {
+        summary:hover {
+            background-color: #333;
+        }
+    }
+
+    .mcr-search,
+    .mcr-overview-search {
+        input {
+            color: var(--color-primary);
+            background-color: #333;
+        }
+    }
+}
+
+.tg-dark {
+    background-color: var(--bg-primary);
+
+    .tg-cell {
+        color: var(--color-primary);
+    }
+}
