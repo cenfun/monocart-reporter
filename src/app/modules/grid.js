@@ -449,11 +449,21 @@ const getGridOption = () => {
                 return rowItem[id];
             }
         },
-        rowFilter: function(rowItem) {
+        rowFilter: function(rowItem, index, parent) {
 
             const searchableAllKeys = state.searchableAllKeys;
 
             const hasMatched = this.highlightKeywordsFilter(rowItem, searchableAllKeys, state.keywords);
+
+            rowItem.highlighted = hasMatched;
+            if (!hasMatched) {
+                while (state.includeDescendants && parent) {
+                    if (parent.highlighted) {
+                        return true;
+                    }
+                    parent = parent.tg_parent;
+                }
+            }
 
             return hasMatched;
 
