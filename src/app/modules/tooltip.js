@@ -39,7 +39,7 @@ const getTruncatedNode = (node) => {
         return;
     }
     node = node.querySelector('.tg-tree-name') || node;
-    if (node.clientWidth < node.scrollWidth) {
+    if (node.clientWidth < node.scrollWidth || node.querySelector('.mcr-title-tags-split-compact')) {
         return node;
     }
 };
@@ -49,7 +49,7 @@ export const bindGridTooltip = (grid) => {
         const node = getTruncatedNode(d.cellNode);
         if (node) {
             const html = false;
-            const text = node.innerText;
+            const text = node.querySelector('[data-title]')?.dataset.title || node.innerText;
             showTooltip(node, text, html);
         }
     }).bind('onCellMouseLeave', (e, d) => {
