@@ -1,6 +1,6 @@
 <script setup>
 import {
-    computed, shallowReactive, onMounted
+    computed, shallowReactive, onMounted, ref
 } from 'vue';
 import {
     VuiFlex,
@@ -32,9 +32,12 @@ const props = defineProps({
 
 const data = shallowReactive({
     iconType: '',
+    titleCopied: '',
     showStepsCollapse: false,
     showAttachmentsCollapse: false
 });
+
+const titleRef = ref();
 
 const classMap = computed(() => {
     const ls = ['mcr-detail-info'];
@@ -96,6 +99,20 @@ const onRowUpdate = () => {
     emit('update');
 };
 
+const onTitleCopyClick = () => {
+    const title = titleRef.value?.querySelector('[data-title]')?.dataset.title;
+    if (title) {
+        Util.copyText(title).then((res) => {
+            if (res) {
+                data.titleCopied = 'copied';
+                setTimeout(() => {
+                    data.titleCopied = '';
+                }, 1000);
+            }
+        });
+    }
+};
+
 </script>
 
 <template>
@@ -143,10 +160,20 @@ const onRowUpdate = () => {
         </div>
 
         <div
+          ref="titleRef"
           :class="['mcr-detail-title', (data.showStepsCollapse||data.showAttachmentsCollapse)?'':'mcr-flex-auto']"
           tooltip
           v-html="data.html"
         />
+
+        <VuiIconLabel
+          v-if="rowItem.type==='case'"
+          button
+          icon="copy"
+          @click="onTitleCopyClick"
+        >
+          {{ data.titleCopied }}
+        </VuiIconLabel>
 
         <VuiSwitch
           v-if="data.showAttachmentsCollapse"

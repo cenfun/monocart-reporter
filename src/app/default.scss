@@ -177,6 +177,32 @@ a:not([href], [class]):hover {
     margin-right: 5px;
 }
 
+.mcr-title-tags-split {
+    display: flex;
+    width: 100%;
+
+    .mcr-title-tags-split-title {
+        overflow: hidden;
+    }
+
+    .mcr-title-tags-split-tags-box {
+        display: none;
+        align-self: center;
+        margin-left: 5px;
+        padding: 0;
+    }
+}
+
+.mcr-title-tags-split-compact {
+    .mcr-title-tags-split-tags-list {
+        display: none;
+    }
+
+    .mcr-title-tags-split-tags-box {
+        display: inline-block;
+    }
+}
+
 /* header */
 
 .mcr-header {

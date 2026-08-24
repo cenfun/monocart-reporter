@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - feat: compact title tags into boxes on overflow and add title copy button (#207)
+
 * 2.12.6
   - feat: sort search tags alphabetically and overflow list (#206)
   - fixed tags sync with hash

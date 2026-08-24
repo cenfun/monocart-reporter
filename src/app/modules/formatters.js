@@ -160,30 +160,28 @@ const tagsFormatter = (tags) => {
     return list.join('');
 };
 
-const titleTagsFormatter = (rowItem, columnItem) => {
+const titleTagsFormatter = (rowItem, columnItem, titleTagsSplit) => {
     const title = Util.quoteAttr(rowItem.title);
-
-    if (columnItem && columnItem.titleTagsDisabled) {
-        return title;
-    }
 
     if (!Util.isTagItem(rowItem)) {
         return title;
     }
 
     const titleTags = [];
-    let newTitle = title.replace(Util.tagPattern, function(all, before, key, after) {
+    const newTitle = title.replace(Util.tagPattern, function(all, before, key, after) {
         titleTags.push(`@${key}`);
         return getTag(key, before, after);
     });
 
     // new syntax in playwright v1.42
+    let tags = [];
+    let newTags = '';
     if (rowItem.tags) {
         // remove tags which is already in title
-        const tags = rowItem.tags.filter((it) => !titleTags.includes(it));
+        tags = rowItem.tags.filter((it) => !titleTags.includes(it));
         const len = tags.length;
         if (len) {
-            newTitle += tags.map((it, i) => {
+            newTags = tags.map((it, i) => {
                 const key = `${it}`.slice(1);
                 const before = i === 0;
                 const after = i !== len - 1;
@@ -192,7 +190,73 @@ const titleTagsFormatter = (rowItem, columnItem) => {
         }
     }
 
-    return newTitle;
+    const titleStr = Util.quoteAttr([rowItem.title, ... tags].join(' '));
+    if (columnItem && columnItem.titleTagsDisabled) {
+        return `<span data-title="${titleStr}">${newTitle}</span>`;
+    }
+    if (titleTagsSplit && newTags) {
+        return `<div class="mcr-title-tags-split" data-title="${titleStr}"><div class="mcr-title-tags-split-title">${newTitle}</div><div class="mcr-tag mcr-title-tags-split-tags-box">@</div><div class="mcr-title-tags-split-tags-list">${newTags}</div></div>`;
+    }
+    return `<span data-title="${titleStr}">${newTitle}${newTags}</span>`;
+};
+
+const setTitleTagsSplitCompact = (container, compact) => {
+    if (compact) {
+        container.classList.add('mcr-title-tags-split-compact');
+    } else {
+        container.classList.remove('mcr-title-tags-split-compact');
+    }
+};
+
+const updateTitleTagsSplit = (container) => {
+    requestAnimationFrame(() => {
+        if (!container.isConnected) {
+            return;
+        }
+        const title = container.querySelector('.mcr-title-tags-split-title');
+        const tagsList = container.querySelector('.mcr-title-tags-split-tags-list');
+        const tags = Array.from(tagsList.querySelectorAll('.mcr-tag'));
+        const tagsBox = container.querySelector('.mcr-title-tags-split-tags-box');
+
+        const tagsListWidth = container.mcrTagsListWidth || tagsList.offsetWidth;
+        if (tagsListWidth) {
+            container.mcrTagsListWidth = tagsListWidth;
+        }
+        const compact = title.scrollWidth + tagsListWidth > container.clientWidth;
+        setTitleTagsSplitCompact(container, compact);
+        if (!compact || tagsBox.style.background) {
+            return;
+        }
+
+        tagsBox.style.cssText = tags[0].style.cssText;
+        const backgrounds = tags.slice(0, 4).map((tag) => getComputedStyle(tag).backgroundColor);
+        while (backgrounds.length < 3) {
+            backgrounds.splice(0, 0, backgrounds[0]);
+        }
+        if (backgrounds.length < 4) {
+            backgrounds.push(backgrounds.at(-1));
+        }
+        tagsBox.style.background = `conic-gradient(${backgrounds[1]} 0 25%, ${backgrounds[3]} 0 50%, ${backgrounds[2]} 0 75%, ${backgrounds[0]} 0)`;
+    });
+};
+
+const observeTitleTagsSplit = (cellNode) => {
+    requestAnimationFrame(() => {
+        const container = cellNode.querySelector('.mcr-title-tags-split');
+        if (!container) {
+            return;
+        }
+        updateTitleTagsSplit(container);
+
+        const resizeObserver = new ResizeObserver(() => updateTitleTagsSplit(container));
+        resizeObserver.observe(container);
+        const intersectionObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                updateTitleTagsSplit(container);
+            }
+        });
+        intersectionObserver.observe(container);
+    });
 };
 
 // ===========================================================================
@@ -235,7 +299,7 @@ const formatters = {
     },
 
     tree: function(value, rowItem, columnItem, cellNode) {
-        let formattedValue = titleTagsFormatter(rowItem, columnItem);
+        let formattedValue = titleTagsFormatter(rowItem, columnItem, true);
         const defaultFormatter = this.getDefaultFormatter('tree');
 
         if (rowItem.type === 'suite' && rowItem.caseNum) {
@@ -248,7 +312,9 @@ const formatters = {
             // add count number for step
             formattedValue = `${formattedValue} <span class="mcr-num mcr-count">${Util.NF(rowItem.count)}</span>`;
         }
-        return defaultFormatter(formattedValue, rowItem, columnItem, cellNode);
+        const formatted = defaultFormatter(formattedValue, rowItem, columnItem, cellNode);
+        observeTitleTagsSplit(cellNode);
+        return formatted;
     },
 
     tags: function(value, rowItem, columnItem, cellNode) {
