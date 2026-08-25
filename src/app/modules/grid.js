@@ -455,10 +455,10 @@ const getGridOption = () => {
 
             const hasMatched = this.highlightKeywordsFilter(rowItem, searchableAllKeys, state.keywords);
 
-            rowItem.highlighted = hasMatched;
+            rowItem.tg_highlighted = hasMatched;
             if (!hasMatched) {
                 while (state.includeDescendants && parent) {
-                    if (parent.highlighted) {
+                    if (parent.tg_highlighted) {
                         return true;
                     }
                     parent = parent.tg_parent;
