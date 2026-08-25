@@ -208,35 +208,44 @@ const setTitleTagsSplitCompact = (container, compact) => {
     }
 };
 
-const updateTitleTagsSplit = (container) => {
+const initTitleTagsSplit = (container) => {
+    const tagsList = container.querySelector('.mcr-title-tags-split-tags-list');
+    const tags = Array.from(tagsList.querySelectorAll('.mcr-tag'));
+    const bgTags = tags.slice(0, 4);
+    while (bgTags.length < 3) {
+        bgTags.splice(0, 0, bgTags[0]);
+    }
+    if (bgTags.length < 4) {
+        bgTags.push(bgTags.at(-1));
+    }
+
+    const bgEls = bgTags.map((tag) => {
+        const bgEl = document.createElement('span');
+        bgEl.className = 'mcr-title-tags-split-tags-box-bg';
+        bgEl.style.cssText = tag.style.cssText;
+        bgEl.style.background = getComputedStyle(tag).background;
+        return bgEl;
+    });
+    const textEl = document.createElement('span');
+    textEl.className = 'mcr-title-tags-split-tags-box-text';
+    textEl.textContent = '@';
+    const tagsBox = container.querySelector('.mcr-title-tags-split-tags-box');
+    tagsBox.replaceChildren(... bgEls, textEl);
+};
+
+const updateTitleTagsSplitCompact = (container) => {
     requestAnimationFrame(() => {
         if (!container.isConnected) {
             return;
         }
-        const title = container.querySelector('.mcr-title-tags-split-title');
         const tagsList = container.querySelector('.mcr-title-tags-split-tags-list');
-        const tags = Array.from(tagsList.querySelectorAll('.mcr-tag'));
-        const tagsBox = container.querySelector('.mcr-title-tags-split-tags-box');
-
         const tagsListWidth = container.mcrTagsListWidth || tagsList.offsetWidth;
         if (tagsListWidth) {
             container.mcrTagsListWidth = tagsListWidth;
         }
+        const title = container.querySelector('.mcr-title-tags-split-title');
         const compact = title.scrollWidth + tagsListWidth > container.clientWidth;
         setTitleTagsSplitCompact(container, compact);
-        if (!compact || tagsBox.style.background) {
-            return;
-        }
-
-        tagsBox.style.cssText = tags[0].style.cssText;
-        const backgrounds = tags.slice(0, 4).map((tag) => getComputedStyle(tag).backgroundColor);
-        while (backgrounds.length < 3) {
-            backgrounds.splice(0, 0, backgrounds[0]);
-        }
-        if (backgrounds.length < 4) {
-            backgrounds.push(backgrounds.at(-1));
-        }
-        tagsBox.style.background = `conic-gradient(${backgrounds[1]} 0 25%, ${backgrounds[3]} 0 50%, ${backgrounds[2]} 0 75%, ${backgrounds[0]} 0)`;
     });
 };
 
@@ -246,13 +255,14 @@ const observeTitleTagsSplit = (cellNode) => {
         if (!container) {
             return;
         }
-        updateTitleTagsSplit(container);
+        initTitleTagsSplit(container);
+        updateTitleTagsSplitCompact(container);
 
-        const resizeObserver = new ResizeObserver(() => updateTitleTagsSplit(container));
+        const resizeObserver = new ResizeObserver(() => updateTitleTagsSplitCompact(container));
         resizeObserver.observe(container);
         const intersectionObserver = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                updateTitleTagsSplit(container);
+                updateTitleTagsSplitCompact(container);
             }
         });
         intersectionObserver.observe(container);

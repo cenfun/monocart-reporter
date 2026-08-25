@@ -190,6 +190,34 @@ a:not([href], [class]):hover {
         align-self: center;
         margin-left: 5px;
         padding: 0;
+        position: relative;
+        overflow: hidden;
+
+        .mcr-title-tags-split-tags-box-bg {
+            position: absolute;
+            inset: 0;
+            border-radius: 0;
+
+            &:nth-child(1) {
+                clip-path: polygon(0 0, 50% 0, 50% 50%, 0 50%);
+            }
+
+            &:nth-child(2) {
+                clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 50%);
+            }
+
+            &:nth-child(3) {
+                clip-path: polygon(0 50%, 50% 50%, 50% 100%, 0 100%);
+            }
+
+            &:nth-child(4) {
+                clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
+            }
+        }
+
+        .mcr-title-tags-split-tags-box-text {
+            position: relative;
+        }
     }
 }
 
