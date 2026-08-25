@@ -56,6 +56,7 @@ const state = shallowReactive({
     keywords: getTagsKeywords(),
     searchableAllKeys: [],
     searchableKeys: [],
+    includeDescendants: false,
 
     caseType: hash.get('caseType') || 'tests',
 

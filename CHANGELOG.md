@@ -1,5 +1,8 @@
 ## Changelog
 
+* Unreleased
+  - feat: optionally include descendants when searching (#208)
+
 * 2.12.6
   - feat: sort search tags alphabetically and overflow list (#206)
   - fixed tags sync with hash

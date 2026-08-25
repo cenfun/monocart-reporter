@@ -389,6 +389,17 @@ a:not([href], [class]):hover {
 }
 
 .mcr-searchable-list {
+    .mcr-searchable-section {
+        margin-top: 5px;
+        padding-bottom: 1px;
+        font-weight: bold;
+
+        &:not(:first-child) {
+            padding-top: 8px;
+            border-top: 1px solid #ddd;
+        }
+    }
+
     .mcr-searchable-item {
         padding: 5px 0;
     }

@@ -77,6 +77,11 @@ const navItemClass = (item) => {
 
 const initStore = () => {
 
+    const includeDescendants = store.get('includeDescendants');
+    if (includeDescendants === 'true') {
+        state.includeDescendants = true;
+    }
+
     const imageZoom = store.get('imageZoom');
     if (imageZoom === 'true') {
         state.imageZoom = true;
@@ -622,6 +627,13 @@ watch(() => state.groups, (v) => {
     deep: true
 });
 
+watch(() => state.includeDescendants, () => {
+    store.set('includeDescendants', state.includeDescendants);
+    if (state.keywords) {
+        updateGrid();
+    }
+});
+
 watch(() => state.imageZoom, () => {
     store.set('imageZoom', state.imageZoom);
 });
@@ -853,12 +865,15 @@ window.addEventListener('message', (e) => {
       v-model="state.searchDropdownVisible"
       :target="state.searchDropdownTarget"
       positions="bottom"
-      title="Searchable Fields"
+      title="Search Options"
     >
       <VuiFlex
         direction="column"
         class="mcr-searchable-list"
       >
+        <div class="mcr-searchable-section">
+          Searchable Fields
+        </div>
         <VuiSwitch
           v-for="(item, i) in searchable.columns"
           :key="i"
@@ -870,6 +885,19 @@ window.addEventListener('message', (e) => {
           class="mcr-searchable-item"
         >
           {{ item.name }}
+        </VuiSwitch>
+        <div class="mcr-searchable-section">
+          Filtering
+        </div>
+        <VuiSwitch
+          v-model="state.includeDescendants"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+          class="mcr-searchable-item"
+        >
+          Include descendants
         </VuiSwitch>
       </VuiFlex>
     </VuiPopover>
