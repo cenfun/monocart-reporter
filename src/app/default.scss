@@ -516,6 +516,11 @@ a:not([href], [class]):hover {
     }
 }
 
+.mcr-title-setting {
+    flex: auto;
+    justify-content: flex-start;
+}
+
 .mcr-percent-chart {
     position: relative;
     display: inline-block;

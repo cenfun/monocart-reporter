@@ -51,22 +51,24 @@ const iconFormatter = (options) => {
         button: false,
         ... options
     };
-    createApp(VuiIconLabel, props).mount(div);
-    return div;
+    const vm = createApp(VuiIconLabel, props).mount(div);
+    return vm.$el;
 };
 
 const titleFormatter = (value) => {
     const div = document.createElement('div');
-    createApp({
+    const vm = createApp({
         render() {
             return h(VuiFlex, {
                 gap: '5px'
             }, {
                 default: () => {
                     return [
-                        h('div', null, value),
+                        value,
                         h(VuiIconLabel, {
-                            icon: 'drop-down',
+                            class: 'mcr-title-setting',
+                            icon: 'setting',
+                            color: '#000',
                             button: true
                         })
                     ];
@@ -74,7 +76,7 @@ const titleFormatter = (value) => {
             });
         }
     }).mount(div);
-    return div;
+    return vm.$el;
 };
 
 // ===========================================================================

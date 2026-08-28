@@ -169,8 +169,8 @@ const clickTitleHandler = (d) => {
         return;
     }
 
-    const cls = e.target.classList;
-    if (!cls.contains('vui-icon')) {
+    const iconLabel = e.target.closest('.vui-icon-label');
+    if (!iconLabel) {
         return;
     }
 
@@ -178,7 +178,7 @@ const clickTitleHandler = (d) => {
     e.preventDefault();
 
     state.levelPopoverVisible = true;
-    state.levelPopoverTarget = e.target;
+    state.levelPopoverTarget = iconLabel.firstChild;
 
 };
 
