@@ -391,6 +391,9 @@ a:not([href], [class]):hover {
     }
 
     .mcr-groups-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         width: 100%;
         padding: 5px 0;
     }

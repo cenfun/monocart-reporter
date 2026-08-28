@@ -801,7 +801,7 @@ window.addEventListener('message', (e) => {
         <VuiIconLabel
           icon="setting"
           button
-          tooltip="Group Settings"
+          tooltip="Group Options"
           size="20px"
           @click="onSettingClick"
         />
@@ -920,12 +920,12 @@ window.addEventListener('message', (e) => {
     >
       <template #header>
         <VuiFlex
-          align="between"
+          align="space-between"
           align-items="center"
           gap="10px"
           class="mcr-groups-header"
         >
-          <div>Show Group Levels</div>
+          <div>Show Group</div>
           <VuiSwitch
             v-model="state.groups.group"
             width="28px"
@@ -938,10 +938,8 @@ window.addEventListener('message', (e) => {
         direction="column"
         class="mcr-groups-list"
       >
-        <VuiFlex
+        <div
           v-if="state.systemList"
-          align="between"
-          align-items="center"
           class="mcr-groups-item"
         >
           <VuiIconLabel
@@ -957,13 +955,9 @@ window.addEventListener('message', (e) => {
             width="28px"
             height="16px"
           />
-        </VuiFlex>
+        </div>
 
-        <VuiFlex
-          align="between"
-          align-items="center"
-          class="mcr-groups-item"
-        >
+        <div class="mcr-groups-item">
           <VuiIconLabel
             :button="canExpandGroupLevel('project')"
             icon="project"
@@ -977,13 +971,9 @@ window.addEventListener('message', (e) => {
             width="28px"
             height="16px"
           />
-        </VuiFlex>
+        </div>
 
-        <VuiFlex
-          align="between"
-          align-items="center"
-          class="mcr-groups-item"
-        >
+        <div class="mcr-groups-item">
           <VuiIconLabel
             :button="canExpandGroupLevel('file')"
             icon="file"
@@ -997,13 +987,9 @@ window.addEventListener('message', (e) => {
             width="28px"
             height="16px"
           />
-        </VuiFlex>
+        </div>
 
-        <VuiFlex
-          align="between"
-          align-items="center"
-          class="mcr-groups-item"
-        >
+        <div class="mcr-groups-item">
           <VuiIconLabel
             :button="canExpandGroupLevel('describe')"
             icon="suite"
@@ -1017,13 +1003,9 @@ window.addEventListener('message', (e) => {
             width="28px"
             height="16px"
           />
-        </VuiFlex>
+        </div>
 
-        <VuiFlex
-          align="between"
-          align-items="center"
-          class="mcr-groups-item"
-        >
+        <div class="mcr-groups-item">
           <VuiIconLabel
             button
             icon="case"
@@ -1032,13 +1014,9 @@ window.addEventListener('message', (e) => {
           >
             Case
           </VuiIconLabel>
-        </VuiFlex>
+        </div>
 
-        <VuiFlex
-          align="between"
-          align-items="center"
-          class="mcr-groups-item"
-        >
+        <div class="mcr-groups-item">
           <VuiIconLabel
             :button="canExpandGroupLevel('step')"
             icon="step"
@@ -1052,14 +1030,10 @@ window.addEventListener('message', (e) => {
             width="28px"
             height="16px"
           />
-        </VuiFlex>
+        </div>
 
         <div class="mcr-groups-line">
-          <VuiFlex
-            align="between"
-            align-items="center"
-            class="mcr-groups-item"
-          >
+          <div class="mcr-groups-item">
             <VuiFlex
               align-items="center"
               gap="5px"
@@ -1077,7 +1051,7 @@ window.addEventListener('message', (e) => {
               width="28px"
               height="16px"
             />
-          </VuiFlex>
+          </div>
         </div>
 
         <div
