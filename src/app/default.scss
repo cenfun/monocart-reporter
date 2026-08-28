@@ -328,13 +328,16 @@ a:not([href], [class]):hover {
     background-color: var(--color-skipped);
 }
 
-.mcr-search-holder {
+.mcr-filter-left {
+    display: flex;
+    flex: auto;
+    gap: 10px;
+    align-items: center;
     min-width: 150px;
 
     .mcr-search {
         width: 100%;
         max-width: 350px;
-        padding: 5px;
 
         input {
             border-radius: 10px;
@@ -372,7 +375,15 @@ a:not([href], [class]):hover {
     }
 }
 
+.mcr-groups-header {
+    width: 100%;
+    font-weight: bold;
+    font-size: var(--vui-font-size-l);
+}
+
 .mcr-groups-list {
+    min-width: 180px;
+
     .mcr-groups-line {
         margin-top: 5px;
         padding-top: 5px;
@@ -380,11 +391,29 @@ a:not([href], [class]):hover {
     }
 
     .mcr-groups-item {
+        width: 100%;
         padding: 5px 0;
     }
 
     .mcr-groups-item:hover {
         background-color: #f8f8f8;
+    }
+
+    .mcr-groups-label {
+        flex: 1;
+        justify-content: flex-start;
+        min-width: 0;
+    }
+
+    .mcr-groups-label-disabled {
+        color: #999;
+        cursor: default;
+        opacity: 0.6;
+    }
+
+    .mcr-groups-reset {
+        width: 100%;
+        padding: 5px 0;
     }
 }
 
@@ -405,22 +434,6 @@ a:not([href], [class]):hover {
     }
 
     .mcr-searchable-item:hover {
-        background-color: #f8f8f8;
-    }
-}
-
-.mcr-expand-list {
-    position: relative;
-
-    .mcr-expand-item {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        width: 100%;
-        padding: 5px 0;
-    }
-
-    .mcr-expand-item:hover {
         background-color: #f8f8f8;
     }
 }

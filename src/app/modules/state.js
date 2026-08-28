@@ -63,6 +63,8 @@ const state = shallowReactive({
     groups: shallowReactive({
         ... defaultGroups
     }),
+    groupsPopoverVisible: false,
+    groupsPopoverTarget: null,
 
     trace: shallowReactive({}),
     metadata: shallowReactive({}),

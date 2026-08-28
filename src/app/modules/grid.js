@@ -163,28 +163,9 @@ const showPositionHandler = (d) => {
     setPosition(position);
 };
 
-const clickTitleHandler = (d) => {
-    const { e, columnItem } = d;
-    if (columnItem.id !== 'title') {
-        return;
-    }
-
-    const iconLabel = e.target.closest('.vui-icon-label');
-    if (!iconLabel) {
-        return;
-    }
-
-    // using native event
-    e.preventDefault();
-
-    state.levelPopoverVisible = true;
-    state.levelPopoverTarget = iconLabel.firstChild;
-
-};
-
 export const expandRowLevel = (type) => {
-    state.levelPopoverVisible = false;
-    state.levelPopoverTarget = null;
+    state.groupsPopoverVisible = false;
+    state.groupsPopoverTarget = null;
 
     const grid = state.grid;
 
@@ -259,11 +240,6 @@ const bindGridEvents = () => {
     bindGridTooltip(grid);
 
     grid.bind('onClick', (e, d) => {
-
-        if (d.headerNode) {
-            clickTitleHandler(d);
-            return;
-        }
 
         if (!d.cellNode) {
             return;

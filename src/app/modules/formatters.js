@@ -1,8 +1,5 @@
-import { createApp, h } from 'vue';
-import {
-    VuiFlex,
-    VuiIconLabel
-} from 'vine-ui';
+import { createApp } from 'vue';
+import { VuiIconLabel } from 'vine-ui';
 
 import { marked } from 'marked';
 
@@ -52,30 +49,6 @@ const iconFormatter = (options) => {
         ... options
     };
     const vm = createApp(VuiIconLabel, props).mount(div);
-    return vm.$el;
-};
-
-const titleFormatter = (value) => {
-    const div = document.createElement('div');
-    const vm = createApp({
-        render() {
-            return h(VuiFlex, {
-                gap: '5px'
-            }, {
-                default: () => {
-                    return [
-                        value,
-                        h(VuiIconLabel, {
-                            class: 'mcr-title-setting',
-                            icon: 'setting',
-                            color: '#000',
-                            button: true
-                        })
-                    ];
-                }
-            });
-        }
-    }).mount(div);
     return vm.$el;
 };
 
@@ -204,13 +177,6 @@ const formatters = {
     null: function(value) {
         if (value === null || typeof value === 'undefined') {
             return '';
-        }
-        return value;
-    },
-
-    header: function(value, rowItem, columnItem, cellNode) {
-        if (columnItem.id === 'title') {
-            return titleFormatter(value);
         }
         return value;
     },

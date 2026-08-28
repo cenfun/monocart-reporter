@@ -356,6 +356,13 @@ const onSearchDropdownClick = (e) => {
     state.searchDropdownTarget = e.target;
 };
 
+const onSettingClick = (e) => {
+
+    state.groupsPopoverVisible = true;
+    state.groupsPopoverTarget = e.target;
+
+};
+
 
 const resetGroups = () => {
     removeSort();
@@ -385,11 +392,20 @@ const isGroupsChanged = computed(() => {
     return false;
 });
 
-// =================================================================================
+const canExpandGroupLevel = (type) => {
+    if (type === 'case') {
+        return true;
+    }
+    if (type === 'step') {
+        return state.groups.step;
+    }
+    return state.groups.group && state.groups[type];
+};
 
-const onSuiteDropdownClick = (e) => {
-    state.suiteDropdownVisible = true;
-    state.suiteDropdownTarget = e.target;
+const onGroupLevelClick = (type) => {
+    if (canExpandGroupLevel(type)) {
+        expandRowLevel(type);
+    }
 };
 
 // =================================================================================
@@ -766,19 +782,7 @@ window.addEventListener('message', (e) => {
         Export
       </VuiButton>
 
-      <div class="mcr-nav">
-        <div
-          v-for="(item, i) in state.navList"
-          :key="i"
-          :class="navItemClass(item)"
-          @click="onNavItemClick(item)"
-        >
-          <b>{{ item.name }}</b>
-          <span>{{ Util.NF(item.value) }}</span>
-        </div>
-      </div>
-
-      <div class="mcr-search-holder mcr-flex-auto">
+      <div class="mcr-filter-left">
         <VuiInput
           v-model="state.keywords"
           width="100%"
@@ -793,22 +797,27 @@ window.addEventListener('message', (e) => {
           @blur="onSearchBlur"
           @icon-click="onSearchDropdownClick"
         />
+
+        <VuiIconLabel
+          icon="setting"
+          button
+          tooltip="Group Settings"
+          size="20px"
+          @click="onSettingClick"
+        />
       </div>
 
-      <VuiFlex gap="8px">
-        <VuiSwitch
-          v-model="state.groups.group"
-          :label-clickable="true"
-          label-position="right"
+      <div class="mcr-nav">
+        <div
+          v-for="(item, i) in state.navList"
+          :key="i"
+          :class="navItemClass(item)"
+          @click="onNavItemClick(item)"
         >
-          Group
-        </VuiSwitch>
-        <VuiIconLabel
-          button
-          icon="drop-down"
-          @click="onSuiteDropdownClick"
-        />
-      </VuiFlex>
+          <b>{{ item.name }}</b>
+          <span>{{ Util.NF(item.value) }}</span>
+        </div>
+      </div>
     </VuiFlex>
 
     <div class="mcr-grid mcr-flex-auto" />
@@ -903,79 +912,159 @@ window.addEventListener('message', (e) => {
     </VuiPopover>
 
     <VuiPopover
-      v-model="state.suiteDropdownVisible"
-      :target="state.suiteDropdownTarget"
-      positions="bottom"
+      v-model="state.groupsPopoverVisible"
+      :target="state.groupsPopoverTarget"
+      :positions="['bottom','right']"
       title="Show Group Levels"
+      width="210px"
     >
+      <template #header>
+        <VuiFlex
+          align="between"
+          align-items="center"
+          gap="10px"
+          class="mcr-groups-header"
+        >
+          <div>Show Group Levels</div>
+          <VuiSwitch
+            v-model="state.groups.group"
+            width="28px"
+            height="16px"
+          />
+        </VuiFlex>
+      </template>
+
       <VuiFlex
         direction="column"
         class="mcr-groups-list"
       >
-        <VuiSwitch
+        <VuiFlex
           v-if="state.systemList"
-          v-model="state.groups.shard"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
+          align="between"
+          align-items="center"
           class="mcr-groups-item"
         >
-          Shard
-        </VuiSwitch>
-
-        <VuiSwitch
-          v-model="state.groups.project"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
-          class="mcr-groups-item"
-        >
-          Project
-        </VuiSwitch>
-        <VuiSwitch
-          v-model="state.groups.file"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
-          class="mcr-groups-item"
-        >
-          File
-        </VuiSwitch>
-        <VuiSwitch
-          v-model="state.groups.describe"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
-          class="mcr-groups-item"
-        >
-          Describe
-        </VuiSwitch>
-
-        <VuiSwitch
-          v-model="state.groups.step"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
-          class="mcr-groups-item"
-        >
-          Step
-        </VuiSwitch>
-
-        <div class="mcr-groups-line">
+          <VuiIconLabel
+            :button="canExpandGroupLevel('shard')"
+            icon="shard"
+            :class="['mcr-groups-label', canExpandGroupLevel('shard') ? '' : 'mcr-groups-label-disabled']"
+            @click="onGroupLevelClick('shard')"
+          >
+            Shard
+          </VuiIconLabel>
           <VuiSwitch
-            v-model="state.groups.merge"
-            :label-clickable="true"
-            label-position="right"
+            v-model="state.groups.shard"
             width="28px"
             height="16px"
+          />
+        </VuiFlex>
+
+        <VuiFlex
+          align="between"
+          align-items="center"
+          class="mcr-groups-item"
+        >
+          <VuiIconLabel
+            :button="canExpandGroupLevel('project')"
+            icon="project"
+            :class="['mcr-groups-label', canExpandGroupLevel('project') ? '' : 'mcr-groups-label-disabled']"
+            @click="onGroupLevelClick('project')"
+          >
+            Project
+          </VuiIconLabel>
+          <VuiSwitch
+            v-model="state.groups.project"
+            width="28px"
+            height="16px"
+          />
+        </VuiFlex>
+
+        <VuiFlex
+          align="between"
+          align-items="center"
+          class="mcr-groups-item"
+        >
+          <VuiIconLabel
+            :button="canExpandGroupLevel('file')"
+            icon="file"
+            :class="['mcr-groups-label', canExpandGroupLevel('file') ? '' : 'mcr-groups-label-disabled']"
+            @click="onGroupLevelClick('file')"
+          >
+            File
+          </VuiIconLabel>
+          <VuiSwitch
+            v-model="state.groups.file"
+            width="28px"
+            height="16px"
+          />
+        </VuiFlex>
+
+        <VuiFlex
+          align="between"
+          align-items="center"
+          class="mcr-groups-item"
+        >
+          <VuiIconLabel
+            :button="canExpandGroupLevel('describe')"
+            icon="suite"
+            :class="['mcr-groups-label', canExpandGroupLevel('describe') ? '' : 'mcr-groups-label-disabled']"
+            @click="onGroupLevelClick('describe')"
+          >
+            Describe
+          </VuiIconLabel>
+          <VuiSwitch
+            v-model="state.groups.describe"
+            width="28px"
+            height="16px"
+          />
+        </VuiFlex>
+
+        <VuiFlex
+          align="between"
+          align-items="center"
+          class="mcr-groups-item"
+        >
+          <VuiIconLabel
+            button
+            icon="case"
+            class="mcr-groups-label"
+            @click="onGroupLevelClick('case')"
+          >
+            Case
+          </VuiIconLabel>
+        </VuiFlex>
+
+        <VuiFlex
+          align="between"
+          align-items="center"
+          class="mcr-groups-item"
+        >
+          <VuiIconLabel
+            :button="canExpandGroupLevel('step')"
+            icon="step"
+            :class="['mcr-groups-label', canExpandGroupLevel('step') ? '' : 'mcr-groups-label-disabled']"
+            @click="onGroupLevelClick('step')"
+          >
+            Step
+          </VuiIconLabel>
+          <VuiSwitch
+            v-model="state.groups.step"
+            width="28px"
+            height="16px"
+          />
+        </VuiFlex>
+
+        <div class="mcr-groups-line">
+          <VuiFlex
+            align="between"
+            align-items="center"
             class="mcr-groups-item"
           >
-            <VuiFlex gap="10px">
+            <VuiFlex
+              align-items="center"
+              gap="5px"
+              class="mcr-groups-label"
+            >
               <div>Merge Groups</div>
               <VuiIconLabel
                 button
@@ -983,7 +1072,12 @@ window.addEventListener('message', (e) => {
                 tooltip="Whether to merge groups by title when the parent group is hidden"
               />
             </VuiFlex>
-          </VuiSwitch>
+            <VuiSwitch
+              v-model="state.groups.merge"
+              width="28px"
+              height="16px"
+            />
+          </VuiFlex>
         </div>
 
         <div
@@ -993,82 +1087,13 @@ window.addEventListener('message', (e) => {
           <VuiIconLabel
             button
             icon="reload"
-            class="mcr-groups-item"
+            class="mcr-groups-reset"
             @click="resetGroups()"
           >
             Reset
           </VuiIconLabel>
         </div>
       </VuiFlex>
-    </VuiPopover>
-
-    <VuiPopover
-      v-model="state.levelPopoverVisible"
-      :target="state.levelPopoverTarget"
-      :positions="['bottom','right']"
-      title="Expand to Level"
-      width="130px"
-    >
-      <div class="mcr-expand-list">
-        <template v-if="state.groups.group">
-          <VuiIconLabel
-            v-if="state.groups.shard && state.systemList"
-            button
-            icon="shard"
-            class="mcr-expand-item"
-            @click="expandRowLevel('shard')"
-          >
-            Shard
-          </VuiIconLabel>
-
-          <VuiIconLabel
-            v-if="state.groups.project"
-            button
-            icon="project"
-            class="mcr-expand-item"
-            @click="expandRowLevel('project')"
-          >
-            Project
-          </VuiIconLabel>
-
-          <VuiIconLabel
-            v-if="state.groups.file"
-            button
-            icon="file"
-            class="mcr-expand-item"
-            @click="expandRowLevel('file')"
-          >
-            File
-          </VuiIconLabel>
-
-          <VuiIconLabel
-            v-if="state.groups.describe"
-            button
-            icon="suite"
-            class="mcr-expand-item"
-            @click="expandRowLevel('describe')"
-          >
-            Describe
-          </VuiIconLabel>
-        </template>
-        <VuiIconLabel
-          button
-          icon="case"
-          class="mcr-expand-item"
-          @click="expandRowLevel('case')"
-        >
-          Case
-        </VuiIconLabel>
-        <VuiIconLabel
-          v-if="state.groups.step"
-          button
-          icon="step"
-          class="mcr-expand-item"
-          @click="expandRowLevel('step')"
-        >
-          Step
-        </VuiIconLabel>
-      </div>
     </VuiPopover>
 
     <VuiPopover

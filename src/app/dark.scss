@@ -1,9 +1,9 @@
-/** fixed popover theme */
+/** fixed popover and tooltip theme */
 .vui {
-    .vui-popover,
-    .vui-tooltip {
+    &.vui-popover,
+    &.vui-tooltip,
+    &.vui-dialog {
         color: var(--color-primary-fixed);
-        background-color: var(--bg-primary-fixed);
     }
 }
 
