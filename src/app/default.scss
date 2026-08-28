@@ -180,8 +180,19 @@ a:not([href], [class]):hover {
 /* header */
 
 .mcr-header {
+    position: relative;
+    display: flex;
     flex-shrink: 0;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
     border-bottom: 1px solid #ccc;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 1;
+    }
 }
 
 .mcr-header-left {
@@ -244,8 +255,18 @@ a:not([href], [class]):hover {
 }
 
 .mcr-filter {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
     overflow: hidden;
+
+    > * {
+        flex-shrink: 1;
+    }
 }
 
 .mcr-nav {
@@ -376,13 +397,32 @@ a:not([href], [class]):hover {
 }
 
 .mcr-groups-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    position: relative;
     width: 100%;
     font-weight: bold;
     font-size: var(--vui-font-size-l);
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 }
 
 .mcr-groups-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
     min-width: 180px;
+
+    > * {
+        flex-shrink: 0;
+    }
 
     .mcr-groups-line {
         margin-top: 5px;
@@ -393,9 +433,16 @@ a:not([href], [class]):hover {
     .mcr-groups-item {
         display: flex;
         justify-content: space-between;
+        position: relative;
         align-items: center;
         width: 100%;
         padding: 5px 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        > * {
+            flex-shrink: 0;
+        }
     }
 
     .mcr-groups-item:hover {
@@ -403,9 +450,19 @@ a:not([href], [class]):hover {
     }
 
     .mcr-groups-label {
+        position: relative;
+        display: flex;
         flex: 1;
+        gap: 5px;
         justify-content: flex-start;
+        align-items: center;
         min-width: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        > * {
+            flex-shrink: 0;
+        }
     }
 
     .mcr-groups-label-disabled {
@@ -421,6 +478,16 @@ a:not([href], [class]):hover {
 }
 
 .mcr-searchable-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
+
+    .mcr-searchable-section,
+    .mcr-searchable-item {
+        flex-shrink: 0;
+    }
+
     .mcr-searchable-section {
         margin-top: 5px;
         padding-bottom: 1px;

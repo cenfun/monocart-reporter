@@ -29,11 +29,7 @@ const onMetaData = (e) => {
 </script>
 
 <template>
-  <VuiFlex
-    gap="10px"
-    direction="column"
-    class="mcr-attachment-video"
-  >
+  <div class="mcr-attachment-video">
     <div class="mcr-attachment-video-main">
       <video
         controls
@@ -56,12 +52,23 @@ const onMetaData = (e) => {
         target="_blank"
       >Download video</a>
     </VuiFlex>
-  </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-video {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: normal;
     padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 
     video {
         display: block;

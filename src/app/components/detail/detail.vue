@@ -3,7 +3,6 @@ import {
     createApp, h, watch, shallowReactive, onMounted, nextTick
 } from 'vue';
 import {
-    VuiFlex,
     VuiSwitch,
     VuiInput
 } from 'vine-ui';
@@ -503,19 +502,13 @@ const onFocus = (e) => {
 </script>
 
 <template>
-  <VuiFlex
+  <div
     class="mcr-detail-overview"
-    direction="column"
     tabindex="0"
     @focus="onFocus"
     @click="onFocus"
   >
-    <VuiFlex
-      gap="15px"
-      wrap
-      padding="10px"
-      class="mcr-overview-head"
-    >
+    <div class="mcr-overview-head">
       <VuiInput
         v-model="data.keywords"
         class="mcr-overview-search"
@@ -535,21 +528,41 @@ const onFocus = (e) => {
       >
         Only Failed
       </VuiSwitch>
-    </VuiFlex>
+    </div>
     <div class="mcr-overview-grid mcr-flex-auto" />
-  </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-detail-overview {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
     width: 100%;
     height: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 
     .mcr-overview-head {
         position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+        padding: 10px;
         border-bottom: thin solid #ccc;
+        text-overflow: ellipsis;
+        overflow: hidden;
         user-select: none;
+
+        > * {
+            flex-shrink: 0;
+        }
     }
 
     .mcr-overview-search {

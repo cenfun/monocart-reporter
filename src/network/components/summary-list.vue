@@ -1,7 +1,4 @@
 <script setup>
-import { VuiFlex } from 'vine-ui';
-
-
 const props = defineProps({
     title: {
         type: String,
@@ -27,11 +24,7 @@ const props = defineProps({
       <summary>
         <b>{{ props.title }}</b>
       </summary>
-      <VuiFlex
-        class="mcr-summary-body"
-        direction="column"
-        gap="5px"
-      >
+      <div class="mcr-summary-body">
         <div
           v-for="(item, i) in props.list"
           :key="i"
@@ -47,7 +40,7 @@ const props = defineProps({
           />
         </div>
         <slot />
-      </VuiFlex>
+      </div>
     </details>
   </div>
 </template>
@@ -65,7 +58,18 @@ const props = defineProps({
     }
 
     .mcr-summary-body {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        align-items: normal;
         margin-left: 15px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        > * {
+            flex-shrink: 0;
+        }
     }
 
     .mcr-summary-item {

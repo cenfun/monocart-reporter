@@ -91,11 +91,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <VuiFlex
-    class="mcr-attachment-network"
-    direction="column"
-    gap="10px"
-  >
+  <div class="mcr-attachment-network">
     <div
       v-for="(item, i) of d.pages"
       :key="i"
@@ -172,12 +168,23 @@ watchEffect(() => {
         target="_blank"
       >{{ props.data.report.name }}</a>
     </VuiFlex>
-  </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-network {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: normal;
     padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 
     .mcr-network-waterfall {
         width: 100%;

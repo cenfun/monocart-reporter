@@ -665,11 +665,9 @@ onMounted(() => {
         direction="column"
         gap="10px"
       >
-        <VuiFlex
+        <div
           v-for="(item, i) in pd.results"
           :key="i"
-          direction="column"
-          gap="10px"
           class="mcr-timeline-result"
         >
           <VuiFlex gap="5px">
@@ -702,7 +700,7 @@ onMounted(() => {
               {{ Util.TF(item.duration) }}
             </VuiIconLabel>
           </VuiFlex>
-        </VuiFlex>
+        </div>
 
         <template v-if="pd.tick">
           <VuiFlex gap="10px">
@@ -753,8 +751,19 @@ onMounted(() => {
 }
 
 .mcr-timeline-result {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: normal;
     padding-bottom: 10px;
     border-bottom: 1px solid #ccc;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 }
 
 </style>

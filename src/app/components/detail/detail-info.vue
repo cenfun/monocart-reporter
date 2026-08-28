@@ -3,7 +3,6 @@ import {
     computed, shallowReactive, onMounted
 } from 'vue';
 import {
-    VuiFlex,
     VuiSwitch,
     VuiIconLabel
 } from 'vine-ui';
@@ -99,28 +98,17 @@ const onRowUpdate = () => {
 </script>
 
 <template>
-  <VuiFlex
-    :class="classMap"
-    direction="column"
-    gap="5px"
-  >
+  <div :class="classMap">
     <DetailColumn
       v-if="rowItem.type==='details'"
       :column="rowItem"
     />
 
-    <VuiFlex
+    <div
       v-else
-      gap="10px"
       class="mcr-detail-head"
-      wrap
     >
-      <VuiFlex
-        gap="5px"
-        class="mcr-flex-auto"
-        wrap
-        overflow="hidden"
-      >
+      <div class="mcr-detail-main mcr-flex-auto">
         <VuiIconLabel
           v-if="data.iconType"
           :icon="data.iconType"
@@ -178,28 +166,59 @@ const onRowUpdate = () => {
           v-if="rowItem.tg_simpleList"
           :list="rowItem.tg_simpleList"
         />
-      </VuiFlex>
+      </div>
 
       <DurationLocation
         :row-item="rowItem"
         @update="onRowUpdate"
       />
-    </VuiFlex>
-  </VuiFlex>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-detail-info {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: normal;
     font-weight: normal;
     overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 }
 
 .mcr-detail-head {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
     min-height: 26px;
+
+    > * {
+        flex-shrink: 0;
+    }
+
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.mcr-detail-main {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 }
 
 .mcr-detail-title {

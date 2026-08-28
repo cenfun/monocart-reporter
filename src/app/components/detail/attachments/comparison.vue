@@ -792,11 +792,9 @@ onUnmounted(() => {
       </div>
     </Tabs>
 
-    <VuiFlex
+    <div
       v-if="d.imageList"
       class="mcr-comparison-toolbar"
-      align="space-between"
-      padding="10px 10px"
     >
       <VuiFlex gap="20px">
         <VuiSwitch
@@ -858,7 +856,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-    </VuiFlex>
+    </div>
 
     <VuiFlex
       v-if="d.textList"
@@ -964,8 +962,19 @@ onUnmounted(() => {
     }
 
     .mcr-comparison-toolbar {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
         border-bottom: 1px solid var(--border-primary);
+        text-overflow: ellipsis;
         user-select: none;
+        overflow: hidden;
+
+        > * {
+            flex-shrink: 0;
+        }
     }
 
     .mcr-comparison-image {

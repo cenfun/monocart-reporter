@@ -77,9 +77,8 @@ const getColumnComponent = (componentType) => {
     </div>
 
     <template v-else>
-      <VuiFlex
+      <div
         class="mcr-column-head"
-        gap="5px"
         @click="onColumnHeadClick(column)"
       >
         <VuiIconLabel
@@ -102,7 +101,7 @@ const getColumnComponent = (componentType) => {
         >
           Retry #{{ column.data.retry }}
         </div>
-      </VuiFlex>
+      </div>
 
       <component
         :is="getColumnComponent(column.componentType)"
@@ -121,7 +120,17 @@ const getColumnComponent = (componentType) => {
 }
 
 .mcr-column-head {
+    position: relative;
+    display: flex;
+    gap: 5px;
+    align-items: center;
     padding: 5px 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
     border-radius: 5px;
     cursor: pointer;
     user-select: none;

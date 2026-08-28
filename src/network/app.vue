@@ -721,12 +721,7 @@ window.addEventListener('keydown', (e) => {
 
 <template>
   <div class="mcr vui-flex-column">
-    <VuiFlex
-      class="mcr-header"
-      padding="10px"
-      gap="10px"
-      shrink
-    >
+    <div class="mcr-header">
       <VuiFlex
         gap="10px"
         wrap
@@ -737,7 +732,7 @@ window.addEventListener('keydown', (e) => {
       </VuiFlex>
 
       <div class="mcr-flex-auto" />
-    </VuiFlex>
+    </div>
 
     <div class="mcr-network-grid mcr-flex-auto" />
 
@@ -849,10 +844,23 @@ icon
 }
 
 .mcr-header {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
     height: 44px;
+    padding: 10px;
+    box-sizing: border-box;
     color: #fff;
+
+    > * {
+        flex-shrink: 1;
+    }
     line-height: 44px;
     background-color: #24292f;
+    text-overflow: ellipsis;
+    overflow: hidden;
 
     .mcr-title {
         font-size: 18px;

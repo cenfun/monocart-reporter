@@ -707,12 +707,7 @@ window.addEventListener('message', (e) => {
 
 <template>
   <div class="mcr vui-flex-column">
-    <VuiFlex
-      class="mcr-header"
-      padding="10px"
-      gap="10px"
-      shrink
-    >
+    <div class="mcr-header">
       <div class="mcr-header-left">
         <img
           v-if="state.logo"
@@ -765,15 +760,9 @@ window.addEventListener('message', (e) => {
         size="20px"
         @click="onMenuClick"
       />
-    </VuiFlex>
+    </div>
 
-    <VuiFlex
-      class="mcr-filter"
-      gap="10px"
-      padding="10px"
-      wrap
-      shrink
-    >
+    <div class="mcr-filter">
       <VuiButton
         v-if="state.exportSelected"
         primary
@@ -818,7 +807,7 @@ window.addEventListener('message', (e) => {
           <span>{{ Util.NF(item.value) }}</span>
         </div>
       </div>
-    </VuiFlex>
+    </div>
 
     <div class="mcr-grid mcr-flex-auto" />
 
@@ -876,10 +865,7 @@ window.addEventListener('message', (e) => {
       positions="bottom"
       title="Search Options"
     >
-      <VuiFlex
-        direction="column"
-        class="mcr-searchable-list"
-      >
+      <div class="mcr-searchable-list">
         <div class="mcr-searchable-section">
           Searchable Fields
         </div>
@@ -908,7 +894,7 @@ window.addEventListener('message', (e) => {
         >
           Include descendants
         </VuiSwitch>
-      </VuiFlex>
+      </div>
     </VuiPopover>
 
     <VuiPopover
@@ -919,25 +905,17 @@ window.addEventListener('message', (e) => {
       width="210px"
     >
       <template #header>
-        <VuiFlex
-          align="space-between"
-          align-items="center"
-          gap="10px"
-          class="mcr-groups-header"
-        >
+        <div class="mcr-groups-header">
           <div>Show Group</div>
           <VuiSwitch
             v-model="state.groups.group"
             width="28px"
             height="16px"
           />
-        </VuiFlex>
+        </div>
       </template>
 
-      <VuiFlex
-        direction="column"
-        class="mcr-groups-list"
-      >
+      <div class="mcr-groups-list">
         <div
           v-if="state.systemList"
           class="mcr-groups-item"
@@ -1034,18 +1012,14 @@ window.addEventListener('message', (e) => {
 
         <div class="mcr-groups-line">
           <div class="mcr-groups-item">
-            <VuiFlex
-              align-items="center"
-              gap="5px"
-              class="mcr-groups-label"
-            >
+            <div class="mcr-groups-label">
               <div>Merge Groups</div>
               <VuiIconLabel
                 button
                 icon="help"
                 tooltip="Whether to merge groups by title when the parent group is hidden"
               />
-            </VuiFlex>
+            </div>
             <VuiSwitch
               v-model="state.groups.merge"
               width="28px"
@@ -1067,7 +1041,7 @@ window.addEventListener('message', (e) => {
             Reset
           </VuiIconLabel>
         </div>
-      </VuiFlex>
+      </div>
     </VuiPopover>
 
     <VuiPopover

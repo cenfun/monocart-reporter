@@ -137,11 +137,9 @@ watchEffect(() => {
       <div>{{ Util.TSF(data.time) }}</div>
     </VuiFlex>
 
-    <VuiFlex
+    <div
       v-for="(item, i) in data.lines"
       :key="i"
-      gap="10px"
-      padding="5px"
       class="mcr-timing-line"
     >
       <div
@@ -150,7 +148,7 @@ watchEffect(() => {
       />
       <div>{{ item.name }}</div>
       <div>{{ Util.TSF(item.value) }}</div>
-    </VuiFlex>
+    </div>
   </div>
 </template>
 
@@ -161,6 +159,20 @@ watchEffect(() => {
 
 .mcr-timing-waterfall {
     height: 32px;
+}
+
+.mcr-timing-line {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 }
 
 .mcr-timing-legend {

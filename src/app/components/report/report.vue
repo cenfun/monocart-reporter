@@ -387,10 +387,7 @@ onActivated(() => {
 </script>
 
 <template>
-  <VuiFlex
-    direction="column"
-    class="mcr-report"
-  >
+  <div class="mcr-report">
     <div class="mcr-report-item">
       <div class="mcr-report-head">
         <VuiFlex
@@ -656,12 +653,7 @@ onActivated(() => {
         </VuiFlex>
       </div>
       <div class="mcr-report-chart">
-        <VuiFlex
-          gap="10px"
-          padding="10px"
-          class="mcr-details-summary"
-          direction="column"
-        >
+        <div class="mcr-details-summary">
           <details
             v-for="(group, i) in report.artifactList"
             :key="i"
@@ -670,16 +662,10 @@ onActivated(() => {
             <summary>
               {{ group.name }}
             </summary>
-            <VuiFlex
-              class="mcr-artifact-list"
-              gap="5px"
-              wrap
-            >
-              <VuiFlex
+            <div class="mcr-artifact-list">
+              <div
                 v-for="(item, j) in group.list"
                 :key="j"
-                gap="5px"
-                shrink
                 class="mcr-artifact-item"
               >
                 <VuiIconLabel
@@ -690,7 +676,7 @@ onActivated(() => {
                   :href="item.path"
                   target="_blank"
                 >{{ item.name }}</a>
-              </VuiFlex>
+              </div>
               <VuiIconLabel
                 v-if="group.showMore"
                 button
@@ -700,9 +686,9 @@ onActivated(() => {
               >
                 Show more ...
               </VuiIconLabel>
-            </VuiFlex>
+            </div>
           </details>
-        </VuiFlex>
+        </div>
       </div>
     </div>
 
@@ -775,12 +761,21 @@ onActivated(() => {
       </div>
       <div class="mcr-report-chart" />
     </div>
-  </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-report {
-    overflow-y: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
+    text-overflow: ellipsis;
+    overflow: hidden auto;
+
+    > * {
+        flex-shrink: 0;
+    }
 }
 
 .mcr-report-item {
@@ -866,14 +861,48 @@ onActivated(() => {
     }
 }
 
+.mcr-details-summary {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: normal;
+    padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
+}
+
 .mcr-artifact-list {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
     margin-top: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 
     .mcr-artifact-item {
+        position: relative;
+        display: flex;
+        gap: 5px;
+        align-items: center;
         max-width: 100%;
         margin-right: 10px;
         text-overflow: ellipsis;
         overflow: hidden;
+
+        > * {
+            flex-shrink: 1;
+        }
     }
 
     .mcr-show-more {

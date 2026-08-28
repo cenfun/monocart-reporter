@@ -1,6 +1,5 @@
 <script setup>
 import {
-    VuiFlex,
     VuiFlyover,
     VuiLoading,
     VuiIconLabel
@@ -43,11 +42,7 @@ const onFlyoverResize = (width) => {
     @resize="onFlyoverResize"
   >
     <div class="mcr-flyover-main vui-flex-column">
-      <VuiFlex
-        gap="10px"
-        padding="10px"
-        class="mcr-flyover-header"
-      >
+      <div class="mcr-flyover-header">
         <VuiIconLabel
           button
           icon="arrow-right"
@@ -63,7 +58,7 @@ const onFlyoverResize = (width) => {
           size="20px"
           @click="state.flyoverVisible=false"
         />
-      </VuiFlex>
+      </div>
       <div class="mcr-flyover-content mcr-flex-auto">
         <KeepAlive>
           <component :is="flyoverComponents[state.flyoverComponent]" />
@@ -97,8 +92,19 @@ const onFlyoverResize = (width) => {
 }
 
 .mcr-flyover-header {
+    position: relative;
+    display: flex;
     flex-shrink: 0;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
     color: #fff;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
     background-color: #005ba4;
 }
 

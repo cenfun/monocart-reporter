@@ -28,11 +28,7 @@ const onImgLoad = (e) => {
 </script>
 
 <template>
-  <VuiFlex
-    gap="10px"
-    direction="column"
-    class="mcr-attachment-image"
-  >
+  <div class="mcr-attachment-image">
     <div class="mcr-attachment-image-main">
       <img
         :src="props.data.path"
@@ -52,12 +48,23 @@ const onImgLoad = (e) => {
         target="_blank"
       >Download image</a>
     </VuiFlex>
-  </VuiFlex>
+  </div>
 </template>
 
 <style lang="scss">
 .mcr-attachment-image {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: normal;
     padding: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 
     img {
         display: block;

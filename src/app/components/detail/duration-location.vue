@@ -2,10 +2,7 @@
 import {
     onMounted, shallowReactive, watch
 } from 'vue';
-import {
-    VuiFlex,
-    VuiIconLabel
-} from 'vine-ui';
+import { VuiIconLabel } from 'vine-ui';
 
 
 import Util from '../../utils/util.js';
@@ -51,9 +48,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <VuiFlex
+  <div
     v-if="data.durationLabel || data.locationLabel"
-    gap="10px"
     class="mcr-duration-location"
   >
     <div
@@ -73,13 +69,22 @@ onMounted(() => {
     >
       {{ data.copiedLabel }}
     </VuiIconLabel>
-  </VuiFlex>
+  </div>
 </template>
 
 <style>
 .mcr-duration-location {
     position: relative;
+    display: flex;
     flex-shrink: 0;
+    gap: 10px;
+    align-items: center;
     font-weight: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    > * {
+        flex-shrink: 0;
+    }
 }
 </style>
