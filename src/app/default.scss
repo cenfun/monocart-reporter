@@ -410,7 +410,13 @@ a:not([href], [class]):hover {
 }
 
 .mcr-expand-list {
+    position: relative;
+
     .mcr-expand-item {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
         padding: 5px 0;
     }
 

@@ -1007,11 +1007,9 @@ window.addEventListener('message', (e) => {
       :target="state.levelPopoverTarget"
       :positions="['bottom','right']"
       title="Expand to Level"
+      width="130px"
     >
-      <VuiFlex
-        direction="column"
-        class="mcr-expand-list"
-      >
+      <div class="mcr-expand-list">
         <template v-if="state.groups.group">
           <VuiIconLabel
             v-if="state.groups.shard && state.systemList"
@@ -1070,7 +1068,7 @@ window.addEventListener('message', (e) => {
         >
           Step
         </VuiIconLabel>
-      </VuiFlex>
+      </div>
     </VuiPopover>
 
     <VuiPopover
