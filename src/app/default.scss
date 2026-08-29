@@ -127,6 +127,8 @@ a:not([href], [class]):hover {
 }
 
 .mcr {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -186,8 +188,8 @@ a:not([href], [class]):hover {
     gap: 10px;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
     text-overflow: ellipsis;
+    border-bottom: 1px solid #ccc;
     overflow: hidden;
 
     > * {
@@ -257,16 +259,33 @@ a:not([href], [class]):hover {
 .mcr-filter {
     position: relative;
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
     overflow: hidden;
+}
 
-    > * {
-        flex-shrink: 1;
+.mcr-filter-left {
+    display: flex;
+    flex: auto;
+    gap: 10px;
+    align-items: center;
+
+    .mcr-search {
+        width: 100%;
+        max-width: 360px;
+
+        input {
+            border-radius: 10px;
+        }
     }
+}
+
+.mcr-filter-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 .mcr-nav {
@@ -274,32 +293,50 @@ a:not([href], [class]):hover {
     display: flex;
     flex-direction: row;
     flex-shrink: 1;
-    border: thin solid #6c757d;
-    border-radius: 10px;
+    height: 28px;
     overflow: hidden;
 }
 
 .mcr-nav-item {
     display: flex;
-    flex-wrap: wrap;
     gap: 5px;
     justify-content: center;
     align-items: center;
-    padding: 8px 10px;
-    font-size: 14px;
+    height: 100%;
+    padding: 0 10px;
+    font-size: 12px;
+    white-space: nowrap;
     text-align: center;
-    border-left: thin solid #6c757d;
+    text-overflow: ellipsis;
+    border: thin solid #6c757d;
     cursor: pointer;
+    overflow: hidden;
+
+    &:not(:first-child) {
+        border-left: none;
+    }
 
     &:first-child {
-        border-left: none;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    &:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    span {
+        flex-shrink: 0;
+        font-weight: bold;
     }
 }
 
-@media (width <= 500px) {
-    .mcr-nav-item {
-        padding: 5px 6px;
-        font-size: 12px;
+@media (width <= 600px) {
+    .mcr-filter {
+        flex-direction: column;
+        gap: 5px;
+        align-items: stretch;
     }
 }
 
@@ -349,23 +386,6 @@ a:not([href], [class]):hover {
     background-color: var(--color-skipped);
 }
 
-.mcr-filter-left {
-    display: flex;
-    flex: auto;
-    gap: 10px;
-    align-items: center;
-    min-width: 150px;
-
-    .mcr-search {
-        width: 100%;
-        max-width: 350px;
-
-        input {
-            border-radius: 10px;
-        }
-    }
-}
-
 .mcr-search-helper {
     position: absolute;
     max-height: max(50px, calc((100vh - 256px) / 2));
@@ -396,23 +416,6 @@ a:not([href], [class]):hover {
     }
 }
 
-.mcr-groups-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-    width: 100%;
-    font-weight: bold;
-    font-size: var(--vui-font-size-l);
-    text-overflow: ellipsis;
-    overflow: hidden;
-
-    > * {
-        flex-shrink: 0;
-    }
-}
-
 .mcr-groups-list {
     position: relative;
     display: flex;
@@ -420,33 +423,20 @@ a:not([href], [class]):hover {
     align-items: normal;
     min-width: 180px;
 
-    > * {
-        flex-shrink: 0;
-    }
-
-    .mcr-groups-line {
+    .mcr-groups-reset {
         margin-top: 5px;
-        padding-top: 5px;
+        padding-top: 10px;
         border-top: 1px solid #ccc;
     }
 
     .mcr-groups-item {
+        position: relative;
         display: flex;
         justify-content: space-between;
-        position: relative;
         align-items: center;
         width: 100%;
         padding: 5px 0;
-        text-overflow: ellipsis;
         overflow: hidden;
-
-        > * {
-            flex-shrink: 0;
-        }
-    }
-
-    .mcr-groups-item:hover {
-        background-color: #f8f8f8;
     }
 
     .mcr-groups-label {
@@ -469,11 +459,6 @@ a:not([href], [class]):hover {
         color: #999;
         cursor: default;
         opacity: 0.6;
-    }
-
-    .mcr-groups-reset {
-        width: 100%;
-        padding: 5px 0;
     }
 }
 
@@ -527,6 +512,7 @@ a:not([href], [class]):hover {
 }
 
 .mcr-grid {
+    flex: auto;
     overflow: hidden;
 
     .tg-pane.tg-frozen-line-v {
