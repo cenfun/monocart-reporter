@@ -208,122 +208,27 @@
         </div>
 
         <div
-          v-if="state.systemList"
+          v-for="item in groupList"
+          :key="item.id"
           class="mcr-groups-item"
         >
           <VuiIconLabel
-            :button="canExpandGroupLevel('shard')"
-            icon="shard"
-            :class="['mcr-groups-label', canExpandGroupLevel('shard') ? '' : 'mcr-groups-label-disabled']"
-            @click="onGroupLevelClick('shard')"
+            :button="item.canNavigateToLevel"
+            :icon="item.icon"
+            :class="['mcr-groups-label', item.canNavigateToLevel ? '' : 'mcr-groups-label-disabled']"
+            :tooltip="item.canNavigateToLevel ? `Click to expand to the ${item.label} level` : ''"
+            tooltip-timeout="2000"
+            @click="onGroupLevelClick(item)"
           >
-            Shard
+            {{ item.label }}
             <VuiIcon
-              v-if="canExpandGroupLevel('shard')"
+              v-if="item.canNavigateToLevel"
               icon="item-arrow"
             />
           </VuiIconLabel>
           <VuiSwitch
-            v-model="state.groups.shard"
-            :disabled="!state.groups.group"
-            width="28px"
-            height="16px"
-          />
-        </div>
-
-        <div class="mcr-groups-item">
-          <VuiIconLabel
-            :button="canExpandGroupLevel('project')"
-            icon="project"
-            :class="['mcr-groups-label', canExpandGroupLevel('project') ? '' : 'mcr-groups-label-disabled']"
-            @click="onGroupLevelClick('project')"
-          >
-            Project
-            <VuiIcon
-              v-if="canExpandGroupLevel('project')"
-              icon="item-arrow"
-            />
-          </VuiIconLabel>
-          <VuiSwitch
-            v-model="state.groups.project"
-            :disabled="!state.groups.group"
-            width="28px"
-            height="16px"
-          />
-        </div>
-
-        <div class="mcr-groups-item">
-          <VuiIconLabel
-            :button="canExpandGroupLevel('file')"
-            icon="file"
-            :class="['mcr-groups-label', canExpandGroupLevel('file') ? '' : 'mcr-groups-label-disabled']"
-            @click="onGroupLevelClick('file')"
-          >
-            File
-            <VuiIcon
-              v-if="canExpandGroupLevel('file')"
-              icon="item-arrow"
-            />
-          </VuiIconLabel>
-          <VuiSwitch
-            v-model="state.groups.file"
-            :disabled="!state.groups.group"
-            width="28px"
-            height="16px"
-          />
-        </div>
-
-        <div class="mcr-groups-item">
-          <VuiIconLabel
-            :button="canExpandGroupLevel('describe')"
-            icon="suite"
-            :class="['mcr-groups-label', canExpandGroupLevel('describe') ? '' : 'mcr-groups-label-disabled']"
-            @click="onGroupLevelClick('describe')"
-          >
-            Describe
-            <VuiIcon
-              v-if="canExpandGroupLevel('describe')"
-              icon="item-arrow"
-            />
-          </VuiIconLabel>
-          <VuiSwitch
-            v-model="state.groups.describe"
-            :disabled="!state.groups.group"
-            width="28px"
-            height="16px"
-          />
-        </div>
-
-        <div class="mcr-groups-item">
-          <VuiIconLabel
-            :button="canExpandGroupLevel('case')"
-            icon="case"
-            :class="['mcr-groups-label', canExpandGroupLevel('case') ? '' : 'mcr-groups-label-disabled']"
-            @click="onGroupLevelClick('case')"
-          >
-            Case
-            <VuiIcon
-              v-if="canExpandGroupLevel('case')"
-              icon="item-arrow"
-            />
-          </VuiIconLabel>
-        </div>
-
-        <div class="mcr-groups-item">
-          <VuiIconLabel
-            :button="canExpandGroupLevel('step')"
-            icon="step"
-            :class="['mcr-groups-label', canExpandGroupLevel('step') ? '' : 'mcr-groups-label-disabled']"
-            @click="onGroupLevelClick('step')"
-          >
-            Step
-            <VuiIcon
-              v-if="canExpandGroupLevel('step')"
-              icon="item-arrow"
-            />
-          </VuiIconLabel>
-          <VuiSwitch
-            v-model="state.groups.step"
+            v-if="item.switchable"
+            v-model="state.groups[item.id]"
             :disabled="!state.groups.group"
             width="28px"
             height="16px"
@@ -480,6 +385,49 @@ import { initTooltip } from './modules/tooltip.js';
 const searchable = reactive({
     columns: []
 });
+
+const groupLevels = [{
+    id: 'shard',
+    label: 'Shard',
+    icon: 'shard',
+    switchable: true,
+    requiresSystemList: true
+}, {
+    id: 'project',
+    label: 'Project',
+    icon: 'project',
+    switchable: true
+}, {
+    id: 'file',
+    label: 'File',
+    icon: 'file',
+    switchable: true
+}, {
+    id: 'describe',
+    label: 'Describe',
+    icon: 'suite',
+    switchable: true
+}, {
+    id: 'case',
+    label: 'Case',
+    icon: 'case',
+    switchable: false
+}, {
+    id: 'step',
+    label: 'Step',
+    icon: 'step',
+    switchable: true
+}];
+
+const groupList = computed(() => groupLevels.filter((item) => {
+    return !item.requiresSystemList || state.systemList;
+}).map((item) => {
+    const canNavigateToLevel = state.groups.group && (item.id === 'case' || state.groups[item.id]);
+    return {
+        ... item,
+        canNavigateToLevel
+    };
+}));
 
 const tooltip = reactive({
     visible: false,
@@ -839,19 +787,9 @@ const isGroupsChanged = computed(() => {
     return false;
 });
 
-const canExpandGroupLevel = (type) => {
-    if (!state.groups.group) {
-        return false;
-    }
-    if (type === 'case') {
-        return true;
-    }
-    return state.groups[type];
-};
-
-const onGroupLevelClick = (type) => {
-    if (canExpandGroupLevel(type)) {
-        expandRowLevel(type);
+const onGroupLevelClick = (item) => {
+    if (item.canNavigateToLevel) {
+        expandRowLevel(item.id);
     }
 };
 

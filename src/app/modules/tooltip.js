@@ -11,10 +11,14 @@ export const hideTooltip = () => {
         state.tooltip.text = '';
         state.tooltip.html = false;
         state.tooltip.classMap = '';
+        if (state.tooltip.timeoutId) {
+            clearTimeout(state.tooltip.timeoutId);
+            state.tooltip.timeoutId = null;
+        }
     }
 };
 
-export const showTooltip = (elem, text, html) => {
+export const showTooltip = (elem, text) => {
     if (Util.isTouchDevice()) {
         return;
     }
@@ -27,9 +31,18 @@ export const showTooltip = (elem, text, html) => {
     if (state.tooltip) {
         state.tooltip.target = elem;
         state.tooltip.text = text;
-        state.tooltip.html = html;
+        state.tooltip.html = elem.hasAttribute('tooltip-html');
         state.tooltip.classMap = 'mcr-searchable';
         state.tooltip.visible = true;
+
+        const timeout = parseInt(elem.getAttribute('tooltip-timeout'));
+        if (timeout > 0) {
+            state.tooltip.timeoutId = setTimeout(() => {
+                hideTooltip();
+            }, timeout);
+        }
+
+
     }
 
 };
@@ -48,9 +61,7 @@ export const bindGridTooltip = (grid) => {
     grid.bind('onCellMouseEnter', (e, d) => {
         const node = getTruncatedNode(d.cellNode);
         if (node) {
-            const html = false;
-            const text = node.innerText;
-            showTooltip(node, text, html);
+            showTooltip(node, node.innerText);
         }
     }).bind('onCellMouseLeave', (e, d) => {
         hideTooltip();

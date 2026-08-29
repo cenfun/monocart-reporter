@@ -442,17 +442,12 @@ a:not([href], [class]):hover {
     .mcr-groups-label {
         position: relative;
         display: flex;
-        flex: 1;
         gap: 5px;
         justify-content: flex-start;
         align-items: center;
         min-width: 0;
         text-overflow: ellipsis;
         overflow: hidden;
-
-        > * {
-            flex-shrink: 0;
-        }
     }
 
     .mcr-groups-label-disabled {

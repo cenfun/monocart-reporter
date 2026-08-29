@@ -97,7 +97,7 @@ const hideTooltip = () => {
     tooltip.classMap = '';
 };
 
-const showTooltip = (elem, text, html) => {
+const showTooltip = (elem, text) => {
 
     if (Util.isTouchDevice()) {
         return;
@@ -110,7 +110,6 @@ const showTooltip = (elem, text, html) => {
     }
     tooltip.target = elem;
     tooltip.text = text;
-    tooltip.html = html;
     tooltip.classMap = 'mcr-searchable';
     tooltip.visible = true;
 
@@ -853,14 +852,14 @@ icon
     padding: 10px;
     box-sizing: border-box;
     color: #fff;
+    line-height: 44px;
+    text-overflow: ellipsis;
+    background-color: #24292f;
+    overflow: hidden;
 
     > * {
         flex-shrink: 1;
     }
-    line-height: 44px;
-    background-color: #24292f;
-    text-overflow: ellipsis;
-    overflow: hidden;
 
     .mcr-title {
         font-size: 18px;
