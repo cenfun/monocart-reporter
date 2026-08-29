@@ -628,16 +628,18 @@ a:not([href], [class]):hover {
 }
 
 .mcr-num {
+    position: relative;
     display: inline-block;
+    height: 18px;
     min-width: 18px;
-    min-height: 18px;
     padding: 0 5px;
     box-sizing: border-box;
     color: #fff;
     font-weight: normal;
     font-size: 12px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: monospace;
     line-height: 18px;
+    white-space: nowrap;
     text-align: center;
     border-radius: 10px;
     background: #7e939c;

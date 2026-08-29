@@ -61,7 +61,10 @@ export const bindGridTooltip = (grid) => {
     grid.bind('onCellMouseEnter', (e, d) => {
         const node = getTruncatedNode(d.cellNode);
         if (node) {
-            showTooltip(node, node.innerText);
+
+            const text = d.rowItem?.[d.columnItem?.id] || node.innerText;
+
+            showTooltip(node, text);
         }
     }).bind('onCellMouseLeave', (e, d) => {
         hideTooltip();
