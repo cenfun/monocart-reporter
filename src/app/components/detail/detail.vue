@@ -278,6 +278,9 @@ const getGridData = (grid, caseItem) => {
         suite = suite.tg_parent;
     }
 
+    // last group
+    rows[rows.length - 1].classMap = 'tg-group-line';
+
     const row = {
         ... grid.getItemSnapshot(caseItem),
         hasDetails: true
@@ -555,8 +558,8 @@ const onFocus = (e) => {
         gap: 15px;
         align-items: center;
         padding: 10px;
-        border-bottom: thin solid #ccc;
         text-overflow: ellipsis;
+        border-bottom: thin solid #ccc;
         overflow: hidden;
         user-select: none;
 
