@@ -1,20 +1,19 @@
 <template>
-  <div
-    v-if="isCase"
-    class="tg-cell-open"
-    v-html="formattedValue"
-  />
-  <template v-else>
-    <span v-html="formattedValue" />
-    <span
+  <div :class="['grid-title-cell', isCase ? 'tg-cell-open' : '']">
+    <div v-html="formattedValue" />
+    <div
       v-if="caseNum"
       class="mcr-num"
-    >{{ caseNum }}</span>
-    <span
+    >
+      {{ caseNum }}
+    </div>
+    <div
       v-if="stepCount"
       class="mcr-num mcr-count"
-    >{{ stepCount }}</span>
-  </template>
+    >
+      {{ stepCount }}
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -42,6 +41,8 @@ const caseNum = computed(() => {
     }
     return '';
 });
+
+// xN repeated step count
 const stepCount = computed(() => {
     if (props.rowItem.type === 'step' && props.rowItem.count) {
         return Util.NF(props.rowItem.count);
@@ -49,3 +50,12 @@ const stepCount = computed(() => {
     return '';
 });
 </script>
+
+<style lang="scss" scoped>
+.grid-title-cell {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+</style>
