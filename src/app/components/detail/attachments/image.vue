@@ -1,3 +1,27 @@
+<template>
+  <div class="mcr-attachment-image">
+    <div class="mcr-attachment-image-main">
+      <img
+        :src="props.data.path"
+        :alt="props.data.name"
+        :class="imgClass"
+        @load="onImgLoad"
+      >
+    </div>
+    <VuiFlex gap="3px">
+      <VuiIconLabel
+        button
+        icon="download"
+      />
+      <a
+        :href="props.data.path"
+        :download="props.data.fileName || props.data.name"
+        target="_blank"
+      >Download image</a>
+    </VuiFlex>
+  </div>
+</template>
+
 <script setup>
 import { ref } from 'vue';
 import {
@@ -26,30 +50,6 @@ const onImgLoad = (e) => {
 };
 
 </script>
-
-<template>
-  <div class="mcr-attachment-image">
-    <div class="mcr-attachment-image-main">
-      <img
-        :src="props.data.path"
-        :alt="props.data.name"
-        :class="imgClass"
-        @load="onImgLoad"
-      >
-    </div>
-    <VuiFlex gap="3px">
-      <VuiIconLabel
-        button
-        icon="download"
-      />
-      <a
-        :href="props.data.path"
-        :download="props.data.fileName || props.data.name"
-        target="_blank"
-      >Download image</a>
-    </VuiFlex>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-attachment-image {

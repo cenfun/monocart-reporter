@@ -1,3 +1,24 @@
+<template>
+  <div
+    class="mcr-tabs"
+    :style="styleMap"
+  >
+    <div class="mcr-tabs-header">
+      <div
+        v-for="(item, i) in data.options"
+        :key="i"
+        :class="['mcr-tabs-item', item.selected ? 'mcr-tabs-selected' : '', item.disabled ? 'mcr-tabs-disabled' : '']"
+        @click="onTabClick(item)"
+      >
+        <div class="mcr-tabs-label">
+          {{ item.label }}
+        </div>
+      </div>
+    </div>
+    <slot />
+  </div>
+</template>
+
 <script setup>
 import {
     computed,
@@ -84,27 +105,6 @@ onMounted(() => {
 });
 
 </script>
-
-<template>
-  <div
-    class="mcr-tabs"
-    :style="styleMap"
-  >
-    <div class="mcr-tabs-header">
-      <div
-        v-for="(item, i) in data.options"
-        :key="i"
-        :class="['mcr-tabs-item', item.selected ? 'mcr-tabs-selected' : '', item.disabled ? 'mcr-tabs-disabled' : '']"
-        @click="onTabClick(item)"
-      >
-        <div class="mcr-tabs-label">
-          {{ item.label }}
-        </div>
-      </div>
-    </div>
-    <slot />
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-tabs {

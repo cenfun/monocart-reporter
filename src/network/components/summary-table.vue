@@ -1,35 +1,3 @@
-<script setup>
-import { shallowReactive, watchEffect } from 'vue';
-
-const data = shallowReactive({
-    columns: []
-});
-
-const props = defineProps({
-    title: {
-        type: String,
-        default: ''
-    },
-    list: {
-        type: Array,
-        default: () => {
-            return [];
-        }
-    }
-});
-
-watchEffect(() => {
-    const keys = {};
-    props.list.forEach((item) => {
-        Object.keys(item).forEach((k) => {
-            keys[k] = true;
-        });
-    });
-    data.columns = Object.keys(keys);
-});
-
-</script>
-
 <template>
   <div
     v-if="props.list.length"
@@ -70,6 +38,38 @@ watchEffect(() => {
     </details>
   </div>
 </template>
+
+<script setup>
+import { shallowReactive, watchEffect } from 'vue';
+
+const data = shallowReactive({
+    columns: []
+});
+
+const props = defineProps({
+    title: {
+        type: String,
+        default: ''
+    },
+    list: {
+        type: Array,
+        default: () => {
+            return [];
+        }
+    }
+});
+
+watchEffect(() => {
+    const keys = {};
+    props.list.forEach((item) => {
+        Object.keys(item).forEach((k) => {
+            keys[k] = true;
+        });
+    });
+    data.columns = Object.keys(keys);
+});
+
+</script>
 
 <style lang="scss">
 .mcr-summary-table {
@@ -120,4 +120,3 @@ watchEffect(() => {
     }
 }
 </style>
-

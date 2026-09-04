@@ -1,3 +1,35 @@
+<template>
+  <div class="mcr-attachment-trace">
+    <VuiFlex gap="3px">
+      <VuiIconLabel
+        icon="link"
+        :button="false"
+      />
+      <a
+        :href="d.viewerUrl"
+        target="_blank"
+      >View trace</a>
+    </VuiFlex>
+    <VuiIconLabel
+      button
+      :icon="d.icon"
+      :style="d.iconStyle"
+      @click="showTraceHelp"
+    />
+    <VuiFlex gap="3px">
+      <VuiIconLabel
+        button
+        icon="download"
+      />
+      <a
+        :href="props.data.path"
+        :download="props.data.fileName || props.data.name"
+        target="_blank"
+      >Download</a>
+    </VuiFlex>
+  </div>
+</template>
+
 <script setup>
 import { onMounted, shallowReactive } from 'vue';
 import {
@@ -53,38 +85,6 @@ onMounted(() => {
 });
 
 </script>
-
-<template>
-  <div class="mcr-attachment-trace">
-    <VuiFlex gap="3px">
-      <VuiIconLabel
-        icon="link"
-        :button="false"
-      />
-      <a
-        :href="d.viewerUrl"
-        target="_blank"
-      >View trace</a>
-    </VuiFlex>
-    <VuiIconLabel
-      button
-      :icon="d.icon"
-      :style="d.iconStyle"
-      @click="showTraceHelp"
-    />
-    <VuiFlex gap="3px">
-      <VuiIconLabel
-        button
-        icon="download"
-      />
-      <a
-        :href="props.data.path"
-        :download="props.data.fileName || props.data.name"
-        target="_blank"
-      >Download</a>
-    </VuiFlex>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-attachment-trace {

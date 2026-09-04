@@ -1,3 +1,10 @@
+<template>
+  <div
+    ref="el"
+    class="mcr-attachment-content"
+  />
+</template>
+
 <script setup>
 import {
     onMounted, ref, watch
@@ -49,13 +56,6 @@ watch(() => props.data, () => {
 });
 
 </script>
-
-<template>
-  <div
-    ref="el"
-    class="mcr-attachment-content"
-  />
-</template>
 
 <style lang="scss">
 .mcr-attachment-content {

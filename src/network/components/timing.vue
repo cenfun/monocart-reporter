@@ -1,3 +1,56 @@
+<template>
+  <div class="mcr-timing">
+    <div class="mcr-timing-waterfall">
+      <Waterfall
+        :timings="data.timings"
+        :page-timings="data.pageTimings"
+      />
+    </div>
+    <VuiFlex
+      gap="10px"
+      padding="5px"
+    >
+      <div>Request started at</div>
+      <div>{{ Util.TSF(data.durationStart) }}</div>
+    </VuiFlex>
+
+    <VuiFlex
+      v-for="(item, i) in data.rects"
+      :key="i"
+      gap="10px"
+      padding="5px"
+    >
+      <div
+        class="mcr-timing-legend"
+        :style="item.style"
+      />
+      <div>{{ item.name }}</div>
+      <div>{{ Util.TSF(item.value) }}</div>
+    </VuiFlex>
+
+    <VuiFlex
+      gap="10px"
+      padding="5px"
+    >
+      <div>Request time</div>
+      <div>{{ Util.TSF(data.time) }}</div>
+    </VuiFlex>
+
+    <div
+      v-for="(item, i) in data.lines"
+      :key="i"
+      class="mcr-timing-line"
+    >
+      <div
+        class="mcr-timing-legend"
+        :style="item.style"
+      />
+      <div>{{ item.name }}</div>
+      <div>{{ Util.TSF(item.value) }}</div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {
     inject, shallowReactive, watchEffect
@@ -98,59 +151,6 @@ watchEffect(() => {
 });
 
 </script>
-
-<template>
-  <div class="mcr-timing">
-    <div class="mcr-timing-waterfall">
-      <Waterfall
-        :timings="data.timings"
-        :page-timings="data.pageTimings"
-      />
-    </div>
-    <VuiFlex
-      gap="10px"
-      padding="5px"
-    >
-      <div>Request started at</div>
-      <div>{{ Util.TSF(data.durationStart) }}</div>
-    </VuiFlex>
-
-    <VuiFlex
-      v-for="(item, i) in data.rects"
-      :key="i"
-      gap="10px"
-      padding="5px"
-    >
-      <div
-        class="mcr-timing-legend"
-        :style="item.style"
-      />
-      <div>{{ item.name }}</div>
-      <div>{{ Util.TSF(item.value) }}</div>
-    </VuiFlex>
-
-    <VuiFlex
-      gap="10px"
-      padding="5px"
-    >
-      <div>Request time</div>
-      <div>{{ Util.TSF(data.time) }}</div>
-    </VuiFlex>
-
-    <div
-      v-for="(item, i) in data.lines"
-      :key="i"
-      class="mcr-timing-line"
-    >
-      <div
-        class="mcr-timing-legend"
-        :style="item.style"
-      />
-      <div>{{ item.name }}</div>
-      <div>{{ Util.TSF(item.value) }}</div>
-    </div>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-timing {

@@ -1,3 +1,12 @@
+<template>
+  <div class="mcr-metadata-content">
+    <MetadataList
+      v-if="props.column.content"
+      :list="props.column.content"
+    />
+  </div>
+</template>
+
 <script setup>
 import MetadataList from '../metadata-list.vue';
 
@@ -9,15 +18,6 @@ const props = defineProps({
 });
 
 </script>
-
-<template>
-  <div class="mcr-metadata-content">
-    <MetadataList
-      v-if="props.column.content"
-      :list="props.column.content"
-    />
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-metadata-content {

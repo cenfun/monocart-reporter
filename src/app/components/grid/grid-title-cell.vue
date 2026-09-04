@@ -1,8 +1,27 @@
+<template>
+  <div
+    v-if="isCase"
+    class="tg-cell-open"
+    v-html="formattedValue"
+  />
+  <template v-else>
+    <span v-html="formattedValue" />
+    <span
+      v-if="caseNum"
+      class="mcr-num"
+    >{{ caseNum }}</span>
+    <span
+      v-if="stepCount"
+      class="mcr-num mcr-count"
+    >{{ stepCount }}</span>
+  </template>
+</template>
+
 <script setup>
 import { computed } from 'vue';
 
 import Util from '../../utils/util.js';
-import { titleTagsFormatter } from '../../modules/formatters.js';
+import { titleTagsFormatter } from '../../modules/title-tags.js';
 
 const props = defineProps({
     rowItem: {
@@ -30,22 +49,3 @@ const stepCount = computed(() => {
     return '';
 });
 </script>
-
-<template>
-  <div
-    v-if="isCase"
-    class="tg-cell-open"
-    v-html="formattedValue"
-  />
-  <template v-else>
-    <span v-html="formattedValue" />
-    <span
-      v-if="caseNum"
-      class="mcr-num"
-    >{{ caseNum }}</span>
-    <span
-      v-if="stepCount"
-      class="mcr-num mcr-count"
-    >{{ stepCount }}</span>
-  </template>
-</template>

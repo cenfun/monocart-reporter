@@ -1,3 +1,82 @@
+<template>
+  <div :class="classMap">
+    <DetailColumn
+      v-if="rowItem.type==='details'"
+      :column="rowItem"
+    />
+
+    <div
+      v-else
+      class="mcr-detail-head"
+    >
+      <div class="mcr-detail-main mcr-flex-auto">
+        <VuiIconLabel
+          v-if="data.iconType"
+          :icon="data.iconType"
+          :button="false"
+          :title="data.iconType"
+        />
+
+        <div
+          v-if="rowItem.index"
+          class="mcr-step-index"
+        >
+          {{ rowItem.index }}
+        </div>
+
+        <div
+          v-if="data.caseType"
+          :class="data.classStatus"
+        >
+          {{ data.caseType }}
+        </div>
+
+        <div
+          :class="['mcr-detail-title', (data.showStepsCollapse||data.showAttachmentsCollapse)?'':'mcr-flex-auto']"
+          tooltip
+          v-html="data.html"
+        />
+
+        <VuiSwitch
+          v-if="data.showAttachmentsCollapse"
+          v-model="state.collapseAttachments"
+          :disabled="rowItem.collapsed"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+          class="mcr-detail-collapse"
+        >
+          Collapse
+        </VuiSwitch>
+
+        <VuiSwitch
+          v-if="data.showStepsCollapse"
+          v-model="state.collapseSteps"
+          :disabled="rowItem.collapsed"
+          :label-clickable="true"
+          label-position="right"
+          width="28px"
+          height="16px"
+          class="mcr-detail-collapse"
+        >
+          Collapse
+        </VuiSwitch>
+
+        <DetailSimpleList
+          v-if="rowItem.tg_simpleList"
+          :list="rowItem.tg_simpleList"
+        />
+      </div>
+
+      <DurationLocation
+        :row-item="rowItem"
+        @update="onRowUpdate"
+      />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {
     computed, shallowReactive, onMounted
@@ -8,7 +87,7 @@ import {
 } from 'vine-ui';
 
 import Util from '../../utils/util.js';
-import { titleTagsFormatter } from '../../modules/formatters.js';
+import { titleTagsFormatter } from '../../modules/title-tags.js';
 import state from '../../modules/state.js';
 
 import DurationLocation from './duration-location.vue';
@@ -96,85 +175,6 @@ const onRowUpdate = () => {
 };
 
 </script>
-
-<template>
-  <div :class="classMap">
-    <DetailColumn
-      v-if="rowItem.type==='details'"
-      :column="rowItem"
-    />
-
-    <div
-      v-else
-      class="mcr-detail-head"
-    >
-      <div class="mcr-detail-main mcr-flex-auto">
-        <VuiIconLabel
-          v-if="data.iconType"
-          :icon="data.iconType"
-          :button="false"
-          :title="data.iconType"
-        />
-
-        <div
-          v-if="rowItem.index"
-          class="mcr-step-index"
-        >
-          {{ rowItem.index }}
-        </div>
-
-        <div
-          v-if="data.caseType"
-          :class="data.classStatus"
-        >
-          {{ data.caseType }}
-        </div>
-
-        <div
-          :class="['mcr-detail-title', (data.showStepsCollapse||data.showAttachmentsCollapse)?'':'mcr-flex-auto']"
-          tooltip
-          v-html="data.html"
-        />
-
-        <VuiSwitch
-          v-if="data.showAttachmentsCollapse"
-          v-model="state.collapseAttachments"
-          :disabled="rowItem.collapsed"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
-          class="mcr-detail-collapse"
-        >
-          Collapse
-        </VuiSwitch>
-
-        <VuiSwitch
-          v-if="data.showStepsCollapse"
-          v-model="state.collapseSteps"
-          :disabled="rowItem.collapsed"
-          :label-clickable="true"
-          label-position="right"
-          width="28px"
-          height="16px"
-          class="mcr-detail-collapse"
-        >
-          Collapse
-        </VuiSwitch>
-
-        <DetailSimpleList
-          v-if="rowItem.tg_simpleList"
-          :list="rowItem.tg_simpleList"
-        />
-      </div>
-
-      <DurationLocation
-        :row-item="rowItem"
-        @update="onRowUpdate"
-      />
-    </div>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-detail-info {

@@ -1,3 +1,28 @@
+<template>
+  <div
+    v-if="data.durationLabel || data.locationLabel"
+    class="mcr-duration-location"
+  >
+    <div
+      v-if="data.durationLabel"
+      class="mcr-detail-duration"
+    >
+      {{ data.durationLabel }}
+    </div>
+
+    <VuiIconLabel
+      v-if="data.locationLabel"
+      button
+      class="mcr-detail-location"
+      icon="location"
+      :tooltip="data.locationLabel"
+      @click="onLocationClick"
+    >
+      {{ data.copiedLabel }}
+    </VuiIconLabel>
+  </div>
+</template>
+
 <script setup>
 import {
     onMounted, shallowReactive, watch
@@ -46,31 +71,6 @@ onMounted(() => {
 });
 
 </script>
-
-<template>
-  <div
-    v-if="data.durationLabel || data.locationLabel"
-    class="mcr-duration-location"
-  >
-    <div
-      v-if="data.durationLabel"
-      class="mcr-detail-duration"
-    >
-      {{ data.durationLabel }}
-    </div>
-
-    <VuiIconLabel
-      v-if="data.locationLabel"
-      button
-      class="mcr-detail-location"
-      icon="location"
-      :tooltip="data.locationLabel"
-      @click="onLocationClick"
-    >
-      {{ data.copiedLabel }}
-    </VuiIconLabel>
-  </div>
-</template>
 
 <style>
 .mcr-duration-location {

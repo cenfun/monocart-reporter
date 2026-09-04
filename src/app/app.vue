@@ -216,7 +216,7 @@
             :button="item.canNavigateToLevel"
             :icon="item.icon"
             :class="['mcr-groups-label', item.canNavigateToLevel ? '' : 'mcr-groups-label-disabled']"
-            :tooltip="item.canNavigateToLevel ? `Click to expand to the ${item.label} level` : ''"
+            :tooltip="item.canNavigateToLevel ? `Expand to the ${item.label} level` : ''"
             tooltip-timeout="2000"
             @click="onGroupLevelClick(item)"
           >

@@ -1,3 +1,226 @@
+<template>
+  <div class="mcr-timeline-chart">
+    <div>
+      <svg
+        :viewBox="viewBox"
+        width="100%"
+        height="100%"
+        xmlns="http://www.w3.org/2000/svg"
+        @mouseleave="hidePopover"
+      >
+        <rect
+          :width="chart.width"
+          :height="chart.height"
+          fill="#fff"
+          fill-opacity="0"
+          @mousemove="onMouseMove($event)"
+        />
+        <g
+          pointer-events="none"
+          font-family="Verdana,Helvetica,sans-serif"
+          font-size="12px"
+          fill="currentColor"
+        >
+
+          <g
+            v-if="chart.workerList"
+            class="mcr-timeline-workers"
+          >
+            <g
+              v-for="(item, i) in chart.workerList"
+              :key="i"
+            >
+              <text
+                :x="chart.padding"
+                :y="item.y+item.height*0.5"
+                alignment-baseline="middle"
+              >{{ item.name }}</text>
+
+              <g :transform="translate(item.x,item.y)">
+                <rect
+                  :width="item.width"
+                  :height="item.height"
+                  fill="#ececec"
+                />
+                <path
+                  v-for="(bar, j) in item.bars"
+                  :key="j"
+                  :d="bar.d"
+                  :fill="bar.color"
+                  opacity="0.8"
+                />
+              </g>
+
+            </g>
+          </g>
+
+          <g
+            v-if="chart.usage"
+            class="mcr-timeline-usage"
+          >
+            <g>
+              <text
+                v-for="(line, i) in chart.lines"
+                :key="i"
+                :x="chart.padding"
+                :y="line.y"
+                :fill="line.color"
+                alignment-baseline="middle"
+              >{{ line.name }}</text>
+            </g>
+
+            <g :transform="translate(chart.usage.x,chart.usage.y)">
+              <path
+                :d="chart.grid.d"
+                :stroke="chart.grid.color"
+                fill="none"
+              />
+              <g
+                v-for="(line, j) in chart.lines"
+                :key="j"
+              >
+                <path
+                  :d="line.dFill"
+                  :fill="line.color"
+                  fill-opacity="0.1"
+                />
+                <path
+                  :d="line.dStroke"
+                  :stroke="line.color"
+                  fill="none"
+                />
+              </g>
+              <g>
+                <circle
+                  v-for="(item, i) in chart.points"
+                  :key="i"
+                  :cx="item.x"
+                  :cy="item.y"
+                  :fill="item.color"
+                  r="3"
+                />
+              </g>
+
+            </g>
+
+          </g>
+
+          <g
+            v-if="chart.axis"
+            class="mcr-timeline-axis"
+          >
+            <g :transform="translate(chart.axis.x,chart.axis.y)">
+              <path
+                :d="chart.axis.d"
+                :stroke="chart.axis.color"
+              />
+              <text
+                v-for="(item, i) in chart.labels"
+                :key="i"
+                :x="item.x"
+                :y="item.y"
+                :text-anchor="item.anchor"
+                alignment-baseline="baseline"
+              >{{ item.label }}</text>
+            </g>
+          </g>
+
+          <g v-if="chart.focus">
+            <path
+              :d="chart.focus.d"
+              :stroke="chart.focus.color"
+            />
+          </g>
+
+        </g>
+      </svg>
+    </div>
+
+    <VuiPopover
+      ref="popover"
+      v-model="pd.visible"
+      :positions="['top','bottom']"
+      :target="pd.target"
+      nonreactive
+      class="mcr-timeline-popover"
+      width="320px"
+    >
+      <VuiFlex
+        direction="column"
+        gap="10px"
+      >
+        <div
+          v-for="(item, i) in pd.results"
+          :key="i"
+          class="mcr-timeline-result"
+        >
+          <VuiFlex gap="5px">
+            <VuiIconLabel
+              :icon="item.caseType"
+              :button="false"
+            />
+            <div>
+              {{ item.title }}
+            </div>
+          </VuiFlex>
+          <VuiFlex gap="10px">
+            <VuiIconLabel
+              icon="worker"
+              :button="false"
+            >
+              {{ item.parallelIndex + 1 }}
+            </VuiIconLabel>
+            <VuiIconLabel
+              icon="number"
+              :button="false"
+            >
+              {{ item.workerIndex }}
+            </VuiIconLabel>
+
+            <VuiIconLabel
+              icon="time"
+              :button="false"
+            >
+              {{ Util.TF(item.duration) }}
+            </VuiIconLabel>
+          </VuiFlex>
+        </div>
+
+        <template v-if="pd.tick">
+          <VuiFlex gap="10px">
+            <VuiIconLabel
+              icon="cpu"
+              :button="false"
+              :style="'color:'+pd.tick.cpu.color"
+            >
+              <b>CPU</b> {{ pd.tick.cpu.percent }}%
+            </VuiIconLabel>
+
+            <VuiIconLabel
+              icon="memory"
+              :button="false"
+              :style="'color:'+pd.tick.mem.color"
+            >
+              <b>Memory</b> {{ pd.tick.mem.used }} ({{ pd.tick.mem.percent }}%)
+            </VuiIconLabel>
+          </VuiFlex>
+        </template>
+
+        <VuiFlex gap="10px">
+          <VuiIconLabel
+            icon="time"
+            :button="false"
+          >
+            Started
+            <span class="mcr-num">{{ Util.TF(chart.currentTimeStarted) }}</span>
+          </VuiIconLabel>
+          <div>{{ Util.dateFormat(chart.currentTimestamp, state.locale) }}</div>
+        </VuiFlex>
+      </VuiFlex>
+    </VuiPopover>
+  </div>
+</template>
+
 <script setup>
 import {
     shallowReactive, watch, computed, ref, onMounted
@@ -513,229 +736,6 @@ onMounted(() => {
 });
 
 </script>
-
-<template>
-  <div class="mcr-timeline-chart">
-    <div>
-      <svg
-        :viewBox="viewBox"
-        width="100%"
-        height="100%"
-        xmlns="http://www.w3.org/2000/svg"
-        @mouseleave="hidePopover"
-      >
-        <rect
-          :width="chart.width"
-          :height="chart.height"
-          fill="#fff"
-          fill-opacity="0"
-          @mousemove="onMouseMove($event)"
-        />
-        <g
-          pointer-events="none"
-          font-family="Verdana,Helvetica,sans-serif"
-          font-size="12px"
-          fill="currentColor"
-        >
-
-          <g
-            v-if="chart.workerList"
-            class="mcr-timeline-workers"
-          >
-            <g
-              v-for="(item, i) in chart.workerList"
-              :key="i"
-            >
-              <text
-                :x="chart.padding"
-                :y="item.y+item.height*0.5"
-                alignment-baseline="middle"
-              >{{ item.name }}</text>
-
-              <g :transform="translate(item.x,item.y)">
-                <rect
-                  :width="item.width"
-                  :height="item.height"
-                  fill="#ececec"
-                />
-                <path
-                  v-for="(bar, j) in item.bars"
-                  :key="j"
-                  :d="bar.d"
-                  :fill="bar.color"
-                  opacity="0.8"
-                />
-              </g>
-
-            </g>
-          </g>
-
-          <g
-            v-if="chart.usage"
-            class="mcr-timeline-usage"
-          >
-            <g>
-              <text
-                v-for="(line, i) in chart.lines"
-                :key="i"
-                :x="chart.padding"
-                :y="line.y"
-                :fill="line.color"
-                alignment-baseline="middle"
-              >{{ line.name }}</text>
-            </g>
-
-            <g :transform="translate(chart.usage.x,chart.usage.y)">
-              <path
-                :d="chart.grid.d"
-                :stroke="chart.grid.color"
-                fill="none"
-              />
-              <g
-                v-for="(line, j) in chart.lines"
-                :key="j"
-              >
-                <path
-                  :d="line.dFill"
-                  :fill="line.color"
-                  fill-opacity="0.1"
-                />
-                <path
-                  :d="line.dStroke"
-                  :stroke="line.color"
-                  fill="none"
-                />
-              </g>
-              <g>
-                <circle
-                  v-for="(item, i) in chart.points"
-                  :key="i"
-                  :cx="item.x"
-                  :cy="item.y"
-                  :fill="item.color"
-                  r="3"
-                />
-              </g>
-
-            </g>
-
-          </g>
-
-          <g
-            v-if="chart.axis"
-            class="mcr-timeline-axis"
-          >
-            <g :transform="translate(chart.axis.x,chart.axis.y)">
-              <path
-                :d="chart.axis.d"
-                :stroke="chart.axis.color"
-              />
-              <text
-                v-for="(item, i) in chart.labels"
-                :key="i"
-                :x="item.x"
-                :y="item.y"
-                :text-anchor="item.anchor"
-                alignment-baseline="baseline"
-              >{{ item.label }}</text>
-            </g>
-          </g>
-
-          <g v-if="chart.focus">
-            <path
-              :d="chart.focus.d"
-              :stroke="chart.focus.color"
-            />
-          </g>
-
-        </g>
-      </svg>
-    </div>
-
-    <VuiPopover
-      ref="popover"
-      v-model="pd.visible"
-      :positions="['top','bottom']"
-      :target="pd.target"
-      nonreactive
-      class="mcr-timeline-popover"
-      width="320px"
-    >
-      <VuiFlex
-        direction="column"
-        gap="10px"
-      >
-        <div
-          v-for="(item, i) in pd.results"
-          :key="i"
-          class="mcr-timeline-result"
-        >
-          <VuiFlex gap="5px">
-            <VuiIconLabel
-              :icon="item.caseType"
-              :button="false"
-            />
-            <div>
-              {{ item.title }}
-            </div>
-          </VuiFlex>
-          <VuiFlex gap="10px">
-            <VuiIconLabel
-              icon="worker"
-              :button="false"
-            >
-              {{ item.parallelIndex + 1 }}
-            </VuiIconLabel>
-            <VuiIconLabel
-              icon="number"
-              :button="false"
-            >
-              {{ item.workerIndex }}
-            </VuiIconLabel>
-
-            <VuiIconLabel
-              icon="time"
-              :button="false"
-            >
-              {{ Util.TF(item.duration) }}
-            </VuiIconLabel>
-          </VuiFlex>
-        </div>
-
-        <template v-if="pd.tick">
-          <VuiFlex gap="10px">
-            <VuiIconLabel
-              icon="cpu"
-              :button="false"
-              :style="'color:'+pd.tick.cpu.color"
-            >
-              <b>CPU</b> {{ pd.tick.cpu.percent }}%
-            </VuiIconLabel>
-
-            <VuiIconLabel
-              icon="memory"
-              :button="false"
-              :style="'color:'+pd.tick.mem.color"
-            >
-              <b>Memory</b> {{ pd.tick.mem.used }} ({{ pd.tick.mem.percent }}%)
-            </VuiIconLabel>
-          </VuiFlex>
-        </template>
-
-        <VuiFlex gap="10px">
-          <VuiIconLabel
-            icon="time"
-            :button="false"
-          >
-            Started
-            <span class="mcr-num">{{ Util.TF(chart.currentTimeStarted) }}</span>
-          </VuiIconLabel>
-          <div>{{ Util.dateFormat(chart.currentTimestamp, state.locale) }}</div>
-        </VuiFlex>
-      </VuiFlex>
-    </VuiPopover>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-timeline-chart {

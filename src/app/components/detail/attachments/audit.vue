@@ -1,39 +1,3 @@
-<script setup>
-import { watchEffect, shallowReactive } from 'vue';
-import { VuiFlex } from 'vine-ui';
-
-import Util from '../../../utils/util.js';
-
-
-const props = defineProps({
-    data: {
-        type: Object,
-        default: () => {}
-    }
-});
-
-const d = shallowReactive({
-    list: []
-});
-
-watchEffect(() => {
-    const report = props.data.report;
-    if (report && report.categories) {
-        const list = [];
-        report.categories.forEach((item) => {
-            list.push(item);
-            if (item.metrics) {
-                item.metrics.forEach((sub) => {
-                    sub.sub = true;
-                    list.push(sub);
-                });
-            }
-        });
-        d.list = list;
-    }
-});
-</script>
-
 <template>
   <div class="mcr-attachment-audit">
     <table>
@@ -72,6 +36,42 @@ watchEffect(() => {
     </VuiFlex>
   </div>
 </template>
+
+<script setup>
+import { watchEffect, shallowReactive } from 'vue';
+import { VuiFlex } from 'vine-ui';
+
+import Util from '../../../utils/util.js';
+
+
+const props = defineProps({
+    data: {
+        type: Object,
+        default: () => {}
+    }
+});
+
+const d = shallowReactive({
+    list: []
+});
+
+watchEffect(() => {
+    const report = props.data.report;
+    if (report && report.categories) {
+        const list = [];
+        report.categories.forEach((item) => {
+            list.push(item);
+            if (item.metrics) {
+                item.metrics.forEach((sub) => {
+                    sub.sub = true;
+                    list.push(sub);
+                });
+            }
+        });
+        d.list = list;
+    }
+});
+</script>
 
 <style lang="scss">
 .mcr-attachment-audit {

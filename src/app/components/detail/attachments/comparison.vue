@@ -1,3 +1,233 @@
+<template>
+  <div
+    ref="el"
+    class="mcr-attachment-comparison"
+  >
+    <Tabs
+      v-if="d.imageMap"
+      v-model="d.tabIndex"
+      :options="d.tabOptions"
+      :colors="d.tabColors"
+    >
+      <div class="mcr-tab-list">
+        <div
+          v-for="(item, i) of d.imageList"
+          :key="i"
+          class="mcr-tab-pane"
+          :index="i"
+        >
+          <div
+            class="mcr-comparison-image"
+            :style="d.img.wrapperStyle"
+          >
+            <img
+              :src="item.path"
+              :alt="item.name"
+              :style="d.img.imageStyle"
+              @load="onImgLoad"
+            >
+          </div>
+        </div>
+        <div
+          class="mcr-tab-pane"
+          index="3"
+        >
+          <div class="mcr-side-by-side">
+            <div
+              class="mcr-comparison-image"
+              :style="d.img.wrapperStyle"
+            >
+              <img
+                :src="d.sideLeft.path"
+                :alt="d.sideLeft.name"
+                :title="d.sideLeft.title"
+                :style="d.img.imageStyle"
+              >
+            </div>
+            <div
+              class="mcr-comparison-image"
+              :style="d.img.wrapperStyle"
+            >
+              <img
+                :src="d.sideRight.path"
+                :alt="d.sideRight.name"
+                :title="d.sideRight.title"
+                :style="d.img.imageStyle"
+                @click="onSideClick"
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="mcr-tab-pane"
+          index="4"
+        >
+          <div class="mcr-slider-pane">
+            <div
+              class="mcr-comparison-image"
+              :style="d.img.wrapperStyle"
+            >
+              <img
+                :src="d.imageMap.expected.path"
+                :alt="d.imageMap.expected.name"
+                :style="d.img.imageStyle"
+              >
+            </div>
+
+            <div class="mcr-slider-top">
+              <div
+                class="mcr-comparison-image"
+                :style="d.img.wrapperStyle"
+              >
+                <img
+                  :src="d.imageMap.actual.path"
+                  :alt="d.imageMap.actual.name"
+                  :style="updateOpacity(d.img.imageStyle)"
+                >
+              </div>
+            </div>
+
+            <div class="mcr-slider-thumb">
+              <div
+                ref="gutter"
+                :class="['mcr-slider-gutter', d.gutterEnabled?'mcr-slider-gutter-moving':'']"
+              >
+                <div />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Tabs>
+
+    <div
+      v-if="d.imageList"
+      class="mcr-comparison-toolbar"
+    >
+      <VuiFlex gap="20px">
+        <VuiSwitch
+          v-model="state.imageZoom"
+          class="mcr-comparison-zoom"
+          width="28px"
+          height="16px"
+          :label-clickable="true"
+          label-position="right"
+        >
+          <VuiFlex gap="10px">
+            <div>Zoom In/Out</div>
+            <div
+              v-if="state.imageZoom"
+              class="mcr-zoom-value"
+            >
+              {{ d.img.percent }}% <span>({{ d.img.imageLeft }}, {{ d.img.imageTop }})</span>
+            </div>
+          </VuiFlex>
+        </VuiSwitch>
+
+        <VuiFlex
+          v-show="d.tabIndex===4"
+          gap="5px"
+        >
+          <div>Opacity</div>
+          <VuiProgress
+            class="mcr-comparison-opacity"
+            :percentage="d.img.opacity"
+            height="12px"
+            width="100px"
+          />
+          <b>{{ d.img.opacity }}%</b>
+        </VuiFlex>
+      </VuiFlex>
+      <div
+        @mouseenter="showHelp($event, true)"
+        @mouseleave="showHelp($event, false)"
+      >
+        <VuiIconLabel
+          button
+          icon="help"
+        />
+        <div hidden>
+          <div class="mcr-readme mcr-comparison-help">
+            <h3>Help on the image:</h3>
+            <li class="mcr-item">
+              Mouse Down/Up: switch view with neighbor
+            </li>
+            <li class="mcr-item">
+              Double Click: zoom in 100%/200% or reset
+            </li>
+            <li class="mcr-item">
+              Mouse Wheel: zoom in/out
+            </li>
+            <li class="mcr-item">
+              Mouse Drag: switch view or pan
+            </li>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <VuiFlex
+      v-if="d.textList"
+      gap="10px"
+      padding="10px"
+      width="100%"
+      align-items="start"
+      shirk
+      wrap
+    >
+      <div
+        v-for="(item, i) of d.textList"
+        :key="i"
+        class="mcr-text-item"
+      >
+        <div class="mcr-text-head">
+          {{ item.category }}
+        </div>
+        <pre><code>{{ item.content }}</code></pre>
+      </div>
+    </VuiFlex>
+
+    <VuiFlex
+      direction="column"
+      gap="10px"
+      padding="10px"
+    >
+      <VuiFlex
+        v-if="d.message"
+        gap="10px"
+        wrap
+        shirk
+      >
+        <VuiIconLabel
+          button
+          icon="error"
+          gap="10px"
+          @click="onErrorClick"
+        >
+          {{ d.message }}
+        </VuiIconLabel>
+        <div v-if="d.size">
+          ({{ d.size }})
+        </div>
+      </VuiFlex>
+
+      <VuiFlex
+        gap="10px"
+        wrap
+      >
+        <a
+          v-for="(item, i) of props.data.list"
+          :key="i"
+          :href="item.path"
+          target="_blank"
+          :download="item.name"
+          class="mcr-item"
+        >{{ item.name }}</a>
+      </VuiFlex>
+    </VuiFlex>
+  </div>
+</template>
+
 <script setup>
 import {
     watch, watchEffect, reactive, shallowReactive, onUnmounted, onMounted, ref
@@ -689,236 +919,6 @@ onUnmounted(() => {
 });
 
 </script>
-
-<template>
-  <div
-    ref="el"
-    class="mcr-attachment-comparison"
-  >
-    <Tabs
-      v-if="d.imageMap"
-      v-model="d.tabIndex"
-      :options="d.tabOptions"
-      :colors="d.tabColors"
-    >
-      <div class="mcr-tab-list">
-        <div
-          v-for="(item, i) of d.imageList"
-          :key="i"
-          class="mcr-tab-pane"
-          :index="i"
-        >
-          <div
-            class="mcr-comparison-image"
-            :style="d.img.wrapperStyle"
-          >
-            <img
-              :src="item.path"
-              :alt="item.name"
-              :style="d.img.imageStyle"
-              @load="onImgLoad"
-            >
-          </div>
-        </div>
-        <div
-          class="mcr-tab-pane"
-          index="3"
-        >
-          <div class="mcr-side-by-side">
-            <div
-              class="mcr-comparison-image"
-              :style="d.img.wrapperStyle"
-            >
-              <img
-                :src="d.sideLeft.path"
-                :alt="d.sideLeft.name"
-                :title="d.sideLeft.title"
-                :style="d.img.imageStyle"
-              >
-            </div>
-            <div
-              class="mcr-comparison-image"
-              :style="d.img.wrapperStyle"
-            >
-              <img
-                :src="d.sideRight.path"
-                :alt="d.sideRight.name"
-                :title="d.sideRight.title"
-                :style="d.img.imageStyle"
-                @click="onSideClick"
-              >
-            </div>
-          </div>
-        </div>
-        <div
-          class="mcr-tab-pane"
-          index="4"
-        >
-          <div class="mcr-slider-pane">
-            <div
-              class="mcr-comparison-image"
-              :style="d.img.wrapperStyle"
-            >
-              <img
-                :src="d.imageMap.expected.path"
-                :alt="d.imageMap.expected.name"
-                :style="d.img.imageStyle"
-              >
-            </div>
-
-            <div class="mcr-slider-top">
-              <div
-                class="mcr-comparison-image"
-                :style="d.img.wrapperStyle"
-              >
-                <img
-                  :src="d.imageMap.actual.path"
-                  :alt="d.imageMap.actual.name"
-                  :style="updateOpacity(d.img.imageStyle)"
-                >
-              </div>
-            </div>
-
-            <div class="mcr-slider-thumb">
-              <div
-                ref="gutter"
-                :class="['mcr-slider-gutter', d.gutterEnabled?'mcr-slider-gutter-moving':'']"
-              >
-                <div />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Tabs>
-
-    <div
-      v-if="d.imageList"
-      class="mcr-comparison-toolbar"
-    >
-      <VuiFlex gap="20px">
-        <VuiSwitch
-          v-model="state.imageZoom"
-          class="mcr-comparison-zoom"
-          width="28px"
-          height="16px"
-          :label-clickable="true"
-          label-position="right"
-        >
-          <VuiFlex gap="10px">
-            <div>Zoom In/Out</div>
-            <div
-              v-if="state.imageZoom"
-              class="mcr-zoom-value"
-            >
-              {{ d.img.percent }}% <span>({{ d.img.imageLeft }}, {{ d.img.imageTop }})</span>
-            </div>
-          </VuiFlex>
-        </VuiSwitch>
-
-        <VuiFlex
-          v-show="d.tabIndex===4"
-          gap="5px"
-        >
-          <div>Opacity</div>
-          <VuiProgress
-            class="mcr-comparison-opacity"
-            :percentage="d.img.opacity"
-            height="12px"
-            width="100px"
-          />
-          <b>{{ d.img.opacity }}%</b>
-        </VuiFlex>
-      </VuiFlex>
-      <div
-        @mouseenter="showHelp($event, true)"
-        @mouseleave="showHelp($event, false)"
-      >
-        <VuiIconLabel
-          button
-          icon="help"
-        />
-        <div hidden>
-          <div class="mcr-readme mcr-comparison-help">
-            <h3>Help on the image:</h3>
-            <li class="mcr-item">
-              Mouse Down/Up: switch view with neighbor
-            </li>
-            <li class="mcr-item">
-              Double Click: zoom in 100%/200% or reset
-            </li>
-            <li class="mcr-item">
-              Mouse Wheel: zoom in/out
-            </li>
-            <li class="mcr-item">
-              Mouse Drag: switch view or pan
-            </li>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <VuiFlex
-      v-if="d.textList"
-      gap="10px"
-      padding="10px"
-      width="100%"
-      align-items="start"
-      shirk
-      wrap
-    >
-      <div
-        v-for="(item, i) of d.textList"
-        :key="i"
-        class="mcr-text-item"
-      >
-        <div class="mcr-text-head">
-          {{ item.category }}
-        </div>
-        <pre><code>{{ item.content }}</code></pre>
-      </div>
-    </VuiFlex>
-
-    <VuiFlex
-      direction="column"
-      gap="10px"
-      padding="10px"
-    >
-      <VuiFlex
-        v-if="d.message"
-        gap="10px"
-        wrap
-        shirk
-      >
-        <VuiIconLabel
-          button
-          icon="error"
-          gap="10px"
-          @click="onErrorClick"
-        >
-          {{ d.message }}
-        </VuiIconLabel>
-        <div v-if="d.size">
-          ({{ d.size }})
-        </div>
-      </VuiFlex>
-
-      <VuiFlex
-        gap="10px"
-        wrap
-      >
-        <a
-          v-for="(item, i) of props.data.list"
-          :key="i"
-          :href="item.path"
-          target="_blank"
-          :download="item.name"
-          class="mcr-item"
-        >{{ item.name }}</a>
-      </VuiFlex>
-    </VuiFlex>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-attachment-comparison {

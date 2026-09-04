@@ -1,3 +1,19 @@
+<template>
+  <div
+    :class="classMap"
+    :style="styleMap"
+  >
+    <div
+      v-if="props.icon"
+      ref="el"
+      class="mcr-icon-label-icon"
+    />
+    <label v-if="labelContent">
+      <slot>{{ props.label }}</slot>
+    </label>
+  </div>
+</template>
+
 <script setup>
 import {
     computed, onMounted, ref, useSlots, watch
@@ -100,22 +116,6 @@ watch(() => props.icon, () => {
 });
 
 </script>
-
-<template>
-  <div
-    :class="classMap"
-    :style="styleMap"
-  >
-    <div
-      v-if="props.icon"
-      ref="el"
-      class="mcr-icon-label-icon"
-    />
-    <label v-if="labelContent">
-      <slot>{{ props.label }}</slot>
-    </label>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-icon-label {

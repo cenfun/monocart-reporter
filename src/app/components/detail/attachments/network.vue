@@ -1,3 +1,84 @@
+<template>
+  <div class="mcr-attachment-network">
+    <div
+      v-for="(item, i) of d.pages"
+      :key="i"
+    >
+      <VuiFlex
+        gap="10px"
+      >
+        <div><b>Page{{ item.number }}</b></div>
+        <div>{{ item.title }}</div>
+
+        <div
+          v-if="item.onContentLoad>0"
+          style="color: #1a1aa6;"
+        >
+          ContendLoaded {{ Util.TF(item.onContentLoad) }}
+        </div>
+
+        <div
+          v-if="item.onLoad>0"
+          style="color: #c80000;"
+        >
+          Load {{ Util.TF(item.onLoad) }}
+        </div>
+
+        <div>Duration {{ Util.TF(item.waterfall.time) }}</div>
+      </VuiFlex>
+
+      <div
+        class="mcr-network-waterfall"
+        v-html="item.waterfallChart"
+      />
+    </div>
+
+    <VuiFlex gap="10px">
+      <div><b>Requests</b> <span class="mcr-num">{{ d.summary.requests }}</span></div>
+      <div><b>Transferred</b> {{ Util.BF(d.summary.size) }}</div>
+    </VuiFlex>
+
+    <VuiFlex gap="10px">
+      <div><b>Status</b></div>
+      <div
+        v-for="(item, i) of d.status"
+        :key="i"
+      >
+        <span :style="item.color">{{ item.name }}</span> <span class="mcr-num">{{ item.count }}</span>
+      </div>
+    </VuiFlex>
+
+    <VuiFlex gap="10px">
+      <div><b>Methods</b></div>
+      <div
+        v-for="(item, i) of d.methods"
+        :key="i"
+      >
+        {{ item.name }} <span class="mcr-num">{{ item.count }}</span>
+      </div>
+    </VuiFlex>
+
+    <VuiFlex
+      v-if="d.browser||d.creator"
+      gap="10px"
+    >
+      <div v-if="d.browser">
+        <b>Browser</b> {{ d.browser.name }} {{ d.browser.version }}
+      </div>
+      <div v-if="d.creator">
+        <b>Creator</b> {{ d.creator.name }} {{ d.creator.version }}
+      </div>
+    </VuiFlex>
+
+    <VuiFlex>
+      <a
+        :href="props.data.path"
+        target="_blank"
+      >{{ props.data.report.name }}</a>
+    </VuiFlex>
+  </div>
+</template>
+
 <script setup>
 import { watchEffect, shallowReactive } from 'vue';
 import { VuiFlex } from 'vine-ui';
@@ -89,87 +170,6 @@ watchEffect(() => {
     }
 });
 </script>
-
-<template>
-  <div class="mcr-attachment-network">
-    <div
-      v-for="(item, i) of d.pages"
-      :key="i"
-    >
-      <VuiFlex
-        gap="10px"
-      >
-        <div><b>Page{{ item.number }}</b></div>
-        <div>{{ item.title }}</div>
-
-        <div
-          v-if="item.onContentLoad>0"
-          style="color: #1a1aa6;"
-        >
-          ContendLoaded {{ Util.TF(item.onContentLoad) }}
-        </div>
-
-        <div
-          v-if="item.onLoad>0"
-          style="color: #c80000;"
-        >
-          Load {{ Util.TF(item.onLoad) }}
-        </div>
-
-        <div>Duration {{ Util.TF(item.waterfall.time) }}</div>
-      </VuiFlex>
-
-      <div
-        class="mcr-network-waterfall"
-        v-html="item.waterfallChart"
-      />
-    </div>
-
-    <VuiFlex gap="10px">
-      <div><b>Requests</b> <span class="mcr-num">{{ d.summary.requests }}</span></div>
-      <div><b>Transferred</b> {{ Util.BF(d.summary.size) }}</div>
-    </VuiFlex>
-
-    <VuiFlex gap="10px">
-      <div><b>Status</b></div>
-      <div
-        v-for="(item, i) of d.status"
-        :key="i"
-      >
-        <span :style="item.color">{{ item.name }}</span> <span class="mcr-num">{{ item.count }}</span>
-      </div>
-    </VuiFlex>
-
-    <VuiFlex gap="10px">
-      <div><b>Methods</b></div>
-      <div
-        v-for="(item, i) of d.methods"
-        :key="i"
-      >
-        {{ item.name }} <span class="mcr-num">{{ item.count }}</span>
-      </div>
-    </VuiFlex>
-
-    <VuiFlex
-      v-if="d.browser||d.creator"
-      gap="10px"
-    >
-      <div v-if="d.browser">
-        <b>Browser</b> {{ d.browser.name }} {{ d.browser.version }}
-      </div>
-      <div v-if="d.creator">
-        <b>Creator</b> {{ d.creator.name }} {{ d.creator.version }}
-      </div>
-    </VuiFlex>
-
-    <VuiFlex>
-      <a
-        :href="props.data.path"
-        target="_blank"
-      >{{ props.data.report.name }}</a>
-    </VuiFlex>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-attachment-network {

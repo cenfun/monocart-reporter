@@ -1,53 +1,3 @@
-<script setup>
-import { nextTick } from 'vue';
-import {
-    VuiFlex,
-    VuiIconLabel
-} from 'vine-ui';
-
-import ContentAttachment from './detail-content-attachment.vue';
-import ContentHtml from './detail-content-html.vue';
-import ContentMetadata from './detail-content-metadata.vue';
-
-import { renderMermaid } from '../../modules/mermaid.js';
-
-
-const columnComponents = {
-    attachment: ContentAttachment,
-    metadata: ContentMetadata,
-    html: ContentHtml
-};
-
-defineProps({
-    column: {
-        type: Object,
-        default: () => {}
-    }
-});
-
-const itemColumnClass = (item) => {
-    const ls = ['mcr-detail-column'];
-    if (item.id) {
-        ls.push(`mcr-detail-${item.id}`);
-    }
-    return ls;
-};
-
-const onColumnHeadClick = (column) => {
-    column.tg_state.collapsed = !column.tg_state.collapsed;
-    if (!column.tg_state.collapsed) {
-        nextTick(() => {
-            renderMermaid();
-        });
-    }
-};
-
-const getColumnComponent = (componentType) => {
-    return columnComponents[componentType] || columnComponents.html;
-};
-
-</script>
-
 <template>
   <div :class="itemColumnClass(column.data)">
     <div
@@ -112,6 +62,56 @@ const getColumnComponent = (componentType) => {
     </template>
   </div>
 </template>
+
+<script setup>
+import { nextTick } from 'vue';
+import {
+    VuiFlex,
+    VuiIconLabel
+} from 'vine-ui';
+
+import ContentAttachment from './detail-content-attachment.vue';
+import ContentHtml from './detail-content-html.vue';
+import ContentMetadata from './detail-content-metadata.vue';
+
+import { renderMermaid } from '../../modules/mermaid.js';
+
+
+const columnComponents = {
+    attachment: ContentAttachment,
+    metadata: ContentMetadata,
+    html: ContentHtml
+};
+
+defineProps({
+    column: {
+        type: Object,
+        default: () => {}
+    }
+});
+
+const itemColumnClass = (item) => {
+    const ls = ['mcr-detail-column'];
+    if (item.id) {
+        ls.push(`mcr-detail-${item.id}`);
+    }
+    return ls;
+};
+
+const onColumnHeadClick = (column) => {
+    column.tg_state.collapsed = !column.tg_state.collapsed;
+    if (!column.tg_state.collapsed) {
+        nextTick(() => {
+            renderMermaid();
+        });
+    }
+};
+
+const getColumnComponent = (componentType) => {
+    return columnComponents[componentType] || columnComponents.html;
+};
+
+</script>
 
 <style lang="scss">
 .mcr-detail-column {

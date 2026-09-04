@@ -1,39 +1,3 @@
-<script setup>
-import { VuiFlex, VuiIconLabel } from 'vine-ui';
-
-import state from '../modules/state.js';
-
-
-const props = defineProps({
-    list: {
-        type: Array,
-        default: () => []
-    }
-});
-
-const onMetadataClick = (e, data) => {
-    // already open, after close it
-    const currentTarget = e.currentTarget;
-    if (currentTarget === state.metadata.popoverTarget && state.metadata.popoverVisible) {
-        return;
-    }
-
-    if (state.metadata.popoverVisible) {
-        setTimeout(() => {
-            onMetadataClick({
-                currentTarget
-            }, data);
-        }, 100);
-        return;
-    }
-    // console.log('metadata click', data, state.metadata);
-    state.metadata.popoverTarget = currentTarget;
-    state.metadata.data = data;
-    state.metadata.popoverVisible = true;
-};
-
-</script>
-
 <template>
   <div class="mcr-metadata-list">
     <VuiFlex
@@ -76,6 +40,42 @@ const onMetadataClick = (e, data) => {
     </VuiFlex>
   </div>
 </template>
+
+<script setup>
+import { VuiFlex, VuiIconLabel } from 'vine-ui';
+
+import state from '../modules/state.js';
+
+
+const props = defineProps({
+    list: {
+        type: Array,
+        default: () => []
+    }
+});
+
+const onMetadataClick = (e, data) => {
+    // already open, after close it
+    const currentTarget = e.currentTarget;
+    if (currentTarget === state.metadata.popoverTarget && state.metadata.popoverVisible) {
+        return;
+    }
+
+    if (state.metadata.popoverVisible) {
+        setTimeout(() => {
+            onMetadataClick({
+                currentTarget
+            }, data);
+        }, 100);
+        return;
+    }
+    // console.log('metadata click', data, state.metadata);
+    state.metadata.popoverTarget = currentTarget;
+    state.metadata.data = data;
+    state.metadata.popoverVisible = true;
+};
+
+</script>
 
 <style lang="scss">
 .mcr-metadata-list {

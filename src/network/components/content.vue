@@ -1,3 +1,24 @@
+<template>
+  <div class="mcr-content">
+    <div
+      v-show="data.previewType==='image'"
+      class="mcr-content-image"
+    >
+      <img :src="data.imageSrc">
+    </div>
+    <div
+      v-show="data.previewType==='editor'"
+      class="mcr-content-editor"
+    />
+    <div
+      v-show="data.previewType==='other'"
+      class="mcr-content-other"
+    >
+      No content preview
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {
     inject, watch, shallowReactive
@@ -106,27 +127,6 @@ watch(() => state.entry, (v) => {
 });
 
 </script>
-
-<template>
-  <div class="mcr-content">
-    <div
-      v-show="data.previewType==='image'"
-      class="mcr-content-image"
-    >
-      <img :src="data.imageSrc">
-    </div>
-    <div
-      v-show="data.previewType==='editor'"
-      class="mcr-content-editor"
-    />
-    <div
-      v-show="data.previewType==='other'"
-      class="mcr-content-other"
-    >
-      No content preview
-    </div>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-content {

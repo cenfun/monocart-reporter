@@ -1,3 +1,13 @@
+<template>
+  <div
+    v-if="props.pieChart"
+    class="mcr-pie-chart"
+    :style="pieStyle(props.pieChart)"
+    @click="onPieClick($event)"
+    v-html="props.pieChart.svg"
+  />
+</template>
+
 <script setup>
 const props = defineProps({
     pieChart: {
@@ -46,16 +56,6 @@ const onPieClick = (e) => {
 };
 
 </script>
-
-<template>
-  <div
-    v-if="props.pieChart"
-    class="mcr-pie-chart"
-    :style="pieStyle(props.pieChart)"
-    @click="onPieClick($event)"
-    v-html="props.pieChart.svg"
-  />
-</template>
 
 <style lang="scss">
 .mcr-pie-chart {

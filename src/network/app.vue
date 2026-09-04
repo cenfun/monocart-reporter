@@ -1,3 +1,47 @@
+<template>
+  <div class="mcr vui-flex-column">
+    <div class="mcr-header">
+      <VuiFlex
+        gap="10px"
+        wrap
+      >
+        <div class="mcr-title">
+          <a href="./">{{ state.title }}</a>
+        </div>
+      </VuiFlex>
+
+      <div class="mcr-flex-auto" />
+    </div>
+
+    <div class="mcr-network-grid mcr-flex-auto" />
+
+    <Flyover />
+
+    <VuiTooltip
+      :class="tooltip.classMap"
+      :visible="tooltip.visible"
+      :target="tooltip.target"
+      :text="tooltip.text"
+      :html="tooltip.html"
+    />
+
+    <VuiPopover
+      v-model="popover.visible"
+      :target="popover.target"
+      width="300px"
+      class="mcr-popover-timing"
+    >
+      <Timing :entry="popover.entry" />
+    </VuiPopover>
+
+    <VuiLoading
+      :visible="state.initializing"
+      size="l"
+      center
+    />
+  </div>
+</template>
+
 <script setup>
 import {
     shallowReactive, onMounted, provide, createApp, watchEffect
@@ -717,50 +761,6 @@ window.addEventListener('keydown', (e) => {
 });
 
 </script>
-
-<template>
-  <div class="mcr vui-flex-column">
-    <div class="mcr-header">
-      <VuiFlex
-        gap="10px"
-        wrap
-      >
-        <div class="mcr-title">
-          <a href="./">{{ state.title }}</a>
-        </div>
-      </VuiFlex>
-
-      <div class="mcr-flex-auto" />
-    </div>
-
-    <div class="mcr-network-grid mcr-flex-auto" />
-
-    <Flyover />
-
-    <VuiTooltip
-      :class="tooltip.classMap"
-      :visible="tooltip.visible"
-      :target="tooltip.target"
-      :text="tooltip.text"
-      :html="tooltip.html"
-    />
-
-    <VuiPopover
-      v-model="popover.visible"
-      :target="popover.target"
-      width="300px"
-      class="mcr-popover-timing"
-    >
-      <Timing :entry="popover.entry" />
-    </VuiPopover>
-
-    <VuiLoading
-      :visible="state.initializing"
-      size="l"
-      center
-    />
-  </div>
-</template>
 
 <style lang="scss">
 :root {

@@ -1,3 +1,20 @@
+<template>
+  <div
+    v-if="props.data.path"
+    class="mcr-attachment-link"
+  >
+    <VuiIconLabel
+      :icon="download?'download':'link'"
+      :button="false"
+    />
+    <a
+      :href="props.data.path"
+      :download="download"
+      target="_blank"
+    >{{ download ? "Download" : "Open" }}</a>
+  </div>
+</template>
+
 <script setup>
 import { VuiIconLabel } from 'vine-ui';
 import { computed } from 'vue';
@@ -17,23 +34,6 @@ const download = computed(() => {
     return props.data.fileName || props.data.name;
 });
 </script>
-
-<template>
-  <div
-    v-if="props.data.path"
-    class="mcr-attachment-link"
-  >
-    <VuiIconLabel
-      :icon="download?'download':'link'"
-      :button="false"
-    />
-    <a
-      :href="props.data.path"
-      :download="download"
-      target="_blank"
-    >{{ download ? "Download" : "Open" }}</a>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-attachment-link {

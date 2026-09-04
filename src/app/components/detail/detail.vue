@@ -1,3 +1,35 @@
+<template>
+  <div
+    class="mcr-detail-overview"
+    tabindex="0"
+    @focus="onFocus"
+    @click="onFocus"
+  >
+    <div class="mcr-overview-head">
+      <VuiInput
+        v-model="data.keywords"
+        class="mcr-overview-search"
+        placeholder="Search"
+        width="100%"
+        :select-on-focus="true"
+        icon="search"
+        icon-color="gray"
+        cleanable
+      />
+
+      <VuiSwitch
+        v-if="data.hasFailed"
+        v-model="state.onlyFailedSteps"
+        :label-clickable="true"
+        label-position="right"
+      >
+        Only Failed
+      </VuiSwitch>
+    </div>
+    <div class="mcr-overview-grid mcr-flex-auto" />
+  </div>
+</template>
+
 <script setup>
 import {
     createApp, h, watch, shallowReactive, onMounted, nextTick
@@ -502,38 +534,6 @@ const onFocus = (e) => {
 };
 
 </script>
-
-<template>
-  <div
-    class="mcr-detail-overview"
-    tabindex="0"
-    @focus="onFocus"
-    @click="onFocus"
-  >
-    <div class="mcr-overview-head">
-      <VuiInput
-        v-model="data.keywords"
-        class="mcr-overview-search"
-        placeholder="Search"
-        width="100%"
-        :select-on-focus="true"
-        icon="search"
-        icon-color="gray"
-        cleanable
-      />
-
-      <VuiSwitch
-        v-if="data.hasFailed"
-        v-model="state.onlyFailedSteps"
-        :label-clickable="true"
-        label-position="right"
-      >
-        Only Failed
-      </VuiSwitch>
-    </div>
-    <div class="mcr-overview-grid mcr-flex-auto" />
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-detail-overview {

@@ -1,3 +1,23 @@
+<template>
+  <div class="mcr-html-content">
+    <div
+      class="mcr-column-html"
+      v-html="html"
+    />
+    <div
+      class="mcr-column-copy"
+      @click="onCopyClick($event, props.column)"
+    >
+      <VuiIconLabel
+        button
+        icon="copy"
+      >
+        {{ props.column.tg_state.copied }}
+      </VuiIconLabel>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { VuiIconLabel } from 'vine-ui';
 import { onMounted, ref } from 'vue';
@@ -43,26 +63,6 @@ onMounted(() => {
 });
 
 </script>
-
-<template>
-  <div class="mcr-html-content">
-    <div
-      class="mcr-column-html"
-      v-html="html"
-    />
-    <div
-      class="mcr-column-copy"
-      @click="onCopyClick($event, props.column)"
-    >
-      <VuiIconLabel
-        button
-        icon="copy"
-      >
-        {{ props.column.tg_state.copied }}
-      </VuiIconLabel>
-    </div>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-html-content {

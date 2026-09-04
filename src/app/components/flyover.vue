@@ -1,36 +1,3 @@
-<script setup>
-import {
-    VuiFlyover,
-    VuiLoading,
-    VuiIconLabel
-} from 'vine-ui';
-
-import { hash } from '../common/common.js';
-
-import state from '../modules/state.js';
-
-import Detail from './detail/detail.vue';
-import Report from './report/report.vue';
-
-
-const flyoverComponents = {
-    detail: Detail,
-    report: Report
-};
-
-// remove tag till flyover animation end
-const onFlyoverEnd = () => {
-    if (!state.flyoverVisible) {
-        hash.remove('page');
-    }
-};
-
-const onFlyoverResize = (width) => {
-    state.flyoverWidth = width;
-};
-
-</script>
-
 <template>
   <VuiFlyover
     ref="flyover"
@@ -71,6 +38,39 @@ const onFlyoverResize = (width) => {
     />
   </VuiFlyover>
 </template>
+
+<script setup>
+import {
+    VuiFlyover,
+    VuiLoading,
+    VuiIconLabel
+} from 'vine-ui';
+
+import { hash } from '../common/common.js';
+
+import state from '../modules/state.js';
+
+import Detail from './detail/detail.vue';
+import Report from './report/report.vue';
+
+
+const flyoverComponents = {
+    detail: Detail,
+    report: Report
+};
+
+// remove tag till flyover animation end
+const onFlyoverEnd = () => {
+    if (!state.flyoverVisible) {
+        hash.remove('page');
+    }
+};
+
+const onFlyoverResize = (width) => {
+    state.flyoverWidth = width;
+};
+
+</script>
 
 <style lang="scss">
 .vui-flyover {

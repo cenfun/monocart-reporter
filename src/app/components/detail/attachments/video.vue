@@ -1,3 +1,30 @@
+<template>
+  <div class="mcr-attachment-video">
+    <div class="mcr-attachment-video-main">
+      <video
+        controls
+        :src="props.data.path"
+        :class="videoClass"
+        @loadedmetadata="onMetaData"
+      ><source
+        :src="props.data.path"
+        :type="props.data.contentType"
+      ></video>
+    </div>
+    <VuiFlex gap="3px">
+      <VuiIconLabel
+        button
+        icon="download"
+      />
+      <a
+        :href="props.data.path"
+        :download="props.data.fileName || props.data.name"
+        target="_blank"
+      >Download video</a>
+    </VuiFlex>
+  </div>
+</template>
+
 <script setup>
 import { ref } from 'vue';
 import {
@@ -27,33 +54,6 @@ const onMetaData = (e) => {
 };
 
 </script>
-
-<template>
-  <div class="mcr-attachment-video">
-    <div class="mcr-attachment-video-main">
-      <video
-        controls
-        :src="props.data.path"
-        :class="videoClass"
-        @loadedmetadata="onMetaData"
-      ><source
-        :src="props.data.path"
-        :type="props.data.contentType"
-      ></video>
-    </div>
-    <VuiFlex gap="3px">
-      <VuiIconLabel
-        button
-        icon="download"
-      />
-      <a
-        :href="props.data.path"
-        :download="props.data.fileName || props.data.name"
-        target="_blank"
-      >Download video</a>
-    </VuiFlex>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-attachment-video {

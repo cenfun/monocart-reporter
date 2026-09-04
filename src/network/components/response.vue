@@ -1,3 +1,27 @@
+<template>
+  <div class="mcr-summary-container">
+    <SummaryList
+      title="Response"
+      :list="data.list"
+    />
+
+    <SummaryList
+      title="Response Headers"
+      :list="data.headers"
+    />
+
+    <SummaryList
+      title="Cache"
+      :list="data.cache"
+    />
+
+    <SummaryTable
+      title="Response Cookies"
+      :list="data.cookies"
+    />
+  </div>
+</template>
+
 <script setup>
 import {
     inject, watch, shallowReactive
@@ -97,33 +121,8 @@ watch(() => state.entry, (v) => {
 });
 </script>
 
-<template>
-  <div class="mcr-summary-container">
-    <SummaryList
-      title="Response"
-      :list="data.list"
-    />
-
-    <SummaryList
-      title="Response Headers"
-      :list="data.headers"
-    />
-
-    <SummaryList
-      title="Cache"
-      :list="data.cache"
-    />
-
-    <SummaryTable
-      title="Response Cookies"
-      :list="data.cookies"
-    />
-  </div>
-</template>
-
 <style lang="scss">
 .mcr-summary-container {
     position: relative;
 }
 </style>
-

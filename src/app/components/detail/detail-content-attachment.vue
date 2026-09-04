@@ -1,3 +1,11 @@
+<template>
+  <component
+    :is="getComponent(column.component)"
+    :data="column.data"
+    class="mcr-attachment-body"
+  />
+</template>
+
 <script setup>
 
 import Image from './attachments/image.vue';
@@ -40,14 +48,6 @@ const getComponent = (component) => {
 };
 
 </script>
-
-<template>
-  <component
-    :is="getComponent(column.component)"
-    :data="column.data"
-    class="mcr-attachment-body"
-  />
-</template>
 
 <style lang="scss">
 .mcr-attachment-body {

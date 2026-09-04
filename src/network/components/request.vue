@@ -1,3 +1,36 @@
+<template>
+  <div class="mcr-summary-container">
+    <SummaryList
+      title="Request"
+      :list="data.list"
+    />
+    <SummaryList
+      title="Query String Parameters"
+      :list="data.queryString"
+    />
+
+    <SummaryList
+      title="Request Headers"
+      :list="data.headers"
+    />
+
+    <SummaryTable
+      title="Request Cookies"
+      :list="data.cookies"
+    />
+
+    <SummaryList
+      title="Post Data"
+      :list="data.postData"
+    >
+      <SummaryTable
+        title="params"
+        :list="data.params"
+      />
+    </SummaryList>
+  </div>
+</template>
+
 <script setup>
 import {
     inject, watch, shallowReactive
@@ -75,39 +108,6 @@ watch(() => state.entry, (v) => {
 });
 
 </script>
-
-<template>
-  <div class="mcr-summary-container">
-    <SummaryList
-      title="Request"
-      :list="data.list"
-    />
-    <SummaryList
-      title="Query String Parameters"
-      :list="data.queryString"
-    />
-
-    <SummaryList
-      title="Request Headers"
-      :list="data.headers"
-    />
-
-    <SummaryTable
-      title="Request Cookies"
-      :list="data.cookies"
-    />
-
-    <SummaryList
-      title="Post Data"
-      :list="data.postData"
-    >
-      <SummaryTable
-        title="params"
-        :list="data.params"
-      />
-    </SummaryList>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-summary-container {

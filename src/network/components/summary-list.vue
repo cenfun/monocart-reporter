@@ -1,20 +1,3 @@
-<script setup>
-const props = defineProps({
-    title: {
-        type: String,
-        default: ''
-    },
-    list: {
-        type: Array,
-        default: () => {
-            return [];
-        }
-    }
-});
-
-
-</script>
-
 <template>
   <div
     v-if="props.list.length"
@@ -44,6 +27,23 @@ const props = defineProps({
     </details>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+    title: {
+        type: String,
+        default: ''
+    },
+    list: {
+        type: Array,
+        default: () => {
+            return [];
+        }
+    }
+});
+
+
+</script>
 
 <style lang="scss">
 .mcr-summary-list {
@@ -89,4 +89,3 @@ const props = defineProps({
     }
 }
 </style>
-

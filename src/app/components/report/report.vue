@@ -1,3 +1,381 @@
+<template>
+  <div class="mcr-report">
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          v-if="report.amountHeads"
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <VuiIconLabel
+            v-for="(item, i) in report.amountHeads"
+            :key="i"
+            :icon="item.icon"
+            :tooltip="item.description"
+            :button="false"
+          >
+            <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
+          </VuiIconLabel>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <Pie :pie-chart="report.pieChart" />
+        <div class="mcr-amount-list">
+          <template
+            v-for="(group, i) in report.amountList"
+            :key="i"
+          >
+            <VuiFlex
+              v-for="(item, j) in group.list"
+              :key="j"
+              gap="5px"
+            >
+              <VuiIconLabel
+                :icon="item.icon || group.icon"
+                :button="group.button"
+                :primary="group.primary"
+                :tooltip="item.description"
+                @click="onAmountClick(item)"
+              >
+                {{ item.name }}
+              </VuiIconLabel>
+              <span class="mcr-num">{{ Util.NF(item.value) }}</span>
+            </VuiFlex>
+          </template>
+
+          <VuiIconLabel
+            button
+            icon="sort"
+            primary
+            @click="onSortClick('tests','duration')"
+          >
+            Top Slowest
+          </VuiIconLabel>
+
+          <VuiIconLabel
+            button
+            icon="sort"
+            primary
+            @click="onSortClick('failed','duration')"
+          >
+            Top Failed Slowest
+          </VuiIconLabel>
+        </div>
+      </div>
+    </div>
+
+    <Trend />
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <VuiIconLabel
+            icon="timeline"
+            :button="false"
+          >
+            <b>Timeline</b>
+          </VuiIconLabel>
+
+          <VuiIconLabel
+            icon="calendar"
+            size="16px"
+            :button="false"
+          >
+            {{ state.date }}
+          </VuiIconLabel>
+
+          <VuiIconLabel
+            icon="time"
+            size="16px"
+            :button="false"
+          >
+            {{ state.duration }}
+          </VuiIconLabel>
+
+          <VuiSelect
+            v-if="report.systemOptions"
+            v-model="report.systemIndex"
+            tooltips="Sharding machines"
+            :options="report.systemOptions"
+            width="160px"
+          />
+
+          <div class="mcr-flex-auto" />
+
+          <a
+            href="https://playwright.dev/docs/test-parallel"
+            target="_blank"
+          >
+            <VuiIconLabel
+              button
+              icon="help"
+            >
+              Test Parallel
+            </VuiIconLabel>
+          </a>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <Timeline />
+
+        <div
+          v-if="report.usageList"
+          class="mcr-usage-list"
+        >
+          <div
+            v-for="(item, j) in report.usageList"
+            :key="j"
+            class="mcr-usage-item"
+            @click="onUsageClick(item)"
+          >
+            <VuiIconLabel
+              :icon="item.icon"
+              :button="false"
+              :style="'color:'+item.color"
+            />
+            <div class="mcr-long-label">
+              {{ item.name }} {{ item.value }}
+            </div>
+          </div>
+          <template
+            v-for="(group, i) in report.infoList"
+            :key="i"
+          >
+            <div
+              v-for="(item, j) in group.list"
+              :key="j"
+              class="mcr-usage-item"
+              @click="onUsageClick(item)"
+            >
+              <VuiIconLabel
+                :icon="item.icon"
+                :button="false"
+                :style="'color:'+item.color"
+              />
+              <div class="mcr-long-label">
+                {{ item.name }} {{ item.value }}
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <VuiIconLabel
+            icon="tag"
+            :button="false"
+          >
+            <b>Tags</b> <span
+              v-if="report.tagList"
+              class="mcr-num"
+            >{{ Util.NF(report.tagList.length) }}</span>
+          </VuiIconLabel>
+
+          <div class="mcr-flex-auto" />
+
+          <a
+            href="https://playwright.dev/docs/test-annotations#tag-tests"
+            target="_blank"
+          >
+            <VuiIconLabel
+              button
+              icon="help"
+            >
+              Tag Tests
+            </VuiIconLabel>
+          </a>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <div
+          v-if="report.tagList"
+          class="mcr-tag-list"
+        >
+          <div
+            v-for="(item, i) in report.tagList"
+            :key="i"
+            class="mcr-tag-item"
+            @click="onTagClick(item)"
+          >
+            <span
+              :style="item.style"
+              :tooltip="item.description"
+              class="mcr-tag"
+            >{{ item.name }}</span>
+            <span
+              v-if="item.value>1"
+              class="mcr-num"
+            >{{ Util.NF(item.value) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <VuiIconLabel
+            icon="metadata"
+            :button="false"
+          >
+            <b>Metadata</b>
+          </VuiIconLabel>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <MetadataList
+          v-if="report.metadataList"
+          :list="report.metadataList"
+        />
+      </div>
+    </div>
+
+    <div
+      v-if="report.artifactList"
+      class="mcr-report-item"
+    >
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <VuiIconLabel
+            icon="artifact"
+            :button="false"
+          >
+            <b>Artifacts</b>
+          </VuiIconLabel>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <div class="mcr-details-summary">
+          <details
+            v-for="(group, i) in report.artifactList"
+            :key="i"
+            open
+          >
+            <summary>
+              {{ group.name }}
+            </summary>
+            <div class="mcr-artifact-list">
+              <div
+                v-for="(item, j) in group.list"
+                :key="j"
+                class="mcr-artifact-item"
+              >
+                <VuiIconLabel
+                  :icon="item.global?'global':'link'"
+                  :button="false"
+                />
+                <a
+                  :href="item.path"
+                  target="_blank"
+                >{{ item.name }}</a>
+              </div>
+              <VuiIconLabel
+                v-if="group.showMore"
+                button
+                icon="triangle-right"
+                class="mcr-show-more"
+                @click="onShowMoreClick(group)"
+              >
+                Show more ...
+              </VuiIconLabel>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <VuiIconLabel
+            icon="export"
+            :button="false"
+          >
+            <b>Export</b>
+          </VuiIconLabel>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart">
+        <div class="mcr-export-list">
+          <div
+            v-for="(item, i) in report.exportList"
+            :key="i"
+            class="mcr-export-item"
+          >
+            <VuiIconLabel
+              button
+              :icon="item.icon"
+              primary
+              @click="onExportClick(item)"
+            >
+              {{ item.name }}
+            </VuiIconLabel>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcr-report-item">
+      <div class="mcr-report-head">
+        <VuiFlex
+          gap="15px"
+          padding="10px"
+          wrap
+        >
+          <a
+            href="https://github.com/microsoft/playwright"
+            target="_blank"
+          ><VuiIconLabel
+            button
+            icon="playwright"
+            size="20px"
+          >
+            {{ report.playwright }}
+          </VuiIconLabel>
+          </a>
+
+          <a
+            href="https://github.com/cenfun/monocart-reporter"
+            target="_blank"
+          ><VuiIconLabel
+            button
+            icon="monocart"
+            size="16px"
+          >
+            {{ report.monocart }}
+          </VuiIconLabel>
+          </a>
+        </VuiFlex>
+      </div>
+      <div class="mcr-report-chart" />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {
     shallowReactive, watch, onActivated, reactive,
@@ -385,384 +763,6 @@ onActivated(() => {
 });
 
 </script>
-
-<template>
-  <div class="mcr-report">
-    <div class="mcr-report-item">
-      <div class="mcr-report-head">
-        <VuiFlex
-          v-if="report.amountHeads"
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <VuiIconLabel
-            v-for="(item, i) in report.amountHeads"
-            :key="i"
-            :icon="item.icon"
-            :tooltip="item.description"
-            :button="false"
-          >
-            <b>{{ item.name }}</b> <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-          </VuiIconLabel>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart">
-        <Pie :pie-chart="report.pieChart" />
-        <div class="mcr-amount-list">
-          <template
-            v-for="(group, i) in report.amountList"
-            :key="i"
-          >
-            <VuiFlex
-              v-for="(item, j) in group.list"
-              :key="j"
-              gap="5px"
-            >
-              <VuiIconLabel
-                :icon="item.icon || group.icon"
-                :button="group.button"
-                :primary="group.primary"
-                :tooltip="item.description"
-                @click="onAmountClick(item)"
-              >
-                {{ item.name }}
-              </VuiIconLabel>
-              <span class="mcr-num">{{ Util.NF(item.value) }}</span>
-            </VuiFlex>
-          </template>
-
-          <VuiIconLabel
-            button
-            icon="sort"
-            primary
-            @click="onSortClick('tests','duration')"
-          >
-            Top Slowest
-          </VuiIconLabel>
-
-          <VuiIconLabel
-            button
-            icon="sort"
-            primary
-            @click="onSortClick('failed','duration')"
-          >
-            Top Failed Slowest
-          </VuiIconLabel>
-        </div>
-      </div>
-    </div>
-
-    <Trend />
-
-    <div class="mcr-report-item">
-      <div class="mcr-report-head">
-        <VuiFlex
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <VuiIconLabel
-            icon="timeline"
-            :button="false"
-          >
-            <b>Timeline</b>
-          </VuiIconLabel>
-
-          <VuiIconLabel
-            icon="calendar"
-            size="16px"
-            :button="false"
-          >
-            {{ state.date }}
-          </VuiIconLabel>
-
-          <VuiIconLabel
-            icon="time"
-            size="16px"
-            :button="false"
-          >
-            {{ state.duration }}
-          </VuiIconLabel>
-
-          <VuiSelect
-            v-if="report.systemOptions"
-            v-model="report.systemIndex"
-            tooltips="Sharding machines"
-            :options="report.systemOptions"
-            width="160px"
-          />
-
-          <div class="mcr-flex-auto" />
-
-          <a
-            href="https://playwright.dev/docs/test-parallel"
-            target="_blank"
-          >
-            <VuiIconLabel
-              button
-              icon="help"
-            >
-              Test Parallel
-            </VuiIconLabel>
-          </a>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart">
-        <Timeline />
-
-        <div
-          v-if="report.usageList"
-          class="mcr-usage-list"
-        >
-          <div
-            v-for="(item, j) in report.usageList"
-            :key="j"
-            class="mcr-usage-item"
-            @click="onUsageClick(item)"
-          >
-            <VuiIconLabel
-              :icon="item.icon"
-              :button="false"
-              :style="'color:'+item.color"
-            />
-            <div class="mcr-long-label">
-              {{ item.name }} {{ item.value }}
-            </div>
-          </div>
-          <template
-            v-for="(group, i) in report.infoList"
-            :key="i"
-          >
-            <div
-              v-for="(item, j) in group.list"
-              :key="j"
-              class="mcr-usage-item"
-              @click="onUsageClick(item)"
-            >
-              <VuiIconLabel
-                :icon="item.icon"
-                :button="false"
-                :style="'color:'+item.color"
-              />
-              <div class="mcr-long-label">
-                {{ item.name }} {{ item.value }}
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
-    </div>
-
-    <div class="mcr-report-item">
-      <div class="mcr-report-head">
-        <VuiFlex
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <VuiIconLabel
-            icon="tag"
-            :button="false"
-          >
-            <b>Tags</b> <span
-              v-if="report.tagList"
-              class="mcr-num"
-            >{{ Util.NF(report.tagList.length) }}</span>
-          </VuiIconLabel>
-
-          <div class="mcr-flex-auto" />
-
-          <a
-            href="https://playwright.dev/docs/test-annotations#tag-tests"
-            target="_blank"
-          >
-            <VuiIconLabel
-              button
-              icon="help"
-            >
-              Tag Tests
-            </VuiIconLabel>
-          </a>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart">
-        <div
-          v-if="report.tagList"
-          class="mcr-tag-list"
-        >
-          <div
-            v-for="(item, i) in report.tagList"
-            :key="i"
-            class="mcr-tag-item"
-            @click="onTagClick(item)"
-          >
-            <span
-              :style="item.style"
-              :tooltip="item.description"
-              class="mcr-tag"
-            >{{ item.name }}</span>
-            <span
-              v-if="item.value>1"
-              class="mcr-num"
-            >{{ Util.NF(item.value) }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mcr-report-item">
-      <div class="mcr-report-head">
-        <VuiFlex
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <VuiIconLabel
-            icon="metadata"
-            :button="false"
-          >
-            <b>Metadata</b>
-          </VuiIconLabel>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart">
-        <MetadataList
-          v-if="report.metadataList"
-          :list="report.metadataList"
-        />
-      </div>
-    </div>
-
-    <div
-      v-if="report.artifactList"
-      class="mcr-report-item"
-    >
-      <div class="mcr-report-head">
-        <VuiFlex
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <VuiIconLabel
-            icon="artifact"
-            :button="false"
-          >
-            <b>Artifacts</b>
-          </VuiIconLabel>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart">
-        <div class="mcr-details-summary">
-          <details
-            v-for="(group, i) in report.artifactList"
-            :key="i"
-            open
-          >
-            <summary>
-              {{ group.name }}
-            </summary>
-            <div class="mcr-artifact-list">
-              <div
-                v-for="(item, j) in group.list"
-                :key="j"
-                class="mcr-artifact-item"
-              >
-                <VuiIconLabel
-                  :icon="item.global?'global':'link'"
-                  :button="false"
-                />
-                <a
-                  :href="item.path"
-                  target="_blank"
-                >{{ item.name }}</a>
-              </div>
-              <VuiIconLabel
-                v-if="group.showMore"
-                button
-                icon="triangle-right"
-                class="mcr-show-more"
-                @click="onShowMoreClick(group)"
-              >
-                Show more ...
-              </VuiIconLabel>
-            </div>
-          </details>
-        </div>
-      </div>
-    </div>
-
-    <div class="mcr-report-item">
-      <div class="mcr-report-head">
-        <VuiFlex
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <VuiIconLabel
-            icon="export"
-            :button="false"
-          >
-            <b>Export</b>
-          </VuiIconLabel>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart">
-        <div class="mcr-export-list">
-          <div
-            v-for="(item, i) in report.exportList"
-            :key="i"
-            class="mcr-export-item"
-          >
-            <VuiIconLabel
-              button
-              :icon="item.icon"
-              primary
-              @click="onExportClick(item)"
-            >
-              {{ item.name }}
-            </VuiIconLabel>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mcr-report-item">
-      <div class="mcr-report-head">
-        <VuiFlex
-          gap="15px"
-          padding="10px"
-          wrap
-        >
-          <a
-            href="https://github.com/microsoft/playwright"
-            target="_blank"
-          ><VuiIconLabel
-            button
-            icon="playwright"
-            size="20px"
-          >
-            {{ report.playwright }}
-          </VuiIconLabel>
-          </a>
-
-          <a
-            href="https://github.com/cenfun/monocart-reporter"
-            target="_blank"
-          ><VuiIconLabel
-            button
-            icon="monocart"
-            size="16px"
-          >
-            {{ report.monocart }}
-          </VuiIconLabel>
-          </a>
-        </VuiFlex>
-      </div>
-      <div class="mcr-report-chart" />
-    </div>
-  </div>
-</template>
 
 <style lang="scss">
 .mcr-report {

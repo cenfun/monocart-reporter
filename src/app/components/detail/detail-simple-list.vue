@@ -1,13 +1,3 @@
-<script setup>
-const props = defineProps({
-    list: {
-        type: Array,
-        default: () => []
-    }
-});
-
-</script>
-
 <template>
   <div
     v-for="column, sk in props.list"
@@ -20,6 +10,16 @@ const props = defineProps({
     <span v-html="column.content" />
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+    list: {
+        type: Array,
+        default: () => []
+    }
+});
+
+</script>
 
 <style lang="scss">
 .mcr-simple-column {
