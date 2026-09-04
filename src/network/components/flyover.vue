@@ -16,18 +16,20 @@
       >
         <template #left>
           <div class="mcr-tab-left">
-            <IconLabel
+            <VuiIconLabel
               icon="arrow-right"
               size="20px"
+              button
               @click="state.flyoverVisible=false"
             />
           </div>
         </template>
         <template #right>
           <div class="mcr-tab-right">
-            <IconLabel
+            <VuiIconLabel
               icon="close"
               size="20px"
+              button
               @click="state.flyoverVisible=false"
             />
           </div>
@@ -55,10 +57,9 @@ import { inject, watch } from 'vue';
 import {
     VuiFlyover,
     VuiTab,
-    VuiLoading
+    VuiLoading,
+    VuiIconLabel
 } from 'vine-ui';
-
-import IconLabel from './icon-label.vue';
 
 import Request from './request.vue';
 import Response from './response.vue';
