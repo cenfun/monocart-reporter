@@ -169,7 +169,7 @@
           :label-clickable="true"
           label-position="right"
           width="28px"
-          height="16px"
+          height="18px"
           class="mcr-searchable-item"
         >
           {{ item.name }}
@@ -182,7 +182,7 @@
           :label-clickable="true"
           label-position="right"
           width="28px"
-          height="16px"
+          height="18px"
           class="mcr-searchable-item"
         >
           Include descendants
@@ -203,7 +203,7 @@
           <VuiSwitch
             v-model="state.groups.group"
             width="28px"
-            height="16px"
+            height="18px"
           />
         </div>
 
@@ -231,7 +231,7 @@
             v-model="state.groups[item.id]"
             :disabled="!state.groups.group"
             width="28px"
-            height="16px"
+            height="18px"
           />
         </div>
 
@@ -248,7 +248,7 @@
             v-model="state.groups.merge"
             :disabled="!state.groups.group"
             width="28px"
-            height="16px"
+            height="18px"
           />
         </div>
 

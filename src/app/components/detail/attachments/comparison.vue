@@ -109,7 +109,7 @@
           v-model="state.imageZoom"
           class="mcr-comparison-zoom"
           width="28px"
-          height="16px"
+          height="18px"
           :label-clickable="true"
           label-position="right"
         >

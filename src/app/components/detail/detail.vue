@@ -22,6 +22,8 @@
         v-model="state.onlyFailedSteps"
         :label-clickable="true"
         label-position="right"
+        width="28px"
+        height="18px"
       >
         Only Failed
       </VuiSwitch>
@@ -553,7 +555,6 @@ const onFocus = (e) => {
     .mcr-overview-head {
         position: relative;
         display: flex;
-        flex-wrap: wrap;
         gap: 15px;
         align-items: center;
         padding: 10px;
@@ -562,7 +563,7 @@ const onFocus = (e) => {
         overflow: hidden;
         user-select: none;
 
-        > * {
+        .vui-switch {
             flex-shrink: 0;
         }
     }

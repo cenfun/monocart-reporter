@@ -54,7 +54,7 @@
           :label-clickable="true"
           label-position="right"
           width="28px"
-          height="16px"
+          height="18px"
           class="mcr-detail-collapse"
         >
           Collapse
@@ -67,7 +67,7 @@
           :label-clickable="true"
           label-position="right"
           width="28px"
-          height="16px"
+          height="18px"
           class="mcr-detail-collapse"
         >
           Collapse
