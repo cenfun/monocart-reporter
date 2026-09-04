@@ -1,44 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
-const getLegacyPath = (page, legacy) => {
-    if (page === 'report') {
-        return '/report';
-    }
-    if (!page || !page.startsWith('detail/')) {
-        return '/';
-    }
-
-    const parts = page.slice('detail/'.length).split('/');
-    const id = parts.shift();
-    if (!id) {
-        return '/';
-    }
-
-    const title = parts.join('/');
-    if (title && !legacy.has('title')) {
-        legacy.set('title', title);
-    }
-    return `/detail/${encodeURIComponent(id)}`;
-};
-
-const migrateLegacyHash = () => {
-    const rawHash = window.location.hash.slice(1);
-    if (!rawHash || rawHash.startsWith('/')) {
-        return;
-    }
-
-    const legacy = new URLSearchParams(rawHash);
-    const page = legacy.get('page');
-    legacy.delete('page');
-
-    const path = getLegacyPath(page, legacy);
-    const query = legacy.toString();
-    const hash = `#${path}${query ? `?${query}` : ''}`;
-    window.history.replaceState(window.history.state, '', hash);
-};
-
-migrateLegacyHash();
-
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [{

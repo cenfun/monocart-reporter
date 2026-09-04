@@ -3,21 +3,28 @@ const path = require('path');
 const fs = require('fs');
 
 /**
- * Test suite for tag deep linking feature
- * Tests URL hash parameter support for filtering by tags
+ * Tests URL query support for restoring the complete search keywords.
  *
  * NOTE: These tests require a pre-generated report at .temp/monocart/index.html
- * Run `npm run test-example` first to generate the report, then run these tests
+ * Run `npm run test-example` first to generate the report, then run these tests.
  */
 
-// Path to the generated test report
 const reportPath = path.resolve(__dirname, '../../.temp/monocart/index.html');
 const reportUrl = `file://${reportPath}`;
-
-// Check if report exists before running tests
 const reportExists = fs.existsSync(reportPath);
 
-test.describe('Tag Deep Linking', () => {
+const getReportUrl = (query, route = '/') => {
+    const search = new URLSearchParams(query).toString();
+    return `${reportUrl}#${route}${search ? `?${search}` : ''}`;
+};
+
+const getRouteQuery = (page) => {
+    const hash = new URL(page.url()).hash;
+    const index = hash.indexOf('?');
+    return new URLSearchParams(index === -1 ? '' : hash.slice(index + 1));
+};
+
+test.describe('Keyword Deep Linking', () => {
 
     test.beforeAll(() => {
         if (!reportExists) {
@@ -25,232 +32,121 @@ test.describe('Tag Deep Linking', () => {
         }
     });
 
-    test('should initialize keywords from tags hash parameter - single tag', async ({ page }) => {
-        // Navigate to report with tags hash
-        await page.goto(`${reportUrl}#tags=smoke`);
+    test('should initialize a regular keyword from the route', async ({ page }) => {
+        await page.goto(getReportUrl({
+            keywords: 'login failed'
+        }));
+        await page.waitForSelector('.mcr-search input');
 
-        // Wait for the report to load
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Check that search box contains @smoke
-        const searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@smoke');
-
-        // Legacy hashes are normalized to the Vue Router URL.
-        const url = page.url();
-        expect(url).toContain('#/?tags=smoke');
+        await expect(page.locator('.mcr-search input')).toHaveValue('login failed');
+        expect(getRouteQuery(page).get('keywords')).toBe('login failed');
     });
 
-    test('should initialize keywords from tags hash parameter - multiple tags', async ({ page }) => {
-        // Navigate to report with multiple tags
-        await page.goto(`${reportUrl}#tags=smoke,slow`);
+    test('should initialize tag keywords from the route', async ({ page }) => {
+        await page.goto(getReportUrl({
+            keywords: '@smoke @slow'
+        }));
+        await page.waitForSelector('.mcr-search input');
 
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Check that search box contains @smoke @slow
-        const searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@smoke @slow');
-
-        // Verify hash contains both tags
-        const url = page.url();
-        expect(url).toMatch(/#\/\?tags=smoke(%2C|,)slow/);
+        await expect(page.locator('.mcr-search input')).toHaveValue('@smoke @slow');
+        expect(getRouteQuery(page).get('keywords')).toBe('@smoke @slow');
     });
 
-    test('should work with caseType filter combination', async ({ page }) => {
-        // Navigate with both caseType and tags
-        await page.goto(`${reportUrl}#caseType=failed&tags=sanity`);
+    test('should restore mixed tags and regular text', async ({ page }) => {
+        const keywords = '@smoke login failed @critical';
+        await page.goto(getReportUrl({
+            keywords
+        }));
+        await page.waitForSelector('.mcr-search input');
 
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Check search box has tag
-        const searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@sanity');
-
-        // Verify hash contains both parameters
-        const url = page.url();
-        expect(url).toContain('caseType=failed');
-        expect(url).toContain('tags=sanity');
+        await expect(page.locator('.mcr-search input')).toHaveValue(keywords);
     });
 
-    test('should sync keywords to hash when typing tags', async ({ page }) => {
-        // Navigate to report without hash
+    test('should work together with the caseType filter', async ({ page }) => {
+        await page.goto(getReportUrl({
+            caseType: 'failed',
+            keywords: '@sanity login'
+        }));
+        await page.waitForSelector('.mcr-search input');
+
+        await expect(page.locator('.mcr-search input')).toHaveValue('@sanity login');
+        const query = getRouteQuery(page);
+        expect(query.get('caseType')).toBe('failed');
+        expect(query.get('keywords')).toBe('@sanity login');
+    });
+
+    test('should sync the complete search input to the route', async ({ page }) => {
         await page.goto(reportUrl);
+        await page.waitForSelector('.mcr-search input');
 
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Type tags in search box
-        const searchInput = page.locator('.mcr-search input');
-        await searchInput.fill('@smoke @critical');
-
-        // Wait a bit for debounced sync
-        await page.waitForTimeout(500);
-
-        // Verify hash was updated (commas may be URL-encoded as %2C)
-        const url = page.url();
-        expect(url).toMatch(/[?&]tags=smoke(%2C|,)critical/);
-    });
-
-    test('should remove tags from hash when search is cleared', async ({ page }) => {
-        // Start with tags in hash
-        await page.goto(`${reportUrl}#tags=smoke`);
-
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Clear the search box
-        const searchInput = page.locator('.mcr-search input');
-        await searchInput.clear();
-
-        // Wait for sync
-        await page.waitForTimeout(500);
-
-        // Verify tags removed from hash
-        const url = page.url();
-        expect(url).not.toContain('tags=');
-    });
-
-    test('should handle browser back/forward navigation', async ({ page }) => {
-        // Start with one tag
-        await page.goto(`${reportUrl}#tags=smoke`);
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        let searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@smoke');
-
-        // Navigate to different tag
-        await page.goto(`${reportUrl}#tags=slow`);
+        const keywords = '@smoke regular-text @critical';
+        await page.locator('.mcr-search input').fill(keywords);
         await page.waitForTimeout(300);
 
-        searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@slow');
+        expect(getRouteQuery(page).get('keywords')).toBe(keywords);
+        expect(page.url()).not.toContain('tags=');
+    });
 
-        // Go back
+    test('should remove keywords from the route when search is cleared', async ({ page }) => {
+        await page.goto(getReportUrl({
+            keywords: '@smoke login'
+        }));
+        await page.waitForSelector('.mcr-search input');
+
+        await page.locator('.mcr-search input').clear();
+        await page.waitForTimeout(300);
+
+        expect(getRouteQuery(page).has('keywords')).toBe(false);
+    });
+
+    test('should restore keywords with browser back and forward', async ({ page }) => {
+        await page.goto(getReportUrl({
+            keywords: '@smoke first'
+        }));
+        await page.waitForSelector('.mcr-search input');
+        await expect(page.locator('.mcr-search input')).toHaveValue('@smoke first');
+
+        await page.goto(getReportUrl({
+            keywords: '@slow second'
+        }));
+        await expect(page.locator('.mcr-search input')).toHaveValue('@slow second');
+
         await page.goBack();
-        await page.waitForTimeout(300);
+        await expect(page.locator('.mcr-search input')).toHaveValue('@smoke first');
 
-        // Should restore @smoke
-        searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@smoke');
-
-        // Go forward
         await page.goForward();
-        await page.waitForTimeout(300);
-
-        // Should restore @slow
-        searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@slow');
+        await expect(page.locator('.mcr-search input')).toHaveValue('@slow second');
     });
 
-    test('should handle invalid/non-existent tags gracefully', async ({ page }) => {
-        // Navigate with non-existent tag
-        await page.goto(`${reportUrl}#tags=nonexistent999`);
+    test('should preserve special characters', async ({ page }) => {
+        const keywords = '@some-tag login & "quoted" / path';
+        await page.goto(getReportUrl({
+            keywords
+        }));
+        await page.waitForSelector('.mcr-search input');
 
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Check that search box shows the tag even if it doesn't exist
-        const searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@nonexistent999');
-
-        // Should show "No Results" message
-        const noResults = page.locator('.mcr-no-results');
-        await expect(noResults).toBeVisible();
+        await expect(page.locator('.mcr-search input')).toHaveValue(keywords);
+        expect(getRouteQuery(page).get('keywords')).toBe(keywords);
     });
 
-    test('should handle tags with dashes', async ({ page }) => {
-        // Navigate with tag containing dash
-        await page.goto(`${reportUrl}#tags=some-tag`);
+    test('should handle a non-existent keyword gracefully', async ({ page }) => {
+        await page.goto(getReportUrl({
+            keywords: 'nonexistent999'
+        }));
+        await page.waitForSelector('.mcr-search input');
 
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Check that it's parsed correctly
-        const searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@some-tag');
+        await expect(page.locator('.mcr-search input')).toHaveValue('nonexistent999');
+        await expect(page.locator('.mcr-no-results')).toBeVisible();
     });
 
-    test('should only sync @tag patterns to hash, not other keywords', async ({ page }) => {
-        // Navigate to report
-        await page.goto(reportUrl);
+    test('should preserve keywords on the report route', async ({ page }) => {
+        await page.goto(getReportUrl({
+            keywords: '@smoke report'
+        }, '/report'));
+        await page.waitForSelector('.mcr-search input');
 
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Type mixed content: tags and regular text
-        const searchInput = page.locator('.mcr-search input');
-        await searchInput.fill('@smoke regular-text');
-
-        // Wait for sync
-        await page.waitForTimeout(500);
-
-        // Verify only tag is in hash
-        const url = page.url();
-        expect(url).toContain('#/?tags=smoke');
-        expect(url).not.toContain('regular-text');
-    });
-
-    test('should extract multiple tags from mixed keywords', async ({ page }) => {
-        // Navigate to report
-        await page.goto(reportUrl);
-
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Type multiple tags with other text
-        const searchInput = page.locator('.mcr-search input');
-        await searchInput.fill('@smoke some text @slow more text @critical');
-
-        // Wait for sync
-        await page.waitForTimeout(500);
-
-        // Verify all tags are in hash (commas may be URL-encoded as %2C)
-        const url = page.url();
-        expect(url).toMatch(/[?&]tags=smoke(%2C|,)slow(%2C|,)critical/);
-    });
-
-    test('should handle URL encoding for tags', async ({ page }) => {
-        // Navigate with tags that might need encoding
-        await page.goto(`${reportUrl}#tags=smoke,slow`);
-
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Verify tags are parsed correctly
-        const searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@smoke @slow');
-    });
-
-    test('should persist tags when changing caseType filter', async ({ page }) => {
-        // Start with tags and failed filter
-        await page.goto(`${reportUrl}#caseType=failed&tags=smoke`);
-
-        await page.waitForSelector('.mcr-search input', {
-            timeout: 5000
-        });
-
-        // Verify initial state
-        const searchInput = page.locator('.mcr-search input');
-        await expect(searchInput).toHaveValue('@smoke');
-
-        // Verify both parameters present
-        const url = page.url();
-        expect(url).toContain('tags=smoke');
-        expect(url).toContain('caseType=failed');
+        await expect(page.locator('.mcr-search input')).toHaveValue('@smoke report');
+        expect(new URL(page.url()).hash).toContain('#/report?');
+        expect(getRouteQuery(page).get('keywords')).toBe('@smoke report');
     });
 });

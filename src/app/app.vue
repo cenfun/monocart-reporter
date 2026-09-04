@@ -372,9 +372,7 @@ import {
 import Flyover from './components/flyover.vue';
 import MetadataGrid from './components/metadata-grid.vue';
 
-import state, {
-    defaultGroups, getTagsKeywords, getTagsRouteValue
-} from './modules/state.js';
+import state, { defaultGroups } from './modules/state.js';
 import {
     getQueryValue, openReportRoute, replaceQuery
 } from './router.js';
@@ -1004,10 +1002,14 @@ const updateGridAsync = debounce(updateGrid, 200);
 
 const syncRouteState = () => {
     const routeCaseType = getQueryValue(route.query.caseType) || 'tests';
+    const routeKeywords = getQueryValue(route.query.keywords);
     const caseTypeChanged = state.caseType !== routeCaseType;
+    if (!caseTypeChanged && state.keywords === routeKeywords) {
+        return;
+    }
     replaceQuery({
         caseType: state.caseType === 'tests' ? '' : state.caseType,
-        tags: getTagsRouteValue(state.keywords),
+        keywords: state.keywords,
         title: caseTypeChanged ? '' : getQueryValue(route.query.title)
     }, caseTypeChanged ? 'home' : '');
 };
@@ -1072,7 +1074,7 @@ watch(() => state.mermaidEnabled, (v) => {
 
 watch(() => route.fullPath, () => {
     state.caseType = getQueryValue(route.query.caseType) || 'tests';
-    state.keywords = getTagsKeywords(route.query.tags);
+    state.keywords = getQueryValue(route.query.keywords);
     if (state.grid) {
         displayFlyoverWithRoute(route);
     }

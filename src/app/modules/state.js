@@ -1,6 +1,4 @@
 import { shallowReactive } from 'vue';
-import { CommonUtil } from '../common/common.js';
-import { getQueryValue } from '../router.js';
 
 export const defaultGroups = {
     group: true,
@@ -12,28 +10,6 @@ export const defaultGroups = {
     step: false,
 
     merge: false
-};
-
-// Convert comma-separated route tags to @tag keywords format.
-// Support both old format (smoke,slow) and new format (already with @).
-export const getTagsKeywords = (value) => {
-    const tags = getQueryValue(value);
-    if (!tags) {
-        return '';
-    }
-    return tags.split(',').map((t) => {
-        t = t.trim();
-        if (!t) {
-            return '';
-        }
-        return t.startsWith('@') ? t : `@${t}`;
-    }).filter(Boolean).join(' ');
-};
-
-// Extract @tag patterns from keywords for the route query.
-export const getTagsRouteValue = (keywords) => {
-    const tagMatches = `${keywords}`.match(CommonUtil.tagPattern);
-    return tagMatches && tagMatches.length ? tagMatches.map((t) => t.slice(1)).join(',') : '';
 };
 
 // do not use reactive for grid data

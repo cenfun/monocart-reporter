@@ -1,106 +1,60 @@
-# Tag Deep Linking Tests
+# Keyword Deep Linking Tests
 
-This directory contains end-to-end tests for the tag deep linking feature.
+This directory contains end-to-end tests for restoring the complete report search input from the Vue Router query.
 
 ## Overview
 
-These tests verify that the URL hash parameter `tags` works correctly for filtering tests by tags in the monocart-reporter HTML report.
+The report stores the complete search value in the `keywords` query parameter. This includes regular text, tags, or a mixture of both.
+
+Examples:
+
+```text
+#/?keywords=login%20failed
+#/?keywords=%40smoke%20%40slow
+#/?caseType=failed&keywords=%40smoke%20login
+```
 
 ## Prerequisites
 
-**IMPORTANT:** These tests require a pre-generated report at `.temp/monocart/index.html`
+These tests require a pre-generated report at:
 
-The tests will automatically skip if the report doesn't exist.
-
-## Running the Tests
-
-### Option 1: Run tests in correct order (Recommended)
-
-```bash
-# First, generate the report with example tests
-npm run test-example
-
-# Then run the tag deep linking tests
-npm run test-tag-linking
-```
-
-### Option 2: Run all tests together
-
-```bash
-# The tag deep linking tests will automatically skip if report doesn't exist
-npm test
-```
-
-The tag tests will be skipped during the main test run (before report generation) and should be run separately after.
-
-## Test Coverage
-
-The test suite includes 12 comprehensive tests:
-
-1. **Initialization from Hash**
-   - Single tag: `#tags=smoke`
-   - Multiple tags: `#tags=smoke,slow`
-   - Combined with caseType: `#caseType=failed&tags=sanity`
-
-2. **Bidirectional Sync (Keywords ↔ Hash)**
-   - Typing tags updates hash
-   - Clearing search removes tags from hash
-   - Mixed content (tags + text) only syncs tags to hash
-   - Multiple tags extracted from keywords
-
-3. **Browser Navigation**
-   - Back/forward button restores tag state correctly
-
-4. **Edge Cases**
-   - Invalid/non-existent tags handled gracefully
-   - Tags with dashes work correctly
-   - URL encoding handled properly
-   - Tags persist when changing filters
-
-## Expected Results
-
-When the report exists:
-```
-12 passed (5-6 seconds)
-```
-
-When the report doesn't exist:
-```
-12 skipped
-```
-
-## Test Report Location
-
-The tests look for the report at:
-```
+```text
 .temp/monocart/index.html
 ```
 
-This is the default location where `npm run test-example` generates the report.
-
-## Implementation Files
-
-The feature is implemented in:
-- `src/app/router.js` - Defines hash routes and migrates legacy hashes
-- `src/app/modules/state.js` - Converts between route tags and search keywords
-- `src/app/app.vue` - Synchronizes report state with Vue Router
-
-## Manual Testing
-
-You can also manually test the feature by opening the generated report:
+Generate it first with:
 
 ```bash
-# Generate report
 npm run test-example
-
-# Open report
-open .temp/monocart/index.html
-
-# Or view with monocart CLI
-npx monocart show-report .temp/monocart/index.html
 ```
 
-Then try these URLs:
-- `file:///.../index.html#tags=smoke`
-- `file:///.../index.html#tags=smoke,slow`
-- `file:///.../index.html#caseType=failed&tags=sanity`
+## Test coverage
+
+The suite covers:
+
+- regular search text initialization;
+- tag keyword initialization;
+- mixed tags and regular text;
+- synchronization from the search input to the route;
+- clearing the search query;
+- browser back and forward navigation;
+- special-character encoding;
+- non-existent keywords;
+- combination with `caseType`;
+- preservation on the report route.
+
+## Implementation files
+
+- `src/app/router.js` - Defines the standard Vue Router hash routes.
+- `src/app/modules/state.js` - Contains report UI state.
+- `src/app/app.vue` - Synchronizes `state.keywords` with `route.query.keywords`.
+
+## Manual testing
+
+Open the generated report and try URLs such as:
+
+```text
+file:///.../index.html#/?keywords=login%20failed
+file:///.../index.html#/?keywords=%40smoke%20%40slow
+file:///.../index.html#/?caseType=failed&keywords=%40smoke%20login
+```
