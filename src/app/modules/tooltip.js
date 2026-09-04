@@ -1,3 +1,5 @@
+import { initGlobalTooltips } from 'vine-ui';
+
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
 
@@ -61,45 +63,17 @@ export const bindGridTooltip = (grid) => {
     grid.bind('onCellMouseEnter', (e, d) => {
         const node = getTruncatedNode(d.cellNode);
         if (node) {
+            const dataText = d.rowItem?.[d.columnItem?.id];
+            if (dataText && typeof dataText === 'string') {
+                showTooltip(node, dataText);
+                return;
+            }
 
-            const text = d.rowItem?.[d.columnItem?.id] || node.innerText;
-
-            showTooltip(node, text);
+            showTooltip(node, node.innerText);
         }
     }).bind('onCellMouseLeave', (e, d) => {
         hideTooltip();
     });
-};
-
-const initGlobalTooltips = (onEnter, onLeave, getTooltip) => {
-    if (typeof onEnter !== 'function' || typeof onLeave !== 'function') {
-        return;
-    }
-
-    if (typeof getTooltip !== 'function') {
-        getTooltip = (target) => {
-            if (target.hasAttribute('tooltip')) {
-                return target.getAttribute('tooltip') || true;
-            }
-        };
-    }
-
-    document.body.addEventListener('mouseenter', (e) => {
-        const target = e.target;
-        const text = getTooltip(target);
-        if (text) {
-            onEnter(target, text);
-        }
-    }, true);
-
-    document.body.addEventListener('mouseleave', (e) => {
-        const target = e.target;
-        const text = getTooltip(target);
-        if (text) {
-            onLeave(target);
-        }
-    }, true);
-
 };
 
 export const initTooltip = () => {
@@ -108,17 +82,16 @@ export const initTooltip = () => {
         return;
     }
 
-    initGlobalTooltips((target, text) => {
-        // console.log(target, text);
-        if (text === true) {
-            // console.log(target.clientWidth, target.scrollWidth);
+    initGlobalTooltips((target) => {
+        const text = target.getAttribute('tooltip');
+        if (!text) {
             if (target.clientWidth < target.scrollWidth) {
                 showTooltip(target, target.innerText);
             }
             return;
         }
         showTooltip(target, text);
-    }, (target) => {
+    }, () => {
         hideTooltip();
     });
 

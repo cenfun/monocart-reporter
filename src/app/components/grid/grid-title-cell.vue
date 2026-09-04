@@ -1,6 +1,7 @@
 <template>
   <div :class="['grid-title-cell', isCaseClickable ? 'tg-cell-open' : '']">
     <div
+      tooltip
       class="grid-title-content"
       v-html="formattedValue"
     />
