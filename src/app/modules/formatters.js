@@ -7,7 +7,7 @@ import { marked } from 'marked';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
-import { tagsFormatter, titleTagsFormatter } from './title-tags.js';
+import { tagsFormatter } from './title-tags.js';
 
 import GridTitleCell from '../components/grid/grid-title-cell.vue';
 
@@ -156,6 +156,7 @@ const formatters = {
         return defaultFormatter('', rowItem, columnItem, cellNode);
     },
 
+    // Formats tags for a standalone custom column configured with formatter: 'tags'.
     tags: function(value, rowItem, columnItem, cellNode) {
         return tagsFormatter(value);
     },
@@ -222,7 +223,6 @@ const formatters = {
 
 export {
     formatters,
-    titleTagsFormatter,
     markdownFormatter,
     mergeAnnotations
 };
