@@ -56,7 +56,7 @@ try {
     });
 
     console.log(EC.magenta(`Preparing ${releaseType} release from ${currentVersion}`));
-    run('npm', ['version', releaseType, '-m', 'chore(release): %s']);
+    run('npm', ['version', releaseType, '--tag-version-prefix=', '-m', 'chore(release): %s']);
 
     nextVersion = JSON.parse(fs.readFileSync(packagePath, 'utf8')).version;
     console.log(`Version: ${EC.cyan(currentVersion)} -> ${EC.green(nextVersion)}`);

@@ -32,7 +32,7 @@
         "build": "vite build",
         "lint": "eslint src/ --fix && stylelint \"src/**/*.scss\"",
         "version": "npm run build",
-        "publish": "node ./scripts/publish.js",
+        "publish": "node ./scripts/publish.mjs",
         "patch": "npm run publish -- patch",
         "mock-download": "node ./scripts/mock-download.js",
         "mock-serve": "node ./scripts/mock-serve.js",
