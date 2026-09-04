@@ -128,11 +128,11 @@ const generate = async () => {
     }).gif({
         loop: 0,
         delay: delays,
-        colours: 128,
+        colours: 256,
         effort: 10,
-        dither: 0.5,
-        interFrameMaxError: 6,
-        interPaletteMaxError: 6
+        dither: 0,
+        interFrameMaxError: 0,
+        interPaletteMaxError: 0
     }).toFile(outputPath);
 
     const metadata = await sharp(outputPath, {

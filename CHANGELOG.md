@@ -1,8 +1,12 @@
 ## Changelog
 
-* Unreleased
+* 2.13.0
   - feat: optionally include descendants when searching (#208)
-  - feat: preserve complete search keywords and report, detail, and network request state in URL routes
+  - feat: preserve complete search keywords and report, detail, and network request state with Vue Router deep links
+  - changed deep-link URLs to hash routes (`#/report`, `#/detail/:id`, and `#/request/:id`) and replaced the tag-only `tags` parameter with `keywords`
+  - improved grouping controls, title/tag rendering, detail layouts, switches, and tooltips
+  - migrated the frontend build to Vite and consolidated utilities shared by browser and Node.js code
+  - updated the report preview animation and removed unused UI assets
 
 * 2.12.6
   - feat: sort search tags alphabetically and overflow list (#206)
