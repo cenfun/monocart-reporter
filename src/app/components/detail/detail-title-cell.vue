@@ -207,7 +207,6 @@ const onRowUpdate = () => {
 .mcr-detail-head {
     position: relative;
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
     align-items: center;
     min-height: 26px;
@@ -243,6 +242,10 @@ const onRowUpdate = () => {
 
     a {
         color: inherit;
+    }
+
+    .mcr-tags {
+        flex-wrap: wrap;
     }
 }
 

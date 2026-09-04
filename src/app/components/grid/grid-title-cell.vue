@@ -3,6 +3,7 @@
     <div
       v-if="hasTitleTags"
       tooltip
+      :tooltip-text="titleText(titleItems)"
       class="grid-title-tags mcr-tags"
     >
       <template
@@ -11,7 +12,7 @@
       >
         <span
           v-if="item.tag"
-          :class="item.className"
+          class="mcr-tag"
           :style="item.style"
           :tooltip="item.description || undefined"
         >{{ item.key }}</span>
@@ -70,12 +71,24 @@ const hasTitleTags = computed(() => {
     return Boolean(title.value.match(Util.tagPattern)) || Util.isList(rowItem.tags);
 });
 
+const titleText = (list) => {
+    const ls = [];
+    list.forEach((item) => {
+        if (item.tag) {
+            ls.push(`@${item.key}`);
+        } else {
+            ls.push(item.text);
+        }
+    });
+
+    return ls.join(' ');
+};
+
 const getTagItem = (key) => {
     const tag = state.tagMap[key] || {};
     return {
         tag: true,
         key,
-        className: 'mcr-tag',
         style: tag.style,
         description: tag.description
     };

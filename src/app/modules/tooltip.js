@@ -60,6 +60,10 @@ const getTruncatedNode = (node) => {
 };
 
 export const bindGridTooltip = (grid) => {
+    if (Util.isTouchDevice()) {
+        return;
+    }
+
     grid.bind('onCellMouseEnter', (e, d) => {
         const node = getTruncatedNode(d.cellNode);
         if (node) {
@@ -68,7 +72,6 @@ export const bindGridTooltip = (grid) => {
                 showTooltip(node, dataText);
                 return;
             }
-
             showTooltip(node, node.innerText);
         }
     }).bind('onCellMouseLeave', (e, d) => {
@@ -86,7 +89,8 @@ export const initTooltip = () => {
         const text = target.getAttribute('tooltip');
         if (!text) {
             if (target.clientWidth < target.scrollWidth) {
-                showTooltip(target, target.innerText);
+                const tooltipText = target.getAttribute('tooltip-text') || target.innerText;
+                showTooltip(target, tooltipText);
             }
             return;
         }
