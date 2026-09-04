@@ -1,4 +1,6 @@
-import { createApp } from 'vue';
+import {
+    createApp, h, nextTick
+} from 'vue';
 import { VuiIconLabel } from 'vine-ui';
 
 import { marked } from 'marked';
@@ -6,6 +8,25 @@ import { marked } from 'marked';
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
 
+import GridTitleCell from '../components/grid/grid-title-cell.vue';
+
+
+// ===========================================================================
+
+const createGridTitleCell = (rowItem, columnItem, cellNode) => {
+    const container = cellNode.querySelector('.tg-tree-name');
+
+    if (container) {
+        createApp({
+            render() {
+                return h(GridTitleCell, {
+                    rowItem,
+                    columnItem
+                });
+            }
+        }).mount(container);
+    }
+};
 
 // ===========================================================================
 
@@ -203,20 +224,15 @@ const formatters = {
     },
 
     tree: function(value, rowItem, columnItem, cellNode) {
-        let formattedValue = titleTagsFormatter(rowItem, columnItem);
-        const defaultFormatter = this.getDefaultFormatter('tree');
 
-        if (rowItem.type === 'suite' && rowItem.caseNum) {
-            // add case number for suite
-            formattedValue = `${formattedValue} <span class="mcr-num">${Util.NF(rowItem.caseNum)}</span>`;
-        } else if (rowItem.type === 'case') {
-            // add open icon for case
-            formattedValue = `<div class="tg-cell-open">${formattedValue}</div>`;
-        } else if (rowItem.type === 'step' && rowItem.count) {
-            // add count number for step
-            formattedValue = `${formattedValue} <span class="mcr-num mcr-count">${Util.NF(rowItem.count)}</span>`;
-        }
-        return defaultFormatter(formattedValue, rowItem, columnItem, cellNode);
+        nextTick(() => {
+            createGridTitleCell(rowItem, columnItem, cellNode);
+        });
+
+        const defaultFormatter = this.getDefaultFormatter('tree');
+        // async create vue component
+        // tg-tree-name
+        return defaultFormatter('', rowItem, columnItem, cellNode);
     },
 
     tags: function(value, rowItem, columnItem, cellNode) {

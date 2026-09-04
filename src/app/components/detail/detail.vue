@@ -15,7 +15,7 @@ import { initDataColumns, getPositionId } from '../../modules/detail.js';
 import emitter from '../../modules/emitter.js';
 import { renderMermaid } from '../../modules/mermaid.js';
 
-import DetailInfo from './detail-info.vue';
+import DetailTitleCell from './detail-title-cell.vue';
 
 
 const data = shallowReactive({
@@ -27,14 +27,13 @@ const suiteCache = {};
 
 // ===========================================================================
 
-const createDetailInfo = (rowItem, columnItem, cellNode) => {
-
+const createDetailTitleCell = (rowItem, columnItem, cellNode) => {
     const container = cellNode.querySelector('.tg-tree-name');
 
     if (container) {
         createApp({
             render() {
-                return h(DetailInfo, {
+                return h(DetailTitleCell, {
                     rowItem,
                     columnItem
                 });
@@ -181,7 +180,7 @@ const initGrid = () => {
         tree: function(value, rowItem, columnItem, cellNode) {
 
             nextTick(() => {
-                createDetailInfo(rowItem, columnItem, cellNode);
+                createDetailTitleCell(rowItem, columnItem, cellNode);
             });
 
             const defaultFormatter = this.getDefaultFormatter('tree');
