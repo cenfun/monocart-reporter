@@ -10,7 +10,11 @@ import { build as viteBuild, defineConfig } from 'vite';
 
 const APP_ID = 'monocart-reporter-app';
 const NETWORK_ID = 'monocart-reporter-network';
+const PLATFORM_SHARE_ID = 'monocart-platform-share';
 const rootDir = import.meta.dirname;
+const platformShareAlias = {
+    [PLATFORM_SHARE_ID]: path.resolve(rootDir, 'lib/platform/share.js')
+};
 
 const timestamp = (postfix) => {
     let ts = new Date(Date.now() - new Date().getTimezoneOffset() * 60 * 1000).toISOString().slice(2, 19);
@@ -130,6 +134,9 @@ const createUiBuild = (id, entry, emptyOutDir) => ({
         cssInjectedByJs()
     ],
     publicDir: false,
+    resolve: {
+        alias: platformShareAlias
+    },
     build: {
         outDir: path.resolve(rootDir, 'dist'),
         rolldownOptions: {
@@ -212,6 +219,12 @@ export default defineConfig(({ command, mode }) => {
             root: rootDir,
             publicDir: false,
             define,
+            resolve: {
+                alias: platformShareAlias
+            },
+            optimizeDeps: {
+                include: [PLATFORM_SHARE_ID]
+            },
             plugins: [
                 vue()
             ],

@@ -1,6 +1,5 @@
 import { shallowReactive } from 'vue';
-import { hash } from '../common/common.js';
-
+import { hash, CommonUtil } from '../common/common.js';
 
 export const defaultGroups = {
     group: true,
@@ -13,10 +12,6 @@ export const defaultGroups = {
 
     merge: false
 };
-
-// Extract @tag patterns from keywords and sync to hash
-// support tag names with special chars: @feature:tags, @failed@flaky, @some-tag
-export const tagPattern = /@[\w:-]+(?:@[\w:-]+)*/g;
 
 // Convert comma-separated tags from hash to @tag keywords format
 // support both old format (smoke,slow) and new format (already with @)
@@ -36,7 +31,7 @@ export const getTagsKeywords = () => {
 
 // Extract @tag patterns from keywords and sync to hash
 export const syncTagsToHash = (keywords) => {
-    const tagMatches = `${keywords}`.match(tagPattern);
+    const tagMatches = `${keywords}`.match(CommonUtil.tagPattern);
     if (tagMatches && tagMatches.length > 0) {
         hash.set('tags', tagMatches.map((t) => t.slice(1)).join(','));
     } else {

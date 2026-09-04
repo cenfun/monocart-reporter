@@ -33,9 +33,9 @@ const getTag = (key, before, after) => {
 const tagsFormatter = (tags) => {
     const list = [];
     if (Util.isList(tags)) {
-        const len = tags.length;
-        tags.forEach((tag, i) => {
-            const key = `${tag}`.slice(1);
+        const keys = Util.getTagKeys(tags);
+        const len = keys.length;
+        keys.forEach((key, i) => {
             const before = i === 0;
             const after = i !== len - 1;
             list.push(getTag(key, before, after));
@@ -44,42 +44,4 @@ const tagsFormatter = (tags) => {
     return list.join('');
 };
 
-const titleTagsFormatter = (rowItem, columnItem) => {
-    const title = Util.quoteAttr(rowItem.title);
-
-    if (columnItem && columnItem.titleTagsDisabled) {
-        return title;
-    }
-
-    if (!Util.isTagItem(rowItem)) {
-        return title;
-    }
-
-    const titleTags = [];
-    let newTitle = title.replace(Util.tagPattern, function(all, before, key, after) {
-        titleTags.push(`@${key}`);
-        return getTag(key, before, after);
-    });
-
-    // new syntax in playwright v1.42
-    if (rowItem.tags) {
-        // remove tags which is already in title
-        const tags = rowItem.tags.filter((it) => !titleTags.includes(it));
-        const len = tags.length;
-        if (len) {
-            newTitle += tags.map((it, i) => {
-                const key = `${it}`.slice(1);
-                const before = i === 0;
-                const after = i !== len - 1;
-                return getTag(key, before, after);
-            }).join('');
-        }
-    }
-
-    return newTitle;
-};
-
-export {
-    tagsFormatter,
-    titleTagsFormatter
-};
+export { tagsFormatter };

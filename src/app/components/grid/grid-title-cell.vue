@@ -1,10 +1,30 @@
 <template>
   <div :class="['grid-title-cell', isCaseClickable ? 'tg-cell-open' : '']">
     <div
+      v-if="hasTitleTags"
+      tooltip
+      class="grid-title-tags"
+    >
+      <template
+        v-for="(item, i) of titleItems"
+        :key="i"
+      >
+        <span
+          v-if="item.tag"
+          :class="item.className"
+          :style="item.style"
+          :tooltip="item.description || undefined"
+        >{{ item.key }}</span>
+        <span v-else>{{ item.text }}</span>
+      </template>
+    </div>
+    <div
+      v-else
       tooltip
       class="grid-title-content"
-      v-html="formattedValue"
-    />
+    >
+      {{ title }}
+    </div>
     <div
       v-if="caseNum"
       class="mcr-num"
@@ -24,7 +44,7 @@
 import { computed } from 'vue';
 
 import Util from '../../utils/util.js';
-import { titleTagsFormatter } from '../../modules/title-tags.js';
+import state from '../../modules/state.js';
 
 const props = defineProps({
     rowItem: {
@@ -41,7 +61,82 @@ const props = defineProps({
     }
 });
 
-const formattedValue = computed(() => titleTagsFormatter(props.rowItem, props.columnItem));
+const title = computed(() => `${props.rowItem.title}`);
+const hasTitleTags = computed(() => {
+    const rowItem = props.rowItem;
+    if (props.columnItem.titleTagsDisabled || !Util.isTagItem(rowItem)) {
+        return false;
+    }
+    return Boolean(title.value.match(Util.tagPattern)) || Util.isList(rowItem.tags);
+});
+
+const getTagItem = (key, before, after) => {
+    const className = ['mcr-tag'];
+    if (before) {
+        className.push('mcr-tag-before');
+    }
+    if (after) {
+        className.push('mcr-tag-after');
+    }
+
+    const tag = state.tagMap[key] || {};
+    return {
+        tag: true,
+        key,
+        className,
+        style: tag.style,
+        description: tag.description
+    };
+};
+
+const titleItems = computed(() => {
+    const rowItem = props.rowItem;
+    const titleValue = title.value;
+    const list = [];
+    const titleTags = [];
+    let lastIndex = 0;
+
+    const matches = titleValue.matchAll(Util.tagPattern);
+    for (const match of matches) {
+        const [all, key] = match;
+        const index = match.index;
+        let textBefore = titleValue.slice(lastIndex, index);
+        const beforeMatch = textBefore.match(/\s+$/);
+        const afterIndex = index + all.length;
+        const afterMatch = titleValue.slice(afterIndex).match(/^\s+/);
+
+        if (beforeMatch) {
+            textBefore = textBefore.slice(0, -beforeMatch[0].length);
+        }
+        if (textBefore) {
+            list.push({
+                text: textBefore
+            });
+        }
+
+        titleTags.push(all);
+        list.push(getTagItem(key, Boolean(beforeMatch), Boolean(afterMatch)));
+        lastIndex = afterIndex + (afterMatch ? afterMatch[0].length : 0);
+    }
+
+    if (lastIndex < titleValue.length) {
+        list.push({
+            text: titleValue.slice(lastIndex)
+        });
+    }
+
+    // New tag syntax introduced in Playwright v1.42. Do not render tags
+    // already present in the title a second time.
+    if (rowItem.tags) {
+        const tags = Util.getTagKeys(rowItem.tags).filter((key) => !titleTags.includes(`@${key}`));
+        tags.forEach((key, i) => {
+            list.push(getTagItem(key, i === 0, i !== tags.length - 1));
+        });
+    }
+
+    return list;
+});
+
 const isCaseClickable = computed(() => props.rowItem.type === 'case' && props.caseClickable);
 const caseNum = computed(() => {
     if (props.rowItem.type === 'suite' && props.rowItem.caseNum) {
@@ -66,7 +161,8 @@ const stepCount = computed(() => {
     align-items: center;
 }
 
-.grid-title-content {
+.grid-title-content,
+.grid-title-tags {
     min-width: 0;
     text-overflow: ellipsis;
     overflow: hidden;

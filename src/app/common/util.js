@@ -1,5 +1,5 @@
 import { Util } from 'turbogrid';
-import Share from './share.js';
+import Share from 'monocart-platform-share';
 
 const CommonUtil = {
     ... Util,
