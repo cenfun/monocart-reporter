@@ -1,6 +1,9 @@
 <template>
-  <div :class="['grid-title-cell', isCase ? 'tg-cell-open' : '']">
-    <div v-html="formattedValue" />
+  <div :class="['grid-title-cell', isCaseClickable ? 'tg-cell-open' : '']">
+    <div
+      class="grid-title-content"
+      v-html="formattedValue"
+    />
     <div
       v-if="caseNum"
       class="mcr-num"
@@ -30,11 +33,15 @@ const props = defineProps({
     columnItem: {
         type: Object,
         default: () => ({})
+    },
+    caseClickable: {
+        type: Boolean,
+        default: true
     }
 });
 
 const formattedValue = computed(() => titleTagsFormatter(props.rowItem, props.columnItem));
-const isCase = computed(() => props.rowItem.type === 'case');
+const isCaseClickable = computed(() => props.rowItem.type === 'case' && props.caseClickable);
 const caseNum = computed(() => {
     if (props.rowItem.type === 'suite' && props.rowItem.caseNum) {
         return Util.NF(props.rowItem.caseNum);
@@ -56,6 +63,12 @@ const stepCount = computed(() => {
     display: flex;
     gap: 5px;
     align-items: center;
+}
+
+.grid-title-content {
+    min-width: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 </style>

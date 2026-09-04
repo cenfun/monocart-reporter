@@ -31,8 +31,18 @@
           {{ data.caseType }}
         </div>
 
+        <GridTitleCell
+          v-if="useGridTitleCell"
+          :row-item="rowItem"
+          :column-item="titleColumn"
+          :case-clickable="false"
+          :class="titleClass"
+          tooltip
+        />
+
         <div
-          :class="['mcr-detail-title', (data.showStepsCollapse||data.showAttachmentsCollapse)?'':'mcr-flex-auto']"
+          v-else
+          :class="titleClass"
           tooltip
           v-html="data.html"
         />
@@ -87,9 +97,9 @@ import {
 } from 'vine-ui';
 
 import Util from '../../utils/util.js';
-import { titleTagsFormatter } from '../../modules/title-tags.js';
 import state from '../../modules/state.js';
 
+import GridTitleCell from '../grid/grid-title-cell.vue';
 import DurationLocation from './duration-location.vue';
 import DetailSimpleList from './detail-simple-list.vue';
 import DetailColumn from './detail-column.vue';
@@ -120,6 +130,13 @@ const classMap = computed(() => {
     return ls;
 });
 
+const useGridTitleCell = computed(() => ['suite', 'case', 'step'].includes(props.rowItem.type));
+const titleColumn = computed(() => state.columns.find((it) => it.id === 'title') || props.columnItem);
+const titleClass = computed(() => [
+    'mcr-detail-title',
+    data.showStepsCollapse || data.showAttachmentsCollapse ? '' : 'mcr-flex-auto'
+]);
+
 // eslint-disable-next-line complexity
 onMounted(() => {
     const rowItem = props.rowItem;
@@ -135,14 +152,10 @@ onMounted(() => {
     if (rowItem.type === 'case') {
         data.caseType = rowItem.caseType;
         data.classStatus = ['mcr-detail-status', `mcr-status-${rowItem.caseType}`];
-        const titleColumn = state.columns.find((it) => it.id === 'title');
-        data.html = titleTagsFormatter(rowItem, titleColumn);
         return;
     }
 
     if (rowItem.type === 'step') {
-        // step
-        data.html = Util.quoteAttr(rowItem.title);
         return;
     }
 
