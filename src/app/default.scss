@@ -630,6 +630,7 @@ a:not([href], [class]):hover {
 .mcr-num {
     position: relative;
     display: inline-block;
+    flex-shrink: 0;
     height: 18px;
     min-width: 18px;
     padding: 0 5px;

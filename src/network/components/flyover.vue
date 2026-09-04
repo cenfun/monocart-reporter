@@ -17,7 +17,7 @@
         <template #left>
           <div class="mcr-tab-left">
             <VuiIconLabel
-              icon="arrow-right"
+              icon="d-arrow-right"
               size="20px"
               button
               @click="state.flyoverVisible=false"
