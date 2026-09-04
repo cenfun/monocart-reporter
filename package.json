@@ -35,7 +35,8 @@
         "publish": "node ./scripts/publish.js",
         "patch": "npm run publish -- patch",
         "mock-download": "node ./scripts/mock-download.js",
-        "mock-serve": "node ./scripts/mock-serve.js"
+        "mock-serve": "node ./scripts/mock-serve.js",
+        "docs-report-gif": "node ./scripts/generate-report-gif.js"
     },
     "files": [
         "lib"
@@ -84,6 +85,7 @@
         "rollup-plugin-visualizer": "^7.1.1",
         "sanitize-filename": "^1.6.4",
         "sass": "^1.103.1",
+        "sharp": "^0.35.3",
         "stack-utils": "^2.0.6",
         "stylelint": "^17.14.1",
         "stylelint-config-plus": "^1.2.0",
