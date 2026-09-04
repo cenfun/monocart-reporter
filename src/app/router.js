@@ -1,16 +1,25 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
+// Routes are used to synchronize application state with the URL. The app does
+// not render them through RouterView, but Vue Router still requires a component.
+const RouteState = {
+    render: () => null
+};
+
 const router = createRouter({
     history: createWebHashHistory(),
     routes: [{
         path: '/',
-        name: 'home'
+        name: 'home',
+        component: RouteState
     }, {
         path: '/report',
-        name: 'report'
+        name: 'report',
+        component: RouteState
     }, {
         path: '/detail/:id',
-        name: 'detail'
+        name: 'detail',
+        component: RouteState
     }, {
         path: '/:pathMatch(.*)*',
         redirect: {
