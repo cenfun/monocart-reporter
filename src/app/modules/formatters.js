@@ -7,7 +7,6 @@ import { marked } from 'marked';
 
 import Util from '../utils/util.js';
 import state from '../modules/state.js';
-import { tagsFormatter } from './title-tags.js';
 
 import GridTitleCell from '../components/grid/grid-title-cell.vue';
 
@@ -110,6 +109,42 @@ const markdownFormatter = (str, inline) => {
         return marked.parseInline(str, markedOptions);
     }
     return `<div class="markdown-body">${marked.parse(str, markedOptions)}</div>`;
+};
+
+// ===========================================================================
+
+const getTag = (key) => {
+    const list = [];
+    list.push('<span class="mcr-tag"');
+
+    const tag = state.tagMap[key];
+    if (tag) {
+        const { style, description } = tag;
+        if (style) {
+            list.push(` style="${Util.quoteAttr(Util.styleMap(style))}"`);
+        }
+        if (description) {
+            list.push(` tooltip="${Util.quoteAttr(description)}"`);
+        }
+    }
+
+    list.push(`>${key}</span>`);
+
+    return list.join('');
+};
+
+const tagsFormatter = (tags) => {
+    const list = [];
+    if (Util.isList(tags)) {
+        const keys = Util.getTagKeys(tags);
+        keys.forEach((key) => {
+            list.push(getTag(key));
+        });
+    }
+    if (!list.length) {
+        return '';
+    }
+    return `<span class="mcr-tags">${list.join('')}</span>`;
 };
 
 // ===========================================================================

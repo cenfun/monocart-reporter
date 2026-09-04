@@ -175,12 +175,14 @@ a:not([href], [class]):hover {
     background: gray;
 }
 
-.mcr-tag-before {
-    margin-left: 5px;
-}
+.mcr-tags {
+    display: inline-flex;
+    gap: 3px;
+    align-items: center;
 
-.mcr-tag-after {
-    margin-right: 5px;
+    span {
+        flex-shrink: 0;
+    }
 }
 
 /* header */

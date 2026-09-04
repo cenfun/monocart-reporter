@@ -3,7 +3,7 @@
     <div
       v-if="hasTitleTags"
       tooltip
-      class="grid-title-tags"
+      class="grid-title-tags mcr-tags"
     >
       <template
         v-for="(item, i) of titleItems"
@@ -70,20 +70,12 @@ const hasTitleTags = computed(() => {
     return Boolean(title.value.match(Util.tagPattern)) || Util.isList(rowItem.tags);
 });
 
-const getTagItem = (key, before, after) => {
-    const className = ['mcr-tag'];
-    if (before) {
-        className.push('mcr-tag-before');
-    }
-    if (after) {
-        className.push('mcr-tag-after');
-    }
-
+const getTagItem = (key) => {
     const tag = state.tagMap[key] || {};
     return {
         tag: true,
         key,
-        className,
+        className: 'mcr-tag',
         style: tag.style,
         description: tag.description
     };
@@ -115,7 +107,7 @@ const titleItems = computed(() => {
         }
 
         titleTags.push(all);
-        list.push(getTagItem(key, Boolean(beforeMatch), Boolean(afterMatch)));
+        list.push(getTagItem(key));
         lastIndex = afterIndex + (afterMatch ? afterMatch[0].length : 0);
     }
 
@@ -129,8 +121,8 @@ const titleItems = computed(() => {
     // already present in the title a second time.
     if (rowItem.tags) {
         const tags = Util.getTagKeys(rowItem.tags).filter((key) => !titleTags.includes(`@${key}`));
-        tags.forEach((key, i) => {
-            list.push(getTagItem(key, i === 0, i !== tags.length - 1));
+        tags.forEach((key) => {
+            list.push(getTagItem(key));
         });
     }
 
