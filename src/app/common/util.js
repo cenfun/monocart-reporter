@@ -1,9 +1,9 @@
 import { Util } from 'turbogrid';
-import Share from 'monocart-platform-share';
+import * as Shared from '../../shared/index.js';
 
 const CommonUtil = {
     ... Util,
-    ... Share,
+    ... Shared,
 
     isTouchDevice: function() {
         return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
