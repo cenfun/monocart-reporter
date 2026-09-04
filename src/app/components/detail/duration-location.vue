@@ -79,12 +79,9 @@ onMounted(() => {
     flex-shrink: 0;
     gap: 10px;
     align-items: center;
+    max-width: 50%;
     font-weight: normal;
     text-overflow: ellipsis;
     overflow: hidden;
-
-    > * {
-        flex-shrink: 0;
-    }
 }
 </style>
