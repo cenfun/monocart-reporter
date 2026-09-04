@@ -1,18 +1,20 @@
 import { Grid } from 'turbogrid';
-import { hash } from '../common/common.js';
 
 import Util from '../utils/util.js';
+import router, {
+    closeFlyoverRoute, getQueryValue, openDetailRoute
+} from '../router.js';
 import { formatters } from './formatters.js';
 import state from '../modules/state.js';
 import { getGridRows } from './grid-rows.js';
 import { bindGridTooltip } from './tooltip.js';
 import { setPosition, isClickableColumns } from './detail.js';
 
-export const hideFlyover = (immediately) => {
+export const hideFlyover = (updateRoute) => {
     state.flyoverVisible = false;
     state.flyoverData = null;
-    if (immediately) {
-        hash.remove('page');
+    if (updateRoute) {
+        closeFlyoverRoute(true);
     }
 };
 
@@ -35,60 +37,34 @@ const showDetailRowAndFocus = (grid, rowItem) => {
     showFlyover('detail', rowItem);
 };
 
-const showDetail = (pagePath) => {
+const showDetail = (id, title) => {
     const grid = state.grid;
-    if (!pagePath || !grid) {
+    if (!id || !grid) {
         return;
     }
 
-    const list = pagePath.split('/');
-    const id = list.shift();
-    const title = list.join('/');
-    // console.log('page:', page, 'id:', id, 'title:', title);
-
-    // match id
-    if (id) {
-        const rowItem = grid.getRowItemById(id);
-        if (rowItem) {
-            showDetailRowAndFocus(grid, rowItem);
-            return true;
-        }
-    }
-
-    // only match title
-    if (title) {
-        const rowItem = grid.getRowItemBy('title', title);
-        if (rowItem) {
-            showDetailRowAndFocus(grid, rowItem);
-            return true;
-        }
+    const rowItem = grid.getRowItemById(id) || (title && grid.getRowItemBy('title', title));
+    if (rowItem) {
+        showDetailRowAndFocus(grid, rowItem);
+        return true;
     }
 };
 
-export const displayFlyoverWithHash = () => {
+export const displayFlyoverWithRoute = (route = router.currentRoute.value) => {
+    if (route.name === 'report') {
+        showFlyover('report');
+        return;
+    }
 
-    const page = hash.get('page');
-    if (page) {
-
-        const list = page.split('/');
-        const pageName = list.shift();
-        const pagePath = list.join('/');
-
-        if (pageName === 'report') {
-            showFlyover('report');
+    if (route.name === 'detail') {
+        const id = getQueryValue(route.params.id);
+        const title = getQueryValue(route.query.title);
+        if (showDetail(id, title)) {
             return;
         }
-
-        if (pageName === 'detail') {
-            if (showDetail(pagePath)) {
-                return;
-            }
-        }
-
     }
 
     hideFlyover();
-
 };
 
 const getClickCaseItem = (rowItem) => {
@@ -107,9 +83,7 @@ const getClickCaseItem = (rowItem) => {
 };
 
 const showRowDetail = (caseItem) => {
-    showFlyover('detail', caseItem);
-    const { id, title } = caseItem;
-    hash.set('page', `detail/${id}/${title}`);
+    openDetailRoute(caseItem);
 };
 
 const onRowClickHandler = (d, force) => {
@@ -296,7 +270,7 @@ const bindGridEvents = () => {
     // });
 
     grid.bind('onFirstUpdated', (e) => {
-        displayFlyoverWithHash();
+        displayFlyoverWithRoute();
         initTitleWidthHandler(grid);
     });
 };

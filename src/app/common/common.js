@@ -3,7 +3,6 @@ import inflate from 'lz-utils/inflate';
 import niceTicks from 'nice-ticks';
 import { saveAs } from 'file-saver';
 
-import hash from './hash.js';
 import store from './store.js';
 
 import decodeIcons from './icons.js';
@@ -27,7 +26,6 @@ export {
     niceTicks,
     saveAs,
 
-    hash,
     store,
 
     decodeIcons,

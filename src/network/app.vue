@@ -44,8 +44,9 @@
 
 <script setup>
 import {
-    shallowReactive, onMounted, provide, createApp, watchEffect
+    shallowReactive, onMounted, provide, createApp, watch, watchEffect
 } from 'vue';
+import { useRoute } from 'vue-router';
 import {
     VuiFlex,
     VuiTooltip,
@@ -63,9 +64,12 @@ import Util from './utils/util.js';
 import Flyover from './components/flyover.vue';
 import Waterfall from './components/waterfall.vue';
 import Timing from './components/timing.vue';
+import { openRequestRoute } from './router.js';
 
 
 // =================================================================================
+const route = useRoute();
+
 // do not use reactive for grid data
 const state = shallowReactive({
     title: '',
@@ -194,15 +198,31 @@ const initFlyoverSize = () => {
     state.flyoverWidth = flyoverWidth;
 };
 
-// const hideFlyover = () => {
-//     state.flyoverVisible = false;
-//     state.flyoverData = null;
-// };
+const displayRequestWithRoute = () => {
+    if (route.name !== 'request' || !state.entryMap || !state.grid) {
+        state.flyoverVisible = false;
+        state.flyoverData = null;
+        return;
+    }
 
-const showFlyover = (rowItem) => {
+    const id = `${route.params.id || ''}`;
+    const rowItem = state.grid.getRowItemById(id);
+    if (!rowItem) {
+        state.flyoverVisible = false;
+        state.flyoverData = null;
+        return;
+    }
+
+    state.grid.scrollRowIntoView(rowItem);
+    state.grid.selectAll(false);
+    state.grid.setRowSelected(rowItem);
     state.flyoverData = rowItem.id;
     state.flyoverTitle = rowItem.name;
     state.flyoverVisible = true;
+};
+
+const showFlyover = (rowItem) => {
+    openRequestRoute(rowItem.id);
 };
 
 // =================================================================================
@@ -257,8 +277,8 @@ const bindGridEvents = (grid) => {
     });
 
 
-    grid.bind('onFirstUpdated', (e) => {
-
+    grid.bind('onFirstUpdated', () => {
+        displayRequestWithRoute();
     });
 };
 
@@ -596,8 +616,10 @@ const getGridData = () => {
 
     const entries = state.reportData.log.entries;
     const entryMap = {};
-    entries.forEach((entry) => {
-        const id = Util.uid();
+    entries.forEach((entry, index) => {
+        // HAR entries have no required id. Use their stable source position so
+        // request routes continue to work after a page reload.
+        const id = `request-${index}`;
         entry.id = id;
         entryMap[id] = entry;
         entry.timestampStart = new Date(entry.startedDateTime).getTime();
@@ -745,6 +767,14 @@ const init = async () => {
 
 onMounted(() => {
     init();
+});
+
+watch(() => route.fullPath, () => {
+    if (state.grid) {
+        displayRequestWithRoute();
+    }
+}, {
+    immediate: true
 });
 
 window.addEventListener('resize', () => {

@@ -1,5 +1,6 @@
 import { shallowReactive } from 'vue';
-import { hash, CommonUtil } from '../common/common.js';
+import { CommonUtil } from '../common/common.js';
+import { getQueryValue } from '../router.js';
 
 export const defaultGroups = {
     group: true,
@@ -13,30 +14,26 @@ export const defaultGroups = {
     merge: false
 };
 
-// Convert comma-separated tags from hash to @tag keywords format
-// support both old format (smoke,slow) and new format (already with @)
-export const getTagsKeywords = () => {
-    const tags = hash.get('tags');
-    if (tags) {
-        return tags.split(',').map((t) => {
-            t = t.trim();
-            if (!t) {
-                return '';
-            }
-            return t.startsWith('@') ? t : `@${t}`;
-        }).filter(Boolean).join(' ');
+// Convert comma-separated route tags to @tag keywords format.
+// Support both old format (smoke,slow) and new format (already with @).
+export const getTagsKeywords = (value) => {
+    const tags = getQueryValue(value);
+    if (!tags) {
+        return '';
     }
-    return '';
+    return tags.split(',').map((t) => {
+        t = t.trim();
+        if (!t) {
+            return '';
+        }
+        return t.startsWith('@') ? t : `@${t}`;
+    }).filter(Boolean).join(' ');
 };
 
-// Extract @tag patterns from keywords and sync to hash
-export const syncTagsToHash = (keywords) => {
+// Extract @tag patterns from keywords for the route query.
+export const getTagsRouteValue = (keywords) => {
     const tagMatches = `${keywords}`.match(CommonUtil.tagPattern);
-    if (tagMatches && tagMatches.length > 0) {
-        hash.set('tags', tagMatches.map((t) => t.slice(1)).join(','));
-    } else {
-        hash.remove('tags');
-    }
+    return tagMatches && tagMatches.length ? tagMatches.map((t) => t.slice(1)).join(',') : '';
 };
 
 // do not use reactive for grid data
@@ -48,12 +45,12 @@ const state = shallowReactive({
     summary: {},
 
     // filter
-    keywords: getTagsKeywords(),
+    keywords: '',
     searchableAllKeys: [],
     searchableKeys: [],
     includeDescendants: false,
 
-    caseType: hash.get('caseType') || 'tests',
+    caseType: 'tests',
 
     groups: shallowReactive({
         ... defaultGroups

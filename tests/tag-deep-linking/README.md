@@ -81,8 +81,9 @@ This is the default location where `npm run test-example` generates the report.
 ## Implementation Files
 
 The feature is implemented in:
-- `src/app/modules/state.js` - Initializes keywords from tags hash
-- `src/app/app.vue` - Syncs keywords to/from hash, handles popstate
+- `src/app/router.js` - Defines hash routes and migrates legacy hashes
+- `src/app/modules/state.js` - Converts between route tags and search keywords
+- `src/app/app.vue` - Synchronizes report state with Vue Router
 
 ## Manual Testing
 

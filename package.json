@@ -93,6 +93,7 @@
         "vite": "^8.2.2",
         "vite-plugin-css-injected-by-js": "^5.0.2",
         "vue": "^3.5.42",
+        "vue-router": "^4.6.4",
         "ws": "^8.21.3",
         "yazl": "^3.3.1"
     }

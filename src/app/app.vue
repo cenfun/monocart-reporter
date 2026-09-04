@@ -347,6 +347,7 @@
 import {
     watch, onMounted, reactive, computed, watchEffect
 } from 'vue';
+import { useRoute } from 'vue-router';
 import {
     VuiInput,
     VuiFlex,
@@ -360,20 +361,23 @@ import {
     VuiIconLabel
 } from 'vine-ui';
 import {
-    debounce, microtask, inflate, store, hash, setFavicon
+    debounce, inflate, store, setFavicon
 } from './common/common.js';
 
 import Util from './utils/util.js';
 import {
-    createGrid, renderGrid, updateGrid, removeSort, initCustomsFormatters, displayFlyoverWithHash, expandRowLevel
+    createGrid, renderGrid, updateGrid, removeSort, initCustomsFormatters, displayFlyoverWithRoute, expandRowLevel
 } from './modules/grid.js';
 
 import Flyover from './components/flyover.vue';
 import MetadataGrid from './components/metadata-grid.vue';
 
 import state, {
-    defaultGroups, getTagsKeywords, syncTagsToHash
+    defaultGroups, getTagsKeywords, getTagsRouteValue
 } from './modules/state.js';
+import {
+    getQueryValue, openReportRoute, replaceQuery
+} from './router.js';
 
 import { loadMermaid, initMermaid } from './modules/mermaid.js';
 
@@ -381,6 +385,8 @@ import { initTooltip } from './modules/tooltip.js';
 
 
 // =================================================================================
+
+const route = useRoute();
 
 const searchable = reactive({
     columns: []
@@ -842,8 +848,8 @@ const onThemeClick = () => {
     updateTheme();
 };
 
-const onMenuClick = (e) => {
-    hash.set('page', 'report');
+const onMenuClick = () => {
+    openReportRoute();
 };
 
 const onExportClick = () => {
@@ -996,10 +1002,20 @@ const updateSearchHistoryAsync = debounce(() => {
 const updateGridAsync = debounce(updateGrid, 200);
 
 
-watch(() => state.keywords, (v) => {
+const syncRouteState = () => {
+    const routeCaseType = getQueryValue(route.query.caseType) || 'tests';
+    const caseTypeChanged = state.caseType !== routeCaseType;
+    replaceQuery({
+        caseType: state.caseType === 'tests' ? '' : state.caseType,
+        tags: getTagsRouteValue(state.keywords),
+        title: caseTypeChanged ? '' : getQueryValue(route.query.title)
+    }, caseTypeChanged ? 'home' : '');
+};
+
+watch(() => state.keywords, () => {
     updateGridAsync();
     updateSearchHistoryAsync();
-    syncTagsToHash(v);
+    syncRouteState();
 });
 
 watch(() => searchable.columns, (v) => {
@@ -1011,13 +1027,8 @@ watch(() => searchable.columns, (v) => {
     deep: true
 });
 
-watch(() => state.caseType, (v) => {
-    if (v === 'tests') {
-        hash.remove('caseType');
-    } else {
-        hash.set('caseType', v);
-        hash.remove('page');
-    }
+watch(() => state.caseType, () => {
+    syncRouteState();
     renderGrid();
 });
 
@@ -1059,15 +1070,15 @@ watch(() => state.mermaidEnabled, (v) => {
     }
 });
 
-window.addEventListener('popstate', microtask(() => {
-    const caseType = hash.get('caseType');
-    state.caseType = caseType || 'tests';
-
-    // Restore tags from hash
-    state.keywords = getTagsKeywords();
-
-    displayFlyoverWithHash();
-}));
+watch(() => route.fullPath, () => {
+    state.caseType = getQueryValue(route.query.caseType) || 'tests';
+    state.keywords = getTagsKeywords(route.query.tags);
+    if (state.grid) {
+        displayFlyoverWithRoute(route);
+    }
+}, {
+    immediate: true
+});
 
 window.addEventListener('resize', () => {
     state.windowWidth = window.innerWidth;

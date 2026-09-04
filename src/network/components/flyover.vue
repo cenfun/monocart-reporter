@@ -5,6 +5,7 @@
     position="right"
     :width="state.flyoverWidth"
     min-width="350"
+    @end="onFlyoverEnd"
     @resize="onFlyoverResize"
   >
     <div class="mcr-report">
@@ -65,9 +66,16 @@ import Request from './request.vue';
 import Response from './response.vue';
 import Content from './content.vue';
 import Timing from './timing.vue';
+import { closeRequestRoute } from '../router.js';
 
 
 const state = inject('state');
+
+const onFlyoverEnd = () => {
+    if (!state.flyoverVisible) {
+        closeRequestRoute();
+    }
+};
 
 const onFlyoverResize = (width) => {
     state.flyoverWidth = width;

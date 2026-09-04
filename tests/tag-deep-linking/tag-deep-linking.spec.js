@@ -38,9 +38,9 @@ test.describe('Tag Deep Linking', () => {
         const searchInput = page.locator('.mcr-search input');
         await expect(searchInput).toHaveValue('@smoke');
 
-        // Verify hash is still in URL
+        // Legacy hashes are normalized to the Vue Router URL.
         const url = page.url();
-        expect(url).toContain('#tags=smoke');
+        expect(url).toContain('#/?tags=smoke');
     });
 
     test('should initialize keywords from tags hash parameter - multiple tags', async ({ page }) => {
@@ -57,7 +57,7 @@ test.describe('Tag Deep Linking', () => {
 
         // Verify hash contains both tags
         const url = page.url();
-        expect(url).toContain('#tags=smoke,slow');
+        expect(url).toMatch(/#\/\?tags=smoke(%2C|,)slow/);
     });
 
     test('should work with caseType filter combination', async ({ page }) => {
@@ -95,7 +95,7 @@ test.describe('Tag Deep Linking', () => {
 
         // Verify hash was updated (commas may be URL-encoded as %2C)
         const url = page.url();
-        expect(url).toMatch(/#tags=smoke(%2C|,)critical/);
+        expect(url).toMatch(/[?&]tags=smoke(%2C|,)critical/);
     });
 
     test('should remove tags from hash when search is cleared', async ({ page }) => {
@@ -199,7 +199,7 @@ test.describe('Tag Deep Linking', () => {
 
         // Verify only tag is in hash
         const url = page.url();
-        expect(url).toContain('#tags=smoke');
+        expect(url).toContain('#/?tags=smoke');
         expect(url).not.toContain('regular-text');
     });
 
@@ -220,7 +220,7 @@ test.describe('Tag Deep Linking', () => {
 
         // Verify all tags are in hash (commas may be URL-encoded as %2C)
         const url = page.url();
-        expect(url).toMatch(/#tags=smoke(%2C|,)slow(%2C|,)critical/);
+        expect(url).toMatch(/[?&]tags=smoke(%2C|,)slow(%2C|,)critical/);
     });
 
     test('should handle URL encoding for tags', async ({ page }) => {

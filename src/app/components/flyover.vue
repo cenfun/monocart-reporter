@@ -46,8 +46,7 @@ import {
     VuiIconLabel
 } from 'vine-ui';
 
-import { hash } from '../common/common.js';
-
+import { closeFlyoverRoute } from '../router.js';
 import state from '../modules/state.js';
 
 import Detail from './detail/detail.vue';
@@ -59,10 +58,10 @@ const flyoverComponents = {
     report: Report
 };
 
-// remove tag till flyover animation end
+// Update the route after the flyover closing animation ends.
 const onFlyoverEnd = () => {
     if (!state.flyoverVisible) {
-        hash.remove('page');
+        closeFlyoverRoute();
     }
 };
 
