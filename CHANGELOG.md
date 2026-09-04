@@ -2,6 +2,7 @@
 
 * Unreleased
   - feat: optionally include descendants when searching (#208)
+  - feat: preserve complete search keywords and report, detail, and network request state in URL routes
 
 * 2.12.6
   - feat: sort search tags alphabetically and overflow list (#206)
