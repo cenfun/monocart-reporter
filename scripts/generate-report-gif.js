@@ -4,6 +4,7 @@ const { pathToFileURL } = require('url');
 const sharp = require('sharp');
 const { chromium } = require('playwright');
 
+const mouseHelperPath = require.resolve('mouse-helper');
 const rootDir = path.resolve(__dirname, '..');
 
 const width = 810;
@@ -21,13 +22,17 @@ const generate = async () => {
     const browser = await chromium.launch({
         headless: true
     });
-    const page = await browser.newPage({
+    const context = await browser.newContext({
         viewport: {
             width,
             height
         },
         deviceScaleFactor: 1
     });
+    await context.addInitScript({
+        path: mouseHelperPath
+    });
+    const page = await context.newPage();
 
     const frames = [];
     const delays = [];
@@ -58,6 +63,43 @@ const generate = async () => {
         await capture(finalDelay);
     };
 
+    let mousePosition = {
+        x: 0,
+        y: 0
+    };
+    const moveMouseTo = async (locator, options = {}) => {
+        const box = await locator.boundingBox();
+        if (!box) {
+            throw new Error('Unable to find the mouse target');
+        }
+        const target = options.position ? {
+            x: box.x + options.position.x,
+            y: box.y + options.position.y
+        } : {
+            x: box.x + box.width / 2,
+            y: box.y + box.height / 2
+        };
+        const steps = options.steps || 2;
+        const start = mousePosition;
+        for (let i = 1; i <= steps; i++) {
+            const progress = i / steps;
+            await page.mouse.move(
+                start.x + (target.x - start.x) * progress,
+                start.y + (target.y - start.y) * progress
+            );
+            await capture(80);
+            await page.waitForTimeout(80);
+        }
+        mousePosition = target;
+    };
+
+    const clickWithMouse = async (locator, options) => {
+        await moveMouseTo(locator, options);
+        await page.mouse.down();
+        await capture(180);
+        await page.mouse.up();
+    };
+
     try {
         await page.goto(pathToFileURL(reportPath).href, {
             waitUntil: 'load'
@@ -65,21 +107,22 @@ const generate = async () => {
         await page.waitForSelector('.mcr-search input', {
             timeout: 15000
         });
+        await page.evaluate(() => window['mouse-helper']());
         await page.waitForTimeout(800);
         await capture(1200);
 
         // Open the report summary from the menu in the upper-right corner.
         const menuButton = page.locator('.mcr-header > .vui-icon-label').last();
-        await menuButton.click();
+        await clickWithMouse(menuButton);
         await captureTransition(5, 100, 1200);
 
         // Close the summary before demonstrating keyword search.
         const closeButton = page.locator('.mcr-flyover-header .vui-icon-label:visible').last();
-        await closeButton.click();
+        await clickWithMouse(closeButton);
         await captureTransition(4, 100, 700);
 
         const search = page.locator('.mcr-search input');
-        await search.focus();
+        await clickWithMouse(search);
         const keyword = '@sanity';
         for (let i = 1; i <= keyword.length; i++) {
             await search.fill(keyword.slice(0, i));
@@ -88,10 +131,32 @@ const generate = async () => {
         await page.waitForTimeout(350);
         await capture(600);
 
-        // Hide search suggestions and leave the filtered result visible at the end.
+        // Hide search suggestions and leave the filtered result visible briefly.
         await search.evaluate((element) => element.blur());
         await page.waitForTimeout(300);
         await capture(1500);
+
+        // Highlight the first matching case before clicking it. Slow down the
+        // flyover animation so the detail page opening is clear in the GIF.
+        const firstCaseTitle = page.locator('.mcr-grid .tg-case .tg-c-2:visible').first();
+        await moveMouseTo(firstCaseTitle);
+        await capture(700);
+        await page.addStyleTag({
+            content: '.vui-flyover { animation-duration: 800ms !important; }'
+        });
+        await page.mouse.down();
+        await capture(180);
+        await page.mouse.up();
+        await captureTransition(9, 100, 1800);
+
+        // Close the detail with the same slowed flyover animation.
+        await page.locator('.mcr-detail-overview:visible').waitFor();
+        const detailCloseButton = page.locator('.mcr-flyover-header .vui-icon-label:visible').last();
+        await clickWithMouse(detailCloseButton);
+        await captureTransition(9, 100, 700);
+        await page.waitForSelector('.vui-flyover-show', {
+            state: 'hidden'
+        });
     } finally {
         await browser.close();
     }

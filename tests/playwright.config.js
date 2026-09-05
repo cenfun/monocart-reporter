@@ -104,7 +104,9 @@ module.exports = {
     outputDir: '../.temp/test-results/',
     reporter: [
 
-        ['list'],
+        ['list', {
+            printFailuresInline: true
+        }],
 
         ['json', {
             outputFile: '../.temp/json/results.json'
@@ -234,8 +236,10 @@ module.exports = {
                     //     resolve(json);
                     // });
 
+                    console.log('Fetching trend data from remote source ...');
                     const axios = require('axios');
                     axios.get('https://cenfun.github.io/monocart-reporter/index.json').then((res) => {
+                        console.log('✓ Received trend data from remote source');
                         const json = res.data;
                         // mock data
                         // for (let i = 0; i < 100; i++) {
@@ -251,6 +255,7 @@ module.exports = {
                         // }
                         resolve(json);
                     }).catch((e) => {
+                        console.log('✘ Failed to fetch trend data from remote source:', e);
                         resolve();
                     });
 

@@ -6,11 +6,11 @@
 ![](https://img.shields.io/github/license/cenfun/monocart-reporter)
 ![](https://img.shields.io/github/actions/workflow/status/cenfun/monocart-reporter/static.yml)
 
-![](/docs/report.gif)
+![](./docs/report.gif)
 
 Preview: [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/monocart-reporter)
 
-![](/docs/cli.png)
+![](./docs/cli.png)
 
 * A [Playwright](https://github.com/microsoft/playwright) Test [Reporter](https://playwright.dev/docs/test-reporters) (Node.js)
     - A `Tree Grid` style test reporter
@@ -717,7 +717,7 @@ The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/mo
     - `testInfo` same as above
     - `options` (Object) see [Coverage Options](#coverage-options)
 
-![](/docs/v8.gif)
+![](./docs/v8.gif)
 
 ### Global Coverage Report
 The global coverage report will merge all coverages into one global report after all the tests are finished. 
