@@ -409,6 +409,7 @@ const stepCount = computed(() => {
     .grid-title-tags-title {
         display: flex;
         gap: 3px;
+        align-items: center;
     }
 }
 
