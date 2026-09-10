@@ -497,6 +497,14 @@ test.describe('new syntax for tag and annotation in playwright v1.42.0', {
         tag: ['@slow', '@new']
     }, () => {});
 
+    test(
+        "TC-0001 - Verify that a specific record updates upon user approval. An active same-type record with a 'Date' field should be present in the application.",
+        {
+            tag: ['@application', '@failing', '@id:TC-0001', '@manualTesting', '@recordAccess', '@unfinished:inaccurate', '@unfinished:newRecord', '@unfinished:permissions']
+        },
+        async () => {}
+    );
+
     // Annotate tests
     test('test annotation', {
         annotation: {

@@ -37,6 +37,7 @@
           :column-item="titleColumn"
           :case-clickable="false"
           :class="titleClass"
+          wrap
           tooltip
         />
 

@@ -1,5 +1,11 @@
 <template>
-  <div :class="['grid-title-cell', isCaseClickable ? 'tg-cell-open' : '']">
+  <div
+    :class="[
+      'grid-title-cell',
+      wrap ? 'grid-title-cell-wrap' : 'grid-title-cell-nowrap',
+      isCaseClickable ? 'tg-cell-open' : ''
+    ]"
+  >
     <div
       v-if="hasTitleTags"
       tooltip
@@ -59,6 +65,10 @@ const props = defineProps({
     caseClickable: {
         type: Boolean,
         default: true
+    },
+    wrap: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -164,13 +174,47 @@ const stepCount = computed(() => {
     display: flex;
     gap: 5px;
     align-items: center;
+    min-width: 0;
 }
 
 .grid-title-content,
 .grid-title-tags {
     min-width: 0;
-    text-overflow: ellipsis;
+}
+
+.grid-title-cell-nowrap {
+    white-space: nowrap;
     overflow: hidden;
+
+    .grid-title-content,
+    .grid-title-tags {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    // An inline-flex container cannot apply text-overflow to its flex items.
+    // Use a normal inline formatting context so the whole title can ellipsize.
+    .grid-title-tags {
+        display: block;
+
+        span + span {
+            margin-left: 3px;
+        }
+    }
+}
+
+.grid-title-cell-wrap {
+    white-space: normal;
+
+    .grid-title-content {
+        white-space: normal;
+    }
+
+    .grid-title-tags {
+        flex-wrap: wrap;
+        white-space: normal;
+    }
 }
 
 </style>
