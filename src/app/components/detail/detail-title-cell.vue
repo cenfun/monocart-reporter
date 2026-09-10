@@ -38,7 +38,6 @@
           :case-clickable="false"
           :class="titleClass"
           wrap
-          tooltip
         />
 
         <div

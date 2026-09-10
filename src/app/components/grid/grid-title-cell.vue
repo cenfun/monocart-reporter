@@ -6,57 +6,81 @@
       isCaseClickable ? 'tg-cell-open' : ''
     ]"
   >
-    <div
-      v-if="hasTitleTags"
-      ref="tagsContainerRef"
-      :tooltip="compact ? fullTitleText : ''"
-      :tooltip-text="fullTitleText"
-      class="grid-title-tags"
-    >
+    <template v-if="hasTitleTags">
       <div
-        ref="titleRef"
-        class="grid-title-tags-title"
+        v-if="wrap"
+        class="grid-title-tags grid-title-tags-wrap mcr-tags"
       >
         <template
-          v-for="(item, i) of titleContentItems"
+          v-for="(item, i) of allTitleItems"
           :key="i"
         >
           <span
             v-if="item.tag"
             class="mcr-tag"
             :style="item.style"
-            :tooltip="item.description || undefined"
           >{{ item.key }}</span>
-          <span v-else>{{ item.text }}</span>
+          <span
+            v-else
+            class="grid-title-text"
+          >{{ item.text }}</span>
         </template>
       </div>
+
       <div
-        v-if="visibleExtraTagItems.length"
-        ref="tagsListRef"
-        class="grid-title-tags-list mcr-tags"
+        v-else
+        ref="tagsContainerRef"
+        :tooltip="compact ? fullTitleText : ''"
+        :tooltip-text="fullTitleText"
+        class="grid-title-tags"
       >
+        <div
+          ref="titleRef"
+          class="grid-title-tags-title"
+        >
+          <template
+            v-for="(item, i) of titleContentItems"
+            :key="i"
+          >
+            <span
+              v-if="item.tag"
+              class="mcr-tag"
+              :style="item.style"
+              :tooltip="item.description || undefined"
+            >{{ item.key }}</span>
+            <span v-else>{{ item.text }}</span>
+          </template>
+        </div>
+        <div
+          v-if="visibleExtraTagItems.length"
+          ref="tagsListRef"
+          class="grid-title-tags-list mcr-tags"
+        >
+          <span
+            v-for="(item, i) of visibleExtraTagItems"
+            :key="`${item.key}-${i}`"
+            class="mcr-tag"
+            :style="item.style"
+            :tooltip="item.description || undefined"
+          >{{ item.key }}</span>
+        </div>
         <span
-          v-for="(item, i) of visibleExtraTagItems"
-          :key="`${item.key}-${i}`"
-          class="mcr-tag"
-          :style="item.style"
-          :tooltip="item.description || undefined"
-        >{{ item.key }}</span>
+          v-if="compact"
+          class="mcr-tag grid-title-tags-box"
+          :style="tagsBoxStyle"
+          :tooltip="fullTitleText"
+        >@</span>
       </div>
-      <span
-        v-if="compact"
-        class="mcr-tag grid-title-tags-box"
-        :style="tagsBoxStyle"
-        :tooltip="fullTitleText"
-      >@</span>
-    </div>
+    </template>
+
     <div
       v-else
-      tooltip
+      :tooltip="wrap ? undefined : ''"
       class="grid-title-content"
     >
       {{ title }}
     </div>
+
     <div
       v-if="caseNum"
       class="mcr-num"
@@ -169,6 +193,7 @@ const extraTagItems = computed(() => {
 });
 
 const hasExtraTags = computed(() => Boolean(extraTagItems.value.length));
+const allTitleItems = computed(() => titleContentItems.value.concat(extraTagItems.value));
 const fullTitleText = computed(() => {
     const extraTags = extraTagItems.value.map((item) => `@${item.key}`);
     return [title.value, ... extraTags].join(' ');
@@ -390,26 +415,21 @@ const stepCount = computed(() => {
 .grid-title-cell-wrap {
     white-space: normal;
 
-    .grid-title-content {
+    .grid-title-content,
+    .grid-title-text {
         white-space: normal;
+        overflow-wrap: anywhere;
     }
 
-    .grid-title-tags,
-    .grid-title-tags-title,
-    .grid-title-tags-list {
+    .grid-title-text {
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+    .grid-title-tags-wrap {
         flex-wrap: wrap;
         white-space: normal;
-    }
-
-    .grid-title-tags-title,
-    .grid-title-tags-list {
-        flex-shrink: 1;
-    }
-
-    .grid-title-tags-title {
-        display: flex;
-        gap: 3px;
-        align-items: center;
+        overflow: visible;
     }
 }
 
