@@ -276,6 +276,15 @@ module.exports = {
                 critical: {
                     background: '#c00'
                 },
+                new: {
+                    background: 'teal'
+                },
+                fast: {
+                    background: 'green'
+                },
+                report: {
+                    background: 'purple'
+                },
                 '/^(slow|flaky)$/': 'background:orange;',
                 '/^feature(:|$)/': {
                     background: '#0066CC'

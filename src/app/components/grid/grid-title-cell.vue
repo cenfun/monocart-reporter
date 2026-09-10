@@ -203,15 +203,15 @@ const tagsBoxStyle = computed(() => {
     if (!tags.length) {
         return;
     }
-    const colors = tags.slice(0, 4).map((tag) => getTagBackground(tag.key));
-    while (colors.length < 3) {
-        colors.unshift(colors[0]);
-    }
-    if (colors.length < 4) {
-        colors.push(colors[colors.length - 1]);
-    }
+    const colors = tags.map((tag) => getTagBackground(tag.key));
+    const unit = 100 / colors.length;
+    const stops = colors.map((color, index) => {
+        const start = (index * unit).toFixed(2);
+        const end = ((index + 1) * unit).toFixed(2);
+        return `${color} ${start}% ${end}%`;
+    });
     return [tags[0].style, {
-        background: `conic-gradient(${colors[1]} 0 25%, ${colors[3]} 0 50%, ${colors[2]} 0 75%, ${colors[0]} 0)`
+        background: `conic-gradient(${stops.join(', ')})`
     }];
 });
 
