@@ -305,6 +305,7 @@ const getGridData = (grid, caseItem) => {
         let suiteRow = suiteCache[suite.id];
         if (!suiteRow) {
             suiteRow = grid.getItemSnapshot(suite);
+            suiteRow.collapsed = true;
             suiteCache[suite.id] = suiteRow;
         }
         rows.unshift(suiteRow);
