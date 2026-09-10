@@ -8,22 +8,47 @@
   >
     <div
       v-if="hasTitleTags"
-      tooltip
-      :tooltip-text="titleText(titleItems)"
-      class="grid-title-tags mcr-tags"
+      ref="tagsContainerRef"
+      :tooltip="compact ? fullTitleText : ''"
+      :tooltip-text="fullTitleText"
+      class="grid-title-tags"
     >
-      <template
-        v-for="(item, i) of titleItems"
-        :key="i"
+      <div
+        ref="titleRef"
+        class="grid-title-tags-title"
+      >
+        <template
+          v-for="(item, i) of titleContentItems"
+          :key="i"
+        >
+          <span
+            v-if="item.tag"
+            class="mcr-tag"
+            :style="item.style"
+            :tooltip="item.description || undefined"
+          >{{ item.key }}</span>
+          <span v-else>{{ item.text }}</span>
+        </template>
+      </div>
+      <div
+        v-if="visibleExtraTagItems.length"
+        ref="tagsListRef"
+        class="grid-title-tags-list mcr-tags"
       >
         <span
-          v-if="item.tag"
+          v-for="(item, i) of visibleExtraTagItems"
+          :key="`${item.key}-${i}`"
           class="mcr-tag"
           :style="item.style"
           :tooltip="item.description || undefined"
         >{{ item.key }}</span>
-        <span v-else>{{ item.text }}</span>
-      </template>
+      </div>
+      <span
+        v-if="compact"
+        class="mcr-tag grid-title-tags-box"
+        :style="tagsBoxStyle"
+        :tooltip="fullTitleText"
+      >@</span>
     </div>
     <div
       v-else
@@ -48,7 +73,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import {
+    computed, ref, nextTick, onMounted, onBeforeUnmount
+} from 'vue';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
@@ -81,19 +108,6 @@ const hasTitleTags = computed(() => {
     return Boolean(title.value.match(Util.tagPattern)) || Util.isList(rowItem.tags);
 });
 
-const titleText = (list) => {
-    const ls = [];
-    list.forEach((item) => {
-        if (item.tag) {
-            ls.push(`@${item.key}`);
-        } else {
-            ls.push(item.text);
-        }
-    });
-
-    return ls.join(' ');
-};
-
 const getTagItem = (key) => {
     const tag = state.tagMap[key] || {};
     return {
@@ -104,11 +118,10 @@ const getTagItem = (key) => {
     };
 };
 
-const titleItems = computed(() => {
-    const rowItem = props.rowItem;
+const titleData = computed(() => {
     const titleValue = title.value;
-    const list = [];
-    const titleTags = [];
+    const items = [];
+    const tagKeys = [];
     let lastIndex = 0;
 
     const matches = titleValue.matchAll(Util.tagPattern);
@@ -124,32 +137,177 @@ const titleItems = computed(() => {
             textBefore = textBefore.slice(0, -beforeMatch[0].length);
         }
         if (textBefore) {
-            list.push({
+            items.push({
                 text: textBefore
             });
         }
 
-        titleTags.push(all);
-        list.push(getTagItem(key));
+        tagKeys.push(key);
+        items.push(getTagItem(key));
         lastIndex = afterIndex + (afterMatch ? afterMatch[0].length : 0);
     }
 
     if (lastIndex < titleValue.length) {
-        list.push({
+        items.push({
             text: titleValue.slice(lastIndex)
         });
     }
 
-    // New tag syntax introduced in Playwright v1.42. Do not render tags
-    // already present in the title a second time.
-    if (rowItem.tags) {
-        const tags = Util.getTagKeys(rowItem.tags).filter((key) => !titleTags.includes(`@${key}`));
-        tags.forEach((key) => {
-            list.push(getTagItem(key));
-        });
+    return {
+        items,
+        tagKeys
+    };
+});
+
+const titleContentItems = computed(() => titleData.value.items);
+
+// New tag syntax introduced in Playwright v1.42. Keep tags which are not
+// already part of the title separate, so they can be compacted on overflow.
+const extraTagItems = computed(() => {
+    const tags = Util.getTagKeys(props.rowItem.tags || []);
+    return tags.filter((key) => !titleData.value.tagKeys.includes(key)).map(getTagItem);
+});
+
+const hasExtraTags = computed(() => Boolean(extraTagItems.value.length));
+const fullTitleText = computed(() => {
+    const extraTags = extraTagItems.value.map((item) => `@${item.key}`);
+    return [title.value, ... extraTags].join(' ');
+});
+
+const tagsContainerRef = ref();
+const titleRef = ref();
+const tagsListRef = ref();
+const hiddenTagCount = ref(0);
+const compact = computed(() => hiddenTagCount.value > 0);
+const visibleExtraTagItems = computed(() => {
+    const visibleCount = extraTagItems.value.length - hiddenTagCount.value;
+    return extraTagItems.value.slice(0, visibleCount);
+});
+const hiddenExtraTagItems = computed(() => {
+    const hiddenCount = hiddenTagCount.value;
+    return hiddenCount ? extraTagItems.value.slice(-hiddenCount) : [];
+});
+
+const getTagBackground = (key) => {
+    const tag = state.tagMap[key] || {};
+    const style = tag.style || tag;
+    if (typeof style === 'string') {
+        const matched = style.match(/(?:^|;)\s*background(?:-color)?\s*:\s*([^;]+)/i);
+        return matched ? matched[1].trim() : 'gray';
+    }
+    return style.background || style.backgroundColor || style['background-color'] || 'gray';
+};
+
+const tagsBoxStyle = computed(() => {
+    const tags = hiddenExtraTagItems.value;
+    if (!tags.length) {
+        return;
+    }
+    const colors = tags.slice(0, 4).map((tag) => getTagBackground(tag.key));
+    while (colors.length < 3) {
+        colors.unshift(colors[0]);
+    }
+    if (colors.length < 4) {
+        colors.push(colors[colors.length - 1]);
+    }
+    return [tags[0].style, {
+        background: `conic-gradient(${colors[1]} 0 25%, ${colors[3]} 0 50%, ${colors[2]} 0 75%, ${colors[0]} 0)`
+    }];
+});
+
+const tagsBoxWidth = 20;
+let tagWidths = [];
+let animationFrame;
+let resizeObserver;
+
+const disconnectObserver = () => {
+    resizeObserver?.disconnect();
+};
+
+const getTagsWidth = (count, gap) => {
+    if (!count) {
+        return 0;
+    }
+    const width = tagWidths.slice(0, count).reduce((total, itemWidth) => total + itemWidth, 0);
+    return width + gap * (count - 1);
+};
+
+const getVisibleTagCount = (availableWidth, titleWidth, gap, boxWidth) => {
+    const tagCount = tagWidths.length;
+    let tagsWidth = getTagsWidth(tagCount, gap);
+    if (titleWidth + gap + tagsWidth <= availableWidth) {
+        return tagCount;
     }
 
-    return list;
+    // Remove tags from the end and reuse the previous total. This keeps the
+    // resize calculation linear even when a title has many tags.
+    for (let visibleCount = tagCount - 1; visibleCount >= 0; visibleCount -= 1) {
+        tagsWidth -= tagWidths[visibleCount];
+        if (visibleCount) {
+            tagsWidth -= gap;
+        }
+        const visibleTagsWidth = visibleCount ? tagsWidth + gap : 0;
+        const requiredWidth = titleWidth + gap + visibleTagsWidth + boxWidth;
+        if (requiredWidth <= availableWidth) {
+            return visibleCount;
+        }
+    }
+    return 0;
+};
+
+// Width checks are kept together to avoid applying a stale measurement.
+// eslint-disable-next-line complexity
+const updateCompactState = () => {
+    const container = tagsContainerRef.value;
+    const titleNode = titleRef.value;
+    const tagsList = tagsListRef.value;
+    if (!container || !titleNode || props.wrap || !hasExtraTags.value) {
+        hiddenTagCount.value = 0;
+        return;
+    }
+    if (!container.isConnected) {
+        disconnectObserver();
+        return;
+    }
+    if (!container.clientWidth) {
+        return;
+    }
+
+    if (!hiddenTagCount.value && tagsList) {
+        tagWidths = Array.from(tagsList.querySelectorAll('.mcr-tag')).map((tag) => tag.offsetWidth);
+    }
+    if (!tagWidths.length) {
+        return;
+    }
+
+    const gap = parseFloat(getComputedStyle(container).columnGap) || 0;
+    const visibleCount = getVisibleTagCount(container.clientWidth, titleNode.scrollWidth, gap, tagsBoxWidth);
+    hiddenTagCount.value = extraTagItems.value.length - visibleCount;
+};
+
+const updateCompact = () => {
+    cancelAnimationFrame(animationFrame);
+    animationFrame = requestAnimationFrame(updateCompactState);
+};
+
+onMounted(() => {
+    if (props.wrap || !hasExtraTags.value) {
+        return;
+    }
+    nextTick(() => {
+        const container = tagsContainerRef.value;
+        if (!container?.isConnected) {
+            return;
+        }
+        updateCompact();
+        resizeObserver = new ResizeObserver(updateCompact);
+        resizeObserver.observe(container);
+    });
+});
+
+onBeforeUnmount(() => {
+    cancelAnimationFrame(animationFrame);
+    disconnectObserver();
 });
 
 const isCaseClickable = computed(() => props.rowItem.type === 'case' && props.caseClickable);
@@ -182,21 +340,46 @@ const stepCount = computed(() => {
     min-width: 0;
 }
 
+.grid-title-tags {
+    display: flex;
+    flex: 1 1 auto;
+    gap: 3px;
+    align-items: center;
+}
+
+.grid-title-tags-title,
+.grid-title-tags-list {
+    min-width: 0;
+}
+
+.grid-title-tags-list,
+.grid-title-tags-box {
+    flex-shrink: 0;
+}
+
+.grid-title-tags-box {
+    width: 20px;
+    padding: 0;
+}
+
 .grid-title-cell-nowrap {
     white-space: nowrap;
     overflow: hidden;
 
     .grid-title-content,
-    .grid-title-tags {
-        text-overflow: ellipsis;
+    .grid-title-tags,
+    .grid-title-tags-title {
         white-space: nowrap;
         overflow: hidden;
     }
 
-    // An inline-flex container cannot apply text-overflow to its flex items.
-    // Use a normal inline formatting context so the whole title can ellipsize.
-    .grid-title-tags {
-        display: block;
+    .grid-title-content,
+    .grid-title-tags-title {
+        text-overflow: ellipsis;
+    }
+
+    .grid-title-tags-title {
+        flex: 0 1 auto;
 
         span + span {
             margin-left: 3px;
@@ -211,9 +394,21 @@ const stepCount = computed(() => {
         white-space: normal;
     }
 
-    .grid-title-tags {
+    .grid-title-tags,
+    .grid-title-tags-title,
+    .grid-title-tags-list {
         flex-wrap: wrap;
         white-space: normal;
+    }
+
+    .grid-title-tags-title,
+    .grid-title-tags-list {
+        flex-shrink: 1;
+    }
+
+    .grid-title-tags-title {
+        display: flex;
+        gap: 3px;
     }
 }
 
