@@ -591,12 +591,15 @@ const onFocus = (e) => {
                 top: 0;
                 left: 0;
                 content: "";
+                z-index: 100;
                 display: block;
                 width: 100%;
                 height: 100%;
                 box-sizing: border-box;
-                border: 2px solid #80bdff;
+                background-color: var(--vui-blue-30);
+                opacity: 0.1;
                 pointer-events: none;
+                transition: none;
             }
         }
     }

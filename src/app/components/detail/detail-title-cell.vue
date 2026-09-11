@@ -1,5 +1,8 @@
 <template>
-  <div :class="classMap">
+  <div
+    :class="classMap"
+    :data-type="rowItem.type"
+  >
     <DetailColumn
       v-if="rowItem.type==='details'"
       :column="rowItem"
@@ -11,25 +14,11 @@
     >
       <div class="mcr-detail-main mcr-flex-auto">
         <VuiIconLabel
-          v-if="data.iconType"
+          v-if="data.iconType && !useGridTitleCell"
           :icon="data.iconType"
           :button="false"
           :title="data.iconType"
         />
-
-        <div
-          v-if="rowItem.index"
-          class="mcr-step-index"
-        >
-          {{ rowItem.index }}
-        </div>
-
-        <div
-          v-if="data.caseType"
-          :class="data.classStatus"
-        >
-          {{ data.caseType }}
-        </div>
 
         <GridTitleCell
           v-if="useGridTitleCell"
@@ -38,7 +27,26 @@
           :case-clickable="false"
           :class="titleClass"
           wrap
-        />
+        >
+          <VuiIconLabel
+            v-if="data.iconType"
+            :icon="data.iconType"
+            :button="false"
+            :title="data.iconType"
+          />
+          <div
+            v-if="rowItem.index"
+            class="mcr-step-index"
+          >
+            {{ rowItem.index }}
+          </div>
+          <div
+            v-if="data.caseType"
+            :class="data.classStatus"
+          >
+            {{ data.caseType }}
+          </div>
+        </GridTitleCell>
 
         <div
           v-else
@@ -258,11 +266,10 @@ const onRowUpdate = () => {
 }
 
 .mcr-detail-status {
-    padding: 6px 8px;
+    padding: 5px 8px;
     color: #fff;
-    line-height: 100%;
     text-transform: capitalize;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .mcr-status-failed {

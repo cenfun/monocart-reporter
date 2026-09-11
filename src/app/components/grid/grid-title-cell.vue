@@ -11,6 +11,7 @@
         v-if="wrap"
         class="grid-title-tags grid-title-tags-wrap mcr-tags"
       >
+        <slot />
         <template
           v-for="(item, i) of allTitleItems"
           :key="i"
@@ -73,13 +74,22 @@
       </div>
     </template>
 
-    <div
-      v-else
-      :tooltip="wrap ? undefined : ''"
-      class="grid-title-content"
-    >
-      {{ title }}
-    </div>
+    <template v-else>
+      <div
+        v-if="wrap"
+        class="grid-title-tags grid-title-tags-wrap mcr-tags"
+      >
+        <slot />
+        <span class="grid-title-text">{{ title }}</span>
+      </div>
+      <div
+        v-else
+        tooltip
+        class="grid-title-content"
+      >
+        {{ title }}
+      </div>
+    </template>
 
     <div
       v-if="caseNum"
@@ -316,7 +326,7 @@ const updateCompact = () => {
 };
 
 onMounted(() => {
-    if (props.wrap || !hasExtraTags.value) {
+    if (props.wrap || !hasTitleTags.value || !hasExtraTags.value) {
         return;
     }
     nextTick(() => {
