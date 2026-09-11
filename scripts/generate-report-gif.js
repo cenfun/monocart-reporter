@@ -13,7 +13,7 @@ const reportPath = path.resolve(rootDir, process.argv[2] || '.temp/monocart/inde
 const outputPath = path.resolve(rootDir, process.argv[3] || 'docs/report.gif');
 
 // The recording workflow is intentionally linear so its timing remains easy to tune.
-// eslint-disable-next-line complexity
+// eslint-disable-next-line complexity, max-statements
 const generate = async () => {
     if (!fs.existsSync(reportPath)) {
         throw new Error(`Report not found: ${reportPath}\nRun the report tests first to generate it.`);
@@ -138,7 +138,8 @@ const generate = async () => {
 
         // Highlight the first matching case before clicking it. Slow down the
         // flyover animation so the detail page opening is clear in the GIF.
-        const firstCaseTitle = page.locator('.mcr-grid .tg-case .tg-c-2:visible').first();
+        const firstCaseTitle = page.locator('.mcr-grid .tg-case .grid-title-cell:visible').first();
+        await firstCaseTitle.waitFor();
         await moveMouseTo(firstCaseTitle);
         await capture(700);
         await page.addStyleTag({
