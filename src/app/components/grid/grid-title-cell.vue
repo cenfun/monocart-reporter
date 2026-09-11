@@ -20,6 +20,7 @@
             v-if="item.tag"
             class="mcr-tag"
             :style="item.style"
+            :tooltip="item.description || undefined"
           >{{ item.key }}</span>
           <span
             v-else

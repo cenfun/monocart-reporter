@@ -1,5 +1,11 @@
 ## Changelog
 
+* 2.13.1
+  - collapsed suite rows by default in case details
+  - improved wrapping for long titles in case details
+  - compacted overflowing title tags in report grids
+  - fixed title tag colors, alignment, and tooltips
+
 * 2.13.0
   - feat: optionally include descendants when searching (#208)
   - feat: preserve complete search keywords and report, detail, and network request state with Vue Router deep links
