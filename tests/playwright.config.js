@@ -6,6 +6,21 @@ const fs = require('fs');
 process.env.PASSWORD = 'my-password';
 process.env.TOKEN = 'my-token';
 
+const redact = (value, secret) => {
+    if (typeof value === 'string') {
+        return value.replaceAll(secret, '***');
+    }
+    if (Array.isArray(value)) {
+        return value.map((item) => redact(item, secret));
+    }
+    if (value && typeof value === 'object') {
+        return Object.fromEntries(Object.entries(value).map(([key, item]) => [
+            key.replaceAll(secret, '***'), redact(item, secret)
+        ]));
+    }
+    return value;
+};
+
 module.exports = {
 
     globalSetup: './common/global-setup.js',
@@ -383,23 +398,23 @@ module.exports = {
             // additional custom visitor for columns
             visitor: (data, metadata, collect) => {
 
-                // remove secrets and sensitive data
-                if (data.type === 'step') {
-
-                    // step title before:
-                    // locator.type(input[type=password], mysecretpassword)
-                    // apiRequestContext.get(https://api.npmjs.org/?token=myapitoken)
-
-                    const mySecrets = [process.env.PASSWORD, process.env.TOKEN];
-                    mySecrets.forEach((secret) => {
-                        data.title = data.title.replace(secret, '***');
-                    });
-
-                    // step title after:
-                    // locator.type(input[type=password], ***)
-                    // apiRequestContext.get(https://api.npmjs.org/?token=***)
-
-                }
+                // Redact secrets in all report rows, including Playwright 1.63 step metadata.
+                const mySecrets = [process.env.PASSWORD, process.env.TOKEN].filter(Boolean);
+                mySecrets.forEach((secret) => {
+                    data.title = redact(data.title, secret);
+                    if (typeof data.subtitle === 'string') {
+                        data.subtitle = redact(data.subtitle, secret);
+                    }
+                    if (data.params) {
+                        data.params = redact(data.params, secret);
+                    }
+                    if (data.logs) {
+                        data.logs = redact(data.logs, secret);
+                    }
+                    if (data.errors) {
+                        data.errors = redact(data.errors, secret);
+                    }
+                });
 
             },
 

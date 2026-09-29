@@ -3,11 +3,14 @@
     v-if="state.metadata"
     v-model="state.metadata.popoverVisible"
     :target="state.metadata.popoverTarget"
+    :auto-close="false"
     width="auto"
   >
     <div
       ref="metadataEl"
       class="mcr-metadata-grid"
+      @mouseenter="cancelMetadataClose"
+      @mouseleave="onMetadataPopoverLeave"
     >
       <div
         v-for="(item, ii) in list"
@@ -30,16 +33,22 @@ import { ref, watch } from 'vue';
 import { VuiPopover } from 'vine-ui';
 
 import state from '../modules/state.js';
+import {
+    cancelMetadataClose, cleanupMetadata, onMetadataPopoverLeave
+} from '../modules/metadata.js';
 import Util from '../utils/util.js';
 
 
 const list = ref([]);
 
 const initList = (data, ls, level) => {
+    if (!data || typeof data !== 'object') {
+        return;
+    }
     const keys = Object.keys(data);
     keys.forEach((key) => {
         const value = data[key];
-        if (typeof value === 'object') {
+        if (value && typeof value === 'object') {
             ls.push({
                 name: key,
                 level,
@@ -63,9 +72,12 @@ const update = () => {
     list.value = ls;
 };
 
-watch(() => state.metadata.popoverVisible, (visible) => {
+watch(() => [state.metadata.popoverVisible, state.metadata.data], ([visible]) => {
     if (visible) {
         update();
+    } else {
+        // VuiPopover can close itself on native scroll/resize.
+        cleanupMetadata();
     }
 });
 
@@ -77,7 +89,7 @@ watch(() => state.metadata.popoverVisible, (visible) => {
     gap: 5px;
     max-width: 300px;
     max-height: 500px;
-    overflow: hidden auto;
+    overflow: auto;
 }
 
 .mcr-metadata-item {
@@ -89,8 +101,17 @@ watch(() => state.metadata.popoverVisible, (visible) => {
     a,
     span {
         font-weight: normal;
-        word-break: break-all;
+        word-break: normal;
+        overflow-wrap: normal;
         overflow: hidden;
+    }
+
+    a {
+        word-break: break-all;
+    }
+
+    span {
+        overflow: visible;
     }
 }
 </style>

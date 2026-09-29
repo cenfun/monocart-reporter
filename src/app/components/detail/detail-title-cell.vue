@@ -12,7 +12,10 @@
       v-else
       class="mcr-detail-head"
     >
-      <div class="mcr-detail-main mcr-flex-auto">
+      <div
+        ref="mainRef"
+        class="mcr-detail-main mcr-flex-auto"
+      >
         <VuiIconLabel
           v-if="data.iconType && !useGridTitleCell"
           :icon="data.iconType"
@@ -22,9 +25,11 @@
 
         <GridTitleCell
           v-if="useGridTitleCell"
+          ref="titleRef"
           :row-item="rowItem"
           :column-item="titleColumn"
           :case-clickable="false"
+          :hide-duplicate-subtitle="true"
           :class="titleClass"
           wrap
         >
@@ -53,6 +58,31 @@
           :class="titleClass"
           tooltip
           v-html="data.html"
+        />
+
+        <div
+          v-if="stepParams.length"
+          ref="paramsRef"
+          class="mcr-step-params"
+          :class="{ 'mcr-step-params-measure': data.paramsMore }"
+          :aria-hidden="data.paramsMore"
+        >
+          <div
+            v-for="param of stepParams"
+            :key="param.name"
+            class="mcr-simple-column"
+          >
+            {{ param.name }} <span>{{ param.value }}</span>
+          </div>
+        </div>
+        <VuiIconLabel
+          v-if="stepParams.length && data.paramsMore"
+          class="mcr-step-params-more"
+          icon="more"
+          button
+          @mouseenter="onMetadataClick($event, rowItem.params)"
+          @mouseleave="onMetadataLeave($event)"
+          @click="onMetadataClick($event, rowItem.params)"
         />
 
         <VuiSwitch
@@ -97,7 +127,7 @@
 
 <script setup>
 import {
-    computed, shallowReactive, onMounted
+    computed, shallowReactive, ref, onMounted, onBeforeUnmount, nextTick
 } from 'vue';
 import {
     VuiSwitch,
@@ -106,6 +136,9 @@ import {
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
+import {
+    closeMetadata, onMetadataClick, onMetadataLeave
+} from '../../modules/metadata.js';
 
 import GridTitleCell from '../grid/grid-title-cell.vue';
 import DurationLocation from './duration-location.vue';
@@ -129,9 +162,36 @@ const props = defineProps({
 const data = shallowReactive({
     iconType: '',
     showStepsCollapse: false,
-    showAttachmentsCollapse: false
+    showAttachmentsCollapse: false,
+    paramsMore: true
 });
 
+const mainRef = ref();
+const titleRef = ref();
+const paramsRef = ref();
+let paramsObserver;
+
+const formatParam = (value) => {
+    if (typeof value === 'string') {
+        return value;
+    }
+    try {
+        return JSON.stringify(value) || String(value);
+    } catch (e) {
+        return String(value);
+    }
+};
+
+const stepParams = computed(() => {
+    const params = props.rowItem.type === 'step' && props.rowItem.params;
+    if (!params || typeof params !== 'object') {
+        return [];
+    }
+    return Object.entries(params).map(([name, value]) => ({
+        name,
+        value: formatParam(value)
+    }));
+});
 const classMap = computed(() => {
     const ls = ['mcr-detail-info'];
     ls.push(`mcr-detail-${props.rowItem.type}`);
@@ -142,8 +202,49 @@ const useGridTitleCell = computed(() => ['suite', 'case', 'step'].includes(props
 const titleColumn = computed(() => state.columns.find((it) => it.id === 'title') || props.columnItem);
 const titleClass = computed(() => [
     'mcr-detail-title',
-    data.showStepsCollapse || data.showAttachmentsCollapse ? '' : 'mcr-flex-auto'
+    data.showStepsCollapse || data.showAttachmentsCollapse || stepParams.value.length ? '' : 'mcr-flex-auto'
 ]);
+
+const measureTitleWidth = () => {
+    const title = titleRef.value?.$el;
+    const main = mainRef.value;
+    if (!title || !main) {
+        return 0;
+    }
+    const clone = title.cloneNode(true);
+    Object.assign(clone.style, {
+        position: 'absolute',
+        visibility: 'hidden',
+        width: 'max-content',
+        maxWidth: 'none',
+        whiteSpace: 'nowrap',
+        overflow: 'visible',
+        flex: 'none'
+    });
+    clone.querySelectorAll('.grid-title-tags, .grid-title-text').forEach((node) => {
+        node.style.flexWrap = 'nowrap';
+        node.style.whiteSpace = 'nowrap';
+        node.style.overflow = 'visible';
+    });
+    main.appendChild(clone);
+    const width = clone.getBoundingClientRect().width;
+    clone.remove();
+    return width;
+};
+
+const updateParamsDisplay = () => {
+    if (!stepParams.value.length || !mainRef.value || !paramsRef.value) {
+        return;
+    }
+    const main = mainRef.value;
+    const gap = parseFloat(getComputedStyle(main).columnGap) || 0;
+    const showMore = measureTitleWidth() + gap + paramsRef.value.getBoundingClientRect().width > main.clientWidth;
+    const target = state.metadata.popoverTarget;
+    if (!showMore && target && main.contains(target)) {
+        closeMetadata(target);
+    }
+    data.paramsMore = showMore;
+};
 
 // eslint-disable-next-line complexity
 onMounted(() => {
@@ -164,6 +265,11 @@ onMounted(() => {
     }
 
     if (rowItem.type === 'step') {
+        if (stepParams.value.length) {
+            nextTick(updateParamsDisplay);
+            paramsObserver = new ResizeObserver(updateParamsDisplay);
+            paramsObserver.observe(mainRef.value);
+        }
         return;
     }
 
@@ -190,6 +296,13 @@ onMounted(() => {
 
 });
 
+onBeforeUnmount(() => {
+    paramsObserver?.disconnect();
+    const target = state.metadata.popoverTarget;
+    if (target && mainRef.value?.contains(target)) {
+        closeMetadata(target);
+    }
+});
 
 const onRowUpdate = () => {
     emit('update');
@@ -259,6 +372,40 @@ const onRowUpdate = () => {
 
 .mcr-detail-step-info .mcr-detail-title {
     font-weight: bold;
+}
+
+.mcr-detail-step .mcr-detail-main {
+    flex-shrink: 1;
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+.mcr-detail-step .mcr-detail-title:has(+ .mcr-step-params) {
+    min-width: 0;
+    flex: 0 1 auto;
+}
+
+.mcr-step-params {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 5px;
+    align-items: center;
+    white-space: nowrap;
+
+    .mcr-simple-column {
+        max-width: none;
+        margin-left: 0;
+    }
+}
+
+.mcr-step-params-measure {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.mcr-step-params-more {
+    flex-shrink: 0;
 }
 
 .mcr-detail-collapse {

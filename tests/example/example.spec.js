@@ -17,6 +17,7 @@ Future task2               :         des4, after des3, 5d
 
 const { test, expect } = require('@playwright/test');
 const Util = require('../../lib/utils/util.js');
+const Visitor = require('../../lib/visitor.js');
 
 test.describe('group', () => {
 
@@ -255,6 +256,97 @@ test.describe('parent group', () => {
             expect.soft(1).toBe(2);
         });
 
+    });
+
+    test('@util dedupe step metadata', () => {
+        const makeSteps = (paramsFor, subtitleFor) => Array.from({ length: 9 }, (_, i) => ({
+            title: 'Select Customer Company',
+            stepType: 'test.step',
+            location: 'example.spec.js:1:1',
+            duration: 1,
+            params: paramsFor(i),
+            subtitle: subtitleFor(i)
+        }));
+        const dedupe = (steps) => Visitor.prototype.dedupeSteps(steps);
+
+        const same = dedupe(makeSteps(() => ({ companyName: 'Acme' }), () => 'Acme'));
+        expect(same).toHaveLength(1);
+        expect(same[0].count).toBe(9);
+        expect(same[0].duration).toBe(9);
+
+        // HTML reporter merges even a pair; single/ineligible steps still have count 1.
+        const pair = dedupe(makeSteps(() => ({ companyName: 'Acme' }), () => 'Acme').slice(0, 2));
+        expect(pair).toHaveLength(1);
+        expect(pair[0].count).toBe(2);
+
+        const noLocation = makeSteps(() => ({ companyName: 'Acme' }), () => 'Acme').slice(0, 2);
+        noLocation.forEach((step) => {
+            step.location = '';
+        });
+        expect(dedupe(noLocation).map((step) => step.count)).toEqual([1, 1]);
+
+        const unfinished = makeSteps(() => ({ companyName: 'Acme' }), () => 'Acme').slice(0, 2);
+        unfinished[0].duration = -1;
+        expect(dedupe(unfinished).map((step) => step.count)).toEqual([1, 1]);
+
+        const differentParams = dedupe(makeSteps((i) => ({ companyName: i === 4 ? 'Globex' : 'Acme' }), () => 'Acme'));
+        expect(differentParams).toHaveLength(3);
+        expect(differentParams[1].params.companyName).toBe('Globex');
+        expect(differentParams[1].count).toBe(1);
+
+        const differentSubtitles = dedupe(makeSteps(() => ({ companyName: 'Acme' }), (i) => i === 4 ? 'Globex' : 'Acme'));
+        expect(differentSubtitles).toHaveLength(3);
+        expect(differentSubtitles[1].subtitle).toBe('Globex');
+    });
+
+    test('@smoke step params and subtitle', async () => {
+        const companies = ['Acme', 'Globex', 'Initech', 'Umbrella', 'Stark', 'Wayne', 'Wonka', 'Hooli', 'Pied Piper'];
+
+        // Repeated titles with distinct params must retain their individual report rows.
+        for (const companyName of companies) {
+            await test.step('Select Customer Company', () => {}, {
+                params: {
+                    companyName
+                },
+                subtitle: companyName === 'Acme' ? companyName : 'Customer'
+            });
+        }
+
+        await test.step('Parameters only', () => {}, {
+            params: {
+                attempt: 0,
+                companyName: 'Acme',
+                subtitle: 'Customer'
+            }
+        });
+        await test.step('Subtitle only', () => {}, {
+            subtitle: 'No params'
+        });
+        await test.step('Subtitle in parameter value', () => {}, {
+            params: {
+                description: 'Customer: Acme'
+            },
+            subtitle: 'Acme'
+        });
+        await test.step('Long parameters', () => {}, {
+            params: {
+                note: 'A long parameter value. '.repeat(30)
+            }
+        });
+        await test.step('Long unbroken parameter', () => {}, {
+            params: {
+                value: 'unbroken'.repeat(50)
+            }
+        });
+
+        await test.step('Verify selected company', async () => {
+            await test.step('Nested step', () => {}, {
+                params: {
+                    companyName: companies[0]
+                },
+                subtitle: companies[0]
+            });
+        });
     });
 
     test.describe('child group', () => {

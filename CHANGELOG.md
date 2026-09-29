@@ -1,5 +1,10 @@
 ## Changelog
 
+* Unreleased
+  - support Playwright 1.63 step `params` and `subtitle` in report data and UI (#210)
+  - make step subtitles searchable, show parameters inline or in a more popover, and handle long values and touch input
+  - align step deduplication with Playwright HTML while keeping steps with different params separate
+
 * 2.13.1
   - collapsed suite rows by default in case details
   - improved wrapping for long titles in case details

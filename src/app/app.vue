@@ -163,7 +163,7 @@
           Searchable Fields
         </div>
         <VuiSwitch
-          v-for="(item, i) in searchable.columns"
+          v-for="(item, i) in searchableColumns"
           :key="i"
           v-model="item.checked"
           :label-clickable="true"
@@ -389,6 +389,9 @@ const route = useRoute();
 const searchable = reactive({
     columns: []
 });
+const searchableColumns = computed(() => searchable.columns.filter((item) => {
+    return item.id !== 'subtitle' || (state.groups.group && state.groups.step);
+}));
 
 const groupLevels = [{
     id: 'shard',
@@ -522,6 +525,15 @@ const initSearchableColumns = (columns) => {
             column.classMap = 'mcr-searchable';
         }
     });
+
+    // Subtitle belongs to steps rather than a visible grid column.
+    if (!searchable.columns.some((it) => it.id === 'subtitle')) {
+        searchable.columns.push({
+            id: 'subtitle',
+            name: 'Subtitle',
+            checked: true
+        });
+    }
 
     state.searchableAllKeys = searchable.columns.map((it) => it.id);
 
@@ -1022,6 +1034,7 @@ watch(() => state.keywords, () => {
 
 watch(() => searchable.columns, (v) => {
     state.searchableKeys = v.filter((item) => item.checked).map((item) => item.id);
+    state.searchableAllKeys = v.filter((item) => item.id !== 'subtitle' || item.checked).map((item) => item.id);
     if (state.keywords) {
         updateGrid();
     }

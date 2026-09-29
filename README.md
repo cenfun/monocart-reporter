@@ -27,6 +27,7 @@ Preview: [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/m
 * [Output](#output)
 * [Reporter Options](#reporter-options)
 * [View Trace Online](#view-trace-online)
+* [Step Metadata](#step-metadata)
 * [Custom Fields Report](#custom-fields-report)
     * [Custom Columns](#custom-columns)
         - [Column Formatter](#column-formatter)
@@ -146,6 +147,17 @@ You can create and install local CA with [mkcert](https://mkcert.dev)
 }
 ```
 
+## Step Metadata
+With Playwright 1.63+, steps can provide `subtitle` and `params`:
+```js
+await test.step('Select Customer Company', async () => {
+    // ...
+}, { subtitle: 'Acme', params: { companyName: 'Acme' } });
+```
+Monocart preserves both fields on step rows in the HTML report data and, when JSON output is enabled, in the report JSON. In the main grid, the subtitle appears after the step title and can be searched when the Step level is enabled under Grouping Options (the `Subtitle` switch appears under Searchable Fields). In case details, a subtitle already contained in a parameter value is hidden to avoid showing it twice. Parameters appear next to the step if they fit; otherwise, hover over the **more** icon or tap/click it to inspect all values. Long unbroken values in this popover can be scrolled horizontally.
+
+> Step parameters can include secrets. Both the HTML and JSON outputs contain the original values unless you redact them in a [custom data visitor](#remove-secrets-and-sensitive-data).
+
 ## Custom Fields Report
 You can add custom fields to the report. for example: Owner, JIRA Key etc.
 - First, you need to add [Custom Columns](#custom-columns) for the fields.
@@ -264,6 +276,7 @@ module.exports = {
     ]
 };
 ```
+When the Step level is enabled in Grouping Options, `Subtitle` also appears under Searchable Fields; no custom column is required. Case details always allow searching step subtitles.
 
 ### Custom Fields in Comments
 > The code comments are good enough to provide extra information without breaking existing code, and no dependencies, clean, easy to read, etc. 
@@ -487,26 +500,44 @@ module.exports = {
 ```
 
 #### Remove Secrets and Sensitive Data
-> The report may hosted outside of the organization’s internal boundaries, security becomes a big issue. Any secrets or sensitive data, such as usernames, passwords, tokens and API keys, should be handled with extreme care. The following example is removing the password and token from the report data with the string replacement in `visitor` function.
+> The report may be hosted outside of the organization’s internal boundaries. Secrets such as passwords and tokens can appear in step `params` and `subtitle` as well as in titles, logs and errors. Redact them before generating HTML/JSON. This example handles nested parameter values in a `visitor` function:
 ```js
 // playwright.config.js
+const redact = (value, secret) => {
+    if (typeof value === 'string') {
+        return value.replaceAll(secret, '***');
+    }
+    if (Array.isArray(value)) {
+        return value.map((item) => redact(item, secret));
+    }
+    if (value && typeof value === 'object') {
+        return Object.fromEntries(Object.entries(value).map(([key, item]) => [
+            key.replaceAll(secret, '***'), redact(item, secret)
+        ]));
+    }
+    return value;
+};
+
 module.exports = {
     reporter: [
-        ['monocart-reporter', {  
-            name: "My Test Report",
+        ['monocart-reporter', {
+            name: 'My Test Report',
             outputFile: './monocart-report/index.html',
-            visitor: (data, metadata) => {
-                const mySecrets = [process.env.PASSWORD, process.env.TOKEN];
+            visitor: (data) => {
+                const mySecrets = [process.env.PASSWORD, process.env.TOKEN].filter(Boolean);
                 mySecrets.forEach((secret) => {
-                    // remove from title
-                    data.title = data.title.replace(secret, '***');
-                    // remove from logs
-                    if (data.logs) {
-                        data.logs = data.logs.map((item) => item.replace(secret, '***'));
+                    data.title = redact(data.title, secret);
+                    if (typeof data.subtitle === 'string') {
+                        data.subtitle = redact(data.subtitle, secret);
                     }
-                    // remove from errors
+                    if (data.params) {
+                        data.params = redact(data.params, secret);
+                    }
+                    if (data.logs) {
+                        data.logs = redact(data.logs, secret);
+                    }
                     if (data.errors) {
-                        data.errors = data.errors.map((item) => item.replace(secret, '***'));
+                        data.errors = redact(data.errors, secret);
                     }
                 });
             }

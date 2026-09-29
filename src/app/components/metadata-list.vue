@@ -23,6 +23,8 @@
           v-if="item.isObject"
           button
           icon="more"
+          @mouseenter="onMetadataClick($event, item.value)"
+          @mouseleave="onMetadataLeave($event)"
           @click="onMetadataClick($event, item.value)"
         />
         <a
@@ -44,7 +46,7 @@
 <script setup>
 import { VuiFlex, VuiIconLabel } from 'vine-ui';
 
-import state from '../modules/state.js';
+import { onMetadataClick, onMetadataLeave } from '../modules/metadata.js';
 
 
 const props = defineProps({
@@ -53,27 +55,6 @@ const props = defineProps({
         default: () => []
     }
 });
-
-const onMetadataClick = (e, data) => {
-    // already open, after close it
-    const currentTarget = e.currentTarget;
-    if (currentTarget === state.metadata.popoverTarget && state.metadata.popoverVisible) {
-        return;
-    }
-
-    if (state.metadata.popoverVisible) {
-        setTimeout(() => {
-            onMetadataClick({
-                currentTarget
-            }, data);
-        }, 100);
-        return;
-    }
-    // console.log('metadata click', data, state.metadata);
-    state.metadata.popoverTarget = currentTarget;
-    state.metadata.data = data;
-    state.metadata.popoverVisible = true;
-};
 
 </script>
 

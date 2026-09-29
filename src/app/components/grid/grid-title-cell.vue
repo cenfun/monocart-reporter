@@ -13,7 +13,7 @@
       >
         <slot />
         <template
-          v-for="(item, i) of allTitleItems"
+          v-for="(item, i) of titleContentItems"
           :key="i"
         >
           <span
@@ -27,6 +27,21 @@
             class="grid-title-text"
           >{{ item.text }}</span>
         </template>
+        <span
+          v-if="stepSubtitle"
+          class="grid-step-subtitle"
+        >• {{ stepSubtitle }}</span>
+        <span
+          v-if="titleNum"
+          :class="['mcr-num', stepCount ? 'mcr-count' : '']"
+        >{{ titleNum }}</span>
+        <span
+          v-for="(item, i) of extraTagItems"
+          :key="`extra-${i}`"
+          class="mcr-tag"
+          :style="item.style"
+          :tooltip="item.description || undefined"
+        >{{ item.key }}</span>
       </div>
 
       <div
@@ -52,7 +67,16 @@
             >{{ item.key }}</span>
             <span v-else>{{ item.text }}</span>
           </template>
+          <span
+            v-if="stepSubtitle"
+            class="grid-step-subtitle"
+          >• {{ stepSubtitle }}</span>
         </div>
+        <span
+          v-if="titleNum"
+          ref="titleNumRef"
+          :class="['mcr-num', stepCount ? 'mcr-count' : '']"
+        >{{ titleNum }}</span>
         <div
           v-if="visibleExtraTagItems.length"
           ref="tagsListRef"
@@ -82,28 +106,34 @@
       >
         <slot />
         <span class="grid-title-text">{{ title }}</span>
+        <span
+          v-if="stepSubtitle"
+          class="grid-step-subtitle"
+        >• {{ stepSubtitle }}</span>
+        <span
+          v-if="titleNum"
+          :class="['mcr-num', stepCount ? 'mcr-count' : '']"
+        >{{ titleNum }}</span>
       </div>
       <div
         v-else
-        tooltip
-        class="grid-title-content"
+        class="grid-title-plain"
       >
-        {{ title }}
+        <div
+          tooltip
+          class="grid-title-content"
+        >
+          {{ title }}<span
+            v-if="stepSubtitle"
+            class="grid-step-subtitle"
+          > • {{ stepSubtitle }}</span>
+        </div>
+        <span
+          v-if="titleNum"
+          :class="['mcr-num', stepCount ? 'mcr-count' : '']"
+        >{{ titleNum }}</span>
       </div>
     </template>
-
-    <div
-      v-if="caseNum"
-      class="mcr-num"
-    >
-      {{ caseNum }}
-    </div>
-    <div
-      v-if="stepCount"
-      class="mcr-num mcr-count"
-    >
-      {{ stepCount }}
-    </div>
   </div>
 </template>
 
@@ -131,10 +161,32 @@ const props = defineProps({
     wrap: {
         type: Boolean,
         default: false
+    },
+    hideDuplicateSubtitle: {
+        type: Boolean,
+        default: false
     }
 });
 
 const title = computed(() => `${props.rowItem.title}`);
+const containsSubtitle = (value, subtitle) => {
+    if (value && typeof value === 'object') {
+        return Object.values(value).some((item) => containsSubtitle(item, subtitle));
+    }
+    return value !== null && typeof value !== 'undefined' && `${value}`.includes(subtitle);
+};
+const stepSubtitle = computed(() => {
+    const {
+        type, subtitle, params
+    } = props.rowItem;
+    if (type !== 'step' || !subtitle) {
+        return '';
+    }
+    if (props.hideDuplicateSubtitle && params && typeof params === 'object' && Object.values(params).some((value) => containsSubtitle(value, subtitle))) {
+        return '';
+    }
+    return subtitle;
+});
 const hasTitleTags = computed(() => {
     const rowItem = props.rowItem;
     if (props.columnItem.titleTagsDisabled || !Util.isTagItem(rowItem)) {
@@ -204,14 +256,14 @@ const extraTagItems = computed(() => {
 });
 
 const hasExtraTags = computed(() => Boolean(extraTagItems.value.length));
-const allTitleItems = computed(() => titleContentItems.value.concat(extraTagItems.value));
 const fullTitleText = computed(() => {
     const extraTags = extraTagItems.value.map((item) => `@${item.key}`);
-    return [title.value, ... extraTags].join(' ');
+    return [title.value, stepSubtitle.value ? `• ${stepSubtitle.value}` : '', ... extraTags].filter(Boolean).join(' ');
 });
 
 const tagsContainerRef = ref();
 const titleRef = ref();
+const titleNumRef = ref();
 const tagsListRef = ref();
 const hiddenTagCount = ref(0);
 const compact = computed(() => hiddenTagCount.value > 0);
@@ -317,7 +369,9 @@ const updateCompactState = () => {
     }
 
     const gap = parseFloat(getComputedStyle(container).columnGap) || 0;
-    const visibleCount = getVisibleTagCount(container.clientWidth, titleNode.scrollWidth, gap, tagsBoxWidth);
+    const numWidth = titleNumRef.value?.offsetWidth || 0;
+    const availableWidth = container.clientWidth - numWidth - (numWidth ? gap : 0);
+    const visibleCount = getVisibleTagCount(availableWidth, titleNode.scrollWidth, gap, tagsBoxWidth);
     hiddenTagCount.value = extraTagItems.value.length - visibleCount;
 };
 
@@ -338,6 +392,9 @@ onMounted(() => {
         updateCompact();
         resizeObserver = new ResizeObserver(updateCompact);
         resizeObserver.observe(container);
+        if (titleNumRef.value) {
+            resizeObserver.observe(titleNumRef.value);
+        }
     });
 });
 
@@ -356,11 +413,12 @@ const caseNum = computed(() => {
 
 // xN repeated step count
 const stepCount = computed(() => {
-    if (props.rowItem.type === 'step' && props.rowItem.count) {
+    if (props.rowItem.type === 'step' && props.rowItem.count > 1) {
         return Util.NF(props.rowItem.count);
     }
     return '';
 });
+const titleNum = computed(() => stepCount.value || caseNum.value);
 </script>
 
 <style lang="scss" scoped>
@@ -374,6 +432,22 @@ const stepCount = computed(() => {
 .grid-title-content,
 .grid-title-tags {
     min-width: 0;
+}
+
+.grid-title-plain {
+    display: flex;
+    flex: 1 1 auto;
+    gap: 5px;
+    align-items: center;
+    min-width: 0;
+
+    .grid-title-content {
+        flex: 0 1 auto;
+    }
+}
+
+.grid-step-subtitle {
+    color: var(--color-skipped);
 }
 
 .grid-title-tags {

@@ -394,7 +394,11 @@ const getGridOption = () => {
         highlightKeywords: {
             textGenerator: (rowItem, id) => {
                 if (id === 'title') {
-                    return rowItem[id] + rowItem.tags;
+                    const titleText = rowItem[id] + rowItem.tags;
+                    if (rowItem.type === 'step' && rowItem.subtitle && state.searchableAllKeys.includes('subtitle')) {
+                        return `${titleText} • ${rowItem.subtitle}`;
+                    }
+                    return titleText;
                 }
                 return rowItem[id];
             }

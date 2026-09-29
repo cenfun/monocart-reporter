@@ -45,6 +45,7 @@ import { microtask } from '../../common/common.js';
 
 import Util from '../../utils/util.js';
 import state from '../../modules/state.js';
+import { closeMetadata } from '../../modules/metadata.js';
 import { initDataColumns, getPositionId } from '../../modules/detail.js';
 import emitter from '../../modules/emitter.js';
 import { renderMermaid } from '../../modules/mermaid.js';
@@ -139,6 +140,14 @@ const initGrid = () => {
         grid.bind('onClick', (e, d) => {
             removeHighlight();
         });
+
+        // Turbogrid also scrolls virtually without firing a native scroll event.
+        grid.bind('onScroll', () => {
+            const target = state.metadata.popoverTarget;
+            if (target && (!target.isConnected || grid.container?.contains(target))) {
+                closeMetadata(target);
+            }
+        });
     }
 
     grid.setOption({
@@ -168,6 +177,10 @@ const initGrid = () => {
             textGenerator: (rowItem, id) => {
                 const list = [rowItem.title];
 
+                if (rowItem.type === 'step') {
+                    list.push(rowItem.subtitle);
+                }
+
                 if (rowItem.type === 'case') {
                     list.push(rowItem.tags);
                     list.push(rowItem.caseType);
@@ -188,8 +201,8 @@ const initGrid = () => {
         },
 
         rowFilter: function(rowItem) {
-            // search title and errors
-            const hasMatched = this.highlightKeywordsFilter(rowItem, ['title'], data.keywords);
+            // Search step subtitles as well as titles.
+            const hasMatched = this.highlightKeywordsFilter(rowItem, ['title', 'subtitle'], data.keywords);
 
             if (hasMatched) {
 
