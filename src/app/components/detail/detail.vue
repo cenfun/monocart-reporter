@@ -284,8 +284,8 @@ const initRows = (list, collection) => {
                     }
                 }
 
-                collection.index += 1;
-                it.index = collection.index;
+                it.index = collection.index + 1;
+                collection.index += it.count || 1;
             }
 
         }

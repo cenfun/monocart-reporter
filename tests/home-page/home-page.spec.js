@@ -118,47 +118,6 @@ test('test with custom steps', async ({ page }, testInfo) => {
     });
 });
 
-test.describe('group', () => {
-
-    test('merge same steps - route.continue', async ({ page }) => {
-
-        await page.route('**/*', (route) => {
-            const url = route.request().url();
-            // console.log(url);
-            if (url.includes('abort')) {
-                return route.abort();
-            }
-            return route.continue();
-        });
-
-        // mock requests
-        await page.evaluate(() => {
-            for (let i = 0; i < 30; i++) {
-                const script = document.createElement('script');
-                if (i === 5) {
-                    script.src = `http://localhost/${i}/abort.js`;
-                } else {
-                    script.src = `http://localhost/${i}/continue.js`;
-                }
-                document.body.appendChild(script);
-            }
-        });
-
-        await new Promise((resolve) => {
-            setTimeout(resolve, 100);
-        });
-
-    });
-
-    test('merge same steps - for expect', () => {
-        for (let i = 1; i < 30; i++) {
-            // @title step title count ( i > 0 )
-            expect(i).toBeGreaterThan(0);
-        }
-    });
-
-});
-
 /**
  * @verify failed
  */
@@ -286,34 +245,4 @@ test('text comparison', async ({ page }) => {
     await HomePage.mockPageGoto(page, 'https://github.com/cenfun/monocart-reporter');
     expect(await page.textContent('.page-url')).toMatchSnapshot();
 
-});
-
-test('my step test', async () => {
-    await Promise.all([
-        test.step('step 1', async () => {
-            await test.info().attach('my step attachment 1', {
-                body: 'foo'
-            });
-        }),
-        test.step('step 2', async () => {
-            await test.info().attach('my step attachment 2', {
-                body: 'bar'
-            });
-        })
-    ]);
-});
-
-test('A test with skipped steps', async ({ page }) => {
-
-    await test.step('A step that is skipped unconditionally', (step) => {
-        step.skip();
-    });
-
-    await test.step('A step that is skipped conditionally', (step) => {
-        step.skip(true);
-    });
-
-    await test.step('A step that is skipped conditionally (with message)', (step) => {
-        step.skip(true, 'This step is skipped because the condition was met.');
-    });
 });

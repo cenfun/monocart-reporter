@@ -117,10 +117,7 @@
         />
       </div>
 
-      <DurationLocation
-        :row-item="rowItem"
-        @update="onRowUpdate"
-      />
+      <DurationLocation :row-item="rowItem" />
     </div>
   </div>
 </template>
@@ -145,8 +142,6 @@ import DurationLocation from './duration-location.vue';
 import DetailSimpleList from './detail-simple-list.vue';
 import DetailColumn from './detail-column.vue';
 
-
-const emit = defineEmits(['update']);
 
 const props = defineProps({
     rowItem: {
@@ -303,10 +298,6 @@ onBeforeUnmount(() => {
         closeMetadata(target);
     }
 });
-
-const onRowUpdate = () => {
-    emit('update');
-};
 
 </script>
 

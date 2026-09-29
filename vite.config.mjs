@@ -7,6 +7,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import { build as esbuild } from 'esbuild';
 import { createScriptLoader, deflateSync } from 'lz-utils';
 import { build as viteBuild, defineConfig } from 'vite';
+import vendorLicense from './scripts/generate-vendor-license.js';
 
 const APP_ID = 'monocart-reporter-app';
 const NETWORK_ID = 'monocart-reporter-network';
@@ -171,16 +172,20 @@ function buildEndPlugin() {
 
             // Bundle dependencies used by the Node.js runtime into CommonJS.
             const vendorPath = path.resolve(packagesDir, 'monocart-reporter-vendor.js');
-            await esbuild({
+            const vendorBuild = await esbuild({
                 entryPoints: [path.resolve(rootDir, 'src/vendor/index.js')],
                 outfile: vendorPath,
                 bundle: true,
                 platform: 'node',
                 format: 'cjs',
                 minify: true,
-                sourcemap: false
+                sourcemap: false,
+                metafile: true
             });
             logBuilt(vendorPath);
+            const vendorLicensePath = `${vendorPath}.LICENSE`;
+            vendorLicense.generateVendorLicense(vendorBuild.metafile, rootDir, vendorLicensePath);
+            logBuilt(vendorLicensePath);
 
             // Convert shared ESM utilities to CommonJS for the Node.js runtime.
             const sharedPath = path.resolve(packagesDir, 'monocart-reporter-shared.js');
