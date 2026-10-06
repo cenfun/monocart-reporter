@@ -1,4 +1,5 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter } from 'vue-router';
+import { createReportHistory } from '../shared/router-history.js';
 
 // Routes are used to synchronize application state with the URL. The app does
 // not render them through RouterView, but Vue Router still requires a component.
@@ -7,7 +8,7 @@ const RouteState = {
 };
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createReportHistory(),
     routes: [{
         path: '/',
         name: 'home',

@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.14.1
+  - fixed blank reports in `iframe srcdoc` (such as Azure DevOps Publish HTML Report) by using in-memory routing for `about:` documents while preserving hash deep links on regular pages (#211)
+
 * 2.14.0
   - support Playwright 1.63 step `subtitle` and `params` in reports, with subtitle search and parameter display (#210)
   - add step duration progress; improve deduplication, merged durations, and step numbering without losing distinct metadata
