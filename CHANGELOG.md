@@ -1,5 +1,11 @@
 ## Changelog
 
+* 2.15.0
+  - upgrade monocart-coverage-reports to 3.x and lazily cache its ESM entry with dynamic import
+  - use import-mode resolution for coverage types in CommonJS TypeScript projects (TypeScript >=5.3)
+  - (Breaking) coverage reports require Node.js >=22.15.0; skip loading the coverage dependency for ordinary reports without coverage data
+  - update runtime and development dependencies
+
 * 2.14.1
   - fixed blank reports in `iframe srcdoc` (such as Azure DevOps Publish HTML Report) by using in-memory routing for `about:` documents while preserving hash deep links on regular pages (#211)
 

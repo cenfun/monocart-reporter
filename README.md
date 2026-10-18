@@ -739,6 +739,11 @@ module.exports = {
 ```
 
 ## Code Coverage Report
+
+> Coverage features, including merging raw coverage reports, require **Node.js >=22.15.0** because they use monocart-coverage-reports 3.x. Ordinary reports without coverage data do not load this dependency.
+>
+> MCR remains an installed dependency. With npm/pnpm's default engine settings, an incompatible dependency's `engines.node` declaration only produces a warning; it does not by itself block installation. Enabling strict engine checks can make installation fail. This does not guarantee runtime compatibility with older Node.js versions, and coverage features still require Node.js >=22.15.0.
+
 The reporter integrates [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports) for coverage reports, there are two APIs:
 - `addCoverageReport(data, testInfo)` Add coverage to global coverage report from a test. see [Global Coverage Report](#global-coverage-report)
     - `data` There are two supported data inputs: [Istanbul](https://github.com/cenfun/monocart-coverage-reports?#collecting-istanbul-coverage-data) (Object) or [V8](https://github.com/cenfun/monocart-coverage-reports?#collecting-v8-coverage-data) (Array)
@@ -855,6 +860,8 @@ see [Collecting V8 Coverage Data from Node.js](https://github.com/cenfun/monocar
 - [Using entryFilter and sourceFilter to filter the results for V8 report](https://github.com/cenfun/monocart-coverage-reports?#using-entryfilter-and-sourcefilter-to-filter-the-results-for-v8-report)
 - Checking thresholds with [onEnd Hook](https://github.com/cenfun/monocart-coverage-reports?#onend-hook)
 - More details see [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
+- TypeScript consumers require TypeScript >=5.3 for the import-mode coverage type declarations used by this CommonJS package.
+- Upgrading from MCR 2.x: see the [MCR 3.x migration guide](https://github.com/cenfun/monocart-coverage-reports/blob/main/migrate-to-3.md). Local custom reporter paths in `coverage.reports` must start with `./` or `../` and include the file extension; they resolve from the current working directory. Absolute paths and `file:` URLs are also supported. Custom reporter loading or initialization errors now reject report generation.
 
 ### Coverage Examples
 - For Playwright component testing:
@@ -1252,7 +1259,7 @@ See [playwright-reporter-integrations](https://github.com/cenfun/playwright-repo
 
 ## Contributing
 ```sh
-# Node.js 22.12+
+# Node.js 24.11.0+ recommended for development and building
 npm install
 
 npm run build

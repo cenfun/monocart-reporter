@@ -10,7 +10,7 @@ import type {
     CoverageFile,
     CoverageRange,
     AddedResults
-} from "monocart-coverage-reports";
+} from "monocart-coverage-reports" with { "resolution-mode": "import" };
 
 export type {
     TestInfo,
