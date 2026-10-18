@@ -21,6 +21,7 @@ Preview: [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/m
     - Monitor CPU and Memory Usage
     - Export Data (json)
 * [Install](#install)
+* [AI Agent Skills](#ai-agent-skills)
 * [Playwright Config](#playwright-config)
 * [Examples](#examples)
 * [Tutorial](#tutorial)
@@ -63,6 +64,18 @@ Preview: [https://cenfun.github.io/monocart-reporter](https://cenfun.github.io/m
 ## Install
 ```sh
 npm i -D monocart-reporter
+```
+
+## AI Agent Skills
+
+The reusable [Monocart Reporter skill](skills/monocart-reporter/SKILL.md) helps AI coding agents configure Playwright reports, customize columns and metadata, collect coverage, merge shard reports, integrate notifications and external tools, and troubleshoot attachments and global state. It targets reporter 2.x and loads task-specific references on demand.
+
+The npm package includes `skills/monocart-reporter/`. Copy this **entire directory**, including `references/`, into your agent's supported skills location, or ask the agent to read `SKILL.md` directly. Installing the package does not automatically register the skill or modify agent settings. Instructions are in English; requests and responses can use any language.
+
+Locate the installed skill from your project root:
+
+```sh
+node -p "require.resolve('monocart-reporter/skills/monocart-reporter/SKILL.md')"
 ```
 
 ## Playwright Config
@@ -113,6 +126,8 @@ Separated data file which can be used for debugging or data provider (It's inclu
 }
 ```
 
+
+Test reports and attached network reports share Open Graph/Twitter metadata: titles use the main report’s `name` or the network report’s `title`, while descriptions and the hosted preview image introduce Monocart Reporter. No fixed page URL is set. These tags affect link previews, not the report UI.
 
 ## Reporter Options
 - Default options: [lib/default/options.js](./lib/default/options.js)
@@ -918,9 +933,11 @@ test('attach lighthouse audit report', async () => {
 ```
 
 ## Attach Network Report
-Attach a network report with API `attachNetworkReport(har, testInfo)`. Arguments:
+Attach a network report with API `attachNetworkReport(har, testInfo, options)`. Arguments:
 - `har` HAR path (String) or HAR file buffer (Buffer). see [HAR 1.2 Spec](http://www.softwareishard.com/blog/har-12-spec/)
 - `testInfo` see [TestInfo](https://playwright.dev/docs/api/class-testinfo)
+- `options` (optional): `title` sets the report title. Other options include `outputDir`, `outputName`, and `inline` (default false).
+- The returned report object and saved network summary expose the report title as `title`.
 
  Generate HAR with `recordHar` option in browser.newContext() (see example: [report-network.spec.js](https://github.com/cenfun/monocart-reporter/blob/main/tests/report-network/report-network.spec.js) preview [report](https://cenfun.github.io/monocart-reporter/#/report))
 
@@ -1268,6 +1285,12 @@ npm run test
 npm run dev         # App (default)
 npm run dev-app     # App
 npm run dev-network # Network
+
+# Optional: regenerate assets/og-image.png (requires Playwright Chromium)
+npm run docs-og-image
+# After tests finish, copy the preview image into .temp/monocart/
+# This is separate from npm test, including when demonstration tests fail.
+npm run docs
 ```
 ### Dependencies
 - UI Framework [Vue 3](https://github.com/vuejs/core)
@@ -1275,3 +1298,5 @@ npm run dev-network # Network
 - High Performance Grid [turbogrid](https://github.com/cenfun/turbogrid)
 - String compress/decompress [lz-utils](https://github.com/cenfun/lz-utils)
 - Coverage Reporter [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports)
+
+![Monocart Reporter](./assets/og-image.png)

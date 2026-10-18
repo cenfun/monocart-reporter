@@ -74,7 +74,7 @@
       <a
         :href="props.data.path"
         target="_blank"
-      >{{ props.data.report.name }}</a>
+      >{{ props.data.report.title ?? props.data.report.name }}</a>
     </VuiFlex>
   </div>
 </template>

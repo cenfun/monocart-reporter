@@ -1,6 +1,9 @@
 ## Changelog
 
 * 2.15.0
+  - add a bundled AI agent skill with task-specific references for configuration, customization, coverage, integrations, sharding, and troubleshooting
+  - add shared Open Graph/Twitter metadata and a reproducible social preview image
+  - fix Network Report title handling across options, page data, returned metadata, and attachment labels
   - upgrade monocart-coverage-reports to 3.x and lazily cache its ESM entry with dynamic import
   - use import-mode resolution for coverage types in CommonJS TypeScript projects (TypeScript >=5.3)
   - (Breaking) coverage reports require Node.js >=22.15.0; skip loading the coverage dependency for ordinary reports without coverage data

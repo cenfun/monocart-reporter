@@ -40,9 +40,9 @@ jobs:
       - run: npm i
       - run: npx playwright install --with-deps
       - run: npm run build
-      - run: npm run link
-
-      - run: npx playwright test -c tests || exit 0
+      # Demo fixtures intentionally include failed/flaky cases; publish their reports too.
+      - run: npm run test || exit 0
+      - run: npm run docs
 
       - run: cp ./.temp/monocart-zip/mr.zip ./.temp/monocart/mr.zip
 

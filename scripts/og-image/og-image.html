@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Monocart Reporter — built for Playwright, connected to your tools</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            width: 1200px;
+            height: 630px;
+            margin: 0;
+            border-top: 8px solid #d2691e;
+            background: #fff;
+            color: #24292e;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        main { margin: 28px 64px 0; }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            height: 72px;
+        }
+
+        .logo { width: 72px; height: 72px; }
+        .brand { font-size: 42px; font-weight: bold; letter-spacing: -0.8px; }
+
+        .category {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            color: #a54e12;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1.8px;
+        }
+
+        .playwright-logo { width: 72px; height: 72px; flex-shrink: 0; }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 512px 524px;
+            align-items: center;
+            gap: 36px;
+            height: 284px;
+            margin-top: 28px;
+        }
+
+        h1 {
+            margin: 0 0 20px;
+            font-size: 49px;
+            line-height: 56px;
+            letter-spacing: -1.8px;
+        }
+
+        h1 span { color: #a54e12; }
+
+        .intro {
+            margin: 0;
+            color: #57606a;
+            font-size: 22px;
+            line-height: 33px;
+        }
+
+        .report {
+            overflow: hidden;
+            height: 284px;
+            border: 1px solid #d0d7de;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgb(36 41 46 / 7%);
+            font-size: 15px;
+        }
+
+        .report-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 40px;
+            padding: 0 16px;
+            border-bottom: 1px solid #d0d7de;
+            background: #f6f8fa;
+            color: #57606a;
+        }
+
+        .report-toolbar strong { color: #24292e; }
+        .filter { color: #6e7781; font-size: 13px; }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 92px 68px;
+            align-items: center;
+            height: 32px;
+            padding: 0 16px;
+            border-bottom: 1px solid #eef0f2;
+        }
+
+        .row > :last-child { text-align: right; }
+        .columns { height: 30px; color: #57606a; font-size: 12px; font-weight: bold; }
+        .suite { background: #fff9f3; font-weight: bold; }
+        .case { padding-left: 30px; }
+        .step { padding-left: 50px; color: #57606a; font-size: 14px; }
+        .passed { color: #1a7f37; }
+        .owner { color: #57606a; font-size: 13px; }
+        .duration { color: #57606a; font-family: Consolas, monospace; font-size: 13px; }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: 74px 1fr;
+            align-items: center;
+            gap: 7px 12px;
+            padding: 12px 16px;
+            color: #57606a;
+            font-size: 12px;
+        }
+
+        .track { display: flex; gap: 5px; height: 9px; }
+        .bar { border-radius: 3px; background: #73b78c; }
+        .bar.orange { background: #e3a16b; }
+        .timeline-label { grid-column: 1 / -1; margin-top: 3px; color: #6e7781; font-size: 11px; }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .feature {
+            height: 104px;
+            padding: 12px 18px;
+            border: 1px solid #e4e7eb;
+            border-radius: 12px;
+            background: #f6f8fa;
+        }
+
+        .feature strong { display: block; margin-bottom: 5px; font-size: 20px; }
+        .feature p { margin: 0; color: #57606a; font-size: 16px; line-height: 23px; }
+
+        footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 76px;
+            flex-shrink: 0;
+            margin-top: auto;
+            padding: 0 64px;
+            border-top: 1px solid #e5e9ed;
+            color: #57606a;
+            font-size: 21px;
+        }
+
+        .footer-link { display: flex; align-items: center; gap: 12px; }
+        .link-icon, .link-icon svg { display: block; width: 25px; height: 25px; }
+
+        .skill {
+            padding: 8px 16px;
+            border: 1px solid #edc8ab;
+            border-radius: 22px;
+            background: #fff5eb;
+            color: #a54e12;
+            font-size: 17px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <img class="logo" src="{placeholder_logo}" alt="Monocart" width="72" height="72">
+            <div class="brand">Monocart Reporter</div>
+            <div class="category"><img class="playwright-logo" src="{placeholder_playwright_logo}" alt="Playwright" width="72" height="72"><span>PLAYWRIGHT TEST REPORTER</span></div>
+        </header>
+        <section class="hero" aria-label="Customizable Playwright reports">
+            <div>
+                <h1>Built for Playwright.<br><span>Connect your tools.</span></h1>
+                <p class="intro">Customizable reports. Extensible by design.<br>Connect test results to your workflow.<br>Tree grid · Coverage · Shard merging</p>
+            </div>
+            <div class="report" role="img" aria-label="Illustrative tree grid with a custom Owner column, nested test steps and a worker timeline">
+                <div class="report-toolbar"><strong>Test Report</strong><span class="filter">Search · Filter · Group</span></div>
+                <div class="row columns"><span>Title</span><span>Owner</span><span>Duration</span></div>
+                <div class="row suite"><span>▾ Checkout suite</span><span></span><span></span></div>
+                <div class="row"><span class="case"><span class="passed">✓</span> Complete purchase</span><span class="owner">QA Team</span><span class="duration">1.2s</span></div>
+                <div class="row"><span class="step">↳ Add item to cart</span><span></span><span class="duration">320ms</span></div>
+                <div class="row"><span class="step">↳ Confirm order</span><span></span><span class="duration">880ms</span></div>
+                <div class="timeline">
+                    <span>Worker 1</span><div class="track"><span class="bar" style="width: 42%"></span><span class="bar" style="width: 28%"></span></div>
+                    <span>Worker 2</span><div class="track"><span class="bar" style="width: 24%"></span><span class="bar orange" style="width: 48%"></span></div>
+                    <div class="timeline-label">WORKER TIMELINE · CPU &amp; MEMORY MONITORING</div>
+                </div>
+            </div>
+        </section>
+        <section class="features" aria-label="Core capabilities">
+            <div class="feature"><strong>Customize &amp; extend</strong><p>Columns · Metadata · Formatters<br>Tags · Markdown · Visitors</p></div>
+            <div class="feature"><strong>Integrations via hooks</strong><p>Jira · TestRail · Qase · Slack<br>Teams · GitHub Actions · Email</p></div>
+            <div class="feature"><strong>Explore every test run</strong><p>Traces · Logs · Attachments · Trends<br>Worker timelines · CPU &amp; memory</p></div>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-link"><span class="link-icon" aria-hidden="true">{placeholder_link_icon}</span><span>github.com/cenfun/monocart-reporter</span></div>
+        <div class="skill">AI Agent Skills included</div>
+    </footer>
+</body>
+</html>

@@ -241,6 +241,7 @@ export function attachCoverageReport(
  * network
  */
 export type NetworkReportOptions = {
+    /** Report title. */
     title?: string;
     outputDir?: string;
     outputName?: string;

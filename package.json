@@ -14,7 +14,8 @@
             "default": "./lib/index.js"
         },
         "./cli": "./lib/cli.js",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        "./skills/*": "./skills/*"
     },
     "types": "./lib/index.d.ts",
     "scripts": {
@@ -36,10 +37,13 @@
         "patch": "npm run publish -- patch",
         "mock-download": "node ./scripts/mock-download.js",
         "mock-serve": "node ./scripts/mock-serve.js",
-        "docs-report-gif": "node ./scripts/generate-report-gif.js"
+        "docs-report-gif": "node ./scripts/generate-report-gif.js",
+        "docs-og-image": "node ./scripts/og-image/make-og-image.js",
+        "docs": "node ./scripts/docs.js"
     },
     "files": [
-        "lib"
+        "lib",
+        "skills"
     ],
     "license": "MIT",
     "repository": {
