@@ -24,7 +24,6 @@
           '--mcr-progress-start': `${rowItem.progress[0]}%`,
           '--mcr-progress-end': `${rowItem.progress[1]}%`
         }"
-        aria-hidden="true"
       />
     </div>
   </div>

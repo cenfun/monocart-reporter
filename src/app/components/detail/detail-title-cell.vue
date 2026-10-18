@@ -65,7 +65,6 @@
           ref="paramsRef"
           class="mcr-step-params"
           :class="{ 'mcr-step-params-measure': data.paramsMore }"
-          :aria-hidden="data.paramsMore"
         >
           <div
             v-for="param of stepParams"

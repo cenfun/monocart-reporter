@@ -4,8 +4,6 @@
       ref="overlay"
       class="mcr-image-preview"
       role="dialog"
-      aria-modal="true"
-      aria-label="Image preview"
       tabindex="-1"
       @click.self="emit('close')"
       @wheel.prevent="onWheel"
@@ -42,7 +40,6 @@
         ref="closeButton"
         class="mcr-image-preview-close"
         type="button"
-        aria-label="Close image preview"
         title="Close (Esc)"
         @click="emit('close')"
       >

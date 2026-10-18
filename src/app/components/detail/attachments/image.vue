@@ -7,7 +7,6 @@
         :class="imgClass"
         role="button"
         tabindex="0"
-        aria-label="Preview image"
         @load="onImgLoad"
         @click="previewVisible = true"
         @keydown.enter.prevent="previewVisible = true"

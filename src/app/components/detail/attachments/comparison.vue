@@ -1,236 +1,277 @@
 <template>
   <div
-    ref="el"
-    class="mcr-attachment-comparison"
+    class="mcr-comparison-host"
+    :style="fullscreen ? { height: `${inlineHeight}px` } : undefined"
   >
-    <Tabs
-      v-if="d.imageMap"
-      v-model="d.tabIndex"
-      :options="d.tabOptions"
-      :colors="d.tabColors"
+    <Teleport
+      to="body"
+      :disabled="!fullscreen"
     >
-      <div class="mcr-tab-list">
+      <div
+        class="mcr-comparison-preview"
+        :class="{ 'mcr-comparison-preview-fullscreen': fullscreen }"
+        :role="fullscreen ? 'dialog' : undefined"
+        @keydown="onPreviewKeydown"
+      >
         <div
-          v-for="(item, i) of d.imageList"
-          :key="i"
-          class="mcr-tab-pane"
-          :index="i"
+          ref="el"
+          v-bind="$attrs"
+          class="mcr-attachment-comparison"
         >
           <div
-            class="mcr-comparison-image"
-            :style="d.img.wrapperStyle"
+            v-if="d.imageList"
+            class="mcr-comparison-actions"
           >
-            <img
-              :src="item.path"
-              :alt="item.name"
-              :style="d.img.imageStyle"
-              @load="onImgLoad"
-            >
+            <VuiIconLabel
+              ref="fullscreenButton"
+              class="mcr-comparison-fullscreen-button"
+              :icon="fullscreen ? 'close' : 'fullscreen'"
+              size="16px"
+              button
+              role="button"
+              tabindex="0"
+              :title="fullscreen ? 'Close (Esc)' : 'Fullscreen'"
+              @click="toggleFullscreen"
+              @keydown.enter.stop.prevent="toggleFullscreen"
+              @keydown.space.stop.prevent="toggleFullscreen"
+            />
           </div>
-        </div>
-        <div
-          class="mcr-tab-pane"
-          index="3"
-        >
-          <div class="mcr-side-by-side">
-            <div
-              class="mcr-comparison-image"
-              :style="d.img.wrapperStyle"
-            >
-              <img
-                :src="d.sideLeft.path"
-                :alt="d.sideLeft.name"
-                :title="d.sideLeft.title"
-                :style="d.img.imageStyle"
-              >
-            </div>
-            <div
-              class="mcr-comparison-image"
-              :style="d.img.wrapperStyle"
-            >
-              <img
-                :src="d.sideRight.path"
-                :alt="d.sideRight.name"
-                :title="d.sideRight.title"
-                :style="d.img.imageStyle"
-                @click="onSideClick"
-              >
-            </div>
-          </div>
-        </div>
-        <div
-          class="mcr-tab-pane"
-          index="4"
-        >
-          <div class="mcr-slider-pane">
-            <div
-              class="mcr-comparison-image"
-              :style="d.img.wrapperStyle"
-            >
-              <img
-                :src="d.imageMap.expected.path"
-                :alt="d.imageMap.expected.name"
-                :style="d.img.imageStyle"
-              >
-            </div>
-
-            <div class="mcr-slider-top">
+          <Tabs
+            v-if="d.imageMap"
+            v-model="d.tabIndex"
+            :options="d.tabOptions"
+            :colors="d.tabColors"
+          >
+            <div class="mcr-tab-list">
               <div
-                class="mcr-comparison-image"
-                :style="d.img.wrapperStyle"
+                v-for="(item, i) of d.imageList"
+                :key="i"
+                class="mcr-tab-pane"
+                :index="i"
               >
-                <img
-                  :src="d.imageMap.actual.path"
-                  :alt="d.imageMap.actual.name"
-                  :style="updateOpacity(d.img.imageStyle)"
+                <div
+                  class="mcr-comparison-image"
+                  :style="d.img.wrapperStyle"
                 >
+                  <img
+                    :src="item.path"
+                    :alt="item.name"
+                    :style="d.img.imageStyle"
+                    @load="onImgLoad"
+                  >
+                </div>
+              </div>
+              <div
+                class="mcr-tab-pane"
+                index="3"
+              >
+                <div class="mcr-side-by-side">
+                  <div
+                    class="mcr-comparison-image"
+                    :style="d.img.wrapperStyle"
+                  >
+                    <img
+                      :src="d.sideLeft.path"
+                      :alt="d.sideLeft.name"
+                      :title="d.sideLeft.title"
+                      :style="d.img.imageStyle"
+                    >
+                  </div>
+                  <div
+                    class="mcr-comparison-image"
+                    :style="d.img.wrapperStyle"
+                  >
+                    <img
+                      :src="d.sideRight.path"
+                      :alt="d.sideRight.name"
+                      :title="d.sideRight.title"
+                      :style="d.img.imageStyle"
+                      @click="onSideClick"
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="mcr-tab-pane"
+                index="4"
+              >
+                <div class="mcr-slider-pane">
+                  <div
+                    class="mcr-comparison-image"
+                    :style="d.img.wrapperStyle"
+                  >
+                    <img
+                      :src="d.imageMap.expected.path"
+                      :alt="d.imageMap.expected.name"
+                      :style="d.img.imageStyle"
+                    >
+                  </div>
+
+                  <div class="mcr-slider-top">
+                    <div
+                      class="mcr-comparison-image"
+                      :style="d.img.wrapperStyle"
+                    >
+                      <img
+                        :src="d.imageMap.actual.path"
+                        :alt="d.imageMap.actual.name"
+                        :style="updateOpacity(d.img.imageStyle)"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="mcr-slider-thumb">
+                    <div
+                      ref="gutter"
+                      :class="['mcr-slider-gutter', d.gutterEnabled?'mcr-slider-gutter-moving':'']"
+                    >
+                      <div />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          </Tabs>
 
-            <div class="mcr-slider-thumb">
-              <div
-                ref="gutter"
-                :class="['mcr-slider-gutter', d.gutterEnabled?'mcr-slider-gutter-moving':'']"
+          <div
+            v-if="d.imageList"
+            class="mcr-comparison-toolbar"
+          >
+            <VuiFlex gap="20px">
+              <VuiSwitch
+                v-model="state.imageZoom"
+                class="mcr-comparison-zoom"
+                width="28px"
+                height="18px"
+                :label-clickable="true"
+                label-position="right"
               >
-                <div />
+                <VuiFlex gap="10px">
+                  <div>Zoom In/Out</div>
+                  <div
+                    v-if="state.imageZoom"
+                    class="mcr-zoom-value"
+                  >
+                    {{ d.img.percent }}% <span>({{ d.img.imageLeft }}, {{ d.img.imageTop }})</span>
+                  </div>
+                </VuiFlex>
+              </VuiSwitch>
+
+              <VuiFlex
+                v-show="d.tabIndex===4"
+                gap="5px"
+              >
+                <div>Opacity</div>
+                <VuiProgress
+                  class="mcr-comparison-opacity"
+                  :percentage="d.img.opacity"
+                  height="12px"
+                  width="100px"
+                />
+                <b>{{ d.img.opacity }}%</b>
+              </VuiFlex>
+            </VuiFlex>
+            <div
+              @mouseenter="showHelp($event, true)"
+              @mouseleave="showHelp($event, false)"
+            >
+              <VuiIconLabel
+                button
+                icon="help"
+              />
+              <div hidden>
+                <div class="mcr-readme mcr-comparison-help">
+                  <h3>Help on the image:</h3>
+                  <li class="mcr-item">
+                    Mouse Down/Up: switch view with neighbor
+                  </li>
+                  <li class="mcr-item">
+                    Double Click: zoom in 100%/200% or reset
+                  </li>
+                  <li class="mcr-item">
+                    Mouse Wheel: zoom in/out
+                  </li>
+                  <li class="mcr-item">
+                    Mouse Drag: switch view or pan
+                  </li>
+                  <li class="mcr-item">
+                    Fullscreen: expand the comparison; use Close or Esc to restore
+                  </li>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </Tabs>
 
-    <div
-      v-if="d.imageList"
-      class="mcr-comparison-toolbar"
-    >
-      <VuiFlex gap="20px">
-        <VuiSwitch
-          v-model="state.imageZoom"
-          class="mcr-comparison-zoom"
-          width="28px"
-          height="18px"
-          :label-clickable="true"
-          label-position="right"
-        >
-          <VuiFlex gap="10px">
-            <div>Zoom In/Out</div>
+          <VuiFlex
+            v-if="d.textList"
+            v-show="!fullscreen"
+            gap="10px"
+            padding="10px"
+            width="100%"
+            align-items="start"
+            shirk
+            wrap
+          >
             <div
-              v-if="state.imageZoom"
-              class="mcr-zoom-value"
+              v-for="(item, i) of d.textList"
+              :key="i"
+              class="mcr-text-item"
             >
-              {{ d.img.percent }}% <span>({{ d.img.imageLeft }}, {{ d.img.imageTop }})</span>
+              <div class="mcr-text-head">
+                {{ item.category }}
+              </div>
+              <pre><code>{{ item.content }}</code></pre>
             </div>
           </VuiFlex>
-        </VuiSwitch>
 
-        <VuiFlex
-          v-show="d.tabIndex===4"
-          gap="5px"
-        >
-          <div>Opacity</div>
-          <VuiProgress
-            class="mcr-comparison-opacity"
-            :percentage="d.img.opacity"
-            height="12px"
-            width="100px"
-          />
-          <b>{{ d.img.opacity }}%</b>
-        </VuiFlex>
-      </VuiFlex>
-      <div
-        @mouseenter="showHelp($event, true)"
-        @mouseleave="showHelp($event, false)"
-      >
-        <VuiIconLabel
-          button
-          icon="help"
-        />
-        <div hidden>
-          <div class="mcr-readme mcr-comparison-help">
-            <h3>Help on the image:</h3>
-            <li class="mcr-item">
-              Mouse Down/Up: switch view with neighbor
-            </li>
-            <li class="mcr-item">
-              Double Click: zoom in 100%/200% or reset
-            </li>
-            <li class="mcr-item">
-              Mouse Wheel: zoom in/out
-            </li>
-            <li class="mcr-item">
-              Mouse Drag: switch view or pan
-            </li>
-          </div>
+          <VuiFlex
+            v-show="!fullscreen"
+            direction="column"
+            gap="10px"
+            padding="10px"
+          >
+            <VuiFlex
+              v-if="d.message"
+              gap="10px"
+              wrap
+              shirk
+            >
+              <VuiIconLabel
+                button
+                icon="error"
+                gap="10px"
+                @click="onErrorClick"
+              >
+                {{ d.message }}
+              </VuiIconLabel>
+              <div v-if="d.size">
+                ({{ d.size }})
+              </div>
+            </VuiFlex>
+
+            <VuiFlex
+              gap="10px"
+              wrap
+            >
+              <a
+                v-for="(item, i) of props.data.list"
+                :key="i"
+                :href="item.path"
+                target="_blank"
+                :download="item.name"
+                class="mcr-item"
+              >{{ item.name }}</a>
+            </VuiFlex>
+          </VuiFlex>
         </div>
       </div>
-    </div>
-
-    <VuiFlex
-      v-if="d.textList"
-      gap="10px"
-      padding="10px"
-      width="100%"
-      align-items="start"
-      shirk
-      wrap
-    >
-      <div
-        v-for="(item, i) of d.textList"
-        :key="i"
-        class="mcr-text-item"
-      >
-        <div class="mcr-text-head">
-          {{ item.category }}
-        </div>
-        <pre><code>{{ item.content }}</code></pre>
-      </div>
-    </VuiFlex>
-
-    <VuiFlex
-      direction="column"
-      gap="10px"
-      padding="10px"
-    >
-      <VuiFlex
-        v-if="d.message"
-        gap="10px"
-        wrap
-        shirk
-      >
-        <VuiIconLabel
-          button
-          icon="error"
-          gap="10px"
-          @click="onErrorClick"
-        >
-          {{ d.message }}
-        </VuiIconLabel>
-        <div v-if="d.size">
-          ({{ d.size }})
-        </div>
-      </VuiFlex>
-
-      <VuiFlex
-        gap="10px"
-        wrap
-      >
-        <a
-          v-for="(item, i) of props.data.list"
-          :key="i"
-          :href="item.path"
-          target="_blank"
-          :download="item.name"
-          class="mcr-item"
-        >{{ item.name }}</a>
-      </VuiFlex>
-    </VuiFlex>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
 import {
-    watch, watchEffect, reactive, shallowReactive, onUnmounted, onMounted, ref
+    watch, watchEffect, reactive, shallowReactive, onUnmounted, onMounted, onActivated, onDeactivated, ref, nextTick
 } from 'vue';
 import {
     VuiFlex,
@@ -248,6 +289,10 @@ import SME from '../../../common/start-move-end.js';
 
 import Tabs from '../../tabs.vue';
 
+
+defineOptions({
+    inheritAttrs: false
+});
 
 const props = defineProps({
     data: {
@@ -287,6 +332,82 @@ const d = shallowReactive({
 
 const el = ref(null);
 const gutter = ref(null);
+const fullscreen = ref(false);
+const fullscreenButton = ref(null);
+const inlineHeight = ref(0);
+let previousOverflow;
+let previousFocus;
+
+const restoreFullscreen = (restoreFocus = true) => {
+    document.body.style.overflow = previousOverflow;
+    if (state.tooltip?.classMap === 'mcr-comparison-tooltip') {
+        state.tooltip.visible = false;
+        state.tooltip.classMap = '';
+    }
+    if (restoreFocus && previousFocus?.isConnected) {
+        previousFocus.focus({
+            preventScroll: true
+        });
+    }
+};
+
+const toggleFullscreen = async () => {
+    if (fullscreen.value) {
+        restoreFullscreen(false);
+    } else {
+        inlineHeight.value = el.value.offsetHeight;
+        previousOverflow = document.body.style.overflow;
+        previousFocus = document.activeElement;
+        document.body.style.overflow = 'hidden';
+    }
+    fullscreen.value = !fullscreen.value;
+    await nextTick();
+    if (!el.value?.isConnected) {
+        return;
+    }
+    el.value.scrollTop = 0;
+    onContainerResize(true);
+    if (fullscreen.value) {
+        fullscreenButton.value.$el.focus({
+            preventScroll: true
+        });
+    } else {
+        restoreFullscreen();
+    }
+};
+
+const closeFullscreen = () => {
+    if (fullscreen.value) {
+        toggleFullscreen();
+    }
+};
+
+const trapFullscreenFocus = (event) => {
+    const items = Array.from(el.value.querySelectorAll('button, a[href], input, select, textarea, [tabindex]'))
+        .filter((item) => !item.disabled && item.tabIndex >= 0 && item.getClientRects().length);
+    const first = items[0];
+    const last = items[items.length - 1];
+    const target = event.shiftKey ? last : first;
+    const edge = event.shiftKey ? first : last;
+    if (target && document.activeElement === edge) {
+        event.preventDefault();
+        target.focus();
+    }
+};
+
+const onPreviewKeydown = (event) => {
+    if (!fullscreen.value) {
+        return;
+    }
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        closeFullscreen();
+    }
+    if (event.key === 'Tab') {
+        trapFullscreenFocus(event);
+    }
+};
 
 const initImageComparison = (list) => {
     const titles = {
@@ -639,12 +760,14 @@ const showHelp = (e, visible) => {
         tooltip.target = null;
         tooltip.html = false;
         tooltip.text = '';
+        tooltip.classMap = '';
 
         return;
     }
 
     tooltip.target = e.target;
     tooltip.html = true;
+    tooltip.classMap = fullscreen.value ? 'mcr-comparison-tooltip' : '';
 
     const $content = e.target.querySelector('div[hidden]');
     if ($content) {
@@ -893,6 +1016,20 @@ watch(() => d.tabIndex, (i) => {
     onContainerResize(reset);
 });
 
+watch(() => state.flyoverVisible, async (visible) => {
+    if (!visible) {
+        closeFullscreen();
+        return;
+    }
+    await nextTick();
+    onContainerResize(true);
+});
+
+onActivated(() => {
+    onContainerResize(true);
+});
+onDeactivated(closeFullscreen);
+
 watch([
     () => state.flyoverWidth,
     () => state.windowWidth,
@@ -916,12 +1053,54 @@ onMounted(() => {
 
 onUnmounted(() => {
     Util.unbindEvents(globalEvents);
+    if (fullscreen.value) {
+        restoreFullscreen();
+    }
 });
 
 </script>
 
 <style lang="scss">
+.mcr-comparison-preview {
+    display: contents;
+}
+
 .mcr-attachment-comparison {
+    .mcr-comparison-actions {
+        position: sticky;
+        z-index: 1001;
+        top: 0;
+        display: flex;
+        justify-content: flex-end;
+        height: 0;
+        min-width: 0;
+    }
+
+    .mcr-comparison-fullscreen-button {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin: 10px 8px;
+        padding: 4px;
+        color: var(--color-primary);
+        background: var(--bg-primary);
+        border: 0;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover,
+        &:focus-visible {
+            background: var(--bg-hover);
+        }
+    }
+
+    .mcr-tabs-header {
+        padding-right: 40px;
+    }
+
     .mcr-text-item {
         position: relative;
         max-width: 100%;
@@ -947,7 +1126,7 @@ onUnmounted(() => {
     }
 
     > div {
-        min-width: 420px;
+        min-width: var(--mcr-comparison-min-width, 420px);
     }
 
     .mcr-tab-list {
@@ -1075,6 +1254,38 @@ onUnmounted(() => {
     }
 }
 
+.mcr-comparison-preview-fullscreen {
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    overscroll-behavior: contain;
+
+    .mcr-attachment-comparison {
+        --mcr-comparison-min-width: 0;
+
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        color: var(--color-primary);
+        background: var(--bg-secondary);
+        overflow: auto;
+        overscroll-behavior: contain;
+    }
+
+    .mcr-comparison-toolbar {
+        flex-wrap: wrap;
+        gap: 10px;
+
+        > .vui-flex {
+            flex-wrap: wrap;
+        }
+    }
+}
+
 /**
 in tooltip, out of component
 */
@@ -1084,6 +1295,10 @@ in tooltip, out of component
     h3 {
         margin: 5px 0;
     }
+}
+
+.vui-tooltip.mcr-comparison-tooltip {
+    z-index: 10001;
 }
 
 .mcr-zoom-value {
