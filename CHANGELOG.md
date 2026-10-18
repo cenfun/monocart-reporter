@@ -1,6 +1,7 @@
 ## Changelog
 
 * 2.15.0
+  - add image attachment previews with desktop and touch zoom controls, bounded panning, and double-click/tap switching between fitted and original size
   - add a bundled AI agent skill with task-specific references for configuration, customization, coverage, integrations, sharding, and troubleshooting
   - add shared Open Graph/Twitter metadata and a reproducible social preview image
   - fix Network Report title handling across options, page data, returned metadata, and attachment labels

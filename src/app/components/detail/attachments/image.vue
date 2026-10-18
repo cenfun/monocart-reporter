@@ -5,7 +5,13 @@
         :src="props.data.path"
         :alt="props.data.name"
         :class="imgClass"
+        role="button"
+        tabindex="0"
+        aria-label="Preview image"
         @load="onImgLoad"
+        @click="previewVisible = true"
+        @keydown.enter.prevent="previewVisible = true"
+        @keydown.space.prevent="previewVisible = true"
       >
     </div>
     <VuiFlex gap="3px">
@@ -19,6 +25,12 @@
         target="_blank"
       >Download image</a>
     </VuiFlex>
+    <ImagePreview
+      v-if="previewVisible"
+      :src="props.data.path"
+      :alt="props.data.name"
+      @close="previewVisible = false"
+    />
   </div>
 </template>
 
@@ -30,6 +42,7 @@ import {
 } from 'vine-ui';
 
 import Util from '../../../utils/util.js';
+import ImagePreview from '../../common/image-preview.vue';
 
 const props = defineProps({
     data: {
@@ -38,6 +51,7 @@ const props = defineProps({
     }
 });
 
+const previewVisible = ref(false);
 const imgClass = ref('mcr-attachment-image-class');
 const onImgLoad = (e) => {
     const { naturalWidth, naturalHeight } = e.target;
