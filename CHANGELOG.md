@@ -1,5 +1,8 @@
 ## Changelog
 
+* 2.15.1
+  - fixed `attachCoverageReport` throwing when coverage data is empty; return `undefined` without adding an attachment and update the return type accordingly (#212)
+
 * 2.15.0
   - add image attachment previews with desktop and touch zoom controls, bounded panning, and double-click/tap switching between fitted and original size
   - add fullscreen screenshot comparisons with preserved tabs, theme-aware backgrounds, and close/Esc controls
