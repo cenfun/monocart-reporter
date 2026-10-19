@@ -178,3 +178,9 @@ test('Take V8 js and css coverage report', async ({ page }) => {
     // console.log(report.summary);
 
 });
+
+test('Attach coverage report without coverage data', async () => {
+    // a page that failed before running any script gives an empty list
+    const coverageResults = await attachCoverageReport([], test.info());
+    expect(coverageResults).toBeUndefined();
+});
