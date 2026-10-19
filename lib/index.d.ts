@@ -234,7 +234,7 @@ export function attachCoverageReport(
     coverageData: any[] | any,
     testInfo: TestInfo,
     options?: CoverageReportOptions
-): Promise<CoverageResults>;
+): Promise<CoverageResults | undefined>;
 
 
 /**
