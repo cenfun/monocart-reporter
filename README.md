@@ -68,6 +68,8 @@ npm i -D monocart-reporter
 
 ## AI Agent Skills
 
+For AI-assisted development in a source checkout, start with [AGENTS.md](https://github.com/cenfun/monocart-reporter/blob/main/AGENTS.md). It describes the source layout, development commands, validation, and safety boundaries. `.github/copilot-instructions.md` provides a self-contained summary of the core rules for GitHub Copilot. These checkout-only guides are not included in the npm package and are separate from the reusable integration skill below.
+
 The reusable [Monocart Reporter skill](skills/monocart-reporter/SKILL.md) helps AI coding agents configure Playwright reports, customize columns and metadata, collect coverage, merge shard reports, integrate notifications and external tools, and troubleshoot attachments and global state. It targets reporter 2.x and loads task-specific references on demand.
 
 The npm package includes `skills/monocart-reporter/`. Copy this **entire directory**, including `references/`, into your agent's supported skills location, or ask the agent to read `SKILL.md` directly. Installing the package does not automatically register the skill or modify agent settings. Instructions are in English; requests and responses can use any language.

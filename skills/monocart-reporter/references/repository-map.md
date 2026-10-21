@@ -8,6 +8,8 @@ The npm package ships `lib/` and the entire skill directory, plus normal package
 
 ## Checkout map
 
+When maintaining a source checkout, read the root `AGENTS.md` first; `.github/copilot-instructions.md` carries a self-contained summary for Copilot. These checkout-only guides cover command side effects, focused validation, generated output boundaries, and safety. They are not shipped in npm and are not prerequisites for host integration. Keep their shared rules aligned when updating them.
+
 | Task | Source | Validation/examples |
 | --- | --- | --- |
 | Reporter lifecycle and exports | `lib/index.js`, `lib/index.mjs`, `lib/index.d.ts` | `tests/playwright.config.js` |
@@ -22,7 +24,7 @@ The npm package ships `lib/` and the entire skill directory, plus normal package
 | Social preview | `scripts/og-image/`, `lib/default/template.html`, `scripts/docs.js` | `npm run docs-og-image`, `npm run docs` |
 | Published skill | `skills/monocart-reporter/`, `package.json` | `npm pack --dry-run`; verify skill resolution and relative links |
 
-Read scripts before running them. `npm test` runs Playwright integration/report generation, including deliberately failing/flaky examples and local web servers; it is not a lightweight unit suite. Use focused existing test targets when appropriate. `npm run link` prepares local package resolution. Browser runs require installed browsers; coverage needs the supported Node runtime. For preview generation, install Chromium if needed (`npx playwright install chromium`), then run `npm run docs-og-image`. After report generation, `npm run docs` copies the image into `.temp/monocart/` (or pass another directory). It is not a posttest hook: local callers run it explicitly. The Pages workflow runs it once after tests, even if the demonstration tests fail. The shared template gives test and network reports their own titles with the same project description and hosted image.
+Read scripts before running them. `npm test` runs Playwright integration/report generation, including deliberately failing/flaky examples and local web servers; it is not a lightweight unit suite. Use focused existing test targets when appropriate. `npm run link` prepares local package resolution. Browser runs require installed browsers; coverage needs the supported Node runtime. For preview generation, confirm permission before installing Chromium if needed (`npx playwright install chromium`), then run `npm run docs-og-image`. After report generation, `npm run docs` copies the image into `.temp/monocart/` (or pass another directory). It is not a posttest hook: local callers run it explicitly. The Pages workflow runs it once after tests, even if the demonstration tests fail. The shared template gives test and network reports their own titles with the same project description and hosted image.
 
 `npm run lint` includes --fix; avoid unrelated changes. Do not hand-edit generated `dist/` or `lib/packages/`. `lib/assets.js` is maintained source code for HTML generation. Build after changing `lib/default/template.html` or browser bundle inputs; the runtime reads the template bundled in `lib/packages/`, not the source HTML directly.
 
